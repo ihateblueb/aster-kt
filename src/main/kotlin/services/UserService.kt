@@ -6,8 +6,8 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
-import me.blueb.models.ExposedUser
-import me.blueb.models.ExposedUserPrivate
+import me.blueb.models.exposed.ExposedUser
+import me.blueb.models.exposed.ExposedUserPrivate
 
 class UserService(private val database: Database) {
     object Users : Table("user") {

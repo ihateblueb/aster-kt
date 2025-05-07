@@ -6,8 +6,8 @@ import io.ktor.resources.Resource
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
-import me.blueb.models.ExposedUser
-import me.blueb.models.ExposedUserPrivate
+import me.blueb.models.exposed.ExposedUser
+import me.blueb.models.exposed.ExposedUserPrivate
 import me.blueb.services.ConfigService
 import me.blueb.services.IdentifierService
 import org.koin.ktor.ext.inject

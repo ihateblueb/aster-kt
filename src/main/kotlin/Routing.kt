@@ -12,7 +12,7 @@ fun Application.configureRouting() {
         swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
 
         nodeinfo()
-        apUser()
+        actor()
 
         register()
         user()
