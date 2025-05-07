@@ -6,7 +6,7 @@ import me.blueb.models.exposed.ExposedUser
 @Serializable
 data class ApActor(
     @SerialName("@context")
-    val context: List<LdContextItem> = LdContextList,
+    val context: List<LdContextItem> = LdContext,
 
     val id: String,
     val type: ApType.Object = ApType.Object.Person,
