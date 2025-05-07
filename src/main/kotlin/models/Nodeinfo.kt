@@ -14,13 +14,13 @@ data class Nodeinfo(
 @Serializable
 data class NodeinfoSoftare(
     val name: String,
-    val version: String
+    val version: String,
 )
 
 @Serializable
 data class NodeinfoUsage(
     val users: NodeinfoUsageUsers,
-    val localPosts: Int
+    val localPosts: Int,
 )
 
 @Serializable

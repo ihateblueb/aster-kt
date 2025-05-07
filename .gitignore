@@ -36,5 +36,5 @@ out/
 .vscode/
 
 target/
-application.yaml
+src/main/resources/application.yaml
 .DS_Store

@@ -13,7 +13,10 @@ import me.blueb.services.IdentifierService
 import org.koin.ktor.ext.inject
 
 @Resource("/api/register")
-class RegisterResource(val username: String, val password: String)
+class RegisterResource(
+    val username: String,
+    val password: String,
+)
 
 fun Route.register() {
     val configService by inject<ConfigService>()
@@ -22,19 +25,21 @@ fun Route.register() {
     post<RegisterResource> { res ->
         val id = identifierService.generate()
 
-        val newUser = ExposedUser(
-            id = id,
-            apId = configService.instance.url.fullPath + "/user/" + id,
-            inbox = configService.instance.url.fullPath + "/user/" + id + "/inbox",
-            outbox = configService.instance.url.fullPath + "/user/" + id + "/outbox",
-            username = res.username,
-            host = configService.instance.url.host
-        )
+        val newUser =
+            ExposedUser(
+                id = id,
+                apId = configService.instance.url.fullPath + "/user/" + id,
+                inbox = configService.instance.url.fullPath + "/user/" + id + "/inbox",
+                outbox = configService.instance.url.fullPath + "/user/" + id + "/outbox",
+                username = res.username,
+                host = configService.instance.url.host,
+            )
 
-        val newUserPrivate = ExposedUserPrivate(
-            id = id,
-            password = res.password,
-        )
+        val newUserPrivate =
+            ExposedUserPrivate(
+                id = id,
+                password = res.password,
+            )
 
         call.respond(HttpStatusCode.Companion.NotImplemented)
     }

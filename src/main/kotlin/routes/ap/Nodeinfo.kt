@@ -12,7 +12,9 @@ import me.blueb.models.NodeinfoUsage
 import me.blueb.models.NodeinfoUsageUsers
 
 @Resource("/nodeinfo/{version}")
-class NodeinfoResource(val version: String = "2.0")
+class NodeinfoResource(
+    val version: String = "2.0",
+)
 
 fun Route.nodeinfo() {
     get<NodeinfoResource> { res ->
@@ -22,24 +24,30 @@ fun Route.nodeinfo() {
             call.respond(HttpStatusCode.Companion.BadRequest)
         }
 
-        val asterVersion = application.environment.config.property("version").getString()
+        val asterVersion =
+            application.environment.config
+                .property("version")
+                .getString()
 
-        val nodeinfo = Nodeinfo(
-            version = version,
-            software = NodeinfoSoftare(
-                name = "aster",
-                version = asterVersion
-            ),
-            protocols = listOf("activitypub"),
-            openRegistrations = true,
-            usage = NodeinfoUsage(
-                users = NodeinfoUsageUsers(0),
-                localPosts = 0
+        val nodeinfo =
+            Nodeinfo(
+                version = version,
+                software =
+                    NodeinfoSoftare(
+                        name = "aster",
+                        version = asterVersion,
+                    ),
+                protocols = listOf("activitypub"),
+                openRegistrations = true,
+                usage =
+                    NodeinfoUsage(
+                        users = NodeinfoUsageUsers(0),
+                        localPosts = 0,
+                    ),
             )
-        )
 
         call.respond(
-            nodeinfo
+            nodeinfo,
         )
     }
 }

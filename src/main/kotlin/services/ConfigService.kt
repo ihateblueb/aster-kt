@@ -3,9 +3,10 @@ package me.blueb.services
 import io.ktor.http.Url
 import io.ktor.server.config.ApplicationConfig
 
-val config = ApplicationConfig(
-    configPath = "application.yaml"
-)
+val config =
+    ApplicationConfig(
+        configPath = "application.yaml",
+    )
 
 class ConfigService {
     val name: String = config.property("name").getString()

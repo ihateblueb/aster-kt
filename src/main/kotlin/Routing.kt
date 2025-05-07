@@ -3,7 +3,6 @@ package me.blueb
 import io.ktor.server.application.*
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.routing.*
-
 import me.blueb.routes.ap.*
 import me.blueb.routes.api.*
 

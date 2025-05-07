@@ -10,7 +10,9 @@ import me.blueb.services.UserService
 import org.koin.ktor.ext.inject
 
 @Resource("/actor/{id}")
-class ApActorResource(val id: String)
+class ApActorResource(
+    val id: String,
+)
 
 fun Route.actor() {
     val userService by inject<UserService>()
@@ -18,11 +20,12 @@ fun Route.actor() {
     get<ApActorResource> { res ->
         val user = userService.read(res.id)
 
-        if (user == null || user.host != null || !user.activated || user.suspended)
+        if (user == null || user.host != null || !user.activated || user.suspended) {
             call.respond(HttpStatusCode.Companion.NotFound)
+        }
 
         call.respond(
-            ApActor.fromUser(user!!)
+            ApActor.fromUser(user!!),
         )
     }
 }

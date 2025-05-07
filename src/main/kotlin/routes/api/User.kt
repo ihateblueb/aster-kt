@@ -10,7 +10,9 @@ import me.blueb.services.UserService
 import org.koin.ktor.ext.inject
 
 @Resource("/api/user/{id}")
-class UserResource(val id: String)
+class UserResource(
+    val id: String,
+)
 
 fun Route.user() {
     val userService by inject<UserService>()
@@ -18,8 +20,9 @@ fun Route.user() {
     get<UserResource> { res ->
         val user = userService.read(res.id)
 
-        if (user == null || !user.activated || user.suspended)
+        if (user == null || !user.activated || user.suspended) {
             call.respond(HttpStatusCode.Companion.NotFound)
+        }
 
         call.respond<ExposedUser>(user!!)
     }

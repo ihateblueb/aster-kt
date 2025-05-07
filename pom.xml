@@ -5,7 +5,7 @@
     <groupId>me.blueb</groupId>
     <artifactId>aster</artifactId>
     <version>2025.5.6.0-SNAPSHOT</version>
-    <name>aster</name>
+    <name>Aster</name>
     <description>aster</description>
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
@@ -15,6 +15,8 @@
         <slf4j_version>2.0.9</slf4j_version>
         <postgres_version>42.7.5</postgres_version>
         <exposed_version>0.61.0</exposed_version>
+        <flyway_version>11.8.1</flyway_version>
+        <jackson_version>2.19.0</jackson_version>
         <koin_version>3.5.6</koin_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -138,6 +140,11 @@
             <artifactId>exposed-kotlin-datetime</artifactId>
             <version>${exposed_version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.exposed</groupId>
+            <artifactId>exposed-migration</artifactId>
+            <version>${exposed_version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.insert-koin</groupId>
@@ -148,6 +155,28 @@
             <groupId>io.insert-koin</groupId>
             <artifactId>koin-logger-slf4j</artifactId>
             <version>${koin_version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway_version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson_version}</version>
         </dependency>
 
     </dependencies>

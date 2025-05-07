@@ -1,15 +1,15 @@
 package me.blueb.services
 
 import kotlinx.coroutines.Dispatchers
+import me.blueb.models.exposed.ExposedUser
+import me.blueb.models.exposed.ExposedUserPrivate
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
 
-import me.blueb.models.exposed.ExposedUser
-import me.blueb.models.exposed.ExposedUserPrivate
-
-class UserService(private val database: Database) {
+class UserService(
+    private val database: Database,
+) {
     object Users : Table("user") {
         val id = varchar("id", length = 100).uniqueIndex("unique_user_id")
 
@@ -28,7 +28,7 @@ class UserService(private val database: Database) {
         val avatarAlt = varchar("avatarAlt", length = 8192).nullable()
         val banner = varchar("banner", length = 500).nullable()
         val bannerAlt = varchar("bannerAlt", length = 8192).nullable()
-        
+
         val locked = bool("locked").default(false)
         val suspended = bool("suspended").default(false)
         val activated = bool("activated").default(false)
@@ -38,11 +38,6 @@ class UserService(private val database: Database) {
 
         val isCat = bool("isCat").default(false)
         val speakAsCat = bool("speakAsCat").default(false)
-
-        val unique_user_id = uniqueIndex("unique_user_id", id)
-        val unique_user_apId = uniqueIndex("unique_user_apId", apId)
-        val unique_user_inbox = uniqueIndex("unique_user_inbox", inbox)
-        val unique_user_outbox = uniqueIndex("unique_user_outbox", outbox)
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -54,52 +49,50 @@ class UserService(private val database: Database) {
         override val primaryKey = PrimaryKey(Users.id)
     }
 
-    init {
-        transaction(database) {
-            SchemaUtils.create(Users)
-            SchemaUtils.create(UsersPrivate)
-        }
-    }
+    suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+    suspend fun create(
+        user: ExposedUser,
+        userPrivate: ExposedUserPrivate?,
+    ): String =
+        dbQuery {
+            if (userPrivate != null) {
+                UsersPrivate.insert {
+                    it[id] = userPrivate.id
+                    it[password] = userPrivate.password
+                }[Users.id]
+            }
 
-    suspend fun create(user: ExposedUser, userPrivate: ExposedUserPrivate?): String = dbQuery {
-        if (userPrivate != null)
-            UsersPrivate.insert {
-                it[id] = userPrivate.id
-                it[password] = userPrivate.password
+            Users.insert {
+                it[id] = user.id
+                it[apId] = user.apId
+                it[inbox] = user.inbox
+                it[outbox] = user.outbox
+                it[username] = user.username
+                it[host] = user.host
+                it[displayName] = user.displayName
+                it[bio] = user.bio
+                it[location] = user.location
+                it[birthday] = user.birthday
+                it[avatar] = user.avatar
+                it[avatarAlt] = user.avatarAlt
+                it[banner] = user.banner
+                it[bannerAlt] = user.bannerAlt
+                it[Users.locked] = user.locked
+                it[Users.suspended] = user.suspended
+                it[Users.activated] = user.activated
+                it[Users.discoverable] = user.discoverable
+                it[Users.indexable] = user.indexable
+                it[Users.sensitive] = user.sensitive
+                it[Users.isCat] = user.isCat
+                it[Users.speakAsCat] = user.speakAsCat
             }[Users.id]
+        }
 
-        Users.insert {
-            it[id] = user.id
-            it[apId] = user.apId
-            it[inbox] = user.inbox
-            it[outbox] = user.outbox
-            it[username] = user.username
-            it[host] = user.host
-            it[displayName] = user.displayName
-            it[bio] = user.bio
-            it[location] = user.location
-            it[birthday] = user.birthday
-            it[avatar] = user.avatar
-            it[avatarAlt] = user.avatarAlt
-            it[banner] = user.banner
-            it[bannerAlt] = user.bannerAlt
-            it[Users.locked] = user.locked
-            it[Users.suspended] = user.suspended
-            it[Users.activated] = user.activated
-            it[Users.discoverable] = user.discoverable
-            it[Users.indexable] = user.indexable
-            it[Users.sensitive] = user.sensitive
-            it[Users.isCat] = user.isCat
-            it[Users.speakAsCat] = user.speakAsCat
-        }[Users.id]
-    }
-
-    suspend fun read(id: String): ExposedUser? {
-        return dbQuery {
-            Users.selectAll()
+    suspend fun read(id: String): ExposedUser? =
+        dbQuery {
+            Users
+                .selectAll()
                 .where { Users.id eq id }
                 .map {
                     ExposedUser(
@@ -126,26 +119,26 @@ class UserService(private val database: Database) {
                         it[Users.isCat],
                         it[Users.speakAsCat],
                     )
-                }
-                .singleOrNull()
+                }.singleOrNull()
         }
-    }
 
-    suspend fun readPrivate(id: String): ExposedUserPrivate? {
-        return dbQuery {
-            UsersPrivate.selectAll()
+    suspend fun readPrivate(id: String): ExposedUserPrivate? =
+        dbQuery {
+            UsersPrivate
+                .selectAll()
                 .where { Users.id eq id }
                 .map {
                     ExposedUserPrivate(
                         it[UsersPrivate.id],
-                        it[UsersPrivate.password]
+                        it[UsersPrivate.password],
                     )
-                }
-                .singleOrNull()
+                }.singleOrNull()
         }
-    }
 
-    suspend fun update(id: String, user: ExposedUser) {
+    suspend fun update(
+        id: String,
+        user: ExposedUser,
+    ) {
         dbQuery {
             Users.update({ Users.id eq id }) {
                 it[apId] = user.apId
@@ -173,7 +166,10 @@ class UserService(private val database: Database) {
         }
     }
 
-    suspend fun updatePrivate(id: String, userPrivate: ExposedUserPrivate) {
+    suspend fun updatePrivate(
+        id: String,
+        userPrivate: ExposedUserPrivate,
+    ) {
         dbQuery {
             UsersPrivate.update({ UsersPrivate.id eq id }) {
                 it[password] = userPrivate.password
