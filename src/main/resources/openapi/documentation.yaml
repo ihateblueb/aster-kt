@@ -1,0 +1,107 @@
+openapi: "3.1.0"
+info:
+  title: "aster API"
+  description: "aster API"
+  version: "1.0.0"
+servers:
+  - url: "http://127.0.0.1:9978"
+paths:
+  /nodeinfo/{version}:
+    get:
+      description: ""
+      parameters:
+        - name: "version"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Nodeinfo"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    version: "null"
+                    software:
+                      name: "aster"
+                      version: "null"
+                    protocols:
+                      - "activitypub"
+                    openRegistrations: true
+                    usage:
+                      users:
+                        total: 0
+                      localPosts: 0
+  /register:
+    post:
+      description: ""
+      responses:
+        "501":
+          description: "Not Implemented"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+components:
+  schemas:
+    NodeinfoSoftare:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        version:
+          type: "string"
+      required:
+        - "name"
+        - "version"
+    NodeinfoUsageUsers:
+      type: "object"
+      properties:
+        total:
+          type: "integer"
+          format: "int32"
+      required:
+        - "total"
+    NodeinfoUsage:
+      type: "object"
+      properties:
+        users:
+          $ref: "#/components/schemas/NodeinfoUsageUsers"
+        localPosts:
+          type: "integer"
+          format: "int32"
+      required:
+        - "users"
+        - "localPosts"
+    Nodeinfo:
+      type: "object"
+      properties:
+        version:
+          type: "string"
+        software:
+          $ref: "#/components/schemas/NodeinfoSoftare"
+        protocols:
+          type: "array"
+          items:
+            type: "string"
+        openRegistrations:
+          type: "boolean"
+        usage:
+          $ref: "#/components/schemas/NodeinfoUsage"
+      required:
+        - "version"
+        - "software"
+        - "protocols"
+        - "openRegistrations"
+        - "usage"
