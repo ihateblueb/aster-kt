@@ -5,13 +5,8 @@ import me.blueb.models.exposed.ExposedUser
 
 @Serializable
 data class ApActor(
-    @Contextual
     @SerialName("@context")
-    val context: List<Any> = listOf(
-        "https://www.w3.org/ns/activitystreams",
-        "https://w3id.org/security/v1",
-        LdContext()
-    ),
+    val context: List<LdContextItem> = LdContextList,
 
     val id: String,
     val type: ApType.Object = ApType.Object.Person,
