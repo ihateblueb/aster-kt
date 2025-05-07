@@ -4,20 +4,13 @@ import io.ktor.server.application.*
 import io.ktor.server.resources.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
 import kotlinx.serialization.json.Json
-import me.blueb.tools.MigrationUtils
-import kotlin.collections.contains
 
 fun main(args: Array<String>) {
-    val server = embeddedServer(Netty, port = 8080) {
-        module(args)
-    }
-    server.start(wait = true)
+    io.ktor.server.netty.EngineMain.main(args)
 }
 
-fun Application.module(args: Array<String>) {
+fun Application.module() {
     install(Resources)
     install(ContentNegotiation) {
         json(Json {
@@ -26,13 +19,6 @@ fun Application.module(args: Array<String>) {
         })
     }
 
-    if (args.contains("migrate")) {
-        configureDatabases(true)
-        engine.start(wait = true)
-        return
-    } else {
-        configureDatabases()
-    }
-
+    configureDatabases()
     configureRouting()
 }

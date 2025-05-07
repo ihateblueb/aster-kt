@@ -8,15 +8,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 import me.blueb.models.ExposedUser
 import me.blueb.models.ExposedUserPrivate
-import me.blueb.tools.MigrationUtils
 
 class UserService(private val database: Database) {
-    object Users : Table() {
+    object Users : Table("user") {
         val id = varchar("id", length = 100).uniqueIndex("unique_user_id")
 
         val apId = varchar("apId", length = 8192).uniqueIndex("unique_user_apId")
         val inbox = varchar("inbox", length = 8192).uniqueIndex("unique_user_inbox")
-        val outbox = varchar("outbox", length = 8192).uniqueIndex("unique_user_outbox")
+        val outbox = varchar("outbox", length = 8192).nullable()
 
         val username = varchar("username", length = 175)
         val host = varchar("host", length = 500).nullable()
@@ -46,15 +45,13 @@ class UserService(private val database: Database) {
         val unique_user_outbox = uniqueIndex("unique_user_outbox", outbox)
 
         override val primaryKey = PrimaryKey(id)
-        override val tableName = "user"
     }
 
-    object UsersPrivate : Table() {
+    object UsersPrivate : Table("user_private") {
         val id = varchar("id", length = 100).uniqueIndex("unique_user_private_id")
         val password = varchar("password", length = 8192)
 
         override val primaryKey = PrimaryKey(Users.id)
-        override val tableName = "users_private"
     }
 
     init {

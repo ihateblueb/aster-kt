@@ -5,15 +5,13 @@ import kotlinx.coroutines.selects.select
 import me.blueb.services.ConfigService
 import me.blueb.services.IdentifierService
 import me.blueb.services.UserService
-import me.blueb.tools.MigrationUtils
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.transaction
 
 import org.koin.ktor.plugin.Koin
 import org.koin.dsl.*
 import org.koin.logger.slf4jLogger
 
-fun Application.configureDatabases(migrate: Boolean = false) {
+fun Application.configureDatabases() {
     val configService = ConfigService()
 
     val database = Database.connect(
@@ -22,11 +20,6 @@ fun Application.configureDatabases(migrate: Boolean = false) {
         password = configService.database.password,
     )
 
-    if (migrate) {
-        MigrationUtils().runPendingMigrations(database)
-        return
-    }
-
     val userService = UserService(database)
     val identifierService = IdentifierService()
 
@@ -34,6 +27,7 @@ fun Application.configureDatabases(migrate: Boolean = false) {
         slf4jLogger()
         modules(module {
             single { configService }
+            single { database }
             single { userService }
             single { identifierService }
         })

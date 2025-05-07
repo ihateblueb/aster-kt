@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExposedUser(
-    val id: String = "",
+    val id: String,
 
-    val apId: String = "",
-    val inbox: String = "",
-    val outbox: String = "",
+    val apId: String,
+    val inbox: String,
+    val outbox: String? = null,
 
-    val username: String = "",
+    val username: String,
     val host: String? = null,
     val displayName: String? = null,
     val bio: String? = null,
