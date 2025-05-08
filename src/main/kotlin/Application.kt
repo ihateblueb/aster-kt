@@ -22,6 +22,23 @@ fun Application.module() {
         )
     }
 
+    /*
+        refactor "exposed/Exposed*" to "entity/*Entity"
+        rename directories to be singular
+
+        maven -> gradle?
+
+        scan plugins folder for jars, 
+        load,
+        @*Plugin annotated classes,
+        and other stuff
+
+        look how DI works with these plugins, write sample
+
+        also consider annotation for route to automatically add to Routing.kt,
+        use for route plugins
+    */
+
     configureDatabases()
     configureRouting()
 }
