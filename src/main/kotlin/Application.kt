@@ -3,6 +3,7 @@ package me.blueb
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.resources.*
 import kotlinx.serialization.json.Json
 
@@ -13,7 +14,8 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     install(Resources)
-    install(ContentNegotiation) {
+    install(RequestValidation) {}
+    install (ContentNegotiation) {
         json(
             Json {
                 prettyPrint = true
