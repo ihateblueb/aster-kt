@@ -7,6 +7,7 @@ import io.ktor.server.plugins.requestvalidation.*
 import io.ktor.server.resources.*
 import kotlinx.serialization.json.Json
 
+
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain
         .main(args)
@@ -25,7 +26,7 @@ fun Application.module() {
     }
 
     /*
-        refactor "exposed/Exposed*" to "entity/*Entity"
+        refactor "exposed/Exposed" to "entity/Entity"
         rename directories to be singular
 
         maven -> gradle?

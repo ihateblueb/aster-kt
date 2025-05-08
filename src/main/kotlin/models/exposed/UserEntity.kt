@@ -3,7 +3,7 @@ package me.blueb.models.exposed
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ExposedUser(
+data class UserEntity(
     val id: String,
     val apId: String,
     val inbox: String,

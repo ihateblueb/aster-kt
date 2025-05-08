@@ -1,8 +1,8 @@
 package me.blueb.services
 
 import kotlinx.coroutines.Dispatchers
-import me.blueb.models.exposed.ExposedUser
-import me.blueb.models.exposed.ExposedUserPrivate
+import me.blueb.models.exposed.UserEntity
+import me.blueb.models.exposed.UserPrivateEntity
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -52,8 +52,8 @@ class UserService(
     suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) { block() }
 
     suspend fun create(
-        user: ExposedUser,
-        userPrivate: ExposedUserPrivate?,
+        user: UserEntity,
+        userPrivate: UserPrivateEntity?,
     ): String =
         dbQuery {
             if (userPrivate != null) {
@@ -89,13 +89,13 @@ class UserService(
             }[Users.id]
         }
 
-    suspend fun read(id: String): ExposedUser? =
+    suspend fun read(id: String): UserEntity? =
         dbQuery {
             Users
                 .selectAll()
                 .where { Users.id eq id }
                 .map {
-                    ExposedUser(
+                    UserEntity(
                         it[Users.id],
                         it[Users.apId],
                         it[Users.inbox],
@@ -122,13 +122,13 @@ class UserService(
                 }.singleOrNull()
         }
 
-    suspend fun readPrivate(id: String): ExposedUserPrivate? =
+    suspend fun readPrivate(id: String): UserPrivateEntity? =
         dbQuery {
             UsersPrivate
                 .selectAll()
                 .where { Users.id eq id }
                 .map {
-                    ExposedUserPrivate(
+                    UserPrivateEntity(
                         it[UsersPrivate.id],
                         it[UsersPrivate.password],
                     )
@@ -137,7 +137,7 @@ class UserService(
 
     suspend fun update(
         id: String,
-        user: ExposedUser,
+        user: UserEntity,
     ) {
         dbQuery {
             Users.update({ Users.id eq id }) {
@@ -168,7 +168,7 @@ class UserService(
 
     suspend fun updatePrivate(
         id: String,
-        userPrivate: ExposedUserPrivate,
+        userPrivate: UserPrivateEntity,
     ) {
         dbQuery {
             UsersPrivate.update({ UsersPrivate.id eq id }) {

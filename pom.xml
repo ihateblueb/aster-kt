@@ -52,6 +52,11 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
             <version>${kotlin_version}</version>
             <scope>test</scope>
@@ -112,6 +117,12 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-swagger-jvm</artifactId>
             <version>${ktor_version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <version>4.8.179</version>
         </dependency>
 
         <dependency>

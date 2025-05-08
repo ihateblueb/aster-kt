@@ -5,7 +5,7 @@ import io.ktor.resources.Resource
 import io.ktor.server.resources.get
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import me.blueb.models.exposed.ExposedUser
+import me.blueb.models.exposed.UserEntity
 import me.blueb.services.UserService
 import org.koin.ktor.ext.inject
 
@@ -24,6 +24,6 @@ fun Route.user() {
             call.respond(HttpStatusCode.Companion.NotFound)
         }
 
-        call.respond<ExposedUser>(user!!)
+        call.respond<UserEntity>(user!!)
     }
 }

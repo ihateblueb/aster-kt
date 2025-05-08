@@ -8,12 +8,11 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
-import me.blueb.models.exposed.ExposedUser
-import me.blueb.models.exposed.ExposedUserPrivate
+import me.blueb.models.exposed.UserEntity
+import me.blueb.models.exposed.UserPrivateEntity
 import me.blueb.services.ConfigService
 import me.blueb.services.IdentifierService
 import org.koin.ktor.ext.inject
-import kotlin.math.log
 
 @Resource("/api/register")
 class RegisterResource()
@@ -36,7 +35,7 @@ fun Route.register() {
         println(body.username)
 
         val newUser =
-            ExposedUser(
+            UserEntity(
                 id = id,
                 apId = configService.instance.url.fullPath + "/user/" + id,
                 inbox = configService.instance.url.fullPath + "/user/" + id + "/inbox",
@@ -46,7 +45,7 @@ fun Route.register() {
             )
 
         val newUserPrivate =
-            ExposedUserPrivate(
+            UserPrivateEntity(
                 id = id,
                 password = body.password,
             )

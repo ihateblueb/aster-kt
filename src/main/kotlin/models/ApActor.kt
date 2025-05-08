@@ -1,7 +1,7 @@
 package me.blueb.models
 
 import kotlinx.serialization.*
-import me.blueb.models.exposed.ExposedUser
+import me.blueb.models.exposed.UserEntity
 
 @Serializable
 data class ApActor(
@@ -14,7 +14,7 @@ data class ApActor(
     val name: String? = null,
 ) {
     companion object {
-        fun fromUser(user: ExposedUser): ApActor =
+        fun fromUser(user: UserEntity): ApActor =
             ApActor(
                 id = user.apId,
                 type = ApType.Object.Person,
