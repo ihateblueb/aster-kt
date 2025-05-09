@@ -1,4 +1,4 @@
-package me.blueb.services
+package me.blueb.service
 
 import io.ktor.http.Url
 import io.ktor.server.config.ApplicationConfig
@@ -11,13 +11,9 @@ val config =
 class ConfigService {
     val name: String = config.property("name").getString()
     val version: String = config.property("version").getString()
+    val url: Url = Url(config.property("url").getString())
 
-    val instance: ConfigServiceInstance = ConfigServiceInstance()
     val database: ConfigServiceDatabase = ConfigServiceDatabase()
-}
-
-class ConfigServiceInstance {
-    val url: Url = Url(config.property("instance.url").getString())
 }
 
 class ConfigServiceDatabase {

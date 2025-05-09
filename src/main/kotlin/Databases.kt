@@ -1,7 +1,9 @@
 package me.blueb
 
 import io.ktor.server.application.*
-import me.blueb.services.*
+
+import me.blueb.service.*
+import me.blueb.db.*
 
 import MigrationUtils
 import org.flywaydb.core.Flyway
@@ -9,30 +11,20 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.sql.transactions.transaction
 
-import org.koin.dsl.*
-import org.koin.ktor.plugin.Koin
-import org.koin.logger.slf4jLogger
-
-const val migrationPath: String = "src/main/kotlin/migrations"
+const val migrationPath: String = "src/main/kotlin/migration"
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
-fun Application.configureDatabases(
-    migrate: Boolean = false,
-    genMigration: Boolean = false,
-) {
+fun Application.configureDatabases() {
     val configService = ConfigService()
+    val identifierService = IdentifierService()
 
     val dbUrl = "jdbc:postgresql://${configService.database.host}:${configService.database.port}/${configService.database.db}"
 
-    val database =
-        Database.connect(
-            dbUrl,
-            user = configService.database.user,
-            password = configService.database.password,
-        )
-
-    val userService = UserService(database)
-    val identifierService = IdentifierService()
+    val database = Database.connect(
+        dbUrl,
+        user = configService.database.user,
+        password = configService.database.password,
+    )
 
     val flyway = Flyway.configure()
         .dataSource(dbUrl, configService.database.user, configService.database.password)
@@ -40,7 +32,7 @@ fun Application.configureDatabases(
         .load()
 
     transaction(database) {
-        val entities = listOf(UserService.Users, UserService.UsersPrivate)
+        val entities = listOf(UserTable, UserPrivateTable)
 
         for (entity in entities) {
             log.info("Generating migration script for table " + entity.tableName)
@@ -54,17 +46,5 @@ fun Application.configureDatabases(
 
     transaction(database) {
         flyway.migrate()
-    }
-
-    install(Koin) {
-        slf4jLogger()
-        modules(
-            module {
-                single { configService }
-                single { database }
-                single { userService }
-                single { identifierService }
-            },
-        )
     }
 }

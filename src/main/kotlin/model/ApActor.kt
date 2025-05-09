@@ -1,7 +1,7 @@
-package me.blueb.models
+package me.blueb.model
 
 import kotlinx.serialization.*
-import me.blueb.models.exposed.UserEntity
+import me.blueb.model.entity.UserEntity
 
 @Serializable
 data class ApActor(

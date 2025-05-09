@@ -1,4 +1,4 @@
-package me.blueb.services
+package me.blueb.service
 
 import java.lang.System
 import java.util.Date

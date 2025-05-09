@@ -1,24 +1,23 @@
-package me.blueb.routes.ap
+package me.blueb.route.ap
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.resources.Resource
 import io.ktor.server.resources.get
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
-import me.blueb.models.ApActor
-import me.blueb.services.UserService
-import org.koin.ktor.ext.inject
+import me.blueb.model.ApActor
+import me.blueb.model.repository.UserRepository
 
-@Resource("/actor/{id}")
-class ApActorResource(
+@Resource("/user/{id}")
+class ApUserResource(
     val id: String,
 )
 
-fun Route.actor() {
-    val userService by inject<UserService>()
+fun Route.apUser() {
+    val userRepository = UserRepository()
 
-    get<ApActorResource> { res ->
-        val user = userService.read(res.id)
+    get<ApUserResource> { res ->
+        val user = userRepository.getById(res.id)
 
         if (user == null || user.host != null || !user.activated || user.suspended) {
             call.respond(HttpStatusCode.Companion.NotFound)

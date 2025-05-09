@@ -1,4 +1,4 @@
-package me.blueb.routes.ap
+package me.blueb.route.ap
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.resources.Resource
@@ -6,10 +6,10 @@ import io.ktor.server.resources.get
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.application
-import me.blueb.models.Nodeinfo
-import me.blueb.models.NodeinfoSoftare
-import me.blueb.models.NodeinfoUsage
-import me.blueb.models.NodeinfoUsageUsers
+import me.blueb.model.Nodeinfo
+import me.blueb.model.NodeinfoSoftare
+import me.blueb.model.NodeinfoUsage
+import me.blueb.model.NodeinfoUsageUsers
 
 @Resource("/nodeinfo/{version}")
 class NodeinfoResource(

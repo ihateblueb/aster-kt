@@ -1,4 +1,4 @@
-package me.blueb.models
+package me.blueb.model
 
 import kotlinx.serialization.Serializable
 

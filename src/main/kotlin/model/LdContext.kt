@@ -1,4 +1,4 @@
-package me.blueb.models
+package me.blueb.model
 
 import kotlinx.serialization.Serializable
 
@@ -11,7 +11,7 @@ sealed class LdContextItem {
 
     @Serializable
     data class LdContextDefinitions(
-        val value: me.blueb.models.LdContextDefinitions,
+        val value: me.blueb.model.LdContextDefinitions,
     ) : LdContextItem()
 }
 

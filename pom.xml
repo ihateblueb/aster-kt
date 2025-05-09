@@ -10,14 +10,13 @@
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin_version>2.1.10</kotlin_version>
-        <ktor_version>3.1.2</ktor_version>
-        <logback_version>1.5.13</logback_version>
-        <slf4j_version>2.0.9</slf4j_version>
+        <ktor_version>3.1.3</ktor_version>
+        <logback_version>1.5.18</logback_version>
+        <slf4j_version>2.0.17</slf4j_version>
         <postgres_version>42.7.5</postgres_version>
         <exposed_version>0.61.0</exposed_version>
         <flyway_version>11.8.1</flyway_version>
         <jackson_version>2.19.0</jackson_version>
-        <koin_version>3.5.6</koin_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <main.class>io.ktor.server.netty.EngineMain</main.class>
@@ -118,6 +117,12 @@
             <artifactId>ktor-server-swagger-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-request-validation</artifactId>
+            <version>3.1.2</version>
+            <scope>implementation</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.github.classgraph</groupId>
@@ -163,17 +168,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.insert-koin</groupId>
-            <artifactId>koin-ktor</artifactId>
-            <version>${koin_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.insert-koin</groupId>
-            <artifactId>koin-logger-slf4j</artifactId>
-            <version>${koin_version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>${flyway_version}</version>
@@ -194,11 +188,11 @@
             <artifactId>jackson-databind</artifactId>
             <version>${jackson_version}</version>
         </dependency>
+
         <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-request-validation</artifactId>
-            <version>3.1.2</version>
-            <scope>implementation</scope>
+            <groupId>at.favre.lib</groupId>
+            <artifactId>bcrypt</artifactId>
+            <version>0.10.2</version>
         </dependency>
 
     </dependencies>
