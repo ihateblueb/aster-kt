@@ -2,6 +2,7 @@ package me.blueb.service
 
 import io.ktor.http.Url
 import io.ktor.server.config.ApplicationConfig
+import me.blueb.model.InstanceRegistrationsMode
 
 val config =
     ApplicationConfig(
@@ -11,7 +12,9 @@ val config =
 class ConfigService {
     val name: String = config.property("name").getString()
     val version: String = config.property("version").getString()
+
     val url: Url = Url(config.property("url").getString())
+    val registrations: InstanceRegistrationsMode = InstanceRegistrationsMode.valueOf(config.property("registrations").getString())
 
     val database: ConfigServiceDatabase = ConfigServiceDatabase()
 }

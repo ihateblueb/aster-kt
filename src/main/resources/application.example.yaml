@@ -9,8 +9,9 @@ ktor:
     port: 9978
     host: 127.0.0.1
 
-instance:
-  url: "https://aster.example.com/"
+url: "https://aster.example.com/"
+registrations: invite
+
 database:
   host: localhost
   port: 5432
