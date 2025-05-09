@@ -2,6 +2,7 @@ package me.blueb.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import io.ktor.http.HttpStatusCode
+import io.ktor.resources.Resource
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
@@ -12,8 +13,11 @@ import me.blueb.model.entity.UserEntity
 import me.blueb.model.entity.UserPrivateEntity
 import me.blueb.model.repository.UserPrivateRepository
 import me.blueb.model.repository.UserRepository
-import me.blueb.service.ConfigService
+import me.blueb.model.Configuration
 import me.blueb.service.IdentifierService
+
+@Resource("/api/register")
+class RegisterResource()
 
 @Serializable
 data class RegisterBody(
@@ -23,22 +27,22 @@ data class RegisterBody(
 )
 
 fun Route.register() {
-    val configService = ConfigService()
+    val configuration = Configuration()
     val identifierService = IdentifierService()
 
     val userRepository = UserRepository()
     val userPrivateRepository = UserPrivateRepository()
 
-    post("/api/register") {
+    post<RegisterResource> { res ->
         val body = call.receive<RegisterBody>()
 
-        if (configService.registrations == InstanceRegistrationsMode.Closed)
+        if (configuration.registrations == InstanceRegistrationsMode.Closed)
             call.respond(
                 status = HttpStatusCode.BadRequest,
                 message = "Registrations closed",
             )
 
-        if (configService.registrations == InstanceRegistrationsMode.Invite)
+        if (configuration.registrations == InstanceRegistrationsMode.Invite)
             call.respond(
                 status = HttpStatusCode.NotImplemented,
                 message = "Invite system not implemented",
@@ -55,12 +59,12 @@ fun Route.register() {
         val newUser =
             UserEntity(
                 id = id,
-                apId = configService.url.toString() + "user/" + id,
-                inbox = configService.url.toString() + "user/" + id + "/inbox",
-                outbox = configService.url.toString() + "user/" + id + "/outbox",
+                apId = configuration.url.toString() + "user/" + id,
+                inbox = configuration.url.toString() + "user/" + id + "/inbox",
+                outbox = configuration.url.toString() + "user/" + id + "/outbox",
                 username = body.username,
-                host = configService.url.host,
-                activated = configService.registrations != InstanceRegistrationsMode.Approval,
+                host = configuration.url.host,
+                activated = configuration.registrations != InstanceRegistrationsMode.Approval,
             )
 
         val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())

@@ -6,6 +6,7 @@ import me.blueb.service.*
 import me.blueb.db.*
 
 import MigrationUtils
+import me.blueb.model.Configuration
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
@@ -15,19 +16,19 @@ const val migrationPath: String = "src/main/kotlin/migration"
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 fun Application.configureDatabases() {
-    val configService = ConfigService()
+    val configuration = Configuration()
     val identifierService = IdentifierService()
 
-    val dbUrl = "jdbc:postgresql://${configService.database.host}:${configService.database.port}/${configService.database.db}"
+    val dbUrl = "jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}"
 
     val database = Database.connect(
         dbUrl,
-        user = configService.database.user,
-        password = configService.database.password,
+        user = configuration.database.user,
+        password = configuration.database.password,
     )
 
     val flyway = Flyway.configure()
-        .dataSource(dbUrl, configService.database.user, configService.database.password)
+        .dataSource(dbUrl, configuration.database.user, configuration.database.password)
         .locations("filesystem:$migrationPath")
         .load()
 

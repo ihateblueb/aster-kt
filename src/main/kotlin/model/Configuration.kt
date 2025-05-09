@@ -1,25 +1,30 @@
-package me.blueb.service
+package me.blueb.model
 
 import io.ktor.http.Url
 import io.ktor.server.config.ApplicationConfig
-import me.blueb.model.InstanceRegistrationsMode
 
 val config =
     ApplicationConfig(
         configPath = "application.yaml",
     )
 
-class ConfigService {
+class Configuration {
     val name: String = config.property("name").getString()
-    val version: String = config.property("version").getString()
 
     val url: Url = Url(config.property("url").getString())
     val registrations: InstanceRegistrationsMode = InstanceRegistrationsMode.valueOf(config.property("registrations").getString())
+    val identifiers: IdentifierType = IdentifierType.valueOf(config.property("identifiers").getString())
 
-    val database: ConfigServiceDatabase = ConfigServiceDatabase()
+    val software: ConfigurationSoftware = ConfigurationSoftware()
+    val database: ConfigurationDatabase = ConfigurationDatabase()
 }
 
-class ConfigServiceDatabase {
+class ConfigurationSoftware {
+    val name: String = config.property("software.name").getString()
+    val version: String = config.property("software.version").getString()
+}
+
+class ConfigurationDatabase {
     val host: String = config.property("database.host").getString()
     val port: String = config.property("database.port").getString()
     val db: String = config.property("database.db").getString()

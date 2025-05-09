@@ -6,10 +6,12 @@ import io.ktor.server.resources.get
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.application
+import me.blueb.model.Configuration
 import me.blueb.model.Nodeinfo
 import me.blueb.model.NodeinfoSoftare
 import me.blueb.model.NodeinfoUsage
 import me.blueb.model.NodeinfoUsageUsers
+import me.blueb.model.repository.UserRepository
 
 @Resource("/nodeinfo/{version}")
 class NodeinfoResource(
@@ -17,6 +19,8 @@ class NodeinfoResource(
 )
 
 fun Route.nodeinfo() {
+    val configuration = Configuration()
+
     get<NodeinfoResource> { res ->
         val version = res.version
 
@@ -24,18 +28,13 @@ fun Route.nodeinfo() {
             call.respond(HttpStatusCode.Companion.BadRequest)
         }
 
-        val asterVersion =
-            application.environment.config
-                .property("version")
-                .getString()
-
         val nodeinfo =
             Nodeinfo(
                 version = version,
                 software =
                     NodeinfoSoftare(
-                        name = "aster",
-                        version = asterVersion,
+                        name = configuration.software.name,
+                        version = configuration.software.version,
                     ),
                 protocols = listOf("activitypub"),
                 openRegistrations = true,

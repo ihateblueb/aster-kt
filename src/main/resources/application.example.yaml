@@ -1,6 +1,3 @@
-name: ${project.name}
-version: ${project.version}
-
 ktor:
   application:
     modules:
@@ -9,8 +6,24 @@ ktor:
     port: 9978
     host: 127.0.0.1
 
+# Display name for instance
+name: "Aster"
+
+# URL instance is to be accessible by.
+# Do not reuse domains after starting an instance.
+# Do not change after you start using this instance.
 url: "https://aster.example.com/"
+
+# options:
+#   open      - anyone can register
+#   approval  - anyone can register but cannot use their account until approved
+#   invite    - only people with invite codes can register
+#   closed    - nobody can register
 registrations: invite
+
+# ID format to use. Keep as default unless migrating from elsewhere.
+# options: aid, aidx, uuid
+identifiers: aidx
 
 database:
   host: localhost
@@ -18,3 +31,8 @@ database:
   db: aster
   user: ''
   password: ''
+
+# ignore
+software:
+  name: ${project.name}
+  version: ${project.version}
