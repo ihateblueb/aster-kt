@@ -123,6 +123,11 @@
             <version>3.1.2</version>
             <scope>implementation</scope>
         </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-call-id-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.github.classgraph</groupId>
@@ -193,6 +198,12 @@
             <groupId>at.favre.lib</groupId>
             <artifactId>bcrypt</artifactId>
             <version>0.10.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-call-id</artifactId>
+            <version>3.1.2</version>
+            <scope>implementation</scope>
         </dependency>
 
     </dependencies>

@@ -33,7 +33,7 @@ fun Application.configureDatabases() {
         .load()
 
     transaction(database) {
-        val entities = listOf(UserTable, UserPrivateTable)
+        val entities = listOf(UserTable, UserPrivateTable, NoteTable)
 
         for (entity in entities) {
             log.info("Generating migration script for table " + entity.tableName)

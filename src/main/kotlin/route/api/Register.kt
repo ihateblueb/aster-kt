@@ -1,13 +1,16 @@
 package me.blueb.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.resources.Resource
+import io.ktor.server.plugins.callid.callId
+import io.ktor.server.request.header
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
+import me.blueb.model.ApiError
 import me.blueb.model.InstanceRegistrationsMode
 import me.blueb.model.entity.UserEntity
 import me.blueb.model.entity.UserPrivateEntity
@@ -16,14 +19,11 @@ import me.blueb.model.repository.UserRepository
 import me.blueb.model.Configuration
 import me.blueb.service.IdentifierService
 
-@Resource("/api/register")
-class RegisterResource()
-
 @Serializable
 data class RegisterBody(
     val username: String,
     val password: String,
-    val invite: String?
+    val invite: String? = null,
 )
 
 fun Route.register() {
@@ -33,20 +33,30 @@ fun Route.register() {
     val userRepository = UserRepository()
     val userPrivateRepository = UserPrivateRepository()
 
-    post<RegisterResource> { res ->
+    post("/api/register") {
         val body = call.receive<RegisterBody>()
 
-        if (configuration.registrations == InstanceRegistrationsMode.Closed)
+        if (configuration.registrations == InstanceRegistrationsMode.Closed) {
             call.respond(
                 status = HttpStatusCode.BadRequest,
-                message = "Registrations closed",
+                message = ApiError(
+                    message = "Registrations closed",
+                    requestId = call.callId
+                )
             )
+            return@post
+        }
 
-        if (configuration.registrations == InstanceRegistrationsMode.Invite)
+        if (configuration.registrations == InstanceRegistrationsMode.Invite) {
             call.respond(
                 status = HttpStatusCode.NotImplemented,
-                message = "Invite system not implemented",
+                message = ApiError(
+                    message = "Invite system not implemented",
+                    requestId = call.callId
+                )
             )
+            return@post
+        }
 
         /*if (configService.registrations == InstanceRegistrationsMode.Invite && body.invite == null)
             call.respond(
@@ -81,5 +91,6 @@ fun Route.register() {
         val registeredUser = userRepository.getById(newUser.id)
 
         call.respond(registeredUser as Any)
+        return@post
     }
 }

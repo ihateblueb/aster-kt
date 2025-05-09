@@ -1,23 +1,27 @@
 package me.blueb.model.repository
 
 import me.blueb.db.NoteTable
-import me.blueb.db.UserPrivateTable
+import me.blueb.db.UserTable
 import me.blueb.db.suspendTransaction
-import me.blueb.model.activity.ApCreateActivity
 import me.blueb.model.entity.NoteEntity
-import me.blueb.model.entity.UserPrivateEntity
+import me.blueb.service.UserService
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.leftJoin
 import org.jetbrains.exposed.sql.update
 
 class NoteRepository {
     suspend fun getById(id: String): NoteEntity? = suspendTransaction {
          NoteTable
+             .leftJoin(UserTable)
             .select(NoteTable.id eq id)
             .map { NoteEntity.fromTable(it) }
             .singleOrNull()
     }
+
     suspend fun getByApId(apId: String): NoteEntity? = suspendTransaction {
         NoteTable
             .select(NoteTable.apId eq apId)

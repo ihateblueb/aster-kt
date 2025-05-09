@@ -50,13 +50,13 @@ class IdentifierService {
         )
 
     fun generate(): String {
-        if (configuration.identifiers == IdentifierType.AID)
+        if (configuration.identifiers == IdentifierType.Aid)
             return this.generateAid()
 
-        if (configuration.identifiers == IdentifierType.AIDX)
+        if (configuration.identifiers == IdentifierType.Aidx)
             return this.generateAidx()
 
-        if (configuration.identifiers == IdentifierType.UUID)
+        if (configuration.identifiers == IdentifierType.Uuid)
             return UUID.randomUUID().toString()
 
         return this.generateAidx()
@@ -75,11 +75,7 @@ class IdentifierService {
         aidCounter++
 
         id += time.toString(36).padStart(8, '0')
-        id += aidAlphabet.random()
-        id += aidAlphabet.random()
-        id += aidAlphabet.random()
-        id += aidAlphabet.random()
-        id += aidCounter.toString(36).padStart(4, '0').takeLast(2)
+        id += aidCounter.toString(36).padStart(2, '0').takeLast(2)
 
         return id
     }

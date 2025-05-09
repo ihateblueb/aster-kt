@@ -2,6 +2,8 @@ package me.blueb.model
 
 import io.ktor.http.Url
 import io.ktor.server.config.ApplicationConfig
+import java.util.Locale
+import java.util.Locale.getDefault
 
 val config =
     ApplicationConfig(
@@ -12,8 +14,10 @@ class Configuration {
     val name: String = config.property("name").getString()
 
     val url: Url = Url(config.property("url").getString())
-    val registrations: InstanceRegistrationsMode = InstanceRegistrationsMode.valueOf(config.property("registrations").getString())
-    val identifiers: IdentifierType = IdentifierType.valueOf(config.property("identifiers").getString())
+    val registrations: InstanceRegistrationsMode = InstanceRegistrationsMode.valueOf(config.property("registrations").getString()
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString() })
+    val identifiers: IdentifierType = IdentifierType.valueOf(config.property("identifiers").getString()
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString() })
 
     val software: ConfigurationSoftware = ConfigurationSoftware()
     val database: ConfigurationDatabase = ConfigurationDatabase()

@@ -3,24 +3,22 @@ package me.blueb.model.repository
 import me.blueb.db.UserTable
 import me.blueb.db.suspendTransaction
 import me.blueb.model.entity.UserEntity
+import org.jetbrains.exposed.sql.Expression
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.update
 
 class UserRepository {
-    suspend fun getById(id: String): UserEntity? = suspendTransaction {
+    suspend fun get(expression: List<Expression<*>>): UserEntity? = suspendTransaction {
         UserTable
-            .select(UserTable.id eq id)
+            .select(expression)
             .map { UserEntity.fromTable(it) }
             .singleOrNull()
     }
-    suspend fun getByApId(apId: String): UserEntity? = suspendTransaction {
-        UserTable
-            .select(UserTable.apId eq apId)
-            .map { UserEntity.fromTable(it) }
-            .singleOrNull()
-    }
+
+    suspend fun getById(id: String): UserEntity? = this.get(listOf(UserTable.id eq id))
+    suspend fun getByApId(apId: String): UserEntity? = this.get(listOf(UserTable.apId eq apId))
 
     suspend fun create(user: UserEntity) = suspendTransaction {
         UserTable

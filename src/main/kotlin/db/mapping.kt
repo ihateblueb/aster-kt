@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.kotlin.datetime.date
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -51,7 +52,7 @@ object NoteTable : IdTable<String>("note") {
     override val id = varchar("id", length = 100).uniqueIndex("unique_note_id").entityId()
 
     val apId = varchar("apId", length = 8192).uniqueIndex("unique_note_apId")
-    val user = leftJoin(UserTable)
+    val user = varchar("user", length = 100).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
 
     val content = varchar("content", length = 25000).index("note_content_index")
 
