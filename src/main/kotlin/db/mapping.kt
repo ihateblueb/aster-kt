@@ -1,12 +1,11 @@
 package me.blueb.db
 
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Transaction
+import org.jetbrains.exposed.sql.kotlin.datetime.date
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 object UserTable : IdTable<String>("user") {
@@ -38,15 +37,33 @@ object UserTable : IdTable<String>("user") {
     val isCat = bool("isCat").default(false)
     val speakAsCat = bool("speakAsCat").default(false)
 
-    override val primaryKey = PrimaryKey(id)
+    override val primaryKey = PrimaryKey(this.id)
 }
 
 object UserPrivateTable : IdTable<String>("user_private") {
     override val id = varchar("id", length = 100).uniqueIndex("unique_user_private_id").entityId()
     val password = varchar("password", length = 8192)
 
-    override val primaryKey = PrimaryKey(UserTable.id)
+    override val primaryKey = PrimaryKey(this.id)
 }
+
+object NoteTable : IdTable<String>("note") {
+    override val id = varchar("id", length = 100).uniqueIndex("unique_note_id").entityId()
+
+    val apId = varchar("apId", length = 8192).uniqueIndex("unique_note_apId")
+    val user = leftJoin(UserTable)
+
+    val content = varchar("content", length = 25000).index("note_content_index")
+
+    val to = array<String>("to").index("note_to_index")
+    val tags = array<String>("tags").index("note_tag_index")
+
+    val createdAt = date("createdAt")
+    val updatedAt = date("updatedAt")
+
+    override val primaryKey = PrimaryKey(this.id)
+}
+
 
 suspend fun <T> suspendTransaction(block: Transaction.() -> T): T =
     newSuspendedTransaction(Dispatchers.IO, statement = block)
