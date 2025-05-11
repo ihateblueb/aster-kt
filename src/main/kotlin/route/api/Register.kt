@@ -1,23 +1,21 @@
 package me.blueb.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.plugins.callid.callId
-import io.ktor.server.request.header
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
+import me.blueb.db.entity.UserEntity
+import me.blueb.db.entity.UserPrivateEntity
 import me.blueb.model.ApiError
 import me.blueb.model.InstanceRegistrationsMode
-import me.blueb.model.entity.UserEntity
-import me.blueb.model.entity.UserPrivateEntity
-import me.blueb.model.repository.UserPrivateRepository
-import me.blueb.model.repository.UserRepository
 import me.blueb.model.Configuration
 import me.blueb.service.IdentifierService
+import me.blueb.service.UserService
+import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 data class RegisterBody(
@@ -29,9 +27,7 @@ data class RegisterBody(
 fun Route.register() {
     val configuration = Configuration()
     val identifierService = IdentifierService()
-
-    val userRepository = UserRepository()
-    val userPrivateRepository = UserPrivateRepository()
+    val userService = UserService()
 
     post("/api/register") {
         val body = call.receive<RegisterBody>()
@@ -65,32 +61,21 @@ fun Route.register() {
             )*/
 
         val id = identifierService.generate()
-
-        val newUser =
-            UserEntity(
-                id = id,
-                apId = configuration.url.toString() + "user/" + id,
-                inbox = configuration.url.toString() + "user/" + id + "/inbox",
-                outbox = configuration.url.toString() + "user/" + id + "/outbox",
-                username = body.username,
-                host = configuration.url.host,
-                activated = configuration.registrations != InstanceRegistrationsMode.Approval,
-            )
-
         val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
 
-        val newUserPrivate =
-            UserPrivateEntity(
-                id = id,
-                password = hashedPassword,
-            )
+        transaction {
+            UserEntity.new(id) {
+                apId = configuration.url.toString() + "user/" + id
+                inbox = configuration.url.toString() + "user/" + id + "/inbox"
+                outbox = configuration.url.toString() + "user/" + id + "/outbox"
+                username = body.username
+                activated = configuration.registrations != InstanceRegistrationsMode.Approval
+            }
+            UserPrivateEntity.new(id) {
+                password = hashedPassword
+            }
+        }
 
-        userRepository.create(newUser)
-        userPrivateRepository.create(newUserPrivate)
-
-        val registeredUser = userRepository.getById(newUser.id)
-
-        call.respond(registeredUser as Any)
-        return@post
+        call.respond(userService.getById(id) as Any)
     }
 }

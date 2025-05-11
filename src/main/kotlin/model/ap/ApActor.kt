@@ -1,7 +1,7 @@
-package me.blueb.model
+package me.blueb.model.ap
 
-import kotlinx.serialization.*
-import me.blueb.model.entity.UserEntity
+import kotlinx.serialization.Serializable
+import me.blueb.db.entity.UserEntity
 
 @Serializable
 data class ApActor(
@@ -16,7 +16,7 @@ data class ApActor(
     val _misskey_summary: String? = null,
 ) : ApObjectWithContext() {
     companion object {
-        fun fromUser(user: UserEntity): ApActor =
+        fun fromEntity(user: UserEntity): ApActor =
             ApActor(
                 id = user.apId,
                 type = ApType.Object.Person,

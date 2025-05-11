@@ -31,6 +31,7 @@ fun Application.module() {
     install(ContentNegotiation) {
         json(
             Json {
+                encodeDefaults = true
                 prettyPrint = true
                 isLenient = true
             },

@@ -5,23 +5,21 @@ import io.ktor.server.routing.get
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.util.getOrFail
-import me.blueb.model.ApActor
-import me.blueb.model.repository.UserRepository
+import me.blueb.model.ap.ApActor
+import me.blueb.service.UserService
 
 fun Route.apUser() {
-    val userRepository = UserRepository()
+    val userService = UserService()
 
     get("/user/{id}") {
-        val user = userRepository.getById(
-            id = call.parameters.getOrFail("id")
-        )
+        val user = userService.getById(call.parameters.getOrFail("id"))
 
         if (user == null || user.host != null || !user.activated || user.suspended) {
             call.respond(HttpStatusCode.Companion.NotFound)
         }
 
         call.respond(
-            ApActor.fromUser(user!!),
+            ApActor.fromEntity(user!!),
         )
     }
 }
