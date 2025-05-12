@@ -7,5 +7,6 @@ ktor:
     host: 127.0.0.1
 
 # This is just for making the maven package details accessible
-name: ${pkg.name}
-version: ${pkg.version}
+name: ${project.artifactId}
+version: ${project.version}
+groupId: ${project.groupId}

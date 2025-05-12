@@ -1,8 +1,6 @@
 package me.blueb.route.ap
 
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.resources.get
-import io.ktor.server.response.header
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
@@ -12,11 +10,13 @@ import me.blueb.model.Nodeinfo
 import me.blueb.model.NodeinfoSoftare
 import me.blueb.model.NodeinfoUsage
 import me.blueb.model.NodeinfoUsageUsers
+import me.blueb.model.PackageInformation
 import me.blueb.model.WellKnown
 import me.blueb.model.WellKnownLink
 
 fun Route.nodeinfo() {
     val configuration = Configuration()
+	val packageInformation = PackageInformation()
 
     get("/.well-known/nodeinfo") {
         call.response.headers.append("Content-Type", "application/jrd+json")
@@ -50,8 +50,8 @@ fun Route.nodeinfo() {
                 version = version,
                 software =
                     NodeinfoSoftare(
-                        name = configuration.software.name,
-                        version = configuration.software.version,
+                        name = packageInformation.name,
+                        version = packageInformation.version,
                     ),
                 protocols = listOf("activitypub"),
                 openRegistrations = true,

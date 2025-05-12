@@ -17,7 +17,6 @@ class Configuration {
     val registrations: InstanceRegistrationsMode
     val identifiers: IdentifierType
 
-    val software: ConfigurationSoftware
     val database: ConfigurationDatabase
 
 	init {
@@ -52,25 +51,7 @@ class Configuration {
 			IdentifierType.Aidx
 		}
 
-		software = ConfigurationSoftware()
 		database = ConfigurationDatabase()
-	}
-}
-
-class ConfigurationSoftware {
-    val name: String
-    val version: String
-
-	init {
-		var softwareNameProp = config?.propertyOrNull("software.name")?.getString()
-		name = softwareNameProp ?: "aster"
-
-		var softwareVersionProp = config?.propertyOrNull("software.version")?.getString()
-		version = if (softwareVersionProp != null) {
-			softwareVersionProp
-		} else {
-			throw Exception("Configuration is missing 'software.version' attribute.")
-		}
 	}
 }
 

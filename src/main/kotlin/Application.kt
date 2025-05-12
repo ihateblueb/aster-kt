@@ -7,6 +7,7 @@ import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.resources.*
 import kotlinx.serialization.json.Json
+import me.blueb.db.database
 import me.blueb.service.IdentifierService
 import me.blueb.service.MigrationService
 
@@ -31,6 +32,9 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
 	val identifierService = IdentifierService()
+
+	// access connection before using it
+	database
 
 	install(CallId) {
 		header(HttpHeaders.XRequestId)
