@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 
-const val migrationPath: String = "src/main/kotlin/migration"
+const val migrationPath: String = "src/main/resources/migrations"
 
 val configuration = Configuration()
 val identifierService = IdentifierService()

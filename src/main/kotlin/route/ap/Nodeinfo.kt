@@ -6,6 +6,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.util.getOrFail
 import me.blueb.model.Configuration
+import me.blueb.model.InstanceRegistrationsMode
 import me.blueb.model.Nodeinfo
 import me.blueb.model.NodeinfoSoftare
 import me.blueb.model.NodeinfoUsage
@@ -43,6 +44,7 @@ fun Route.nodeinfo() {
 
         if (version != "2.0" && version != "2.1") {
             call.respond(HttpStatusCode.BadRequest)
+			return@get
         }
 
         val nodeinfo =
@@ -54,7 +56,7 @@ fun Route.nodeinfo() {
                         version = packageInformation.version,
                     ),
                 protocols = listOf("activitypub"),
-                openRegistrations = true,
+                openRegistrations = configuration.registrations == InstanceRegistrationsMode.Open,
                 usage =
                     NodeinfoUsage(
                         users = NodeinfoUsageUsers(0),

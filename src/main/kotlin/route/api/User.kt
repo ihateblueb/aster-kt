@@ -16,10 +16,11 @@ fun Route.user() {
 
         if (user == null || !user.activated || user.suspended) {
             call.respond(HttpStatusCode.Companion.NotFound)
+			return@get
         }
 
         call.respond(
-            User.fromEntity(user!!)
+            User.fromEntity(user)
         )
     }
 }

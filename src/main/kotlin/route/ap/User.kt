@@ -15,11 +15,12 @@ fun Route.apUser() {
         val user = userService.getById(call.parameters.getOrFail("id"))
 
         if (user == null || user.host != null || !user.activated || user.suspended) {
-            call.respond(HttpStatusCode.Companion.NotFound)
+            call.respond(HttpStatusCode.NotFound)
+			return@get
         }
 
         call.respond(
-            ApActor.fromEntity(user!!),
+            ApActor.fromEntity(user),
         )
     }
 }
