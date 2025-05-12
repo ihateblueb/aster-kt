@@ -1,7 +1,5 @@
 package me.blueb.model
 
-import kotlinx.serialization.Serializable
-
 val LdContext: List<LdContextItem> =
     listOf(
         LdContextItem.String("https://www.w3.org/ns/activitystreams"),

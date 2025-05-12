@@ -1,0 +1,11 @@
+ktor:
+  application:
+    modules:
+      - me.blueb.ApplicationKt.module
+  deployment:
+    port: 9978
+    host: 127.0.0.1
+
+# This is just for making the maven package details accessible
+name: ${pkg.name}
+version: ${pkg.version}

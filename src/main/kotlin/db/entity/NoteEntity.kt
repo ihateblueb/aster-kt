@@ -1,6 +1,7 @@
 package me.blueb.db.entity
 
 import me.blueb.db.table.NoteTable
+import me.blueb.db.table.UserTable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -9,7 +10,7 @@ class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
     companion object : EntityClass<String, NoteEntity>(NoteTable)
 
     var apId by NoteTable.apId
-    var user by NoteTable.user
+    var user by referencedOn(UserTable)
 
     var content by NoteTable.content
 

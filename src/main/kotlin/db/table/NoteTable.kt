@@ -8,7 +8,7 @@ object NoteTable : IdTable<String>("note") {
     override val id = varchar("id", length = 125).uniqueIndex("unique_note_id").entityId()
 
     val apId = varchar("apId", length = 1025).uniqueIndex("unique_note_apId")
-    val user = varchar("user", length = 125).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
+	val user = varchar("user", length = 125).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
 
     val content = varchar("content", length = 25000).index("note_content_index")
 
