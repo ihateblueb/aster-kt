@@ -17,4 +17,5 @@ class UserService() {
 
     suspend fun getById(id: String): UserEntity? = suspendTransaction { UserEntity.get(id) }
     suspend fun getByApId(apId: String): UserEntity? = this.get(listOf(UserTable.apId eq apId))
+	suspend fun getByUsername(username: String): UserEntity? = this.get(listOf(UserTable.username eq username))
 }

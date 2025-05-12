@@ -6,10 +6,12 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.resources.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import me.blueb.db.Database
 import me.blueb.service.IdentifierService
 import me.blueb.service.MigrationService
+import me.blueb.service.SetupService
 
 fun main(args: Array<String>) {
 	if (args.isNotEmpty()) {
@@ -32,11 +34,16 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
 	val identifierService = IdentifierService()
+	val setupService = SetupService()
 
 	// access connection before using it
 	Database.database
 
 	configureQueue()
+
+	runBlocking {
+		setupService.setup()
+	}
 
 	install(CallId) {
 		header(HttpHeaders.XRequestId)
