@@ -16,6 +16,7 @@
         <postgres_version>42.7.5</postgres_version>
         <exposed_version>0.61.0</exposed_version>
         <flyway_version>11.8.1</flyway_version>
+		<kolbasa_version>0.94.0</kolbasa_version>
         <jackson_version>2.19.0</jackson_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -182,6 +183,18 @@
             <artifactId>flyway-database-postgresql</artifactId>
             <version>${flyway_version}</version>
         </dependency>
+
+		<dependency>
+			<groupId>io.github.vgv</groupId>
+			<artifactId>kolbasa</artifactId>
+			<version>${kolbasa_version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>6.3.0</version>
+		</dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

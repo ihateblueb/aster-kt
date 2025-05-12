@@ -1,7 +1,7 @@
 package me.blueb.service
 
 import MigrationUtils
-import me.blueb.db.database
+import me.blueb.db.Database
 import me.blueb.db.table.AuthTable
 import me.blueb.db.table.NoteTable
 import me.blueb.db.table.UserPrivateTable
@@ -18,6 +18,8 @@ val configuration = Configuration()
 val identifierService = IdentifierService()
 val log = LoggerFactory.getLogger("MigrationService")
 
+val database = Database.database
+
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService {
 	val flyway = Flyway.configure()
@@ -26,7 +28,7 @@ class MigrationService {
 		.load()
 
 	fun generate() {
-		transaction(database) {
+		transaction() {
 			val tables = listOf(
 				AuthTable,
 				NoteTable,
