@@ -14,7 +14,7 @@ class Configuration {
     val name: String
 
     val url: Url
-    val registrations: InstanceRegistrationsMode
+    val registrations: InstanceRegistrationsType
     val identifiers: IdentifierType
 
     val database: ConfigurationDatabase
@@ -39,9 +39,9 @@ class Configuration {
 
 		var registrationsProp = config?.propertyOrNull("registrations")?.getString()
 		registrations = if (registrationsProp != null) {
-			InstanceRegistrationsMode.valueOf(lower(registrationsProp))
+			InstanceRegistrationsType.valueOf(lower(registrationsProp))
 		} else {
-			InstanceRegistrationsMode.Closed
+			InstanceRegistrationsType.Closed
 		}
 
 		var identifiersProp = config?.propertyOrNull("identifiers")?.getString()

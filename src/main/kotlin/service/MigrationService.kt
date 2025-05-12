@@ -2,10 +2,7 @@ package me.blueb.service
 
 import MigrationUtils
 import me.blueb.db.Database
-import me.blueb.db.table.AuthTable
-import me.blueb.db.table.NoteTable
-import me.blueb.db.table.UserPrivateTable
-import me.blueb.db.table.UserTable
+import me.blueb.db.table.*
 import me.blueb.model.Configuration
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
@@ -29,8 +26,10 @@ class MigrationService {
 
 	fun generate() {
 		transaction() {
+			// todo: automatically look for these
 			val tables = listOf(
 				AuthTable,
+				InviteTable,
 				NoteTable,
 				UserPrivateTable,
 				UserTable,

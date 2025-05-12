@@ -1,5 +1,5 @@
 package me.blueb.model
 
-enum class InstanceRegistrationsMode {
+enum class InstanceRegistrationsType {
     Open, Approval, Invite, Closed
 }

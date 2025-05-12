@@ -10,11 +10,13 @@ import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
+import me.blueb.db.table.UserTable
 import me.blueb.model.ApiError
-import me.blueb.model.InstanceRegistrationsMode
+import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.Configuration
 import me.blueb.service.IdentifierService
 import me.blueb.service.UserService
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
@@ -32,7 +34,7 @@ fun Route.register() {
     post("/api/register") {
         val body = call.receive<RegisterBody>()
 
-        if (configuration.registrations == InstanceRegistrationsMode.Closed) {
+        if (configuration.registrations == InstanceRegistrationsType.Closed) {
             call.respond(
                 status = HttpStatusCode.BadRequest,
                 message = ApiError(
@@ -43,7 +45,7 @@ fun Route.register() {
             return@post
         }
 
-        if (configuration.registrations == InstanceRegistrationsMode.Invite) {
+        if (configuration.registrations == InstanceRegistrationsType.Invite) {
             call.respond(
                 status = HttpStatusCode.NotImplemented,
                 message = ApiError(
@@ -60,6 +62,21 @@ fun Route.register() {
                 message = "Invite required",
             )*/
 
+        // todo: check if username is used
+		// ilike?
+        val existingUser = userService.get(listOf(UserTable.username like body.username.lowercase()))
+
+		if (existingUser != null) {
+			call.respond(
+				status = HttpStatusCode.BadRequest,
+				message = ApiError(
+					message = "Username taken",
+					requestId = call.callId
+				)
+			)
+			return@post
+		}
+
         val id = identifierService.generate()
         val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
 
@@ -69,7 +86,7 @@ fun Route.register() {
                 inbox = configuration.url.toString() + "user/" + id + "/inbox"
                 outbox = configuration.url.toString() + "user/" + id + "/outbox"
                 username = body.username
-                activated = configuration.registrations != InstanceRegistrationsMode.Approval
+                activated = configuration.registrations != InstanceRegistrationsType.Approval
             }
             UserPrivateEntity.new(id) {
                 password = hashedPassword
