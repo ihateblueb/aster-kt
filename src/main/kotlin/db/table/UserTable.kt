@@ -34,5 +34,7 @@ object UserTable : IdTable<String>("user") {
     val isCat = bool("isCat").default(false)
     val speakAsCat = bool("speakAsCat").default(false)
 
+	val publicKey = varchar("publicKey", length = 5000)
+
     override val primaryKey = PrimaryKey(NoteTable.id)
 }

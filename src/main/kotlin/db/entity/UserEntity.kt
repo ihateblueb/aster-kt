@@ -35,4 +35,6 @@ class UserEntity(id: EntityID<String>) : Entity<String>(id) {
 
     var isCat by UserTable.isCat
     var speakAsCat by UserTable.speakAsCat
+
+	var publicKey by UserTable.publicKey
 }

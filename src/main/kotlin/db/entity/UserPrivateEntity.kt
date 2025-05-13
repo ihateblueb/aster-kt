@@ -9,4 +9,5 @@ class UserPrivateEntity(id: EntityID<String>) : Entity<String>(id) {
     companion object : EntityClass<String, UserPrivateEntity>(UserPrivateTable)
 
     var password by UserPrivateTable.password
+	var privateKey by UserPrivateTable.privateKey
 }

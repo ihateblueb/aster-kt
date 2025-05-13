@@ -35,6 +35,8 @@ data class User(
 
     val isCat: Boolean = false,
     val speakAsCat: Boolean = false,
+
+	val publicKey: String,
 ) {
     companion object {
         fun fromEntity(entity: UserEntity) = User(
@@ -64,7 +66,9 @@ data class User(
             sensitive = entity.sensitive,
 
             isCat = entity.isCat,
-            speakAsCat = entity.speakAsCat
+            speakAsCat = entity.speakAsCat,
+
+			publicKey = entity.publicKey,
         )
     }
 }

@@ -14,7 +14,9 @@ import me.blueb.db.table.UserTable
 import me.blueb.model.ApiError
 import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.Configuration
+import me.blueb.model.KeyType
 import me.blueb.service.IdentifierService
+import me.blueb.service.KeypairService
 import me.blueb.service.UserService
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -30,6 +32,7 @@ fun Route.register() {
     val configuration = Configuration()
     val identifierService = IdentifierService()
     val userService = UserService()
+	val keypairService = KeypairService()
 
     post("/api/register") {
         val body = call.receive<RegisterBody>()
@@ -64,21 +67,26 @@ fun Route.register() {
 
         // todo: check if username is used
 		// ilike?
-        val existingUser = userService.get(listOf(UserTable.username like body.username.lowercase()))
+		// 		val existingUser = userService.get(
+		//			UserTable.username like body.username.lowercase()
+		//		)
+		//
+		//		if (existingUser != null) {
+		//			call.respond(
+		//				status = HttpStatusCode.BadRequest,
+		//				message = ApiError(
+		//					message = "Username taken",
+		//					requestId = call.callId
+		//				)
+		//			)
+		//			return@post
+		//		}
 
-		if (existingUser != null) {
-			call.respond(
-				status = HttpStatusCode.BadRequest,
-				message = ApiError(
-					message = "Username taken",
-					requestId = call.callId
-				)
-			)
-			return@post
-		}
 
         val id = identifierService.generate()
         val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
+
+		val keypair = keypairService.generate()
 
         transaction {
             UserEntity.new(id) {
@@ -87,9 +95,11 @@ fun Route.register() {
                 outbox = configuration.url.toString() + "user/" + id + "/outbox"
                 username = body.username
                 activated = configuration.registrations != InstanceRegistrationsType.Approval
+				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
             }
             UserPrivateEntity.new(id) {
                 password = hashedPassword
+				privateKey = keypairService.keyToPem(KeyType.Private, keypair)
             }
         }
 

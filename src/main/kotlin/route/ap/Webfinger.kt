@@ -35,10 +35,8 @@ fun Route.webfinger() {
             .replace("@", "")
 
         val user = userService.get(
-            listOf(
-                UserTable.username eq username,
-                UserTable.host eq null
-            )
+			UserTable.username eq username
+				and(UserTable.host eq null)
         )
 
         if (user == null || user.suspended || !user.activated) {
