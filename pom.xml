@@ -18,6 +18,7 @@
         <flyway_version>11.8.1</flyway_version>
 		<kolbasa_version>0.95.0</kolbasa_version>
         <jackson_version>2.19.0</jackson_version>
+		<pf4j_version>3.13.0</pf4j_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <main.class>me.blueb.ApplicationKt</main.class>
@@ -219,7 +220,13 @@
             <scope>implementation</scope>
         </dependency>
 
-    </dependencies>
+		<dependency>
+			<groupId>org.pf4j</groupId>
+			<artifactId>pf4j</artifactId>
+			<version>${pf4j_version}</version>
+		</dependency>
+
+	</dependencies>
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <resources>

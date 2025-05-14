@@ -18,6 +18,7 @@ fun Application.configureRouting() {
         webfinger()
         apUser()
 
+		login()
         register()
         user()
     }

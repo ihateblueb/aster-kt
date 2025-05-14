@@ -7,6 +7,9 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
@@ -16,6 +19,7 @@ import me.blueb.model.ApiError
 import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.Configuration
 import me.blueb.model.KeyType
+import me.blueb.model.User
 import me.blueb.service.IdentifierService
 import me.blueb.service.KeypairService
 import me.blueb.service.UserService
@@ -97,7 +101,7 @@ fun Route.register() {
 				username = body.username
 				activated = configuration.registrations != InstanceRegistrationsType.Approval
 				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
-				// createdAt
+				createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 			}
 			UserPrivateEntity.new(id) {
 				password = hashedPassword
@@ -105,6 +109,13 @@ fun Route.register() {
 			}
 		}
 
-        call.respond(userService.getById(id) as Any)
+		val user = userService.getById(id)
+
+		if (user == null) {
+			call.respond(HttpStatusCode.NotFound)
+			return@post
+		}
+
+        call.respond(User.fromEntity(user))
     }
 }

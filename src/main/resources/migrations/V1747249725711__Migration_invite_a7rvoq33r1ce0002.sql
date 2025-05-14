@@ -1,0 +1,1 @@
+ALTER TABLE invite ADD "usedAt" TIMESTAMP NULL;

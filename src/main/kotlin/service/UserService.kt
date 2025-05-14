@@ -1,6 +1,7 @@
 package me.blueb.service
 
 import me.blueb.db.entity.UserEntity
+import me.blueb.db.entity.UserPrivateEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.db.table.UserTable
 import org.jetbrains.exposed.sql.Op
@@ -9,6 +10,12 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 class UserService() {
 	suspend fun get(where: Op<Boolean>): UserEntity? = suspendTransaction {
 		UserEntity
+			.find { where }
+			.singleOrNull()
+	}
+
+	suspend fun getPrivate(where: Op<Boolean>): UserPrivateEntity? = suspendTransaction {
+		UserPrivateEntity
 			.find { where }
 			.singleOrNull()
 	}

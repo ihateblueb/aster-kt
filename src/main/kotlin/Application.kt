@@ -11,7 +11,12 @@ import kotlinx.serialization.json.Json
 import me.blueb.db.Database
 import me.blueb.service.IdentifierService
 import me.blueb.service.MigrationService
+import me.blueb.service.PluginService
 import me.blueb.service.SetupService
+
+val identifierService = IdentifierService()
+val setupService = SetupService()
+val pluginService = PluginService()
 
 fun main(args: Array<String>) {
 	if (args.isNotEmpty()) {
@@ -33,9 +38,6 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-	val identifierService = IdentifierService()
-	val setupService = SetupService()
-
 	// access connection before using it
 	Database.database
 
@@ -44,6 +46,8 @@ fun Application.module() {
 	runBlocking {
 		setupService.setup()
 	}
+
+	pluginService.initialize()
 
 	install(CallId) {
 		header(HttpHeaders.XRequestId)
