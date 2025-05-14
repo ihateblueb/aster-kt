@@ -3,6 +3,7 @@ package me.blueb.db.table
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.kotlin.datetime.date
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object NoteTable : IdTable<String>("note") {
     override val id = varchar("id", length = 125).uniqueIndex("unique_note_id").entityId()
@@ -15,8 +16,8 @@ object NoteTable : IdTable<String>("note") {
     val to = array<String>("to").index("note_to_index")
     val tags = array<String>("tags").index("note_tag_index")
 
-    val createdAt = date("createdAt")
-    val updatedAt = date("updatedAt")
+    val createdAt = datetime("createdAt")
+	val updatedAt = datetime("updatedAt").nullable()
 
     override val primaryKey = PrimaryKey(id)
 }

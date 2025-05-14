@@ -1,8 +1,12 @@
 package me.blueb.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
+import me.blueb.db.suspendTransaction
 import me.blueb.db.table.UserTable
 import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.KeyType
@@ -49,13 +53,14 @@ class SetupService {
 
 			val keypair = keypairService.generate()
 
-			transaction {
+			suspendTransaction {
 				UserEntity.new(id) {
 					apId = configuration.url.toString() + "user/" + id
 					inbox = configuration.url.toString() + "user/" + id + "/inbox"
 					outbox = configuration.url.toString() + "user/" + id + "/outbox"
 					username = "instance.actor"
 					activated = configuration.registrations != InstanceRegistrationsType.Approval
+					createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 					publicKey = keypairService.keyToPem(KeyType.Public, keypair)
 				}
 				UserPrivateEntity.new(id) {

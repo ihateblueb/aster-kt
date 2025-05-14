@@ -3,6 +3,7 @@ package me.blueb.db.table
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.kotlin.datetime.date
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object InviteTable : IdTable<String>("invite") {
 	override val id = varchar("id", length = 125).uniqueIndex("unique_invite_id").entityId()
@@ -12,7 +13,8 @@ object InviteTable : IdTable<String>("invite") {
 	val user = varchar("user", length = 125).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
 	val creator = varchar("creator", length = 125).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
 
-	val createdAt = date("createdAt")
+	val createdAt = datetime("createdAt")
+	val usedAt = datetime("usedAt").nullable()
 
 	override val primaryKey = PrimaryKey(id)
 }

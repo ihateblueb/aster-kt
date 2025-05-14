@@ -3,6 +3,7 @@ package me.blueb.db.table
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object UserTable : IdTable<String>("user") {
     override val id: Column<EntityID<String>> = varchar("id", length = 125).uniqueIndex("unique_user_id").entityId()
@@ -33,6 +34,9 @@ object UserTable : IdTable<String>("user") {
 
     val isCat = bool("isCat").default(false)
     val speakAsCat = bool("speakAsCat").default(false)
+
+	val createdAt = datetime("createdAt")
+	val updatedAt = datetime("updatedAt").nullable()
 
 	val publicKey = varchar("publicKey", length = 5000)
 

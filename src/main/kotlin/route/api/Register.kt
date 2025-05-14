@@ -10,6 +10,7 @@ import io.ktor.server.routing.post
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
+import me.blueb.db.suspendTransaction
 import me.blueb.db.table.UserTable
 import me.blueb.model.ApiError
 import me.blueb.model.InstanceRegistrationsType
@@ -88,20 +89,21 @@ fun Route.register() {
 
 		val keypair = keypairService.generate()
 
-        transaction {
-            UserEntity.new(id) {
-                apId = configuration.url.toString() + "user/" + id
-                inbox = configuration.url.toString() + "user/" + id + "/inbox"
-                outbox = configuration.url.toString() + "user/" + id + "/outbox"
-                username = body.username
-                activated = configuration.registrations != InstanceRegistrationsType.Approval
+		suspendTransaction {
+ 			UserEntity.new(id) {
+				apId = configuration.url.toString() + "user/" + id
+				inbox = configuration.url.toString() + "user/" + id + "/inbox"
+				outbox = configuration.url.toString() + "user/" + id + "/outbox"
+				username = body.username
+				activated = configuration.registrations != InstanceRegistrationsType.Approval
 				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
-            }
-            UserPrivateEntity.new(id) {
-                password = hashedPassword
+				// createdAt
+			}
+			UserPrivateEntity.new(id) {
+				password = hashedPassword
 				privateKey = keypairService.keyToPem(KeyType.Private, keypair)
-            }
-        }
+			}
+		}
 
         call.respond(userService.getById(id) as Any)
     }

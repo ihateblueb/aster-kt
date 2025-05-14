@@ -10,6 +10,6 @@ class AuthEntity(id: EntityID<String>) : Entity<String>(id) {
 	companion object : EntityClass<String, AuthEntity>(AuthTable)
 
 	var token by AuthTable.token
-	var user by referencedOn(UserTable)
+	var user by referencedOn(UserTable) // todo: wrong
 	var createdAt by AuthTable.createdAt
 }
