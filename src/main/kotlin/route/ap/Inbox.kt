@@ -12,4 +12,8 @@ fun Route.inbox() {
 	post("/inbox") {
 		call.respond(HttpStatusCode.NotImplemented)
 	}
+
+	post("/user/{id}/inbox") {
+		call.respond(HttpStatusCode.NotImplemented)
+	}
 }

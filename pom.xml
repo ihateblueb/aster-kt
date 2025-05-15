@@ -111,11 +111,6 @@
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-resources-jvm</artifactId>
-            <version>${ktor_version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
             <artifactId>ktor-server-swagger-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
@@ -129,12 +124,6 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-call-id-jvm</artifactId>
             <version>${ktor_version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.179</version>
         </dependency>
 
         <dependency>

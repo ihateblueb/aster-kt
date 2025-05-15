@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 import me.blueb.db.table.UserPrivateTable
 import me.blueb.db.table.UserTable
 import me.blueb.model.ApiError
+import me.blueb.model.User
 import me.blueb.service.AuthService
 import me.blueb.service.UserService
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -24,7 +25,8 @@ data class LoginBody(
 
 @Serializable
 data class LoginResponse(
-	val token: String
+	val token: String,
+	val user: User
 )
 
 fun Route.login() {
@@ -100,8 +102,8 @@ fun Route.login() {
 			return@post
 		}
 
-		val token = authService.registerToken(user.id.toString())
+		val token = authService.registerToken(user)
 
-		call.respond(LoginResponse(token))
+		call.respond(LoginResponse(token, User.fromEntity(user)))
     }
 }

@@ -10,8 +10,8 @@ object InviteTable : IdTable<String>("invite") {
 
 	val code = varchar("code", length = 275).uniqueIndex("unique_invite_code")
 
-	val user = varchar("user", length = 125).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
-	val creator = varchar("creator", length = 125).references(UserTable.id, onDelete = ReferenceOption.CASCADE)
+	val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
+	val creator = reference("creator", UserTable, onDelete = ReferenceOption.CASCADE)
 
 	val createdAt = datetime("createdAt")
 	val usedAt = datetime("usedAt").nullable()

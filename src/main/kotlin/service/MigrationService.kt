@@ -7,18 +7,20 @@ import me.blueb.model.Configuration
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 const val migrationPath: String = "src/main/resources/migrations"
-
-val configuration = Configuration()
-val identifierService = IdentifierService()
-val log = LoggerFactory.getLogger("MigrationService")
 
 val database = Database.database
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService {
+	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+	private val configuration = Configuration()
+	private val identifierService = IdentifierService()
+
 	val flyway = Flyway.configure()
 		.dataSource("jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}", configuration.database.user, configuration.database.password)
 		.locations("filesystem:$migrationPath")
@@ -36,7 +38,7 @@ class MigrationService {
 			)
 
 			for (table in tables) {
-				log.info("Generating migration script for table " + table.tableName)
+				logger.info("Generating migration script for table " + table.tableName)
 				MigrationUtils.generateMigrationScript(
 					table,
 					scriptDirectory = migrationPath,

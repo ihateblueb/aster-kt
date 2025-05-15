@@ -1,5 +1,6 @@
 package me.blueb.db.entity
 
+import me.blueb.db.table.AuthTable
 import me.blueb.db.table.InviteTable
 import me.blueb.db.table.UserTable
 import org.jetbrains.exposed.dao.Entity
@@ -11,8 +12,8 @@ class InviteEntity(id: EntityID<String>) : Entity<String>(id) {
 
 	var code by InviteTable.code
 
-	var user by referencedOn(UserTable)
-	var creator by referencedOn(UserTable)
+	var user by UserEntity referencedOn InviteTable.user
+	var creator by UserEntity referencedOn InviteTable.user
 
 	var createdAt by InviteTable.createdAt
 }

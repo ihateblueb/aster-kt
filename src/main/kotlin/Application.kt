@@ -5,7 +5,6 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.resources.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import me.blueb.db.Database
@@ -14,9 +13,9 @@ import me.blueb.service.MigrationService
 import me.blueb.service.PluginService
 import me.blueb.service.SetupService
 
-val identifierService = IdentifierService()
-val setupService = SetupService()
-val pluginService = PluginService()
+private val identifierService = IdentifierService()
+private val setupService = SetupService()
+private val pluginService = PluginService()
 
 fun main(args: Array<String>) {
 	if (args.isNotEmpty()) {
@@ -56,8 +55,6 @@ fun Application.module() {
 		}
 		generate { identifierService.generate() }
 	}
-
-	install(Resources)
 
 	install(ContentNegotiation) {
 		json(

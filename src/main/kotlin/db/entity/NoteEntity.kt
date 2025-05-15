@@ -10,7 +10,7 @@ class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
     companion object : EntityClass<String, NoteEntity>(NoteTable)
 
     var apId by NoteTable.apId
-    var user by referencedOn(UserTable)
+    var user by UserEntity referencedOn NoteTable.user
 
     var content by NoteTable.content
 
