@@ -12,7 +12,7 @@ class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
 	var conversation by NoteTable.conversation
 
     var user by UserEntity referencedOn NoteTable.user
-	var replyingTo by  NoteEntity referencedOn NoteTable.replyingTo
+	var replyingTo by NoteEntity optionalReferencedOn NoteTable.replyingTo
 
     var content by NoteTable.content
 
