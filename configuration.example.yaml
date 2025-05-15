@@ -1,0 +1,25 @@
+# Display name for instance
+name: "Aster"
+
+# URL instance is to be accessible by.
+# Do not reuse domains after starting an instance.
+# Do not change after you start using this instance.
+url: "https://kt.example.com/"
+
+# options:
+#   open      - anyone can register
+#   approval  - anyone can register but cannot use their account until approved
+#   invite    - only people with invite codes can register
+#   closed    - nobody can register
+registrations: invite
+
+# ID format to use. Keep as default unless migrating from elsewhere.
+# options: aidx, aid, uuid
+identifiers: aidx
+
+database:
+    host: localhost
+    port: 5432
+    db: aster
+    user: aster
+    password: aster
