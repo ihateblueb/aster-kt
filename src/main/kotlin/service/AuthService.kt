@@ -6,12 +6,22 @@ import kotlinx.datetime.toLocalDateTime
 import me.blueb.db.entity.AuthEntity
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.suspendTransaction
-import org.jetbrains.exposed.dao.id.EntityID
+import me.blueb.db.table.AuthTable
+import org.jetbrains.exposed.sql.Op
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.math.BigInteger
 import java.security.SecureRandom
 
 class AuthService {
 	private val identifierService = IdentifierService()
+
+	suspend fun get(where: Op<Boolean>): AuthEntity? = suspendTransaction {
+		AuthEntity
+			.find { where }
+			.singleOrNull()
+	}
+
+	suspend fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
 	fun generateToken() : String {
 		val random = SecureRandom()

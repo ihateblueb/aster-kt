@@ -1,0 +1,44 @@
+package me.blueb.model
+
+import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
+import me.blueb.db.entity.NoteEntity
+import me.blueb.db.suspendTransaction
+
+@Serializable
+data class Note(
+	val id: String,
+
+	val apId: String,
+	val conversation: String? = null,
+
+	val user: User,
+	val replyingTo: Note? = null,
+	
+	val content: String,
+
+	val visibility: Visibility,
+	val to: List<String>? = null,
+	val tags: List<String>? = null,
+
+	val createdAt: LocalDateTime,
+	val updatedAt: LocalDateTime? = null,
+) {
+	companion object {
+		fun fromEntity(entity: NoteEntity) {
+			Note(
+				id = entity.id.toString(),
+				apId = entity.apId,
+				conversation = entity.conversation,
+				user = User.fromEntity(entity.user),
+				replyingTo = null, // todo: fix Note.fromEntity(entity.replyingTo) recursion
+				content = entity.content,
+				visibility = entity.visibility,
+				to = entity.to,
+				tags = entity.tags,
+				createdAt = entity.createdAt,
+				updatedAt = entity.updatedAt,
+			)
+		}
+	}
+}

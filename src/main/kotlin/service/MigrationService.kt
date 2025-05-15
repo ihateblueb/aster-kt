@@ -27,7 +27,7 @@ class MigrationService {
 		.load()
 
 	fun generate() {
-		transaction() {
+		transaction(database) {
 			// todo: automatically look for these
 			val tables = listOf(
 				AuthTable,

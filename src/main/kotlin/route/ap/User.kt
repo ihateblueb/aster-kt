@@ -19,8 +19,6 @@ fun Route.apUser() {
 			return@get
         }
 
-        call.respond(
-            ApActor.fromEntity(user),
-        )
+        call.respond(ApActor.fromEntity(user))
     }
 }

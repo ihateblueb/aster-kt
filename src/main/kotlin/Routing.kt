@@ -15,10 +15,12 @@ fun Application.configureRouting() {
 		hostMeta()
 		inbox()
         nodeinfo()
-        webfinger()
+		apNote()
         apUser()
+		webfinger()
 
 		login()
+		note()
         register()
         user()
     }

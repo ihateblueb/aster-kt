@@ -71,5 +71,6 @@ fun Application.module() {
 		)
 	}
 
+	configureAuthentication()
 	configureRouting()
 }
