@@ -2,13 +2,13 @@ package me.blueb.service
 
 import me.blueb.model.Configuration
 import me.blueb.model.IdentifierType
+import me.blueb.util.aidCounter
 import java.util.Date
 import java.util.UUID
 
 class IdentifierService {
     private val configuration = Configuration()
 
-    var aidCounter = 0
     var aidAlphabet =
         listOf(
             "0",

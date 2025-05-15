@@ -72,26 +72,22 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-core</artifactId>
-            <version>3.1.2</version>
-            <scope>implementation</scope>
+			<version>${ktor_version}</version>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-openapi</artifactId>
-            <version>3.1.2</version>
-            <scope>implementation</scope>
+			<version>${ktor_version}</version>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-csrf</artifactId>
-            <version>3.1.2</version>
-            <scope>implementation</scope>
+            <version>${ktor_version}</version>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-call-logging</artifactId>
-            <version>3.1.2</version>
-            <scope>implementation</scope>
+			<version>${ktor_version}</version>
         </dependency>
 
         <dependency>
@@ -213,6 +209,12 @@
 			<groupId>org.pf4j</groupId>
 			<artifactId>pf4j</artifactId>
 			<version>${pf4j_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-server-cors</artifactId>
+			<version>3.1.2</version>
+			<scope>implementation</scope>
 		</dependency>
 
 	</dependencies>
