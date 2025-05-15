@@ -23,4 +23,10 @@ class UserService() {
     suspend fun getById(id: String): UserEntity? = get(UserTable.id eq id)
     suspend fun getByApId(apId: String): UserEntity? = get(UserTable.apId eq apId)
 	suspend fun getByUsername(username: String): UserEntity? = get(UserTable.username eq username)
+
+	suspend fun count(where: Op<Boolean>): Long = suspendTransaction {
+		UserEntity
+			.find { where }
+			.count()
+	}
 }
