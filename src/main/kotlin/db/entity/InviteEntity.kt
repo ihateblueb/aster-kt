@@ -1,8 +1,6 @@
 package me.blueb.db.entity
 
-import me.blueb.db.table.AuthTable
 import me.blueb.db.table.InviteTable
-import me.blueb.db.table.UserTable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID

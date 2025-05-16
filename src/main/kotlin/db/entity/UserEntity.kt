@@ -1,6 +1,5 @@
 package me.blueb.db.entity
 
-import me.blueb.db.table.UserPrivateTable
 import me.blueb.db.table.UserTable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass

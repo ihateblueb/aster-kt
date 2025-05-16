@@ -14,7 +14,6 @@ import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
 import me.blueb.db.suspendTransaction
-import me.blueb.db.table.UserTable
 import me.blueb.model.ApiError
 import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.Configuration
@@ -23,8 +22,6 @@ import me.blueb.model.User
 import me.blueb.service.IdentifierService
 import me.blueb.service.KeypairService
 import me.blueb.service.UserService
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
-import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 data class RegisterBody(

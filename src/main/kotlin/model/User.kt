@@ -1,6 +1,5 @@
 package me.blueb.model
 
-import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.NoteEntity
 import me.blueb.db.entity.UserEntity
