@@ -13,7 +13,6 @@ import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.KeyType
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.math.BigInteger

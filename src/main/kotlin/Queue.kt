@@ -5,10 +5,17 @@ import kolbasa.queue.PredefinedDataTypes
 import kolbasa.queue.Queue
 import kolbasa.schema.SchemaHelpers
 import me.blueb.db.Database
+import me.blueb.service.QueueService
+
+private val queueService = QueueService()
 
 fun Application.configureQueue() {
-	val inboxQueue = Queue.of("inbox", PredefinedDataTypes.String)
-	val deliverQueue = Queue.of("deliver", PredefinedDataTypes.String)
-
-	SchemaHelpers.updateDatabaseSchema(Database.dataSource, listOf(inboxQueue, deliverQueue))
+	SchemaHelpers.updateDatabaseSchema(
+		Database.dataSource,
+		listOf(
+			queueService.inboxQueue,
+			queueService.deliverQueue,
+			queueService.systemQueue
+		)
+	)
 }

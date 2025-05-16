@@ -9,8 +9,13 @@ class PluginService {
 	val pluginManager = me.blueb.util.pluginManager
 
 	fun initialize() {
+		pluginManager.loadPlugins()
+
+		logger.info("${pluginManager.plugins.count()} plugins loaded")
 		pluginManager.plugins.forEach { plugin ->
 			logger.info("Loaded plugin ${plugin.pluginId}")
 		}
+
+		pluginManager.startPlugins()
 	}
 }

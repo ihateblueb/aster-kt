@@ -55,9 +55,6 @@ fun Application.module() {
 
 	install(CallId) {
 		header(HttpHeaders.XRequestId)
-		verify { callId: String ->
-			callId.isNotEmpty()
-		}
 		generate { identifierService.generate() }
 	}
 

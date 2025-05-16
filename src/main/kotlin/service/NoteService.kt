@@ -5,6 +5,7 @@ import me.blueb.db.entity.UserEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.db.table.NoteTable
 import me.blueb.db.table.UserTable
+import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
@@ -13,6 +14,9 @@ class NoteService {
 		NoteEntity
 			.find { where }
 			.singleOrNull()
+			?.apply { // todo: test
+				this.load(UserEntity::id)
+			}
 	}
 
 	suspend fun getById(id: String): NoteEntity? = get(NoteTable.id eq id)
@@ -24,4 +28,6 @@ class NoteService {
 			.select(where)
 			.count()
 	}
+
+	suspend fun delete(where: Op<Boolean>) = get(where)?.delete()
 }

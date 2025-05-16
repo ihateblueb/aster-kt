@@ -26,7 +26,9 @@ fun Application.configureAuthentication() {
 			authenticate { credential ->
 				val auth = authService.getByToken(credential.token)
 
-				if (auth != null) {
+				if (auth != null ) {
+					// todo: if older than 3 months, invalidate
+
 					var authId = ""
 
 					suspendTransaction {

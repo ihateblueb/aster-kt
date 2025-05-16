@@ -1,4 +1,4 @@
-package me.blueb.model
+package me.blueb.model.ap
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.add
@@ -6,7 +6,7 @@ import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-val LdContext: JsonArray = buildJsonArray {
+val ApContext: JsonArray = buildJsonArray {
 	add("https://www.w3.org/ns/activitystreams")
 	add("https://w3id.org/security/v1")
 	add(buildJsonObject {
