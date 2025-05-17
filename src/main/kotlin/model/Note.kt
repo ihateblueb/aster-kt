@@ -13,7 +13,8 @@ data class Note(
 
 	val user: User,
 	val replyingTo: Note? = null,
-	
+
+	val cw: String? = null,
 	val content: String,
 
 	val visibility: Visibility,
@@ -31,6 +32,7 @@ data class Note(
 				conversation = entity.conversation,
 				user = User.fromEntity(entity.user),
 				replyingTo = null, // todo: fix Note.fromEntity(entity.replyingTo) recursion
+				cw = entity.cw,
 				content = entity.content,
 				visibility = entity.visibility,
 				to = entity.to,

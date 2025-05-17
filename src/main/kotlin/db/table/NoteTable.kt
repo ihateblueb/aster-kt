@@ -14,6 +14,7 @@ object NoteTable : IdTable<String>("note") {
 	val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
 	val replyingTo = reference("replyingTo", NoteTable, onDelete = ReferenceOption.CASCADE).nullable()
 
+	val cw = varchar("cw", length = 5000).nullable().index("note_cw_index")
     val content = varchar("content", length = 25000).index("note_content_index")
 
 	val visibility = enumeration("visibility", Visibility::class)

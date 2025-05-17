@@ -21,4 +21,12 @@ fun Route.apUser() {
 
         call.respond(ApActor.fromEntity(user))
     }
+
+	get("/user/{id}/followers") {
+		call.respond(HttpStatusCode.NotImplemented)
+	}
+
+	get("/user/{id}/following") {
+		call.respond(HttpStatusCode.NotImplemented)
+	}
 }

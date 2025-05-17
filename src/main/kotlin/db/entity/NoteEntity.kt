@@ -14,6 +14,7 @@ class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
     var user by UserEntity referencedOn NoteTable.user
 	var replyingTo by NoteEntity optionalReferencedOn NoteTable.replyingTo
 
+	var cw by NoteTable.cw
     var content by NoteTable.content
 
 	var visibility by NoteTable.visibility

@@ -22,6 +22,7 @@ import me.blueb.model.User
 import me.blueb.service.IdentifierService
 import me.blueb.service.KeypairService
 import me.blueb.service.UserService
+import me.blueb.service.ValidationService
 
 @Serializable
 data class RegisterBody(
@@ -32,9 +33,11 @@ data class RegisterBody(
 
 fun Route.register() {
     val configuration = Configuration()
+
     val identifierService = IdentifierService()
     val userService = UserService()
 	val keypairService = KeypairService()
+	val validationService = ValidationService()
 
     post("/api/register") {
         val body = call.receive<RegisterBody>()
@@ -67,6 +70,17 @@ fun Route.register() {
                 message = "Invite required",
             )*/
 
+		if (validationService.containsNonAlphanumeric(body.username)) {
+			call.respond(
+				status = HttpStatusCode.BadRequest,
+				message = ApiError(
+					message = "Username contains non-alphanumeric characters",
+					requestId = call.callId
+				)
+			)
+			return@post
+		}
+
         // todo: check if username is used
 		// ilike?
 		// 		val existingUser = userService.get(
@@ -83,7 +97,6 @@ fun Route.register() {
 		//			)
 		//			return@post
 		//		}
-
 
         val id = identifierService.generate()
         val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())

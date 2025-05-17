@@ -33,8 +33,9 @@ class MigrationService {
 				AuthTable,
 				InviteTable,
 				NoteTable,
-				UserPrivateTable,
+				PolicyTable,
 				UserTable,
+				UserPrivateTable,
 			)
 
 			for (table in tables) {

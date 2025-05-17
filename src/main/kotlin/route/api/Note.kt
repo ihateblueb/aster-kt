@@ -27,6 +27,7 @@ import org.apache.commons.text.StringEscapeUtils
 
 @Serializable
 data class PostNoteBody(
+	val cw: String? = null,
 	val content: String? = null,
 	val visibility: String,
 )
@@ -89,6 +90,7 @@ fun Route.note() {
 				NoteEntity.new(id) {
 					apId = configuration.url.toString() + "note/" + id
 					user = authenticatedUser
+					cw = StringEscapeUtils.escapeHtml4(body.cw)
 					content = StringEscapeUtils.escapeHtml4(body.content)
 					visibility = Visibility.fromString(body.visibility)
 					to = listOf()
