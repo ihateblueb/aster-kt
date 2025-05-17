@@ -23,3 +23,16 @@ database:
     db: aster
     user: aster
     password: aster
+
+# Delay is a number in seconds between each retry attempt at a failed job, increases exponentially
+# Threads is how many threads to dedicate to the thread pool of a queue's processors
+queue:
+    inbox:
+        delay: 300
+        threads: 8
+    deliver:
+        delay: 600
+        threads: 6
+    system:
+        delay: 60
+        threads: 4

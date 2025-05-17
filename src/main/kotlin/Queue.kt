@@ -16,4 +16,6 @@ fun Application.configureQueue() {
 			queueService.systemQueue
 		)
 	)
+
+	queueService.initConsumers()
 }
