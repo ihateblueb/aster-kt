@@ -1,9 +1,7 @@
 package me.blueb.model.ap
 
 import kotlinx.serialization.Serializable
-import me.blueb.db.entity.NoteEntity
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.suspendTransaction
+import me.blueb.model.Note
 import me.blueb.model.Visibility
 import me.blueb.service.ap.ApVisibilityService
 
@@ -36,14 +34,14 @@ data class ApNote(
 
 ) : ApObjectWithContext() {
 	companion object {
-		fun fromEntity(note: NoteEntity) {
+		fun fromEntity(note: Note): ApNote {
 			val toCc = apVisibilityService.visibilityToCc(
 				note.visibility,
 				followersUrl = null,
 				to = note.to
 			)
 
-			ApNote(
+			return ApNote(
 				id = note.apId,
 				actor = note.user.apId,
 				content = note.content,

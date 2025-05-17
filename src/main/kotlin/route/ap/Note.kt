@@ -13,14 +13,16 @@ fun Route.apNote() {
 	val noteService = NoteService()
 
 	get("/note/{id}") {
+		call.response.headers.append("Content-Type", "application/activity+json")
+
 		val note = noteService.getById(call.parameters.getOrFail("id"))
 
 		if (
 			note == null ||
 			!note.user.activated ||
 			note.user.suspended ||
-			note.visibility !== Visibility.Public ||
-			note.visibility !== Visibility.Unlisted
+			(note.visibility != Visibility.Public &&
+				note.visibility != Visibility.Unlisted)
 		) {
 			call.respond(HttpStatusCode.NotFound)
 			return@get

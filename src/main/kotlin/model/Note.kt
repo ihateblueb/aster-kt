@@ -3,7 +3,6 @@ package me.blueb.model
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.NoteEntity
-import me.blueb.db.suspendTransaction
 
 @Serializable
 data class Note(
@@ -25,8 +24,8 @@ data class Note(
 	val updatedAt: LocalDateTime? = null,
 ) {
 	companion object {
-		fun fromEntity(entity: NoteEntity) {
-			Note(
+		fun fromEntity(entity: NoteEntity): Note {
+			return Note(
 				id = entity.id.toString(),
 				apId = entity.apId,
 				conversation = entity.conversation,

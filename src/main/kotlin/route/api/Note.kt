@@ -10,7 +10,6 @@ import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
-import io.ktor.server.routing.route
 import io.ktor.server.util.getOrFail
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -21,7 +20,6 @@ import me.blueb.db.entity.NoteEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.model.ApiError
 import me.blueb.model.Configuration
-import me.blueb.model.Note
 import me.blueb.model.Visibility
 import me.blueb.service.IdentifierService
 import me.blueb.service.NoteService
@@ -46,14 +44,14 @@ fun Route.note() {
 			note == null ||
 			!note.user.activated ||
 			note.user.suspended ||
-			note.visibility !== Visibility.Public ||
-			note.visibility !== Visibility.Unlisted
+			(note.visibility != Visibility.Public &&
+				note.visibility != Visibility.Unlisted)
 		) {
 			call.respond(HttpStatusCode.NotFound)
 			return@get
 		}
 
-		call.respond(Note.fromEntity(note))
+		call.respond(note)
 	}
 
 	get("/api/note/{id}/replies") {
