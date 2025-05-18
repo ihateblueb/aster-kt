@@ -20,7 +20,6 @@ export default tseslint.config(
 		},
 		rules: {
 			...reactHooks.configs.recommended.rules,
-			'indent': ["error", "tab"],
 			'react-refresh/only-export-components': [
 				'warn',
 				{ allowConstantExport: true },

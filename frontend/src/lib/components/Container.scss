@@ -1,0 +1,38 @@
+.container {
+	display: flex;
+	flex-direction: column;
+
+	&.center {
+		width: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&.left {
+		width: 100%;
+		align-items: flex-start;
+		justify-content: center;
+	}
+
+	&.right {
+		width: 100%;
+		align-items: flex-end;
+		justify-content: center;
+	}
+
+	&.sm {
+		gap: 4px;
+	}
+
+	&.md {
+		gap: 8px;
+	}
+
+	&.lg {
+		gap: 10px;
+	}
+
+	&.xl {
+		gap: 12px;
+	}
+}

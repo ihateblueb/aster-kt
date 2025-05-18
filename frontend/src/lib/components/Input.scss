@@ -1,0 +1,32 @@
+.input {
+	display: flex;
+	align-items: center;
+
+	padding: 8px 10px;
+
+	color: var(--tx-2);
+	background-color: var(--bg-3);
+
+	box-shadow: var(--funky-effect);
+	border-radius: var(--br-md);
+	border: none;
+
+	width: 225px;
+
+	&.wide {
+		width: 100%;
+	}
+
+	::placeholder {
+		color: var(--tx-3);
+	}
+}
+
+.inputLabel {
+	display: block;
+
+	color: var(--tx-2);
+	font-size: var(--fs-sm);
+
+	margin: 4px 0;
+}
