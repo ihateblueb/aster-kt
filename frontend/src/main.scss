@@ -1,0 +1,63 @@
+@use "./lib/font/inter";
+
+:root {
+	--font: 'Inter', 'Arial', sans-serif;
+	--font-features: 'cv05', 'cv08';
+
+	--fs-mn: 0%;
+	--fs-xs: 0.75rem;
+	--fs-sm: 0.8rem;
+	--fs-md: 0.9rem;
+	--fs-lg: 1.05rem;
+	--fs-xl: 1.1rem;
+	--fs-mx: 100%;
+
+	--br-mn: 0px;
+	--br-xxs: 2px;
+	--br-xs: 4px;
+	--br-sm: 6px;
+	--br-md: 10px;
+	--br-lg: 12px;
+	--br-xl: 14px;
+	--br-xxl: 18px;
+	--br-mx: 99999px;
+
+	--blur-xs: 2px;
+	--blur-sm: 4px;
+	--blur-md: 8px;
+	--blur-lg: 12px;
+	--blur-xl: 20px;
+
+	--funky-effect:
+		inset 0 -0.1rem 2.5px #00000020, inset 0 0.035rem 1px #ffffff05,
+		inset 0 0.055rem 2.5px #ffffff05;
+
+	--bg-1: #140e1b;
+	--bg-2: #1a1423;
+	--bg-3: #261e37;
+	--bg-4: #3f325a;
+
+	--tx-1: #f3efff;
+	--tx-2: #d8cdf1;
+	--tx-3: #9688bd;
+}
+
+html {
+	font-family: var(--font);
+	font-feature-settings: var(--font-features);
+	font-size: var(--fs-md);
+
+	background-color: var(--bg-1);
+	color: var(--tx-2);
+}
+
+body {
+	display: flex;
+	justify-content: center;
+
+	height: 100vh;
+	width: 100vw;
+	box-sizing: border-box;
+
+	margin: 0;
+}
