@@ -10,16 +10,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-const val migrationPath: String = "src/main/resources/migrations"
-
-val database = Database.database
-
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
 	private val configuration = Configuration()
 	private val identifierService = IdentifierService()
+
+	private val migrationPath: String = "src/main/resources/migrations"
+	private val database = Database.database
 
 	val flyway = Flyway.configure()
 		.dataSource("jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}", configuration.database.user, configuration.database.password)
@@ -34,6 +33,8 @@ class MigrationService {
 				InviteTable,
 				NoteTable,
 				PolicyTable,
+				RelationshipTable,
+				RoleTable,
 				UserTable,
 				UserPrivateTable,
 			)

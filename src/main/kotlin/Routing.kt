@@ -9,6 +9,7 @@ import me.blueb.route.api.register
 import me.blueb.route.ap.*
 import me.blueb.route.api.*
 import me.blueb.route.api.admin.*
+import me.blueb.route.frontend
 
 fun Application.configureRouting() {
     routing {
@@ -30,5 +31,7 @@ fun Application.configureRouting() {
 		note()
         register()
         user()
+
+		frontend()
     }
 }
