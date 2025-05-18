@@ -308,45 +308,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-					<execution>
-						<id>frontend-install-dependencies</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>pnpm</executable>
-							<arguments>
-								<argument>install</argument>
-							</arguments>
-							<workingDirectory>${project.basedir}/frontend</workingDirectory>
-						</configuration>
-					</execution>
-                    <execution>
-						<id>frontend-build</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>pnpm</executable>
-							<arguments>
-								<argument>build</argument>
-							</arguments>
-							<workingDirectory>${project.basedir}/frontend</workingDirectory>
-						</configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>${main.class}</mainClass>
-                </configuration>
-            </plugin>
-
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.3.1</version>
