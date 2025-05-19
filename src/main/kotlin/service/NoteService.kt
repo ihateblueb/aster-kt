@@ -15,9 +15,7 @@ class NoteService {
 		val note = NoteEntity
 			.find { where }
 			.singleOrNull()
-			?.apply { // todo: test
-				this.load(UserEntity::id)
-			}
+			?.load(NoteEntity::user)
 
 		if (note != null)
 			Note.fromEntity(note)

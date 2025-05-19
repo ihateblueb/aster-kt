@@ -1,5 +1,8 @@
 package me.blueb.db.table
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
@@ -32,10 +35,13 @@ object UserTable : IdTable<String>("user") {
     val indexable = bool("indexable").default(false)
     val sensitive = bool("sensitive").default(false)
 
+	val roles = array<String>("roles").default(listOf())
+	val emojis = array<String>("emojis").default(listOf())
+
     val isCat = bool("isCat").default(false)
     val speakAsCat = bool("speakAsCat").default(false)
 
-	val createdAt = datetime("createdAt")
+	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
 	val updatedAt = datetime("updatedAt").nullable()
 
 	val publicKey = varchar("publicKey", length = 5000)

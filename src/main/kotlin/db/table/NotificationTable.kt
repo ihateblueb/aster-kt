@@ -3,24 +3,24 @@ package me.blueb.db.table
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import me.blueb.model.RelationshipType
-import me.blueb.model.RoleType
+import me.blueb.model.NotificationType
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
-object RelationshipTable : IdTable<String>("relationship") {
-	override val id = varchar("id", length = 125).uniqueIndex("unique_relationship_id").entityId()
+object NotificationTable : IdTable<String>("notification") {
+	override val id = varchar("id", length = 125).uniqueIndex("unique_notification_id").entityId()
 
-	val type = enumeration("type", RelationshipType::class)
+	val type = enumeration("type", NotificationType::class)
 
 	val to = reference("to", UserTable, onDelete = ReferenceOption.CASCADE)
 	val from = reference("from", UserTable, onDelete = ReferenceOption.CASCADE)
 
-	val activityId = varchar("activityId", length = 2750).nullable()
+	val note = reference("note", NoteTable, onDelete = ReferenceOption.CASCADE)
+	val relationship = reference("relationship", RelationshipTable, onDelete = ReferenceOption.CASCADE)
 
 	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
-	val updatedAt = datetime("updatedAt").nullable()
 
-	override val primaryKey = PrimaryKey(PolicyTable.id)
+	override val primaryKey = PrimaryKey(id)
 }
+

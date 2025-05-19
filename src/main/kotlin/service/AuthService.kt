@@ -42,7 +42,6 @@ class AuthService {
 			AuthEntity.new(id) {
 				token = generatedToken
 				user = userEntity
-				createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 			}
 		}
 

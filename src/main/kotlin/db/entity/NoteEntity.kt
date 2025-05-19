@@ -18,8 +18,10 @@ class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
     var content by NoteTable.content
 
 	var visibility by NoteTable.visibility
+
     var to by NoteTable.to
     var tags by NoteTable.tags
+	var emojis by NoteTable.emojis
 
     var createdAt by NoteTable.createdAt
     var updatedAt by NoteTable.updatedAt

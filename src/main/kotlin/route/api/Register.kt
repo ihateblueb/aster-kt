@@ -111,7 +111,6 @@ fun Route.register() {
 				username = body.username
 				activated = configuration.registrations != InstanceRegistrationsType.Approval
 				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
-				createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 			}
 			UserPrivateEntity.new(id) {
 				password = hashedPassword

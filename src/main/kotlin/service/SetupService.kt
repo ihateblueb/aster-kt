@@ -4,13 +4,15 @@ import at.favre.lib.crypto.bcrypt.BCrypt
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import me.blueb.db.entity.RoleEntity
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
 import me.blueb.db.suspendTransaction
+import me.blueb.db.table.RoleTable
 import me.blueb.db.table.UserTable
 import me.blueb.model.Configuration
-import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.KeyType
+import me.blueb.model.RoleType
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.slf4j.Logger
@@ -24,11 +26,49 @@ class SetupService {
 	private val userService = UserService()
 	private val keypairService = KeypairService()
 	private val identifierService = IdentifierService()
+	private val roleService = RoleService()
 
 	private val configuration = Configuration()
 
     suspend fun setup() {
+		setupRoles()
 		setupInstanceActor()
+	}
+
+	suspend fun setupRoles() {
+		val existingAdminRole = roleService.get(RoleTable.type eq RoleType.Admin)
+
+		if (existingAdminRole != null) {
+			logger.info("Admin role already exists.")
+		} else {
+			logger.warn("Admin role missing, generating...")
+
+			val id = identifierService.generate()
+
+			suspendTransaction {
+				RoleEntity.new(id) {
+					name = "Admin"
+					type = RoleType.Admin
+				}
+			}
+		}
+
+		val existingModRole = roleService.get(RoleTable.type eq RoleType.Mod)
+
+		if (existingModRole != null) {
+			logger.info("Mod role already exists.")
+		} else {
+			logger.warn("Mod role missing, generating...")
+
+			val id = identifierService.generate()
+
+			suspendTransaction {
+				RoleEntity.new(id) {
+					name = "Mod"
+					type = RoleType.Mod
+				}
+			}
+		}
 	}
 
 	suspend fun setupInstanceActor() {
@@ -62,8 +102,8 @@ class SetupService {
 					inbox = configuration.url.toString() + "user/" + id + "/inbox"
 					outbox = configuration.url.toString() + "user/" + id + "/outbox"
 					username = "instance.actor"
-					activated = configuration.registrations != InstanceRegistrationsType.Approval
-					createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+					activated = true
+					automated = true
 					publicKey = keypairService.keyToPem(KeyType.Public, keypair)
 				}
 				UserPrivateEntity.new(id) {

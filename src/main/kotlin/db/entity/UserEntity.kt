@@ -32,6 +32,9 @@ class UserEntity(id: EntityID<String>) : Entity<String>(id) {
     var indexable by UserTable.indexable
     var sensitive by UserTable.sensitive
 
+	var roles by UserTable.roles
+	var emojis by UserTable.emojis
+
     var isCat by UserTable.isCat
     var speakAsCat by UserTable.speakAsCat
 
