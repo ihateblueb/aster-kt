@@ -13,6 +13,7 @@
 		"@tabler/icons-react": "^3.33.0",
 		"@tanstack/react-router": "^1.120.5",
 		"@tanstack/react-router-devtools": "^1.120.6",
+		"@tanstack/react-store": "^0.7.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"sass": "^1.89.0"

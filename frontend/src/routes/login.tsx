@@ -5,6 +5,7 @@ import PageWrapper from "../lib/components/PageWrapper.tsx";
 import {useForm} from "@tanstack/react-form";
 import Input from "../lib/components/Input.tsx";
 import Container from "../lib/components/Container.tsx";
+import Button from "../lib/components/Button.tsx";
 
 export const Route = createFileRoute('/login')({
 	component: RouteComponent,
@@ -91,9 +92,9 @@ function RouteComponent() {
 							<form.Subscribe
 								selector={(state) => [state.canSubmit, state.isSubmitting]}
 								children={([canSubmit, isSubmitting]) => (
-									<button type="submit" disabled={!canSubmit}>
+									<Button type="submit" disabled={!canSubmit}>
 										{isSubmitting ? '...' : 'Login'}
-									</button>
+									</Button>
 								)}
 							/>
 						</Container>
