@@ -1,11 +1,9 @@
 package me.blueb.db.table
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object UserTable : IdTable<String>("user") {
@@ -41,7 +39,7 @@ object UserTable : IdTable<String>("user") {
     val isCat = bool("isCat").default(false)
     val speakAsCat = bool("speakAsCat").default(false)
 
-	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
 	val publicKey = varchar("publicKey", length = 5000)

@@ -1,11 +1,9 @@
 package me.blueb.db.table
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import me.blueb.model.NotificationType
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object NotificationTable : IdTable<String>("notification") {
@@ -19,7 +17,7 @@ object NotificationTable : IdTable<String>("notification") {
 	val note = reference("note", NoteTable, onDelete = ReferenceOption.CASCADE)
 	val relationship = reference("relationship", RelationshipTable, onDelete = ReferenceOption.CASCADE)
 
-	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 
 	override val primaryKey = PrimaryKey(id)
 }

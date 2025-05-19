@@ -85,9 +85,7 @@ fun Application.module() {
 		allowHost("127.0.0.1:9978")
 	}
 
-	install(DefaultHeaders) {
-	}
-
+	install(DefaultHeaders)
 	install(ForwardedHeaders)
 
 	install(ContentNegotiation) {

@@ -1,11 +1,9 @@
 package me.blueb.db.table
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import me.blueb.model.Visibility
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object NoteTable : IdTable<String>("note") {
@@ -26,7 +24,7 @@ object NoteTable : IdTable<String>("note") {
     val tags = array<String>("tags").default(listOf())
 	val emojis = array<String>("emojis").default(listOf())
 
-    val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
     override val primaryKey = PrimaryKey(id)

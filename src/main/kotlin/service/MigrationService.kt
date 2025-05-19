@@ -32,6 +32,7 @@ class MigrationService {
 				AuthTable,
 				InviteTable,
 				NoteTable,
+				NotificationTable,
 				PolicyTable,
 				RelationshipTable,
 				RoleTable,

@@ -1,12 +1,9 @@
 package me.blueb.db.table
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import me.blueb.model.RelationshipType
-import me.blueb.model.RoleType
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object RelationshipTable : IdTable<String>("relationship") {
@@ -19,7 +16,7 @@ object RelationshipTable : IdTable<String>("relationship") {
 
 	val activityId = varchar("activityId", length = 2750).nullable()
 
-	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
 	override val primaryKey = PrimaryKey(PolicyTable.id)

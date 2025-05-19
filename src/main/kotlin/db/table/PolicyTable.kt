@@ -1,10 +1,8 @@
 package me.blueb.db.table
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import me.blueb.model.PolicyType
 import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object PolicyTable : IdTable<String>("policy") {
@@ -15,7 +13,7 @@ object PolicyTable : IdTable<String>("policy") {
 	val host = varchar("host", length = 2750)
 	val content = varchar("content", length = 5000).nullable()
 
-	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
 	override val primaryKey = PrimaryKey(id)

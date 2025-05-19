@@ -1,11 +1,8 @@
 package me.blueb.db.table
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.kotlin.datetime.date
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 
 object InviteTable : IdTable<String>("invite") {
@@ -16,7 +13,7 @@ object InviteTable : IdTable<String>("invite") {
 	val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
 	val creator = reference("creator", UserTable, onDelete = ReferenceOption.CASCADE)
 
-	val createdAt = datetime("createdAt").default(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val usedAt = datetime("usedAt").nullable()
 
 	override val primaryKey = PrimaryKey(id)
