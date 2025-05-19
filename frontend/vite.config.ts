@@ -17,19 +17,19 @@ export default defineConfig({
 		proxy: {
 			'/api': {
 				target: 'http://localhost:9978',
-				changeOrigin: true,
+				changeOrigin: false,
 			},
 			'/swagger': {
 				target: 'http://localhost:9978',
-				changeOrigin: true,
+				changeOrigin: false,
 			},
 			'/upload': {
 				target: 'http://localhost:9978',
-				changeOrigin: true,
+				changeOrigin: false,
 			},
 			'/uploads': {
 				target: 'http://localhost:9978',
-				changeOrigin: true,
+				changeOrigin: false,
 			}
 		}
 	}

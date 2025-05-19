@@ -7,8 +7,20 @@ import Input from "../lib/components/Input.tsx";
 import Container from "../lib/components/Container.tsx";
 import Button from "../lib/components/Button.tsx";
 
+import login from "../lib/api/login.ts"
+import localstore from "../lib/utils/localstore.ts";
+import router from "../lib/router.ts";
+
 export const Route = createFileRoute('/login')({
 	component: RouteComponent,
+	onEnter: async () => {
+		const token = localstore.getParsed('token');
+
+		if (token)
+			router.navigate({
+				href: "/"
+			});
+	}
 })
 
 function RouteComponent() {
@@ -19,6 +31,12 @@ function RouteComponent() {
 		},
 		onSubmit: async (values) => {
 			console.log(values);
+			await login(values.value.username, values.value.password).then((result) => {
+				if (result.token && result.user) {
+					localstore.set("token", result.token);
+					localstore.set("self", JSON.stringify(result.user));
+				}
+			});
 		}
 	})
 

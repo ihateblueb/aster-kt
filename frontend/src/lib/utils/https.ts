@@ -1,25 +1,9 @@
-import {useStore} from "@tanstack/react-store";
-import {store} from "./store.ts";
 import ApiError from "./ApiError.ts";
 import localstore from "./localstore.ts";
 
 class Https {
-	private count(num: number) {
-		const count: number = useStore(store, (state): number => state[count]);
-		store.setState((state) => {
-			return {
-				...state,
-				[count]: count + num,
-			}
-		})
-	}
-
-	private start() {
-		this.count(1);
-	}
+	private start() {	}
 	private async end(res: Response) {
-		this.count(-1);
-
 		let body;
 		try {
 			body = await res.json() ?? undefined;
@@ -51,13 +35,16 @@ class Https {
 		return await this.end(req)
 	}
 
-	public async post(url: string, body?: any) {
+	public async post(url: string, auth?: boolean, body?: any) {
 		this.start()
 
 		const req = await fetch(url, {
 			method: 'POST',
-			headers: {
+			headers: auth ? {
+				"Content-Type": "application/json",
 				Authorization: 'Bearer ' + localstore.getParsed('token')
+			} : {
+				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(body)
 		});
@@ -71,6 +58,7 @@ class Https {
 		const req = await fetch(url, {
 			method: 'PATCH',
 			headers: {
+				"Content-Type": "application/json",
 				Authorization: 'Bearer ' + localstore.getParsed('token')
 			},
 			body: JSON.stringify(body)
@@ -85,6 +73,7 @@ class Https {
 		const req = await fetch(url, {
 			method: 'DELETE',
 			headers: {
+				"Content-Type": "application/json",
 				Authorization: 'Bearer ' + localstore.getParsed('token')
 			}
 		});
