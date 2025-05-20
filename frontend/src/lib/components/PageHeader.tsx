@@ -2,6 +2,10 @@ import * as React from "react";
 import './PageHeader.scss'
 
 function PageHeader({ icon, title, children }: { icon: React.ReactNode, title: string, children?: React.ReactNode }) {
+	React.useEffect(() => {
+		document.title = `${title} - Aster`
+	})
+
 	return (
 		<div className={"pageHeader"}>
 			<div className={"icon"}>

@@ -44,6 +44,16 @@
 	--tx-3: #9688bd;
 
 	--ac-1: #8e6bed;
+	--ac-1-50: #8e6bed50;
+
+	--success: #38b84d;
+	--success-50: #38b84d50;
+
+	--warn: #e39244;
+	--warn-50: #e3924450;
+
+	--danger: #e65448;
+	--danger-50: #e6544850;
 }
 
 html {
@@ -95,15 +105,48 @@ body {
 		outline-offset 0s;
 
 	&:focus-visible {
-		outline: 2px solid var(--ac-1);
-		outline-offset: 1px;
 		border: 1px solid var(--ac-1);
+
+		outline: 2px solid var(--ac-1-50);
+		outline-offset: 1px;
 	}
 
 	&:disabled {
 		cursor: not-allowed;
 
 		color: var(--tx-3);
+		opacity: 75%;
+	}
+}
+
+button.dismiss {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	color: inherit;
+	background-color: transparent;
+
+	border-radius: var(--br-md);
+	border: 1px solid transparent;
+
+	transition:
+		0.1s,
+		width 0s,
+		height 0s,
+		border 0s,
+		outline 0s,
+		outline-offset 0s;
+
+	&:focus-visible {
+		border: 1px solid var(--ac-1);
+
+		outline: 2px solid var(--ac-1-50);
+		outline-offset: 1px;
+	}
+
+	&:disabled {
+		cursor: not-allowed;
 		opacity: 75%;
 	}
 }

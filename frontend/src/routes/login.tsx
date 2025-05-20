@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import PageHeader from "../lib/components/PageHeader.tsx";
 import {IconLogin} from "@tabler/icons-react";
 import PageWrapper from "../lib/components/PageWrapper.tsx";
-import {useForm} from "@tanstack/react-form";
+import {useForm, useStore} from "@tanstack/react-form";
 import Input from "../lib/components/Input.tsx";
 import Container from "../lib/components/Container.tsx";
 import Button from "../lib/components/Button.tsx";
@@ -55,6 +55,8 @@ function RouteComponent() {
 					}}
 				>
 					<Container gap={"md"} align={"center"}>
+						{/* TODO: alert on invalid && api error */}
+
 						<form.Field
 							name={"username"}
 							validators={{
