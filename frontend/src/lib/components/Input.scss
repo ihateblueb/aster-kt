@@ -1,16 +1,4 @@
 .input {
-	display: flex;
-	align-items: center;
-
-	padding: 8px 10px;
-
-	color: var(--tx-2);
-	background-color: var(--bg-3);
-
-	box-shadow: var(--funky-effect);
-	border-radius: var(--br-md);
-	border: none;
-
 	width: 225px;
 
 	&.wide {

@@ -1,28 +1,9 @@
 .button {
-	display: flex;
-	align-items: center;
-
-	padding: 8px 10px;
-
 	&.thin {
 		padding: 6px 8px;
 	}
 
-	color: var(--tx-2);
-	background-color: var(--bg-3);
-
-	box-shadow: var(--funky-effect);
-	border-radius: var(--br-md);
-	border: none;
-
 	&.wide {
 		width: 100%;
-	}
-
-	&:disabled {
-		cursor: not-allowed;
-
-		color: var(--tx-3);
-		opacity: 75%;
 	}
 }
