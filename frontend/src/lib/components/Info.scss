@@ -32,6 +32,12 @@
 		background-color: var(--danger-50);
 	}
 
+	&.text {
+		box-shadow: none;
+		background: transparent;
+		padding: 0;
+	}
+
 	gap: 6px;
 
 	.icon {

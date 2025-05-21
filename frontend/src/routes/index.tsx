@@ -16,7 +16,7 @@ function RouteComponent() {
 			<>
 				<PageHeader
 					icon={<IconHome size={18} />}
-					title={"test"}
+					title={"Timeline"}
 				>
 					tes
 				</PageHeader>

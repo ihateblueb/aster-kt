@@ -19,6 +19,11 @@
 
 	.title {
 		color: var(--tx-1);
+		font-size: var(--fs-lg);
+		font-weight: 500;
+
+		width: 100%;
+		box-sizing: border-box;
 	}
 
 	.children {
@@ -26,8 +31,7 @@
 		align-items: center;
 		justify-content: flex-end;
 
-		width: 100%;
-		box-sizing: border-box;
+		flex-grow: 1;
 
 		color: var(--tx-1);
 	}

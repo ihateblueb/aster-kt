@@ -3,16 +3,18 @@ import {IconX} from "@tabler/icons-react";
 import './Info.scss'
 
 function Info(
-	{ type, icon, dismissable, children }:
-	{ type?: undefined | "primary" | "success" | "warn" | "danger", icon: React.ReactNode, dismissable: boolean, children?: React.ReactNode }
+	{ text, type, icon, dismissable, children }:
+	{ text?: boolean, type?: undefined | "primary" | "success" | "warn" | "danger", icon?: React.ReactNode, dismissable?: boolean, children?: React.ReactNode }
 ) {
 	let [shown, setShown] = React.useState(true)
 
+	// TODO: voiceover doesnt read alert content
+
 	if (shown)
 		return (
-			<div className={`info ${type}`}>
+			<div className={`info ${type} ${text ? "text" : ""}`} aria-label={`Alert (${type})`} tabIndex={0}>
 				{icon ?
-					<div className={"icon"}>
+					<div className={"icon"} aria-hidden="true">
 						{icon}
 					</div>
 					: null}

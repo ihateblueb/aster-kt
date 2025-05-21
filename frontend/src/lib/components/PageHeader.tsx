@@ -7,8 +7,8 @@ function PageHeader({ icon, title, children }: { icon: React.ReactNode, title: s
 	})
 
 	return (
-		<div className={"pageHeader"}>
-			<div className={"icon"}>
+		<div className={"pageHeader"} role={"heading"}>
+			<div className={"icon"} aria-hidden={true}>
 				{icon}
 			</div>
 			<div className={"title"}>
