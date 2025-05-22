@@ -11,13 +11,14 @@ var configPath = workingDir + "configuration.yaml"
 val config = YamlConfig(configPath)
 
 class Configuration {
-    val name: String
+	val name: String
 
-    val url: Url
-    val registrations: InstanceRegistrationsType
-    val identifiers: IdentifierType
+	val url: Url
+	val registrations: InstanceRegistrationsType
+	val identifiers: IdentifierType
 
-    val database: ConfigurationDatabase
+	val database: ConfigurationDatabase
+	val queue: ConfigurationQueue
 
 	init {
 		fun lower(string: String): String {
@@ -29,7 +30,7 @@ class Configuration {
 
 		var nameProp = config?.propertyOrNull("name")?.getString()
 		name = nameProp ?: "Aster"
-		
+
 		var urlProp = config?.propertyOrNull("url")?.getString()
 		url = if (urlProp != null) {
 			Url(urlProp)
@@ -52,15 +53,16 @@ class Configuration {
 		}
 
 		database = ConfigurationDatabase()
+		queue = ConfigurationQueue()
 	}
 }
 
 class ConfigurationDatabase {
-    val host: String
-    val port: String
-    val db: String
-    val user: String
-    val password: String
+	val host: String
+	val port: String
+	val db: String
+	val user: String
+	val password: String
 
 	init {
 		var databaseHostProp = config?.propertyOrNull("database.host")?.getString()
@@ -91,3 +93,29 @@ class ConfigurationDatabase {
 		}
 	}
 }
+
+class ConfigurationQueue {
+	val inbox: ConfigurationSpecificQueue
+	val deliver: ConfigurationSpecificQueue
+	val system: ConfigurationSpecificQueue
+
+	init {
+		inbox = ConfigurationSpecificQueue(
+			threads = ((config?.propertyOrNull("queue.inbox.threads")?.getString()?.toInt()) ?: 8),
+			concurrency = ((config?.propertyOrNull("queue.inbox.concurrency")?.getString()?.toInt()) ?: 8)
+		)
+		deliver = ConfigurationSpecificQueue(
+			threads = ((config?.propertyOrNull("queue.deliver.threads")?.getString()?.toInt()) ?: 6),
+			concurrency = ((config?.propertyOrNull("queue.deliver.concurrency")?.getString()?.toInt()) ?: 6)
+		)
+		system = ConfigurationSpecificQueue(
+			threads = ((config?.propertyOrNull("queue.system.threads")?.getString()?.toInt()) ?: 4),
+			concurrency = ((config?.propertyOrNull("queue.system.concurrency")?.getString()?.toInt()) ?: 4)
+		)
+	}
+}
+
+data class ConfigurationSpecificQueue(
+	val threads: Int,
+	val concurrency: Int
+)

@@ -23,3 +23,17 @@ database:
     db: aster
     user: aster
     password: aster
+
+# Queues are how Aster handles federating and system tasks
+#   threads: how many threads to have for a queue
+#   concurrency: how many jobs can be run on a thread at a time
+queue:
+    inbox:
+        threads: 8
+        concurrency: 8
+    deliver:
+        threads: 6
+        concurrency: 6
+    system:
+        threads: 4
+        concurrency: 4
