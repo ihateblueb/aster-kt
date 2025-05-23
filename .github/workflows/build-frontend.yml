@@ -11,8 +11,5 @@ jobs:
             - name: Install pnpm
               run: npm install -g pnpm
 
-            - name: Install dependencies
-              run: pnpm install
-
             - name: Run aster.sh build-frontend
               run: ./aster.sh build-frontend
