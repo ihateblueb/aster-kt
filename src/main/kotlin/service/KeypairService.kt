@@ -8,7 +8,7 @@ import java.util.Base64
 class KeypairService {
 	fun generate(): KeyPair {
 		val generator = KeyPairGenerator.getInstance("RSA")
-		generator.initialize(1024)
+		generator.initialize(2048)
 		return generator.generateKeyPair()
 	}
 
