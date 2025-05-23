@@ -1,0 +1,23 @@
+name: build-backend.yml
+on:
+    workflow_run:
+        workflows: ["build-frontend.yml"]
+        branches: [main]
+        types:
+            - completed
+
+jobs:
+    build:
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Setup JFK
+              uses: actions/setup-java@v4
+              with:
+                  java-version: '21'
+                  distribution: 'jetbrains'
+
+            - name: Run aster.sh build
+              run: ./aster.sh build
