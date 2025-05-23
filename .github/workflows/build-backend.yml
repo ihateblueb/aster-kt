@@ -16,7 +16,7 @@ jobs:
             - name: Install pnpm
               run: npm install -g pnpm
 
-            - name: Setup JFK
+            - name: Setup JDK
               uses: actions/setup-java@v4
               with:
                   java-version: '21'
