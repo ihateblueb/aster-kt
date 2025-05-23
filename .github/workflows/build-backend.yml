@@ -24,3 +24,8 @@ jobs:
 
             - name: Run aster.sh build
               run: ./aster.sh build
+
+            - name: Archive artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  path: target/aster*.jar
