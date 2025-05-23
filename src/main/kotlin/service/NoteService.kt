@@ -9,6 +9,7 @@ import me.blueb.model.Note
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 
 class NoteService {
 	suspend fun get(where: Op<Boolean>): Note? = suspendTransaction {
@@ -31,4 +32,14 @@ class NoteService {
 			.select(where)
 			.count()
 	}
+
+	suspend fun delete(where: Op<Boolean>) = suspendTransaction {
+		NoteEntity
+			.find { where }
+			.singleOrNull()
+			?.delete()
+	}
+
+	suspend fun deleteById(id: String) = delete(NoteTable.id eq id)
+	suspend fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 }

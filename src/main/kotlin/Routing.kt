@@ -8,7 +8,7 @@ import me.blueb.route.api.register
 
 import me.blueb.route.ap.*
 import me.blueb.route.api.*
-import me.blueb.route.api.admin.*
+import me.blueb.route.api.mod.*
 import me.blueb.route.frontend
 
 fun Application.configureRouting() {
@@ -25,7 +25,7 @@ fun Application.configureRouting() {
 		apNote()
         apUser()
 
-		adminPolicy()
+		modPolicy()
 
 		login()
 		note()

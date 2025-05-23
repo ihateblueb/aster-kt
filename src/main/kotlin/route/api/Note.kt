@@ -20,9 +20,11 @@ import me.blueb.db.entity.NoteEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.model.ApiError
 import me.blueb.model.Configuration
+import me.blueb.model.RoleType
 import me.blueb.model.Visibility
 import me.blueb.service.IdentifierService
 import me.blueb.service.NoteService
+import me.blueb.service.RoleService
 import org.apache.commons.text.StringEscapeUtils
 
 @Serializable
@@ -37,6 +39,7 @@ fun Route.note() {
 
 	val identifierService = IdentifierService()
 	val noteService = NoteService()
+	val roleService = RoleService()
 
 	get("/api/note/{id}") {
 		val note = noteService.getById(call.parameters.getOrFail("id"))
@@ -59,15 +62,34 @@ fun Route.note() {
 		call.respond(HttpStatusCode.NotImplemented)
 	}
 
-	delete("/api/note/{id}") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
-
-	patch("/api/note/{id}") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
-
 	authenticate("authRequired") {
+		delete("/api/note/{id}") {
+			val authenticatedUser = call.attributes[authenticatedUserKey]
+
+			val note = noteService.getById(call.parameters.getOrFail("id"))
+
+			if (note == null) {
+				call.respond(HttpStatusCode.NotFound)
+				return@delete
+			}
+
+			if (
+				note.user.id != authenticatedUser.id.toString() && (!roleService.userHasRoleOfType(authenticatedUser.id.toString(),
+					RoleType.Admin) || !roleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
+			) {
+				call.respond(HttpStatusCode.Forbidden)
+				return@delete
+			}
+
+			noteService.deleteById(note.id.toString())
+
+			call.respond(HttpStatusCode.OK)
+		}
+
+		patch("/api/note/{id}") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
+
 		post("/api/note") {
 			val authenticatedUser = call.attributes[authenticatedUserKey]
 
@@ -101,31 +123,31 @@ fun Route.note() {
 
 			call.respond(HttpStatusCode.NotImplemented)
 		}
-	}
 
-	post("/note/{id}/repeat") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
+		post("/note/{id}/repeat") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
 
-	post("/note/{id}/like") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
+		post("/note/{id}/like") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
 
-	post("/note/{id}/react") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
+		post("/note/{id}/react") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
 
-	post("/note/{id}/bookmark") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
+		post("/note/{id}/bookmark") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
 
-	/* Hide post and all replies to it, use conversation to determine replies */
-	post("/note/{id}/hide") {
-		call.respond(HttpStatusCode.NotImplemented)
-	}
+		/* Hide post and all replies to it, use conversation to determine replies */
+		post("/note/{id}/hide") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
 
-	/* stop receiving notifications for this post, user conversation for this, too */
-	post("/note/{id}/mute") {
-		call.respond(HttpStatusCode.NotImplemented)
+		/* stop receiving notifications for this post, user conversation for this, too */
+		post("/note/{id}/mute") {
+			call.respond(HttpStatusCode.NotImplemented)
+		}
 	}
 }
