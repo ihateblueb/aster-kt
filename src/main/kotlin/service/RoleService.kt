@@ -3,7 +3,7 @@ package me.blueb.service
 import me.blueb.db.entity.RoleEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.db.table.RoleTable
-import me.blueb.db.table.UserTable
+import me.blueb.model.RoleType
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
@@ -16,12 +16,19 @@ class RoleService {
 			.singleOrNull()
 	}
 
+	suspend fun getMany(where: Op<Boolean>): List<RoleEntity> = suspendTransaction {
+		RoleEntity
+			.find { where }
+			.toList()
+	}
+
 	suspend fun getById(id: String): RoleEntity? = get(RoleTable.id eq id)
 
-	suspend fun userHasRole(userId: String, roleId: String): Boolean {
+	suspend fun userHasRoleOfType(userId: String, type: RoleType): Boolean {
 		val user = userService.getById(userId)
+		val rolesOfType = this.getMany(RoleTable.type eq type)
 
-		if (user != null && user.roles.contains(roleId))
+		if (user != null && rolesOfType.any { it.id.toString() in user.roles })
 			return true
 
 		return false

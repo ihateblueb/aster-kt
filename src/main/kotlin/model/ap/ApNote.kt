@@ -3,9 +3,12 @@ package me.blueb.model.ap
 import kotlinx.serialization.Serializable
 import me.blueb.model.Note
 import me.blueb.model.Visibility
+import me.blueb.service.FormatService
 import me.blueb.service.ap.ApVisibilityService
 
 private val apVisibilityService = ApVisibilityService()
+
+private val formatService = FormatService()
 
 @Serializable
 data class ApNote(
@@ -46,7 +49,7 @@ data class ApNote(
 				actor = note.user.apId,
 				content = note.content,
 				_misskey_content = note.content,
-				published = note.createdAt.toString(),
+				published = formatService.formatToStandardDateTime(note.createdAt),
 				visibility = note.visibility,
 				to = toCc["to"]!!,
 				cc = toCc["cc"]!!

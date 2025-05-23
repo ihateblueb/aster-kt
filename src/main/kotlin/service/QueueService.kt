@@ -75,6 +75,8 @@ class QueueService {
 				}
 			}
 		}
+
+		logger.info("Initialized queue consumers.")
 	}
 
 	fun processInboxJob(message: Message<String, Unit>) {

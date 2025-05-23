@@ -4,8 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.model.Configuration
+import me.blueb.service.FormatService
 
-val configuration = Configuration()
+private val configuration = Configuration()
+
+private val formatService = FormatService()
 
 @Serializable
 data class ApActor(
@@ -33,6 +36,8 @@ data class ApActor(
 	val vcardBday: String? = null,
 	@SerialName("vcard:Address")
 	val vcardAddress: String? = null,
+
+	val published: String,
 
 	val inbox: String,
 	val outbox: String? = null,
@@ -76,6 +81,8 @@ data class ApActor(
 
 				vcardBday = user.birthday,
 				vcardAddress = user.location,
+
+				published = formatService.formatToStandardDateTime(user.createdAt),
 
 				inbox = user.inbox,
 				outbox = user.outbox,

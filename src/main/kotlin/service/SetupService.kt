@@ -51,6 +51,8 @@ class SetupService {
 					type = RoleType.Admin
 				}
 			}
+
+			logger.info("Admin role generated.")
 		}
 
 		val existingModRole = roleService.get(RoleTable.type eq RoleType.Mod)
@@ -68,6 +70,8 @@ class SetupService {
 					type = RoleType.Mod
 				}
 			}
+
+			logger.info("Mod role generated.")
 		}
 	}
 

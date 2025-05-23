@@ -12,11 +12,14 @@ import io.ktor.util.AttributeKey
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.model.ApiError
+import me.blueb.model.RoleType
 import me.blueb.service.AuthService
+import me.blueb.service.RoleService
 import me.blueb.service.UserService
 
 private val authService = AuthService()
 private val userService = UserService()
+private val roleService = RoleService()
 
 val authenticatedUserKey = AttributeKey<UserEntity>("authenticatedUser")
 
@@ -75,6 +78,114 @@ fun Application.configureAuthentication() {
 							return@authenticate false
 						} else {
 							return@authenticate true
+						}
+					} else {
+						respond(
+							HttpStatusCode.Unauthorized,
+							ApiError(
+								message = "Authentication required",
+								requestId = callId
+							)
+						)
+						return@authenticate false
+					}
+				} else {
+					respond(
+						HttpStatusCode.Unauthorized,
+						ApiError(
+							message = "Authentication required",
+							requestId = callId
+						)
+					)
+					return@authenticate false
+				}
+			}
+		}
+
+		bearer("authRequiredMod") {
+			authenticate { credential ->
+				val auth = authService.getByToken(credential.token)
+
+				if (auth != null) {
+					var authId = ""
+
+					suspendTransaction {
+						authId = auth.user.id.toString()
+					}
+
+					UserIdPrincipal(authId)
+
+					val user = userService.getById(authId)
+					if (user != null) {
+						attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
+
+						if (!user.activated || user.suspended) {
+							respond(
+								HttpStatusCode.Forbidden,
+								ApiError(
+									message = "Account inactive",
+									requestId = callId
+								)
+							)
+							return@authenticate false
+						} else {
+							val isMod = roleService.userHasRoleOfType(user.id.toString(), RoleType.Mod)
+
+							return@authenticate isMod
+						}
+					} else {
+						respond(
+							HttpStatusCode.Unauthorized,
+							ApiError(
+								message = "Authentication required",
+								requestId = callId
+							)
+						)
+						return@authenticate false
+					}
+				} else {
+					respond(
+						HttpStatusCode.Unauthorized,
+						ApiError(
+							message = "Authentication required",
+							requestId = callId
+						)
+					)
+					return@authenticate false
+				}
+			}
+		}
+
+		bearer("authRequiredAdmin") {
+			authenticate { credential ->
+				val auth = authService.getByToken(credential.token)
+
+				if (auth != null) {
+					var authId = ""
+
+					suspendTransaction {
+						authId = auth.user.id.toString()
+					}
+
+					UserIdPrincipal(authId)
+
+					val user = userService.getById(authId)
+					if (user != null) {
+						attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
+
+						if (!user.activated || user.suspended) {
+							respond(
+								HttpStatusCode.Forbidden,
+								ApiError(
+									message = "Account inactive",
+									requestId = callId
+								)
+							)
+							return@authenticate false
+						} else {
+							val isAdmin = roleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
+
+							return@authenticate isAdmin
 						}
 					} else {
 						respond(
