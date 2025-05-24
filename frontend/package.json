@@ -5,7 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc -b && vite build",
+		"build-new": "tsc -b && vite build",
+		"build": "swc src -d dist --strip-leading-paths && vite build",
 		"lint": "eslint",
 		"preview": "vite preview"
 	},
@@ -21,6 +22,8 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.25.0",
+		"@swc/cli": "^0.7.7",
+		"@swc/core": "^1.11.29",
 		"@tanstack/react-form": "^1.11.2",
 		"@tanstack/router-plugin": "^1.120.5",
 		"@types/react": "^19.1.2",

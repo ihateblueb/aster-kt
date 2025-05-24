@@ -131,7 +131,16 @@ fun Application.configureAuthentication() {
 						} else {
 							val isMod = roleService.userHasRoleOfType(user.id.toString(), RoleType.Mod)
 
-							return@authenticate isMod
+							if (!isMod) {
+								respond(
+									HttpStatusCode.Forbidden,
+									ApiError(
+										message = "Account does not have a mod role",
+										requestId = callId
+									)
+								)
+								return@authenticate false
+							}
 						}
 					} else {
 						respond(
@@ -185,7 +194,16 @@ fun Application.configureAuthentication() {
 						} else {
 							val isAdmin = roleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
 
-							return@authenticate isAdmin
+							if (!isAdmin) {
+								respond(
+									HttpStatusCode.Forbidden,
+									ApiError(
+										message = "Account does not have an admin role",
+										requestId = callId
+									)
+								)
+								return@authenticate false
+							}
 						}
 					} else {
 						respond(

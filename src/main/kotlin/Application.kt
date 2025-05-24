@@ -19,7 +19,6 @@ import me.blueb.db.Database
 import me.blueb.model.Configuration
 import me.blueb.service.CommandLineService
 import me.blueb.service.IdentifierService
-import me.blueb.service.MigrationService
 import me.blueb.service.PluginService
 import me.blueb.service.SetupService
 
@@ -31,7 +30,7 @@ private val setupService = SetupService()
 private val pluginService = PluginService()
 
 fun main(args: Array<String>) {
-	if (args.isNotEmpty()) {
+	if (args.isNotEmpty() && !args[0].startsWith("-")) {
 		runBlocking {
 			commandLineService.execute(args)
 		}

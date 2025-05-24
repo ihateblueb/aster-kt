@@ -37,6 +37,10 @@ class RoleService {
 		val user = userService.getById(userId)
 		val rolesOfType = this.getMany(RoleTable.type eq type)
 
+
+		if (user != null && rolesOfType.any { it.id.toString() in user.roles })
+			println("id in user roles")
+
 		if (user != null && rolesOfType.any { it.id.toString() in user.roles })
 			return true
 

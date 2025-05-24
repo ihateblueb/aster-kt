@@ -11,8 +11,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
 import io.ktor.server.util.getOrFail
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import me.blueb.db.table.PolicyTable
 import me.blueb.model.ApiError
@@ -34,10 +32,8 @@ data class PolicyBody(
 fun Route.modPolicy() {
 	authenticate("authRequiredMod") {
 		get("/api/admin/policies") {
-			val since = LocalDateTime.parse(call.parameters["since"] ?: Clock.System.now().toString(), LocalDateTime.Formats.ISO)
-			var take = call.parameters["take"]?.toIntOrNull()
-
-			take = timelineService.normalizeTake(take)
+			val since = timelineService.normalizeSince(call.parameters["since"])
+			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 			val policies = policyService.getMany(PolicyTable.createdAt less since, take)
 

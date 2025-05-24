@@ -1,5 +1,10 @@
 package me.blueb.service
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
 class TimelineService {
 	fun normalizeTake(take: Int?): Int {
 		if (take != null) {
@@ -12,5 +17,10 @@ class TimelineService {
 		} else {
 			return 15
 		}
+	}
+
+	fun normalizeSince(since: String?): LocalDateTime {
+		val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).toString()
+		return LocalDateTime.parse(since ?: now)
 	}
 }
