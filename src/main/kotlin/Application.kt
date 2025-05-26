@@ -14,13 +14,13 @@ import io.ktor.server.plugins.forwardedheaders.ForwardedHeaders
 import io.ktor.server.request.httpMethod
 import io.ktor.server.request.uri
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.json.Json
 import me.blueb.db.Database
 import me.blueb.model.Configuration
 import me.blueb.service.CommandLineService
 import me.blueb.service.IdentifierService
 import me.blueb.service.PluginService
 import me.blueb.service.SetupService
+import me.blueb.util.jsonConfig
 
 private val configuration = Configuration()
 
@@ -82,12 +82,6 @@ fun Application.module() {
 	install(ForwardedHeaders)
 
 	install(ContentNegotiation) {
-		val jsonConfig = Json {
-			encodeDefaults = true
-			prettyPrint = true
-			isLenient = true
-		}
-
 		json(jsonConfig)
 
 		register(

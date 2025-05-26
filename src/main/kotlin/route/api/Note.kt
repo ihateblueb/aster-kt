@@ -25,6 +25,7 @@ import me.blueb.model.Visibility
 import me.blueb.service.IdentifierService
 import me.blueb.service.NoteService
 import me.blueb.service.RoleService
+import me.blueb.service.ap.ApIdService
 import org.apache.commons.text.StringEscapeUtils
 
 @Serializable
@@ -38,6 +39,7 @@ fun Route.note() {
 	val configuration = Configuration()
 
 	val identifierService = IdentifierService()
+	val apIdService = ApIdService()
 	val noteService = NoteService()
 	val roleService = RoleService()
 
@@ -110,7 +112,7 @@ fun Route.note() {
 
 			suspendTransaction {
 				NoteEntity.new(id) {
-					apId = configuration.url.toString() + "note/" + id
+					apId = apIdService.renderNoteApId(id)
 					user = authenticatedUser
 					cw = StringEscapeUtils.escapeHtml4(body.cw)
 					content = StringEscapeUtils.escapeHtml4(body.content)

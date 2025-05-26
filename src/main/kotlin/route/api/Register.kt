@@ -7,9 +7,6 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
@@ -23,6 +20,7 @@ import me.blueb.service.IdentifierService
 import me.blueb.service.KeypairService
 import me.blueb.service.UserService
 import me.blueb.service.ValidationService
+import me.blueb.service.ap.ApIdService
 
 @Serializable
 data class RegisterBody(
@@ -35,6 +33,7 @@ fun Route.register() {
     val configuration = Configuration()
 
     val identifierService = IdentifierService()
+	val apIdService = ApIdService()
     val userService = UserService()
 	val keypairService = KeypairService()
 	val validationService = ValidationService()
@@ -105,9 +104,9 @@ fun Route.register() {
 
 		suspendTransaction {
  			UserEntity.new(id) {
-				apId = configuration.url.toString() + "user/" + id
-				inbox = configuration.url.toString() + "user/" + id + "/inbox"
-				outbox = configuration.url.toString() + "user/" + id + "/outbox"
+				apId = apIdService.renderUserApId(id)
+				inbox = apIdService.renderInboxApId(id)
+				outbox = apIdService.renderOutboxApId(id)
 				username = body.username
 				activated = configuration.registrations != InstanceRegistrationsType.Approval
 				publicKey = keypairService.keyToPem(KeyType.Public, keypair)

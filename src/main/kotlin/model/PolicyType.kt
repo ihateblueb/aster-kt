@@ -3,25 +3,38 @@ package me.blueb.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Federation Policy types determine how a Policy should be enforced
+ * */
 @Serializable
 enum class PolicyType {
-	// no communication either way
+	/**
+	 * No communication allowed either direction.
+	 * */
 	@SerialName("block")
 	Block,
 
-	// quietly ignore
+	/**
+	 * Quietly ignore remote host.
+	 * */
 	@SerialName("silence")
 	Silence,
 
-	// force content warning on note
+	/**
+	 * Append content warnings (`cw`) on incoming [Note].
+	 * */
 	@SerialName("forceContentWarning")
 	ForceContentWarning,
 
-	// force sensitive on user
+	/**
+	 * Append sensitive tag on new [User].
+	 * */
 	@SerialName("forceSensitive")
 	ForceSensitive,
 
-	// force follows from instance to be accepted
+	/**
+	 * Force all incoming Follow activities to require approval.
+	 * */
 	@SerialName("forceFollowRequest")
 	ForceFollowRequest;
 

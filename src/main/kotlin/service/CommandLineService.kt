@@ -3,24 +3,41 @@ package me.blueb.service
 import me.blueb.db.Database
 import me.blueb.db.suspendTransaction
 import me.blueb.model.PackageInformation
+import org.slf4j.LoggerFactory
+import java.util.Scanner
 
 class CommandLineService {
+	private val logger = LoggerFactory.getLogger(this::class.java)
+
 	private val packageInformation = PackageInformation()
 
 	private val userService = UserService()
 	private val roleService = RoleService()
 
 	fun help() {
-		println("${packageInformation.name} ${packageInformation.version}")
-		println("run without arguments to start server")
-		println()
-		println("help					show this page")
-		println("migration:generate			generate migrations (for developer use)")
-		println("migration:execute			execute migrations")
-		println("role:list				list all roles")
-		println("role:create				create a role")
-		println("role:give				give role to user")
-		println("role:revoke				revoke role from user")
+		logger.info("${packageInformation.name} ${packageInformation.version}")
+		logger.info("Run without arguments to start server")
+		logger.info("help					Show this page")
+		logger.info("migration:generate			Generate migrations (for developer use)")
+		logger.info("migration:execute			Execute migrations")
+		logger.info("role:list				List all roles")
+		logger.info("role:create				Create a role")
+		logger.info("role:give				Give role to user")
+		logger.info("role:revoke				Revoke role from user")
+	}
+
+	suspend fun continuous() {
+		val scanner = Scanner(System.`in`)
+		val line = scanner.nextLine()
+
+		logger.info("Starting continuous scanner.")
+
+		when(line) {
+			"exit" -> scanner.close()
+			else -> execute(line.split(" ").toTypedArray())
+		}
+
+		scanner.close()
 	}
 
 	suspend fun execute(args: Array<String>) {
@@ -32,6 +49,11 @@ class CommandLineService {
 			when (args[0]) {
 				"help" -> {
 					help()
+					return
+				}
+
+				"continuous" -> {
+					continuous()
 					return
 				}
 
@@ -48,12 +70,9 @@ class CommandLineService {
 				"role:list" -> {
 					val roles = roleService.getAll()
 
-					println("id	name	type	createdAt	updatedAt")
 					for (role in roles) {
-						println("${role.id}	${role.name}	${role.type}	${role.createdAt}	${role.updatedAt}")
+						println("${role.id}	${role.name}	(${role.type})	${role.createdAt}	${role.updatedAt}")
 					}
-
-					println("TODO")
 					return
 				}
 
@@ -92,8 +111,11 @@ class CommandLineService {
 						val roles = user.roles.toMutableList()
 						roles.add(roleId)
 
-						user.roles = roles
-						user.storeWrittenValues()
+						// TODO: test
+						// role:give a7rw55doalcl0001 a7z33n00iie40004
+
+						user.roles = roles.toList()
+						user.flush()
 					}
 
 					println("Gave role ${role.name} to ${user.displayName ?: user.username}")

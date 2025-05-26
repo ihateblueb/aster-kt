@@ -11,7 +11,7 @@ import me.blueb.service.UserService
 fun Route.apUser() {
     val userService = UserService()
 
-    get("/user/{id}") {
+    get("/users/{id}") {
         val user = userService.getById(call.parameters.getOrFail("id"))
 
         if (user == null || user.host != null || !user.activated || user.suspended) {
@@ -22,11 +22,11 @@ fun Route.apUser() {
         call.respond(ApActor.fromEntity(user))
     }
 
-	get("/user/{id}/followers") {
+	get("/users/{id}/followers") {
 		call.respond(HttpStatusCode.NotImplemented)
 	}
 
-	get("/user/{id}/following") {
+	get("/users/{id}/following") {
 		call.respond(HttpStatusCode.NotImplemented)
 	}
 }

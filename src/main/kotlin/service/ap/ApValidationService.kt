@@ -29,11 +29,7 @@ class ApValidationService {
 		val body = call.receive<ByteArray>()
 
 		val blockPolicies = policyService.getAllByType(PolicyType.Block)
-		val blockedHosts: MutableList<String> = mutableListOf()
-
-		for (blockPolicy in blockPolicies) {
-			blockedHosts.add(blockPolicy.host)
-		}
+		val blockedHosts = policyService.reducePoliciesInListToHost(blockPolicies)
 
 		if (
 			call.request.headers["Host"].isNullOrEmpty() ||

@@ -262,6 +262,22 @@
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-core-jvm</artifactId>
+			<version>${ktor_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-cio-jvm</artifactId>
+			<version>${ktor_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-content-negotiation-jvm</artifactId>
+			<version>${ktor_version}</version>
+		</dependency>
+
 	</dependencies>
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>

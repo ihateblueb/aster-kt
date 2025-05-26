@@ -28,4 +28,19 @@ class PolicyService {
 			.find { PolicyTable.type eq type }
 			.toList()
 	}
+
+	/**
+	 * Reduce a [List] of [PolicyEntity] to [PolicyEntity.host]
+	 *
+	 * @return [List] of [PolicyEntity.host] as [String]
+	 * */
+	fun reducePoliciesInListToHost(policies: List<PolicyEntity>): List<String> {
+		val reducedHosts: MutableList<String> = mutableListOf()
+
+		for (policy in policies) {
+			reducedHosts.add(policy.host)
+		}
+
+		return reducedHosts
+	}
 }

@@ -5,11 +5,17 @@ import kotlinx.serialization.Serializable
 import me.blueb.db.entity.UserEntity
 import me.blueb.model.Configuration
 import me.blueb.service.FormatService
+import me.blueb.service.ap.ApIdService
 
 private val configuration = Configuration()
 
+private val apIdService = ApIdService()
 private val formatService = FormatService()
 
+/**
+ * ActivityPub representation of [me.blueb.model.User]
+ * Only to be used on local users (where host is null)
+ * */
 @Serializable
 data class ApActor(
 	val id: String,
@@ -87,7 +93,7 @@ data class ApActor(
 				inbox = user.inbox,
 				outbox = user.outbox,
 
-				sharedInbox = configuration.url.toString() + "inbox",
+				sharedInbox = apIdService.renderInboxApId(),
 
 				publicKey = ApKey(
 					id = user.apId + "#main-key",
