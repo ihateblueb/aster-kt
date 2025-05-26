@@ -31,7 +31,7 @@ data class PolicyBody(
 
 fun Route.modPolicy() {
 	authenticate("authRequiredMod") {
-		get("/api/admin/policies") {
+		get("/api/mod/policies") {
 			val since = timelineService.normalizeSince(call.parameters["since"])
 			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
@@ -45,7 +45,7 @@ fun Route.modPolicy() {
 			call.respond(policies)
 		}
 
-		post("/api/admin/policy") {
+		post("/api/mod/policy") {
 			val body = call.receive<PolicyBody>()
 
 			if (
@@ -77,7 +77,7 @@ fun Route.modPolicy() {
 			call.respond(HttpStatusCode.NotImplemented)
 		}
 
-		patch("/api/admin/policy/{id}") {
+		patch("/api/mod/policy/{id}") {
 			val policy = policyService.getById(call.parameters.getOrFail("id"))
 
 			if (policy == null) {
@@ -88,7 +88,7 @@ fun Route.modPolicy() {
 			call.respond(HttpStatusCode.NotImplemented)
 		}
 
-		delete("/api/admin/policy/{id}") {
+		delete("/api/mod/policy/{id}") {
 			val policy = policyService.getById(call.parameters.getOrFail("id"))
 
 			if (policy == null) {

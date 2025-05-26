@@ -16,7 +16,7 @@ fun Application.configureRouting() {
         swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
 
 		hostMeta()
-        nodeinfo()
+		nodeInfo()
 		webfinger()
 
 		inbox()

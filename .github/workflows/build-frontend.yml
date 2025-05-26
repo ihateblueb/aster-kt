@@ -1,4 +1,4 @@
-name: build-frontend.yml
+name: build frontend
 on: [push]
 
 jobs:

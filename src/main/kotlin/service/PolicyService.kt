@@ -20,12 +20,14 @@ class PolicyService {
 		PolicyEntity
 			.find { where }
 			.take(take ?: 15)
+			.sortedBy { it.createdAt }
 			.toList()
 	}
 
 	suspend fun getAllByType(type: PolicyType): List<PolicyEntity> = suspendTransaction {
 		PolicyEntity
 			.find { PolicyTable.type eq type }
+			.sortedBy { it.createdAt }
 			.toList()
 	}
 

@@ -8,10 +8,10 @@ import io.ktor.server.util.getOrFail
 import me.blueb.db.table.UserTable
 import me.blueb.model.Configuration
 import me.blueb.model.InstanceRegistrationsType
-import me.blueb.model.Nodeinfo
-import me.blueb.model.NodeinfoSoftare
-import me.blueb.model.NodeinfoUsage
-import me.blueb.model.NodeinfoUsageUsers
+import me.blueb.model.NodeInfo
+import me.blueb.model.NodeInfoSoftware
+import me.blueb.model.NodeInfoUsage
+import me.blueb.model.NodeInfoUsageUsers
 import me.blueb.model.PackageInformation
 import me.blueb.model.WellKnown
 import me.blueb.model.WellKnownLink
@@ -21,7 +21,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
 import org.jetbrains.exposed.sql.and
 
-fun Route.nodeinfo() {
+fun Route.nodeInfo() {
     val configuration = Configuration()
 	val packageInformation = PackageInformation()
 
@@ -66,25 +66,25 @@ fun Route.nodeinfo() {
 				and(UserTable.username neq "instance.actor")
 		).toInt()
 
-        val nodeinfo =
-            Nodeinfo(
+        val nodeInfo =
+            NodeInfo(
                 version = version,
                 software =
-                    NodeinfoSoftare(
+					NodeInfoSoftware(
                         name = packageInformation.name,
                         version = packageInformation.version,
                     ),
                 protocols = listOf("activitypub"),
                 openRegistrations = configuration.registrations == InstanceRegistrationsType.Open,
                 usage =
-                    NodeinfoUsage(
-                        users = NodeinfoUsageUsers(userCount),
+                    NodeInfoUsage(
+                        users = NodeInfoUsageUsers(userCount),
                         localPosts = noteCount,
                     ),
             )
 
         call.respond(
-            nodeinfo,
+			nodeInfo,
         )
     }
 }

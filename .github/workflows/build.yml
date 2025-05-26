@@ -1,7 +1,7 @@
-name: build-backend.yml
+name: build
 on:
     workflow_run:
-        workflows: ["build-frontend.yml"]
+        workflows: ["build frontend"]
         branches: [main]
         types:
             - completed

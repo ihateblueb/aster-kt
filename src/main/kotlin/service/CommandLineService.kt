@@ -111,9 +111,6 @@ class CommandLineService {
 						val roles = user.roles.toMutableList()
 						roles.add(roleId)
 
-						// TODO: test
-						// role:give a7rw55doalcl0001 a7z33n00iie40004
-
 						user.roles = roles.toList()
 						user.flush()
 					}
