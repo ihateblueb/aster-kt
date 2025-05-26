@@ -16,6 +16,7 @@ import me.blueb.model.InstanceRegistrationsType
 import me.blueb.model.Configuration
 import me.blueb.model.KeyType
 import me.blueb.model.User
+import me.blueb.service.FormatService
 import me.blueb.service.IdentifierService
 import me.blueb.service.KeypairService
 import me.blueb.service.UserService
@@ -37,6 +38,7 @@ fun Route.register() {
     val userService = UserService()
 	val keypairService = KeypairService()
 	val validationService = ValidationService()
+	val formatService = FormatService()
 
     post("/api/register") {
         val body = call.receive<RegisterBody>()
@@ -69,7 +71,9 @@ fun Route.register() {
                 message = "Invite required",
             )*/
 
-		if (validationService.containsNonAlphanumeric(body.username)) {
+		val username = formatService.toASCII(body.username)
+
+		if (validationService.containsNonAlphanumeric(username)) {
 			call.respond(
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
@@ -107,7 +111,7 @@ fun Route.register() {
 				apId = apIdService.renderUserApId(id)
 				inbox = apIdService.renderInboxApId(id)
 				outbox = apIdService.renderOutboxApId(id)
-				username = body.username
+				this.username = username
 				activated = configuration.registrations != InstanceRegistrationsType.Approval
 				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
 			}

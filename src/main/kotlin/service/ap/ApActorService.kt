@@ -1,5 +1,6 @@
 package me.blueb.service.ap
 
+import io.ktor.http.Url
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -9,8 +10,10 @@ import me.blueb.db.entity.UserEntity
 import me.blueb.db.suspendTransaction
 import me.blueb.model.User
 import me.blueb.model.ap.ApActor
+import me.blueb.service.FormatService
 import me.blueb.service.IdentifierService
 import me.blueb.service.ResolverService
+import me.blueb.service.SanitizerService
 import me.blueb.service.TimeService
 import me.blueb.service.UserService
 import org.apache.commons.text.StringEscapeUtils
@@ -23,6 +26,8 @@ class ApActorService {
 	private val resolverService = ResolverService()
 	private val userService = UserService()
 	private val timeService = TimeService()
+	private val formatService = FormatService()
+	private val sanitizerService = SanitizerService()
 
 	/**
 	 * Resolve an ActivityPub Actor by their ID
@@ -83,32 +88,39 @@ class ApActorService {
 		else
 			json["summary"]?.toString()
 
-		suspendTransaction {
-			UserEntity.new(id) {
-				apId = json["id"].toString()
-				this.inbox = inbox
-				outbox = json["outbox"]?.toString()
+		try {
+			suspendTransaction {
+				UserEntity.new(id) {
+					apId = json["id"].toString()
+					this.inbox = inbox
+					outbox = json["outbox"]?.toString()
 
-				username = StringEscapeUtils.escapeHtml4(json["preferredUsername"].toString())
-				displayName = StringEscapeUtils.escapeHtml4(json["name"]?.toString())
+					username = sanitizerService.sanitize(json["preferredUsername"].toString(), true)
+					displayName = if (json["name"] != null) sanitizerService.sanitize(json["name"].toString(), true) else null
 
-				// todo: icon, image
+					host = formatService.toASCII(Url(json["id"].toString()).host)
 
-				bio = StringEscapeUtils.escapeHtml4(summary)
+					// todo: icon, image
 
-				sensitive = json["sensitive"]?.toString()?.toBoolean() ?: false
-				discoverable = json["discoverable"]?.toString()?.toBoolean() ?: false
-				locked = json["manuallyApprovesFollowers"]?.toString()?.toBoolean() ?: false
-				indexable = json["noindex"]?.toString()?.toBoolean()?.let { !it } ?: true
-				isCat = json["isCat"]?.toString()?.toBoolean() ?: false
-				speakAsCat = json["speakAsCat"]?.toString()?.toBoolean() ?: false
+					bio = if (summary != null) sanitizerService.sanitize(summary) else null
 
-				// TODO: birthday, location
+					sensitive = json["sensitive"]?.toString()?.toBoolean() ?: false
+					discoverable = json["discoverable"]?.toString()?.toBoolean() ?: false
+					locked = json["manuallyApprovesFollowers"]?.toString()?.toBoolean() ?: false
+					indexable = json["noindex"]?.toString()?.toBoolean()?.let { !it } ?: true
+					isCat = json["isCat"]?.toString()?.toBoolean() ?: false
+					speakAsCat = json["speakAsCat"]?.toString()?.toBoolean() ?: false
 
-				createdAt = json["published"]?.toString()?.let { LocalDateTime.parse(it) } ?: timeService.now()
+					// TODO: birthday, location
+
+					createdAt = json["published"]?.toString()?.let { LocalDateTime.parse(it) } ?: timeService.now()
+				}
 			}
-		}
 
-		return userService.getById(id)
+			return userService.getById(id)
+		} catch(e: Exception) {
+			logger.error(e.message, e)
+			return null
+		}
 	}
 }

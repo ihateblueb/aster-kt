@@ -25,6 +25,8 @@ import me.blueb.model.Visibility
 import me.blueb.service.IdentifierService
 import me.blueb.service.NoteService
 import me.blueb.service.RoleService
+import me.blueb.service.SanitizerService
+import me.blueb.service.TimeService
 import me.blueb.service.ap.ApIdService
 import org.apache.commons.text.StringEscapeUtils
 
@@ -42,6 +44,8 @@ fun Route.note() {
 	val apIdService = ApIdService()
 	val noteService = NoteService()
 	val roleService = RoleService()
+	val timeService = TimeService()
+	val sanitizerService = SanitizerService()
 
 	get("/api/note/{id}") {
 		val note = noteService.getById(call.parameters.getOrFail("id"))
@@ -114,12 +118,11 @@ fun Route.note() {
 				NoteEntity.new(id) {
 					apId = apIdService.renderNoteApId(id)
 					user = authenticatedUser
-					cw = StringEscapeUtils.escapeHtml4(body.cw)
-					content = StringEscapeUtils.escapeHtml4(body.content)
+					cw = if (body.cw != null) sanitizerService.sanitize(body.cw, true) else null
+					content = sanitizerService.sanitize(body.content, true)
 					visibility = Visibility.fromString(body.visibility)
 					to = listOf()
 					tags = listOf()
-					createdAt = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 				}
 			}
 
