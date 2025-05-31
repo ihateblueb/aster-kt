@@ -34,73 +34,43 @@ class ApValidationService {
 		if (
 			call.request.headers["Host"].isNullOrEmpty() ||
 			call.request.headers["Host"] != configuration.url.host
-		) {
-			logger.debug("Validation failed, missing or invalid host.")
-			call.respond(
-				HttpStatusCode.Unauthorized,
-				ApiError(
-					message = "Missing or invalid host",
-					requestId = call.callId
-				)
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Missing or invalid host."
 			)
-			return
-		}
 
 		if (
 			call.request.headers["Digest"].isNullOrEmpty()
-		) {
-			logger.debug("Validation failed, digest not present.")
-			call.respond(
-				HttpStatusCode.Unauthorized,
-				ApiError(
-					message = "Digest not present",
-					requestId = call.callId
-				)
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Digest not present."
 			)
-			return
-		}
-
-		if (
-			!call.request.headers["Digest"]!!.startsWith("SHA-256=")
-		) {
-			logger.debug("Validation failed, digest incorrect algorithm.")
-			call.respond(
-				HttpStatusCode.Unauthorized,
-				ApiError(
-					message = "Digest incorrect algorithm",
-					requestId = call.callId
-				)
-			)
-			return
-		}
 
 		if (
 			call.request.headers["Signature"].isNullOrEmpty()
-		) {
-			logger.debug("Validation failed, signature not present.")
-			call.respond(
-				HttpStatusCode.Unauthorized,
-				ApiError(
-					message = "Signature not present",
-					requestId = call.callId
-				)
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Signature not present."
 			)
-			return
-		}
+
+		if (
+			!call.request.headers["Digest"]!!.startsWith("SHA-256=")
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Digest uses unsupported algorithm."
+			)
 
 		if (
 			isDigestValid(call.request.headers["Digest"]!!, body)
-		) {
-			logger.debug("Validation failed, digest invalid.")
-			call.respond(
-				HttpStatusCode.Unauthorized,
-				ApiError(
-					message = "Digest invalid",
-					requestId = call.callId
-				)
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Digest invalid."
 			)
-			return
-		}
 
 
 	}
@@ -112,4 +82,14 @@ class ApValidationService {
 
 		return digest == Base64.encode(ourDigest)
 	}
+
+	enum class ApValidationExceptionType {
+		Unauthorized,
+		Forbidden
+	}
+
+	class ApValidationException(
+		type: ApValidationExceptionType = ApValidationExceptionType.Unauthorized,
+		message: String = "Validation failed."
+	) : Exception(message)
 }

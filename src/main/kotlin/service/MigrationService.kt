@@ -20,7 +20,7 @@ class MigrationService {
 	private val migrationPath: String = "src/main/resources/migrations"
 	private val database = Database.database
 
-	val flyway = Flyway.configure()
+	val flyway: Flyway = Flyway.configure()
 		.dataSource("jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}", configuration.database.user, configuration.database.password)
 		.locations("filesystem:$migrationPath")
 		.load()
