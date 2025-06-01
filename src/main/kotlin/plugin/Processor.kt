@@ -1,9 +1,8 @@
 package me.blueb.plugin
 
-import me.blueb.model.ap.ApType
 import org.pf4j.ExtensionPoint
 
 interface Processor : ExtensionPoint {
-	val activityType: ApType.Activity
+	val activityType: String
 	fun process(body: Any)
 }

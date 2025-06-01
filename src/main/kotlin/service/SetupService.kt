@@ -1,9 +1,6 @@
 package me.blueb.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import me.blueb.db.entity.RoleEntity
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.entity.UserPrivateEntity
@@ -13,6 +10,7 @@ import me.blueb.db.table.UserTable
 import me.blueb.model.Configuration
 import me.blueb.model.KeyType
 import me.blueb.model.RoleType
+import me.blueb.service.ap.ApIdService
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.slf4j.Logger
@@ -22,6 +20,8 @@ import java.security.SecureRandom
 
 class SetupService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+
+	val apIdService = ApIdService()
 
 	private val userService = UserService()
 	private val keypairService = KeypairService()
@@ -102,9 +102,9 @@ class SetupService {
 
 			suspendTransaction {
 				UserEntity.new(id) {
-					apId = configuration.url.toString() + "user/" + id
-					inbox = configuration.url.toString() + "user/" + id + "/inbox"
-					outbox = configuration.url.toString() + "user/" + id + "/outbox"
+					apId = apIdService.renderUserApId(id)
+					inbox = apIdService.renderInboxApId(id)
+					outbox = apIdService.renderOutboxApId(id)
 					username = "instance.actor"
 					activated = true
 					automated = true

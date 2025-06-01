@@ -33,8 +33,9 @@ data class RegisterBody(
 fun Route.register() {
     val configuration = Configuration()
 
-    val identifierService = IdentifierService()
 	val apIdService = ApIdService()
+
+    val identifierService = IdentifierService()
     val userService = UserService()
 	val keypairService = KeypairService()
 	val validationService = ValidationService()

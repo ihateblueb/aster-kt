@@ -3,7 +3,7 @@ name: "Aster"
 
 # URL instance is to be accessible by.
 # Do not reuse domains after starting an instance.
-# Do not change after you start using this instance.
+# Do not change after you start the instance for the first time.
 url: "https://aster.example.com/"
 
 # options:
