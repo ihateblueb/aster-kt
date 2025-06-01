@@ -1,1 +1,2 @@
-ALTER TABLE user_private ADD PRIMARY KEY (id);
+ALTER TABLE user_private
+	ADD PRIMARY KEY (id);

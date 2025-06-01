@@ -1,14 +1,14 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
 import MigrationUtils
-import me.blueb.db.Database
-import me.blueb.db.table.*
-import me.blueb.model.Configuration
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.db.Database
+import site.remlit.blueb.db.table.*
+import site.remlit.blueb.model.Configuration
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService {
@@ -21,7 +21,11 @@ class MigrationService {
 	private val database = Database.database
 
 	val flyway: Flyway = Flyway.configure()
-		.dataSource("jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}", configuration.database.user, configuration.database.password)
+		.dataSource(
+			"jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}",
+			configuration.database.user,
+			configuration.database.password
+		)
 		.locations("filesystem:$migrationPath")
 		.load()
 

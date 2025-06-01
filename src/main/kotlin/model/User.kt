@@ -1,10 +1,9 @@
-package me.blueb.model
+package site.remlit.blueb.model
 
 import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.Serializable
-import me.blueb.db.entity.UserEntity
-import me.blueb.service.RelationshipService
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.service.RelationshipService
 
 @Serializable
 data class User(
@@ -44,37 +43,37 @@ data class User(
 
 	val relationship: List<Map<String, Relationship?>>? = null,
 ) {
-    companion object {
+	companion object {
 		private val relationshipService = RelationshipService()
 
-        fun fromEntity(entity: UserEntity, relationshipPair: Pair<Relationship?, Relationship?>? = null) = User(
-            id = entity.id.toString(),
-            apId = entity.apId,
-            inbox = entity.inbox,
-            outbox = entity.outbox,
+		fun fromEntity(entity: UserEntity, relationshipPair: Pair<Relationship?, Relationship?>? = null) = User(
+			id = entity.id.toString(),
+			apId = entity.apId,
+			inbox = entity.inbox,
+			outbox = entity.outbox,
 
-            username = entity.username,
-            host = entity.host,
-            displayName = entity.displayName,
-            bio = entity.bio,
-            location = entity.location,
-            birthday = entity.birthday,
+			username = entity.username,
+			host = entity.host,
+			displayName = entity.displayName,
+			bio = entity.bio,
+			location = entity.location,
+			birthday = entity.birthday,
 
-            avatar = entity.avatar,
-            avatarAlt = entity.avatarAlt,
-            banner = entity.banner,
-            bannerAlt = entity.bannerAlt,
+			avatar = entity.avatar,
+			avatarAlt = entity.avatarAlt,
+			banner = entity.banner,
+			bannerAlt = entity.bannerAlt,
 
-            locked = entity.locked,
-            suspended = entity.suspended,
-            activated = entity.activated,
-            automated = entity.automated,
-            discoverable = entity.discoverable,
-            indexable = entity.indexable,
-            sensitive = entity.sensitive,
+			locked = entity.locked,
+			suspended = entity.suspended,
+			activated = entity.activated,
+			automated = entity.automated,
+			discoverable = entity.discoverable,
+			indexable = entity.indexable,
+			sensitive = entity.sensitive,
 
-            isCat = entity.isCat,
-            speakAsCat = entity.speakAsCat,
+			isCat = entity.isCat,
+			speakAsCat = entity.speakAsCat,
 
 			createdAt = entity.createdAt,
 			updatedAt = entity.updatedAt,
@@ -84,6 +83,6 @@ data class User(
 			relationship = if (relationshipPair != null)
 				relationshipService.mapPair(relationshipPair)
 			else null
-        )
-    }
+		)
+	}
 }

@@ -1,18 +1,17 @@
-package me.blueb.service.ap
+package site.remlit.blueb.service.ap
 
-import io.ktor.http.HttpMethod
-import io.ktor.server.request.httpMethod
-import io.ktor.server.request.receive
-import io.ktor.server.routing.RoutingRequest
+import io.ktor.http.*
+import io.ktor.server.request.*
+import io.ktor.server.routing.*
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
-import me.blueb.model.Configuration
-import me.blueb.model.PolicyType
-import me.blueb.service.KeypairService
-import me.blueb.service.PolicyService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.httpSignatures.HttpSignature
+import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.model.PolicyType
+import site.remlit.blueb.service.KeypairService
+import site.remlit.blueb.service.PolicyService
 import java.security.MessageDigest
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -29,10 +28,10 @@ class ApValidationService {
 	private val keypairService = KeypairService()
 
 	suspend fun validate(request: RoutingRequest, body: ByteArray) {
-		val isGet = request.httpMethod == HttpMethod.Get
+		request.httpMethod == HttpMethod.Get
 
 		val blockPolicies = policyService.getAllByType(PolicyType.Block)
-		val blockedHosts = policyService.reducePoliciesInListToHost(blockPolicies)
+		policyService.reducePoliciesInListToHost(blockPolicies)
 
 		if (
 			request.headers["Host"].isNullOrEmpty() ||

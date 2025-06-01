@@ -1,26 +1,24 @@
-package me.blueb
+package site.remlit.blueb
 
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.http.ContentType
-import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callid.*
-import io.ktor.server.plugins.calllogging.CallLogging
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.plugins.defaultheaders.DefaultHeaders
-import io.ktor.server.plugins.forwardedheaders.ForwardedHeaders
-import io.ktor.server.request.httpMethod
-import io.ktor.server.request.uri
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.request.*
 import kotlinx.coroutines.runBlocking
-import me.blueb.db.Database
-import me.blueb.model.Configuration
-import me.blueb.service.CommandLineService
-import me.blueb.service.IdentifierService
-import me.blueb.service.PluginService
-import me.blueb.service.SetupService
-import me.blueb.util.jsonConfig
+import site.remlit.blueb.db.Database
+import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.service.CommandLineService
+import site.remlit.blueb.service.IdentifierService
+import site.remlit.blueb.service.PluginService
+import site.remlit.blueb.service.SetupService
+import site.remlit.blueb.util.jsonConfig
 
 private val configuration = Configuration()
 

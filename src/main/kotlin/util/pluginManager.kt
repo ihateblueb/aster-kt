@@ -1,4 +1,4 @@
-package me.blueb.util
+package site.remlit.blueb.util
 
 import org.pf4j.DefaultPluginManager
 

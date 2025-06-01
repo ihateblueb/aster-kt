@@ -1,26 +1,25 @@
-package me.blueb.route.ap
+package site.remlit.blueb.route.ap
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.routing.get
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.util.getOrFail
-import me.blueb.model.ap.ApActor
-import me.blueb.service.UserService
+import io.ktor.http.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.util.*
+import site.remlit.blueb.model.ap.ApActor
+import site.remlit.blueb.service.UserService
 
 fun Route.apUser() {
-    val userService = UserService()
+	val userService = UserService()
 
-    get("/users/{id}") {
-        val user = userService.getById(call.parameters.getOrFail("id"))
+	get("/users/{id}") {
+		val user = userService.getById(call.parameters.getOrFail("id"))
 
-        if (user == null || user.host != null || !user.activated || user.suspended) {
-            call.respond(HttpStatusCode.NotFound)
+		if (user == null || user.host != null || !user.activated || user.suspended) {
+			call.respond(HttpStatusCode.NotFound)
 			return@get
-        }
+		}
 
-        call.respond(ApActor.fromEntity(user))
-    }
+		call.respond(ApActor.fromEntity(user))
+	}
 
 	get("/users/{id}/followers") {
 		call.respond(HttpStatusCode.NotImplemented)

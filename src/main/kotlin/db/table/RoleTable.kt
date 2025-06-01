@@ -1,9 +1,9 @@
-package me.blueb.db.table
+package site.remlit.blueb.db.table
 
-import me.blueb.model.RoleType
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import site.remlit.blueb.model.RoleType
 
 object RoleTable : IdTable<String>("role") {
 	override val id = varchar("id", length = 125).uniqueIndex("unique_role_id").entityId()

@@ -1,4 +1,4 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
 import org.apache.commons.text.StringEscapeUtils
 import org.owasp.html.PolicyFactory

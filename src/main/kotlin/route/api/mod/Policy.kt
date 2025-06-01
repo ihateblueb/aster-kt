@@ -1,23 +1,19 @@
-package me.blueb.route.api.mod
+package site.remlit.blueb.route.api.mod
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.auth.authenticate
-import io.ktor.server.plugins.callid.callId
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.delete
-import io.ktor.server.routing.get
-import io.ktor.server.routing.patch
-import io.ktor.server.routing.post
-import io.ktor.server.util.getOrFail
+import io.ktor.http.*
+import io.ktor.server.auth.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
-import me.blueb.db.table.PolicyTable
-import me.blueb.model.ApiError
-import me.blueb.model.PolicyType
-import me.blueb.service.PolicyService
-import me.blueb.service.TimelineService
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import site.remlit.blueb.db.table.PolicyTable
+import site.remlit.blueb.model.ApiError
+import site.remlit.blueb.model.PolicyType
+import site.remlit.blueb.service.PolicyService
+import site.remlit.blueb.service.TimelineService
 
 private val policyService = PolicyService()
 private val timelineService = TimelineService()
@@ -52,7 +48,7 @@ fun Route.modPolicy() {
 				(body.type == PolicyType.Block || body.type == PolicyType.Silence || body.type == PolicyType.ForceSensitive || body.type == PolicyType.ForceContentWarning || body.type == PolicyType.ForceFollowRequest) && body.host == null
 			) {
 				call.respond(
-					HttpStatusCode.BadRequest, 
+					HttpStatusCode.BadRequest,
 					ApiError(
 						"This type of policy requires a host",
 						call.callId

@@ -1,18 +1,11 @@
-package me.blueb.service.ap
+package site.remlit.blueb.service.ap
 
-import io.ktor.http.Url
-import kotlinx.datetime.LocalDateTime
+import io.ktor.http.*
 import kotlinx.serialization.json.JsonObject
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.service.FormatService
-import me.blueb.service.IdentifierService
-import me.blueb.service.ResolverService
-import me.blueb.service.SanitizerService
-import me.blueb.service.TimeService
-import me.blueb.service.UserService
 import org.slf4j.LoggerFactory
-import java.time.format.DateTimeParseException
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.service.*
 
 class ApActorService {
 	private val logger = LoggerFactory.getLogger(this::class.java)
@@ -109,7 +102,8 @@ class ApActorService {
 					username = sanitizerService.sanitize(extractedPreferredUsername, true)
 
 					val extractedName = apUtilityService.extractString(json["name"])
-					displayName = if (!extractedName.isNullOrBlank()) sanitizerService.sanitize(extractedName, true) else null
+					displayName =
+						if (!extractedName.isNullOrBlank()) sanitizerService.sanitize(extractedName, true) else null
 
 					host = formatService.toASCII(Url(extractedId).host)
 
@@ -143,7 +137,7 @@ class ApActorService {
 			}
 
 			return userService.getById(id)
-		} catch(e: Exception) {
+		} catch (e: Exception) {
 			logger.error(e.message, e)
 			return null
 		}

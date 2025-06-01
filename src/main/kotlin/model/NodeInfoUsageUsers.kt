@@ -1,8 +1,8 @@
-package me.blueb.model
+package site.remlit.blueb.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class NodeInfoUsageUsers(
-    val total: Int,
+	val total: Int,
 )

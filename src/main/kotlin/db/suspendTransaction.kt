@@ -1,4 +1,4 @@
-package me.blueb.db
+package site.remlit.blueb.db
 
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Transaction
@@ -7,4 +7,4 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 val Dispatchers.DB get() = Dispatchers.IO
 
 suspend fun <T> suspendTransaction(block: Transaction.() -> T): T =
-    newSuspendedTransaction(Dispatchers.DB, statement = block)
+	newSuspendedTransaction(Dispatchers.DB, statement = block)

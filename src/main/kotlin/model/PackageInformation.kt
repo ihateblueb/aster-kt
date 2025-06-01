@@ -1,6 +1,6 @@
-package me.blueb.model
+package site.remlit.blueb.model
 
-import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.config.*
 
 class PackageInformation {
 	val name: String
@@ -12,6 +12,6 @@ class PackageInformation {
 
 		name = appConfig.propertyOrNull("name")?.getString() ?: "aster"
 		version = appConfig.propertyOrNull("version")?.getString() ?: "0.0.0"
-		groupId = appConfig.propertyOrNull("groupId")?.getString() ?: "me.blueb"
+		groupId = appConfig.propertyOrNull("groupId")?.getString() ?: "site.remlit.blueb"
 	}
 }

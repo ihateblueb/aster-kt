@@ -1,8 +1,7 @@
-package me.blueb.route
+package site.remlit.blueb.route
 
-import io.ktor.server.http.content.react
-import io.ktor.server.http.content.singlePageApplication
-import io.ktor.server.routing.Route
+import io.ktor.server.http.content.*
+import io.ktor.server.routing.*
 
 fun Route.frontend() {
 	singlePageApplication {

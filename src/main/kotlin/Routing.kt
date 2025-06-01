@@ -1,19 +1,19 @@
-package me.blueb
+package site.remlit.blueb
 
 import io.ktor.server.application.*
-import io.ktor.server.plugins.swagger.swaggerUI
+import io.ktor.server.plugins.swagger.*
 import io.ktor.server.routing.*
-import me.blueb.route.ap.apUser
-import me.blueb.route.api.register
-
-import me.blueb.route.ap.*
-import me.blueb.route.api.*
-import me.blueb.route.api.mod.*
-import me.blueb.route.frontend
+import site.remlit.blueb.route.ap.*
+import site.remlit.blueb.route.api.login
+import site.remlit.blueb.route.api.mod.modPolicy
+import site.remlit.blueb.route.api.note
+import site.remlit.blueb.route.api.register
+import site.remlit.blueb.route.api.user
+import site.remlit.blueb.route.frontend
 
 fun Application.configureRouting() {
-    routing {
-        swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
+	routing {
+		swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
 
 		hostMeta()
 		nodeInfo()
@@ -23,15 +23,15 @@ fun Application.configureRouting() {
 		outbox()
 
 		apNote()
-        apUser()
+		apUser()
 
 		modPolicy()
 
 		login()
 		note()
-        register()
-        user()
+		register()
+		user()
 
 		frontend()
-    }
+	}
 }

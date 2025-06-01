@@ -1,1 +1,2 @@
-ALTER TABLE "user" ADD "publicKey" VARCHAR(5000) NOT NULL;
+ALTER TABLE "user"
+	ADD "publicKey" VARCHAR(5000) NOT NULL;

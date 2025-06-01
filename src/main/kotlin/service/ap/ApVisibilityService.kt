@@ -1,10 +1,10 @@
-package me.blueb.service.ap
+package site.remlit.blueb.service.ap
 
-import me.blueb.model.Visibility
+import site.remlit.blueb.model.Visibility
 
 class ApVisibilityService {
 	fun visibilityToCc(visibility: Visibility, followersUrl: String?, to: List<String>?): Map<String, List<String>> {
-		return when(visibility) {
+		return when (visibility) {
 			Visibility.Public -> mapOf(
 				Pair(
 					"to",
@@ -15,6 +15,7 @@ class ApVisibilityService {
 					listOf()
 				),
 			)
+
 			Visibility.Unlisted -> mapOf(
 				Pair(
 					"to",
@@ -25,6 +26,7 @@ class ApVisibilityService {
 					listOf("https://www.w3.org/ns/activitystreams#Public")
 				),
 			)
+
 			Visibility.Followers -> mapOf(
 				Pair(
 					"to",
@@ -35,6 +37,7 @@ class ApVisibilityService {
 					listOf()
 				),
 			)
+
 			Visibility.Direct -> mapOf(
 				Pair(
 					"to",

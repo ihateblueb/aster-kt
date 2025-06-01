@@ -1,4 +1,4 @@
-package me.blueb.model.ap
+package site.remlit.blueb.model.ap
 
 import kotlinx.serialization.Serializable
 

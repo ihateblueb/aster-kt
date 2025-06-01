@@ -1,6 +1,6 @@
-package me.blueb.service.ap
+package site.remlit.blueb.service.ap
 
-import me.blueb.model.Configuration
+import site.remlit.blueb.model.Configuration
 
 /*
 * Changing these can be bad!

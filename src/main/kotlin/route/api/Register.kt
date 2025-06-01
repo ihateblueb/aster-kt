@@ -1,76 +1,67 @@
-package me.blueb.route.api
+package site.remlit.blueb.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.plugins.callid.callId
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
+import io.ktor.http.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.entity.UserPrivateEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.model.ApiError
-import me.blueb.model.InstanceRegistrationsType
-import me.blueb.model.Configuration
-import me.blueb.model.KeyType
-import me.blueb.model.User
-import me.blueb.service.FormatService
-import me.blueb.service.IdentifierService
-import me.blueb.service.KeypairService
-import me.blueb.service.UserService
-import me.blueb.service.ValidationService
-import me.blueb.service.ap.ApIdService
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.db.entity.UserPrivateEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.model.*
+import site.remlit.blueb.service.*
+import site.remlit.blueb.service.ap.ApIdService
 
 @Serializable
 data class RegisterBody(
-    val username: String,
-    val password: String,
-    val invite: String? = null,
+	val username: String,
+	val password: String,
+	val invite: String? = null,
 )
 
 fun Route.register() {
-    val configuration = Configuration()
+	val configuration = Configuration()
 
 	val apIdService = ApIdService()
 
-    val identifierService = IdentifierService()
-    val userService = UserService()
+	val identifierService = IdentifierService()
+	val userService = UserService()
 	val keypairService = KeypairService()
 	val validationService = ValidationService()
 	val formatService = FormatService()
 
-    post("/api/register") {
-        val body = call.receive<RegisterBody>()
+	post("/api/register") {
+		val body = call.receive<RegisterBody>()
 
-        if (configuration.registrations == InstanceRegistrationsType.Closed) {
-            call.respond(
-                status = HttpStatusCode.BadRequest,
-                message = ApiError(
-                    message = "Registrations closed",
-                    requestId = call.callId
-                )
-            )
-            return@post
-        }
+		if (configuration.registrations == InstanceRegistrationsType.Closed) {
+			call.respond(
+				status = HttpStatusCode.BadRequest,
+				message = ApiError(
+					message = "Registrations closed",
+					requestId = call.callId
+				)
+			)
+			return@post
+		}
 
-        if (configuration.registrations == InstanceRegistrationsType.Invite) {
-            call.respond(
-                status = HttpStatusCode.NotImplemented,
-                message = ApiError(
-                    message = "Invite system not implemented",
-                    requestId = call.callId
-                )
-            )
-            return@post
-        }
+		if (configuration.registrations == InstanceRegistrationsType.Invite) {
+			call.respond(
+				status = HttpStatusCode.NotImplemented,
+				message = ApiError(
+					message = "Invite system not implemented",
+					requestId = call.callId
+				)
+			)
+			return@post
+		}
 
-        /*if (configService.registrations == InstanceRegistrationsMode.Invite && body.invite == null)
-            call.respond(
-                status = HttpStatusCode.BadRequest,
-                message = "Invite required",
-            )*/
+		/*if (configService.registrations == InstanceRegistrationsMode.Invite && body.invite == null)
+			call.respond(
+				status = HttpStatusCode.BadRequest,
+				message = "Invite required",
+			)*/
 
 		val username = formatService.toASCII(body.username)
 
@@ -85,7 +76,7 @@ fun Route.register() {
 			return@post
 		}
 
-        // todo: check if username is used
+		// todo: check if username is used
 		// ilike?
 		// 		val existingUser = userService.get(
 		//			UserTable.username like body.username.lowercase()
@@ -102,13 +93,13 @@ fun Route.register() {
 		//			return@post
 		//		}
 
-        val id = identifierService.generate()
-        val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
+		val id = identifierService.generate()
+		val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
 
 		val keypair = keypairService.generate()
 
 		suspendTransaction {
- 			UserEntity.new(id) {
+			UserEntity.new(id) {
 				apId = apIdService.renderUserApId(id)
 				inbox = apIdService.renderInboxApId(id)
 				outbox = apIdService.renderOutboxApId(id)
@@ -129,6 +120,6 @@ fun Route.register() {
 			return@post
 		}
 
-        call.respond(User.fromEntity(user))
-    }
+		call.respond(User.fromEntity(user))
+	}
 }

@@ -1,12 +1,11 @@
-package me.blueb.route.ap
+package site.remlit.blueb.route.ap
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
-import me.blueb.service.ap.ApUtilityService
-import me.blueb.service.ap.ApValidationService
+import io.ktor.http.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import site.remlit.blueb.service.ap.ApUtilityService
+import site.remlit.blueb.service.ap.ApValidationService
 
 private val apValidationService = ApValidationService()
 private val apUtilityService = ApUtilityService()
@@ -17,7 +16,7 @@ fun Route.inbox() {
 
 		apValidationService.validate(call.request, body)
 
-		val bodyObject = apUtilityService.byteArrayToObject(body)
+		apUtilityService.byteArrayToObject(body)
 
 		call.respond(HttpStatusCode.NotImplemented)
 	}

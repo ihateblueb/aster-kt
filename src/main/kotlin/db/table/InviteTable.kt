@@ -1,4 +1,4 @@
-package me.blueb.db.table
+package site.remlit.blueb.db.table
 
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.ReferenceOption

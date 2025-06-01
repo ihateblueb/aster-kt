@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start Server" type="KtorApplicationConfigurationType" factoryName="Ktor">
-    <option name="MAIN_CLASS_NAME" value="me.blueb.ApplicationKt" />
+    <option name="MAIN_CLASS_NAME" value="site.remlit.blueb.ApplicationKt" />
     <module name="aster" />
     <option name="alternativeJrePath" />
     <option name="alternativeJrePathEnabled" value="false" />
     <option name="includeProvidedScope" value="false" />
-    <option name="mainClass" value="me.blueb.ApplicationKt" />
+    <option name="mainClass" value="site.remlit.blueb.ApplicationKt" />
     <option name="passParentEnvs" value="true" />
     <option name="programParameters" value="" />
     <option name="shortenCommandLine" />

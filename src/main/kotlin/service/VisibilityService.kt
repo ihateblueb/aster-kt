@@ -1,6 +1,6 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import me.blueb.model.Visibility
+import site.remlit.blueb.model.Visibility
 
 class VisibilityService {
 	private val userService = UserService()
@@ -10,8 +10,8 @@ class VisibilityService {
 	 * Determines if a user can see an entity
 	 *
 	 * @param visibility Visibility of the entity
-	 * @param author Author ([me.blueb.model.User]) of the entity
-	 * @param to List of [me.blueb.model.User.id], other users who can see this entity (for [Visibility.Direct]). Not applicable to all entities.
+	 * @param author Author ([site.remlit.blueb.model.User]) of the entity
+	 * @param to List of [site.remlit.blueb.model.User.id], other users who can see this entity (for [Visibility.Direct]). Not applicable to all entities.
 	 * @param user User who is trying to view the entity
 	 * @param ignoreBlock Whether to take block relationships into account
 	 * */
@@ -34,10 +34,13 @@ class VisibilityService {
 		when (visibility) {
 			Visibility.Public -> {
 			}
+
 			Visibility.Unlisted -> {
 			}
+
 			Visibility.Followers -> {
 			}
+
 			Visibility.Direct -> {
 			}
 		}

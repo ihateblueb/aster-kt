@@ -1,4 +1,4 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
 class ValidationService {
 	fun containsNonAlphanumeric(text: String): Boolean {

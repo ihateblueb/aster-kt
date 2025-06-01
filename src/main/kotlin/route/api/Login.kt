@@ -1,21 +1,20 @@
-package me.blueb.route.api
+package site.remlit.blueb.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.plugins.callid.callId
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
+import io.ktor.http.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import me.blueb.db.table.UserPrivateTable
-import me.blueb.db.table.UserTable
-import me.blueb.model.ApiError
-import me.blueb.model.User
-import me.blueb.service.AuthService
-import me.blueb.service.UserService
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import site.remlit.blueb.db.table.UserPrivateTable
+import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.model.ApiError
+import site.remlit.blueb.model.User
+import site.remlit.blueb.service.AuthService
+import site.remlit.blueb.service.UserService
 
 @Serializable
 data class LoginBody(
@@ -33,7 +32,7 @@ fun Route.login() {
 	val authService = AuthService()
 	val userService = UserService()
 
-    post("/api/login") {
+	post("/api/login") {
 		val body = call.receive<LoginBody>()
 
 		if (body.username.isBlank()) {
@@ -60,7 +59,7 @@ fun Route.login() {
 
 		val user = userService.get(
 			UserTable.username eq body.username
-				and(UserTable.host eq null)
+				and (UserTable.host eq null)
 		)
 
 		if (user == null) {
@@ -105,5 +104,5 @@ fun Route.login() {
 		val token = authService.registerToken(user)
 
 		call.respond(LoginResponse(token, User.fromEntity(user)))
-    }
+	}
 }

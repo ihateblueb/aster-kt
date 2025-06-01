@@ -1,14 +1,11 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import me.blueb.db.entity.AuthEntity
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.db.table.AuthTable
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import site.remlit.blueb.db.entity.AuthEntity
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.db.table.AuthTable
 import java.math.BigInteger
 import java.security.SecureRandom
 
@@ -23,7 +20,7 @@ class AuthService {
 
 	suspend fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
-	fun generateToken() : String {
+	fun generateToken(): String {
 		val random = SecureRandom()
 
 		val bytes = ByteArray(16)
@@ -34,7 +31,7 @@ class AuthService {
 			.padStart(16, '0')
 	}
 
-	suspend fun registerToken(userEntity: UserEntity) : String {
+	suspend fun registerToken(userEntity: UserEntity): String {
 		val id = identifierService.generate()
 		val generatedToken = generateToken()
 

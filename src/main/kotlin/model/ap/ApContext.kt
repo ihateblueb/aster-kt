@@ -1,10 +1,6 @@
-package me.blueb.model.ap
+package site.remlit.blueb.model.ap
 
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.add
-import kotlinx.serialization.json.buildJsonArray
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
+import kotlinx.serialization.json.*
 
 val ApContext: JsonArray = buildJsonArray {
 	add("https://www.w3.org/ns/activitystreams")

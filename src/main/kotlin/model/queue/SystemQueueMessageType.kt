@@ -1,4 +1,4 @@
-package me.blueb.model.queue
+package site.remlit.blueb.model.queue
 
 enum class SystemQueueMessageType {
 	// check for policy and then apply to all notes

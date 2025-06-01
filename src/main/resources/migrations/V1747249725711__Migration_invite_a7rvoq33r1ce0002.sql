@@ -1,1 +1,2 @@
-ALTER TABLE invite ADD "usedAt" TIMESTAMP NULL;
+ALTER TABLE invite
+	ADD "usedAt" TIMESTAMP NULL;

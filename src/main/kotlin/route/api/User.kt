@@ -1,20 +1,17 @@
-package me.blueb.route.api
+package site.remlit.blueb.route.api
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.patch
-import io.ktor.server.routing.post
-import io.ktor.server.util.getOrFail
-import me.blueb.db.table.UserTable
-import me.blueb.model.User
-import me.blueb.service.UserService
+import io.ktor.http.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.model.User
+import site.remlit.blueb.service.UserService
 
 fun Route.user() {
-    val userService = UserService()
+	val userService = UserService()
 
 	get("/api/lookup/{handle}") {
 		val handle = call.parameters.getOrFail("handle").removePrefix("@")
@@ -24,7 +21,7 @@ fun Route.user() {
 
 		val user = userService.get(
 			UserTable.username eq splitHandle[0]
-				and(UserTable.host eq host)
+				and (UserTable.host eq host)
 		)
 
 		if (user == null || !user.activated || user.suspended) {
@@ -35,18 +32,18 @@ fun Route.user() {
 		call.respond(User.fromEntity(user))
 	}
 
-    get("/api/user/{id}") {
-        val user = userService.getById(call.parameters.getOrFail("id"))
+	get("/api/user/{id}") {
+		val user = userService.getById(call.parameters.getOrFail("id"))
 
-        if (user == null || !user.activated || user.suspended) {
+		if (user == null || !user.activated || user.suspended) {
 			call.respond(HttpStatusCode.NotFound)
 			return@get
-        }
+		}
 
-        call.respond(
-            User.fromEntity(user)
-        )
-    }
+		call.respond(
+			User.fromEntity(user)
+		)
+	}
 
 	patch("/api/user/{id}") {
 		val user = userService.getById(call.parameters.getOrFail("id"))

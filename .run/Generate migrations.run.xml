@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Generate migrations" type="JetRunConfigurationType">
-    <option name="MAIN_CLASS_NAME" value="me.blueb.ApplicationKt" />
+    <option name="MAIN_CLASS_NAME" value="site.remlit.blueb.ApplicationKt" />
     <module name="aster" />
     <option name="PROGRAM_PARAMETERS" value="migration:generate" />
     <shortenClasspath name="NONE" />

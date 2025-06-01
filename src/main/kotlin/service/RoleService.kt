@@ -1,14 +1,11 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import me.blueb.db.entity.PolicyEntity
-import me.blueb.db.entity.RoleEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.db.table.PolicyTable
-import me.blueb.db.table.RoleTable
-import me.blueb.model.PolicyType
-import me.blueb.model.RoleType
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import site.remlit.blueb.db.entity.RoleEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.db.table.RoleTable
+import site.remlit.blueb.model.RoleType
 
 class RoleService {
 	private val userService = UserService()

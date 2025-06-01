@@ -1,21 +1,15 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
 import kolbasa.consumer.Message
 import kolbasa.consumer.datasource.DatabaseConsumer
 import kolbasa.producer.datasource.DatabaseProducer
 import kolbasa.queue.PredefinedDataTypes
 import kolbasa.queue.Queue
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newFixedThreadPoolContext
-import kotlinx.coroutines.runBlocking
-import me.blueb.db.Database
-import me.blueb.model.Configuration
+import kotlinx.coroutines.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.db.Database
+import site.remlit.blueb.model.Configuration
 
 class QueueService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)

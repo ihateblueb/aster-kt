@@ -1,7 +1,7 @@
-package me.blueb.model
+package site.remlit.blueb.model
 
-import io.ktor.http.Url
-import io.ktor.server.config.yaml.YamlConfig
+import io.ktor.http.*
+import io.ktor.server.config.yaml.*
 import java.io.File
 import java.util.Locale.getDefault
 

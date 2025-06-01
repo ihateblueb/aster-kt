@@ -1,12 +1,12 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import me.blueb.model.KeyType
+import site.remlit.blueb.model.KeyType
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
-import java.util.Base64
+import java.util.*
 
 class KeypairService {
 	fun generate(): KeyPair {
@@ -16,7 +16,8 @@ class KeypairService {
 	}
 
 	fun keyToPem(type: KeyType, key: KeyPair): String {
-		val base64Key = Base64.getEncoder().encodeToString(if (type == KeyType.Private) key.private.encoded else key.public.encoded)
+		val base64Key =
+			Base64.getEncoder().encodeToString(if (type == KeyType.Private) key.private.encoded else key.public.encoded)
 
 		val start = if (type == KeyType.Private) "-----BEGIN PRIVATE KEY-----\n" else "-----BEGIN PUBLIC KEY-----\n"
 		val end = if (type == KeyType.Private) "\n-----END PRIVATE KEY-----\n" else "\n-----END PUBLIC KEY-----\n"

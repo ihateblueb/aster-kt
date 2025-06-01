@@ -1,4 +1,4 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -10,13 +10,12 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import me.blueb.model.Configuration
-import me.blueb.model.PackageInformation
-import me.blueb.model.PolicyType
-import me.blueb.util.jsonConfig
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.model.PackageInformation
+import site.remlit.blueb.model.PolicyType
+import site.remlit.blueb.util.jsonConfig
 
 class ResolverService {
 	private val logger = LoggerFactory.getLogger(this::class.java)
@@ -30,7 +29,10 @@ class ResolverService {
 	fun createClient(): HttpClient {
 		return HttpClient(CIO) {
 			defaultRequest {
-				headers.append("User-Agent", "${packageInformation.name}/${packageInformation.version} (+${configuration.url})")
+				headers.append(
+					"User-Agent",
+					"${packageInformation.name}/${packageInformation.version} (+${configuration.url})"
+				)
 			}
 
 			install(ContentNegotiation) {

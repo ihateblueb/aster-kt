@@ -1,20 +1,20 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import me.blueb.db.entity.RoleEntity
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.entity.UserPrivateEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.db.table.RoleTable
-import me.blueb.db.table.UserTable
-import me.blueb.model.Configuration
-import me.blueb.model.KeyType
-import me.blueb.model.RoleType
-import me.blueb.service.ap.ApIdService
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.db.entity.RoleEntity
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.db.entity.UserPrivateEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.db.table.RoleTable
+import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.model.KeyType
+import site.remlit.blueb.model.RoleType
+import site.remlit.blueb.service.ap.ApIdService
 import java.math.BigInteger
 import java.security.SecureRandom
 
@@ -30,7 +30,7 @@ class SetupService {
 
 	private val configuration = Configuration()
 
-    suspend fun setup() {
+	suspend fun setup() {
 		setupRoles()
 		setupInstanceActor()
 	}
@@ -78,7 +78,7 @@ class SetupService {
 	suspend fun setupInstanceActor() {
 		val existingActor = userService.get(
 			UserTable.username eq "instance.actor"
-				and(UserTable.host eq null)
+				and (UserTable.host eq null)
 		)
 
 		if (existingActor != null) {

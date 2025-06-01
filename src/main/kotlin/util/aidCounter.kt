@@ -1,4 +1,4 @@
-package me.blueb.util
+package site.remlit.blueb.util
 
 import kotlin.random.Random
 

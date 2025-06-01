@@ -1,10 +1,8 @@
-package me.blueb.route.ap
+package site.remlit.blueb.route.ap
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import me.blueb.model.Configuration
+import io.ktor.http.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Route.outbox() {
 	get("/outbox") {

@@ -1,9 +1,9 @@
-package me.blueb
+package site.remlit.blueb
 
 import io.ktor.server.application.*
 import kolbasa.schema.SchemaHelpers
-import me.blueb.db.Database
-import me.blueb.service.QueueService
+import site.remlit.blueb.db.Database
+import site.remlit.blueb.service.QueueService
 
 private val queueService = QueueService()
 

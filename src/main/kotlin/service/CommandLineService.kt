@@ -1,10 +1,10 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import me.blueb.db.Database
-import me.blueb.db.suspendTransaction
-import me.blueb.model.PackageInformation
 import org.slf4j.LoggerFactory
-import java.util.Scanner
+import site.remlit.blueb.db.Database
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.model.PackageInformation
+import java.util.*
 
 class CommandLineService {
 	private val logger = LoggerFactory.getLogger(this::class.java)
@@ -32,7 +32,7 @@ class CommandLineService {
 
 		logger.info("Starting continuous scanner.")
 
-		when(line) {
+		when (line) {
 			"exit" -> scanner.close()
 			else -> execute(line.split(" ").toTypedArray())
 		}

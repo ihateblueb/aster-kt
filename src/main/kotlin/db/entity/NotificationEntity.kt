@@ -1,10 +1,9 @@
-package me.blueb.db.entity
+package site.remlit.blueb.db.entity
 
-import me.blueb.db.table.InviteTable
-import me.blueb.db.table.NotificationTable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import site.remlit.blueb.db.table.NotificationTable
 
 class NotificationEntity(id: EntityID<String>) : Entity<String>(id) {
 	companion object : EntityClass<String, NotificationEntity>(NotificationTable)

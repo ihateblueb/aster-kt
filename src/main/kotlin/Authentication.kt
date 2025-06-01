@@ -1,21 +1,18 @@
-package me.blueb
+package site.remlit.blueb
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import io.ktor.server.auth.Authentication
-import io.ktor.server.auth.UserIdPrincipal
-import io.ktor.server.auth.bearer
-import io.ktor.server.plugins.callid.callId
-import io.ktor.server.response.respond
-import io.ktor.util.AttributeKey
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.model.ApiError
-import me.blueb.model.RoleType
-import me.blueb.service.AuthService
-import me.blueb.service.RoleService
-import me.blueb.service.UserService
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.response.*
+import io.ktor.util.*
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.model.ApiError
+import site.remlit.blueb.model.RoleType
+import site.remlit.blueb.service.AuthService
+import site.remlit.blueb.service.RoleService
+import site.remlit.blueb.service.UserService
 
 private val authService = AuthService()
 private val userService = UserService()
@@ -29,7 +26,7 @@ fun Application.configureAuthentication() {
 			authenticate { credential ->
 				val auth = authService.getByToken(credential.token)
 
-				if (auth != null ) {
+				if (auth != null) {
 					// todo: if older than 3 months, invalidate
 
 					var authId = ""

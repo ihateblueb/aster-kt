@@ -1,15 +1,13 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import me.blueb.db.entity.NoteEntity
-import me.blueb.db.entity.UserEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.db.table.NoteTable
-import me.blueb.db.table.UserTable
-import me.blueb.model.Note
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
+import site.remlit.blueb.db.entity.NoteEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.db.table.NoteTable
+import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.model.Note
 
 class NoteService {
 	suspend fun get(where: Op<Boolean>): Note? = suspendTransaction {

@@ -1,11 +1,11 @@
-package me.blueb.service
+package site.remlit.blueb.service
 
-import me.blueb.db.entity.PolicyEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.db.table.PolicyTable
-import me.blueb.model.PolicyType
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import site.remlit.blueb.db.entity.PolicyEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.db.table.PolicyTable
+import site.remlit.blueb.model.PolicyType
 
 class PolicyService {
 	suspend fun get(where: Op<Boolean>): PolicyEntity? = suspendTransaction {

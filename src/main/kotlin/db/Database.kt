@@ -1,15 +1,16 @@
-package me.blueb.db
+package site.remlit.blueb.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import me.blueb.model.Configuration
 import org.jetbrains.exposed.sql.Database
+import site.remlit.blueb.model.Configuration
 
 val configuration = Configuration()
 
 object Database {
 	val config = HikariConfig().apply {
-		jdbcUrl = "jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}"
+		jdbcUrl =
+			"jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}"
 		username = configuration.database.user
 		password = configuration.database.password
 	}

@@ -1,11 +1,11 @@
-package me.blueb.model.ap
+package site.remlit.blueb.model.ap
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import me.blueb.db.entity.UserEntity
-import me.blueb.model.Configuration
-import me.blueb.service.FormatService
-import me.blueb.service.ap.ApIdService
+import site.remlit.blueb.db.entity.UserEntity
+import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.service.FormatService
+import site.remlit.blueb.service.ap.ApIdService
 
 private val configuration = Configuration()
 
@@ -13,7 +13,7 @@ private val apIdService = ApIdService()
 private val formatService = FormatService()
 
 /**
- * ActivityPub representation of [me.blueb.model.User]
+ * ActivityPub representation of [site.remlit.blueb.model.User]
  * Only to be used on local users (where host is null)
  * */
 @Serializable
@@ -55,12 +55,12 @@ data class ApActor(
 	val publicKey: ApKey
 
 ) : ApObjectWithContext() {
-    companion object {
-        fun fromEntity(user: UserEntity): ApActor =
-            ApActor(
-                id = user.apId,
-                type = ApType.Object.Person,
-                preferredUsername = user.username,
+	companion object {
+		fun fromEntity(user: UserEntity): ApActor =
+			ApActor(
+				id = user.apId,
+				type = ApType.Object.Person,
+				preferredUsername = user.username,
 
 				icon = if (user.avatar != null) ApImage(
 					src = user.avatar!!,
@@ -75,8 +75,8 @@ data class ApActor(
 					alt = user.bannerAlt
 				) else null,
 
-                summary = user.bio,
-                _misskey_summary = user.bio,
+				summary = user.bio,
+				_misskey_summary = user.bio,
 
 				sensitive = user.sensitive,
 				discoverable = user.discoverable,
@@ -100,6 +100,6 @@ data class ApActor(
 					owner = user.apId,
 					publicKeyPem = user.publicKey
 				)
-            )
-    }
+			)
+	}
 }

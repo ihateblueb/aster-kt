@@ -1,268 +1,268 @@
 openapi: "3.1.0"
 info:
-  title: "Aster API"
-  description: "Aster API"
-  version: "1.0.0"
+    title: "Aster API"
+    description: "Aster API"
+    version: "1.0.0"
 paths:
-  /actor/{id}:
-    get:
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ApActor"
-  /api/register:
-    post:
-      description: ""
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterBody"
-        required: true
-      responses:
-        "501":
-          description: "Not Implemented"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-  /api/user/{id}:
-    get:
-      description: ""
-      parameters:
-        - name: "id"
-          in: "path"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ExposedUser"
-  /nodeinfo/{version}:
-    get:
-      description: ""
-      parameters:
-        - name: "version"
-          in: "path"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/Nodeinfo"
-              examples:
-                Example#1:
-                  description: ""
-                  value:
-                    version: "null"
-                    software:
-                      name: "aster"
-                      version: "null"
-                    protocols:
-                      - "activitypub"
-                    openRegistrations: true
-                    usage:
-                      users:
-                        total: 0
-                      localPosts: 0
+    /actor/{id}:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/ApActor"
+    /api/register:
+        post:
+            description: ""
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/RegisterBody"
+                required: true
+            responses:
+                "501":
+                    description: "Not Implemented"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+    /api/user/{id}:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/ExposedUser"
+    /nodeinfo/{version}:
+        get:
+            description: ""
+            parameters:
+                -   name: "version"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "400":
+                    description: "Bad Request"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/Nodeinfo"
+                            examples:
+                                Example#1:
+                                    description: ""
+                                    value:
+                                        version: "null"
+                                        software:
+                                            name: "aster"
+                                            version: "null"
+                                        protocols:
+                                            - "activitypub"
+                                        openRegistrations: true
+                                        usage:
+                                            users:
+                                                total: 0
+                                            localPosts: 0
 components:
-  schemas:
-    LdContextItem:
-      type: "object"
-      properties: { }
-    ApActor:
-      type: "object"
-      properties:
-        context:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/LdContextItem"
-        id:
-          type: "string"
-        type:
-          type: "string"
-          enum:
-            - "Person"
-            - "Service"
-            - "Note"
-            - "Image"
-            - "Key"
-        url:
-          type: "string"
-          nullable: true
-        preferredUsername:
-          type: "string"
-        name:
-          type: "string"
-          nullable: true
-      required:
-        - "context"
-        - "id"
-        - "type"
-        - "preferredUsername"
-    RegisterBody:
-      type: "object"
-      properties:
-        username:
-          type: "string"
-        password:
-          type: "string"
-      required:
-        - "username"
-        - "password"
-    ExposedUser:
-      type: "object"
-      properties:
-        id:
-          type: "string"
-        apId:
-          type: "string"
-        inbox:
-          type: "string"
-        outbox:
-          type: "string"
-          nullable: true
-        username:
-          type: "string"
-        host:
-          type: "string"
-          nullable: true
-        displayName:
-          type: "string"
-          nullable: true
-        bio:
-          type: "string"
-          nullable: true
-        location:
-          type: "string"
-          nullable: true
-        birthday:
-          type: "string"
-          nullable: true
-        avatar:
-          type: "string"
-          nullable: true
-        avatarAlt:
-          type: "string"
-          nullable: true
-        banner:
-          type: "string"
-          nullable: true
-        bannerAlt:
-          type: "string"
-          nullable: true
-        locked:
-          type: "boolean"
-        suspended:
-          type: "boolean"
-        activated:
-          type: "boolean"
-        discoverable:
-          type: "boolean"
-        indexable:
-          type: "boolean"
-        sensitive:
-          type: "boolean"
-        isCat:
-          type: "boolean"
-        speakAsCat:
-          type: "boolean"
-      required:
-        - "id"
-        - "apId"
-        - "inbox"
-        - "username"
-        - "locked"
-        - "suspended"
-        - "activated"
-        - "discoverable"
-        - "indexable"
-        - "sensitive"
-        - "isCat"
-        - "speakAsCat"
-    NodeinfoSoftare:
-      type: "object"
-      properties:
-        name:
-          type: "string"
-        version:
-          type: "string"
-      required:
-        - "name"
-        - "version"
-    NodeinfoUsageUsers:
-      type: "object"
-      properties:
-        total:
-          type: "integer"
-          format: "int32"
-      required:
-        - "total"
-    NodeinfoUsage:
-      type: "object"
-      properties:
-        users:
-          $ref: "#/components/schemas/NodeinfoUsageUsers"
-        localPosts:
-          type: "integer"
-          format: "int32"
-      required:
-        - "users"
-        - "localPosts"
-    Nodeinfo:
-      type: "object"
-      properties:
-        version:
-          type: "string"
-        software:
-          $ref: "#/components/schemas/NodeinfoSoftare"
-        protocols:
-          type: "array"
-          items:
-            type: "string"
-        openRegistrations:
-          type: "boolean"
-        usage:
-          $ref: "#/components/schemas/NodeinfoUsage"
-      required:
-        - "version"
-        - "software"
-        - "protocols"
-        - "openRegistrations"
-        - "usage"
+    schemas:
+        LdContextItem:
+            type: "object"
+            properties: { }
+        ApActor:
+            type: "object"
+            properties:
+                context:
+                    type: "array"
+                    items:
+                        $ref: "#/components/schemas/LdContextItem"
+                id:
+                    type: "string"
+                type:
+                    type: "string"
+                    enum:
+                        - "Person"
+                        - "Service"
+                        - "Note"
+                        - "Image"
+                        - "Key"
+                url:
+                    type: "string"
+                    nullable: true
+                preferredUsername:
+                    type: "string"
+                name:
+                    type: "string"
+                    nullable: true
+            required:
+                - "context"
+                - "id"
+                - "type"
+                - "preferredUsername"
+        RegisterBody:
+            type: "object"
+            properties:
+                username:
+                    type: "string"
+                password:
+                    type: "string"
+            required:
+                - "username"
+                - "password"
+        ExposedUser:
+            type: "object"
+            properties:
+                id:
+                    type: "string"
+                apId:
+                    type: "string"
+                inbox:
+                    type: "string"
+                outbox:
+                    type: "string"
+                    nullable: true
+                username:
+                    type: "string"
+                host:
+                    type: "string"
+                    nullable: true
+                displayName:
+                    type: "string"
+                    nullable: true
+                bio:
+                    type: "string"
+                    nullable: true
+                location:
+                    type: "string"
+                    nullable: true
+                birthday:
+                    type: "string"
+                    nullable: true
+                avatar:
+                    type: "string"
+                    nullable: true
+                avatarAlt:
+                    type: "string"
+                    nullable: true
+                banner:
+                    type: "string"
+                    nullable: true
+                bannerAlt:
+                    type: "string"
+                    nullable: true
+                locked:
+                    type: "boolean"
+                suspended:
+                    type: "boolean"
+                activated:
+                    type: "boolean"
+                discoverable:
+                    type: "boolean"
+                indexable:
+                    type: "boolean"
+                sensitive:
+                    type: "boolean"
+                isCat:
+                    type: "boolean"
+                speakAsCat:
+                    type: "boolean"
+            required:
+                - "id"
+                - "apId"
+                - "inbox"
+                - "username"
+                - "locked"
+                - "suspended"
+                - "activated"
+                - "discoverable"
+                - "indexable"
+                - "sensitive"
+                - "isCat"
+                - "speakAsCat"
+        NodeinfoSoftare:
+            type: "object"
+            properties:
+                name:
+                    type: "string"
+                version:
+                    type: "string"
+            required:
+                - "name"
+                - "version"
+        NodeinfoUsageUsers:
+            type: "object"
+            properties:
+                total:
+                    type: "integer"
+                    format: "int32"
+            required:
+                - "total"
+        NodeinfoUsage:
+            type: "object"
+            properties:
+                users:
+                    $ref: "#/components/schemas/NodeinfoUsageUsers"
+                localPosts:
+                    type: "integer"
+                    format: "int32"
+            required:
+                - "users"
+                - "localPosts"
+        Nodeinfo:
+            type: "object"
+            properties:
+                version:
+                    type: "string"
+                software:
+                    $ref: "#/components/schemas/NodeinfoSoftare"
+                protocols:
+                    type: "array"
+                    items:
+                        type: "string"
+                openRegistrations:
+                    type: "boolean"
+                usage:
+                    $ref: "#/components/schemas/NodeinfoUsage"
+            required:
+                - "version"
+                - "software"
+                - "protocols"
+                - "openRegistrations"
+                - "usage"

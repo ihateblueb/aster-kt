@@ -1,10 +1,10 @@
-package me.blueb.model.ap
+package site.remlit.blueb.model.ap
 
 import kotlinx.serialization.Serializable
-import me.blueb.model.Note
-import me.blueb.model.Visibility
-import me.blueb.service.FormatService
-import me.blueb.service.ap.ApVisibilityService
+import site.remlit.blueb.model.Note
+import site.remlit.blueb.model.Visibility
+import site.remlit.blueb.service.FormatService
+import site.remlit.blueb.service.ap.ApVisibilityService
 
 private val apVisibilityService = ApVisibilityService()
 

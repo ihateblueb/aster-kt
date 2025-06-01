@@ -1,9 +1,9 @@
-package me.blueb.db.entity
+package site.remlit.blueb.db.entity
 
-import me.blueb.db.table.RoleTable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import site.remlit.blueb.db.table.RoleTable
 
 
 class RoleEntity(id: EntityID<String>) : Entity<String>(id) {

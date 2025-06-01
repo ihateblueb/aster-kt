@@ -1,5 +1,5 @@
-package me.blueb.model
+package site.remlit.blueb.model
 
 enum class InstanceRegistrationsType {
-    Open, Approval, Invite, Closed
+	Open, Approval, Invite, Closed
 }

@@ -1,4 +1,4 @@
-package me.blueb.plugin
+package site.remlit.blueb.plugin
 
 import org.pf4j.ExtensionPoint
 

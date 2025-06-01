@@ -1,14 +1,13 @@
-package me.blueb.route.ap
+package site.remlit.blueb.route.ap
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.util.getOrFail
-import me.blueb.model.Visibility
-import me.blueb.model.activity.ApCreateActivity
-import me.blueb.model.ap.ApNote
-import me.blueb.service.NoteService
+import io.ktor.http.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.util.*
+import site.remlit.blueb.model.Visibility
+import site.remlit.blueb.model.activity.ApCreateActivity
+import site.remlit.blueb.model.ap.ApNote
+import site.remlit.blueb.service.NoteService
 
 fun Route.apNote() {
 	val noteService = NoteService()

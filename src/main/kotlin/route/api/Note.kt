@@ -1,34 +1,22 @@
-package me.blueb.route.api
+package site.remlit.blueb.route.api
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.auth.authenticate
-import io.ktor.server.plugins.callid.callId
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.delete
-import io.ktor.server.routing.get
-import io.ktor.server.routing.patch
-import io.ktor.server.routing.post
-import io.ktor.server.util.getOrFail
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import io.ktor.http.*
+import io.ktor.server.auth.*
+import io.ktor.server.plugins.callid.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
-import me.blueb.authenticatedUserKey
-import me.blueb.db.entity.NoteEntity
-import me.blueb.db.suspendTransaction
-import me.blueb.model.ApiError
-import me.blueb.model.Configuration
-import me.blueb.model.RoleType
-import me.blueb.model.Visibility
-import me.blueb.service.IdentifierService
-import me.blueb.service.NoteService
-import me.blueb.service.RoleService
-import me.blueb.service.SanitizerService
-import me.blueb.service.TimeService
-import me.blueb.service.ap.ApIdService
-import org.apache.commons.text.StringEscapeUtils
+import site.remlit.blueb.authenticatedUserKey
+import site.remlit.blueb.db.entity.NoteEntity
+import site.remlit.blueb.db.suspendTransaction
+import site.remlit.blueb.model.ApiError
+import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.model.RoleType
+import site.remlit.blueb.model.Visibility
+import site.remlit.blueb.service.*
+import site.remlit.blueb.service.ap.ApIdService
 
 @Serializable
 data class PostNoteBody(
@@ -38,13 +26,13 @@ data class PostNoteBody(
 )
 
 fun Route.note() {
-	val configuration = Configuration()
+	Configuration()
 
 	val identifierService = IdentifierService()
 	val apIdService = ApIdService()
 	val noteService = NoteService()
 	val roleService = RoleService()
-	val timeService = TimeService()
+	TimeService()
 	val sanitizerService = SanitizerService()
 
 	get("/api/note/{id}") {
@@ -80,8 +68,10 @@ fun Route.note() {
 			}
 
 			if (
-				note.user.id != authenticatedUser.id.toString() && (!roleService.userHasRoleOfType(authenticatedUser.id.toString(),
-					RoleType.Admin) || !roleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
+				note.user.id != authenticatedUser.id.toString() && (!roleService.userHasRoleOfType(
+					authenticatedUser.id.toString(),
+					RoleType.Admin
+				) || !roleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
 			) {
 				call.respond(HttpStatusCode.Forbidden)
 				return@delete

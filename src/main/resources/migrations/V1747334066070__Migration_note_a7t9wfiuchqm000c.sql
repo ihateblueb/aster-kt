@@ -1,1 +1,2 @@
-ALTER TABLE note ADD conversation VARCHAR(1025) NULL;
+ALTER TABLE note
+	ADD conversation VARCHAR(1025) NULL;
