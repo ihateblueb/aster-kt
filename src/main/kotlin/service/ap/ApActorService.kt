@@ -1,26 +1,23 @@
 package me.blueb.service.ap
 
 import io.ktor.http.Url
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.JsonObject
 import me.blueb.db.entity.UserEntity
 import me.blueb.db.suspendTransaction
-import me.blueb.model.User
-import me.blueb.model.ap.ApActor
 import me.blueb.service.FormatService
 import me.blueb.service.IdentifierService
 import me.blueb.service.ResolverService
 import me.blueb.service.SanitizerService
 import me.blueb.service.TimeService
 import me.blueb.service.UserService
-import org.apache.commons.text.StringEscapeUtils
 import org.slf4j.LoggerFactory
+import java.time.format.DateTimeParseException
 
 class ApActorService {
 	private val logger = LoggerFactory.getLogger(this::class.java)
+
+	private val apUtilityService = ApUtilityService()
 
 	private val identifierService = IdentifierService()
 	private val resolverService = ResolverService()
@@ -39,7 +36,7 @@ class ApActorService {
 
 		if (existingUser != null) {
 			// TODO: update
-			return existingUser;
+			return existingUser
 		}
 
 		val resolveResponse = resolverService.resolve(apId)
@@ -54,66 +51,94 @@ class ApActorService {
 	suspend fun register(json: JsonObject): UserEntity? {
 		val id = identifierService.generate()
 
-		if (json["id"] == null || json["id"].toString().isBlank()) {
+		val extractedId = apUtilityService.extractString(json["id"])
+
+		if (extractedId.isNullOrBlank()) {
 			logger.debug("Actor ID is null or blank")
 			return null
 		}
 
+		val extractedType = apUtilityService.extractString(json["type"])
+
 		if (
-			json["type"] == null ||
-			json["type"].toString().isBlank() ||
-			!listOf("Person", "Service").contains(json["type"].toString())
+			extractedType.isNullOrBlank() ||
+			!listOf("Person", "Service").contains(extractedType)
 		) {
-			logger.debug("Actor type is null, blank, or invalid")
+			logger.debug("Actor type is null, is blank, or invalid")
 			return null
 		}
 
-		if (json["preferredUsername"] == null || json["preferredUsername"].toString().isBlank()) {
+		val extractedPreferredUsername = apUtilityService.extractString(json["preferredUsername"])
+
+		if (extractedPreferredUsername.isNullOrBlank()) {
 			logger.debug("Actor preferredUsername is null or blank")
 			return null
 		}
 
-		val inbox = if (json["sharedInbox"] != null)
-			json["sharedInbox"].toString()
-		else
-			json["inbox"]?.toString()
+		val extractedSharedInbox = apUtilityService.extractString(json["sharedInbox"])
+		val extractedInbox = apUtilityService.extractString(json["inbox"])
+
+		val inbox = extractedSharedInbox ?: extractedInbox
 
 		if (inbox == null || inbox.isBlank()) {
 			logger.debug("Actor inbox is null or blank")
 			return null
 		}
 
-		val summary = if (json["_misskey_summary"] != null)
-			json["_misskey_summary"].toString()
-		else
-			json["summary"]?.toString()
+		val extractedMisskeySummary = apUtilityService.extractString(json["_misskey_summary"])
+		val extractedSummary = apUtilityService.extractString(json["summary"])
+
+		val summary = extractedMisskeySummary ?: extractedSummary
+
+		val extractedPublicKey = apUtilityService.extractString(
+			apUtilityService.extractObject(json["publicKey"])?.get("publicKeyPem")
+		)
+
+		if (extractedPublicKey.isNullOrBlank()) {
+			logger.debug("Actor public key is null or blank")
+			return null
+		}
 
 		try {
 			suspendTransaction {
 				UserEntity.new(id) {
-					apId = json["id"].toString()
+					apId = extractedId
 					this.inbox = inbox
-					outbox = json["outbox"]?.toString()
+					outbox = apUtilityService.extractString(json["outbox"])
 
-					username = sanitizerService.sanitize(json["preferredUsername"].toString(), true)
-					displayName = if (json["name"] != null) sanitizerService.sanitize(json["name"].toString(), true) else null
+					username = sanitizerService.sanitize(extractedPreferredUsername, true)
 
-					host = formatService.toASCII(Url(json["id"].toString()).host)
+					val extractedName = apUtilityService.extractString(json["name"])
+					displayName = if (!extractedName.isNullOrBlank()) sanitizerService.sanitize(extractedName, true) else null
+
+					host = formatService.toASCII(Url(extractedId).host)
 
 					// todo: icon, image
 
 					bio = if (summary != null) sanitizerService.sanitize(summary) else null
 
-					sensitive = json["sensitive"]?.toString()?.toBoolean() ?: false
-					discoverable = json["discoverable"]?.toString()?.toBoolean() ?: false
-					locked = json["manuallyApprovesFollowers"]?.toString()?.toBoolean() ?: false
-					indexable = json["noindex"]?.toString()?.toBoolean()?.let { !it } ?: true
-					isCat = json["isCat"]?.toString()?.toBoolean() ?: false
-					speakAsCat = json["speakAsCat"]?.toString()?.toBoolean() ?: false
+					sensitive = apUtilityService.extractBoolean(json["sensitive"]) ?: false
+					discoverable = apUtilityService.extractBoolean(json["discoverable"]) ?: false
+					locked = apUtilityService.extractBoolean(json["manuallyApprovesFollowers"]) ?: false
+					indexable = apUtilityService.extractBoolean(json["noindex"])?.let { !it } ?: true
+					isCat = apUtilityService.extractBoolean(json["isCat"]) ?: false
+					speakAsCat = apUtilityService.extractBoolean(json["speakAsCat"]) ?: false
+
+					activated = true
 
 					// TODO: birthday, location
 
-					createdAt = json["published"]?.toString()?.let { LocalDateTime.parse(it) } ?: timeService.now()
+					/*	TODO: this
+					  createdAt =
+						try {
+							apUtilityService.extractString(json["published"])?.let {
+								LocalDateTime.parse(it)
+							} ?: timeService.now()
+						} catch (e: DateTimeParseException) {
+							timeService.now()
+						}*/
+
+					publicKey = sanitizerService.sanitize(extractedPublicKey, true)
 				}
 			}
 

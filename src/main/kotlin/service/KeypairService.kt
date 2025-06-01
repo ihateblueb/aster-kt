@@ -1,8 +1,11 @@
 package me.blueb.service
 
 import me.blueb.model.KeyType
+import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import java.security.PublicKey
+import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
 
 class KeypairService {
@@ -21,5 +24,15 @@ class KeypairService {
 		return start +
 			base64Key.replace("(.{64})".toRegex(), "$1\n") +
 			end
+	}
+
+	fun pemToPublicKey(pem: String): PublicKey {
+		val start = "-----BEGIN PUBLIC KEY-----\n"
+		val end = "\n-----END PUBLIC KEY-----\n"
+
+		val editedString = pem.replace(start, "").replace(end, "").replace("\n", "")
+		val byteArray = Base64.getDecoder().decode(editedString)
+
+		return KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(byteArray))
 	}
 }

@@ -10,11 +10,11 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import me.blueb.model.Configuration
 import me.blueb.model.PackageInformation
 import me.blueb.model.PolicyType
-import me.blueb.model.ResolveAcceptType
 import me.blueb.util.jsonConfig
 import org.slf4j.LoggerFactory
 
@@ -57,7 +57,7 @@ class ResolverService {
 	 *
 	 * @return [JsonObject] or null
 	 * */
-	suspend fun resolve(url: String, accept: ResolveAcceptType = ResolveAcceptType.activityJson): JsonObject? {
+	suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject? {
 		val id = identifierService.generate()
 
 		val blockPolicies = policyService.getAllByType(PolicyType.Block)
@@ -69,7 +69,7 @@ class ResolverService {
 		try {
 			val client = createClient()
 			val response = client.get(url) {
-				headers.append("Accept", accept.toString())
+				headers.append("Accept", accept)
 			}
 			client.close()
 

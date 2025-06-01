@@ -24,6 +24,14 @@
         <main.class>me.blueb.ApplicationKt</main.class>
     </properties>
     <repositories>
+		<repository>
+			<id>site.remlit.main-releases</id>
+			<url>https://repo.remlit.site/releases</url>
+		</repository>
+		<repository>
+			<id>site.remlit.main-snapshots</id>
+			<url>https://repo.remlit.site/snapshots</url>
+		</repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -288,6 +296,11 @@
 			<version>${ktor_version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>site.remlit.blueb</groupId>
+			<artifactId>httpSignatureUtility</artifactId>
+			<version>2025.6.1.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>

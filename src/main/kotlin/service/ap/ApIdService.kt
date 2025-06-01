@@ -39,7 +39,7 @@ class ApIdService {
 	 * @param id ID of a User
 	 */
 	fun renderInboxApId(id: String? = null): String {
-		return if (id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/inbox" else this.renderBaseApId() + "inbox"
+		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/inbox" else this.renderBaseApId() + "inbox"
 	}
 
 
@@ -47,6 +47,6 @@ class ApIdService {
 	 * @param id ID of a User
 	 */
 	fun renderOutboxApId(id: String? = null): String {
-		return if (id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"
+		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"
 	}
 }

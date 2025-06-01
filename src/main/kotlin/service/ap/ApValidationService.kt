@@ -1,18 +1,17 @@
 package me.blueb.service.ap
 
 import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.plugins.callid.callId
 import io.ktor.server.request.httpMethod
 import io.ktor.server.request.receive
-import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingCall
-import me.blueb.model.ApiError
+import kotlinx.datetime.LocalDateTime
 import me.blueb.model.Configuration
 import me.blueb.model.PolicyType
+import me.blueb.service.KeypairService
 import me.blueb.service.PolicyService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.httpSignatures.HttpSignature
 import java.security.MessageDigest
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -21,7 +20,10 @@ class ApValidationService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 	private val configuration = Configuration()
 
+	private val apActorService = ApActorService()
+
 	private val policyService = PolicyService()
+	private val keypairService = KeypairService()
 
 	suspend fun validate(call: RoutingCall) {
 		val isGet = call.request.httpMethod == HttpMethod.Get
@@ -38,6 +40,14 @@ class ApValidationService {
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
 				"Missing or invalid host."
+			)
+
+		if (
+			call.request.headers["Date"].isNullOrEmpty()
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Date not present."
 			)
 
 		if (
@@ -72,7 +82,33 @@ class ApValidationService {
 				"Digest invalid."
 			)
 
+		val parsedSignatureHeader = HttpSignature.parseHeaderString(call.request.headers["Signature"]!!)
 
+		val actorApId = parsedSignatureHeader.keyId.substringBefore("#")
+
+		val actor = apActorService.resolve(actorApId)
+
+		if (
+			actor == null
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Actor not found."
+			)
+
+		val isSignatureValid = parsedSignatureHeader.signature.verify(
+			keypairService.pemToPublicKey(actor.publicKey),
+			LocalDateTime.parse(call.request.headers["Date"]!!),
+			call.receive()
+		)
+
+		if (
+			!isSignatureValid
+		)
+			throw ApValidationException(
+				ApValidationExceptionType.Forbidden,
+				"Signature invalid."
+			)
 	}
 
 	@OptIn(ExperimentalEncodingApi::class)

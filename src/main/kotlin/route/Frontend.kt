@@ -6,6 +6,11 @@ import io.ktor.server.routing.Route
 
 fun Route.frontend() {
 	singlePageApplication {
-		react(javaClass.classLoader.getResource("frontend/dist")!!.toURI().path)
+		val resource = javaClass.classLoader.getResource("frontend/dist")
+
+		if (resource == null)
+			throw RuntimeException("Frontend not properly packaged.")
+
+		react(resource.toURI().path)
 	}
 }
