@@ -1,10 +1,11 @@
 package me.blueb.service.ap
 
+import com.fasterxml.jackson.core.JsonParseException
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
@@ -24,4 +25,10 @@ class ApUtilityService {
 	}
 
 	fun extractObject(item: JsonElement?): JsonObject? = item?.jsonObject
+
+	fun byteArrayToObject(byteArray: ByteArray): JsonObject? = try {
+		Json.parseToJsonElement(String(byteArray)).jsonObject
+	} catch (e: JsonParseException) {
+		null
+	}
 }

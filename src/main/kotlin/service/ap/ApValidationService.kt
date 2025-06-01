@@ -3,8 +3,9 @@ package me.blueb.service.ap
 import io.ktor.http.HttpMethod
 import io.ktor.server.request.httpMethod
 import io.ktor.server.request.receive
-import io.ktor.server.routing.RoutingCall
+import io.ktor.server.routing.RoutingRequest
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import me.blueb.model.Configuration
 import me.blueb.model.PolicyType
 import me.blueb.service.KeypairService
@@ -13,6 +14,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.httpSignatures.HttpSignature
 import java.security.MessageDigest
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -25,17 +28,15 @@ class ApValidationService {
 	private val policyService = PolicyService()
 	private val keypairService = KeypairService()
 
-	suspend fun validate(call: RoutingCall) {
-		val isGet = call.request.httpMethod == HttpMethod.Get
-
-		val body = call.receive<ByteArray>()
+	suspend fun validate(request: RoutingRequest, body: ByteArray) {
+		val isGet = request.httpMethod == HttpMethod.Get
 
 		val blockPolicies = policyService.getAllByType(PolicyType.Block)
 		val blockedHosts = policyService.reducePoliciesInListToHost(blockPolicies)
 
 		if (
-			call.request.headers["Host"].isNullOrEmpty() ||
-			call.request.headers["Host"] != configuration.url.host
+			request.headers["Host"].isNullOrEmpty() ||
+			request.headers["Host"] != configuration.url.host
 		)
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
@@ -43,7 +44,7 @@ class ApValidationService {
 			)
 
 		if (
-			call.request.headers["Date"].isNullOrEmpty()
+			request.headers["Date"].isNullOrEmpty()
 		)
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
@@ -51,7 +52,7 @@ class ApValidationService {
 			)
 
 		if (
-			call.request.headers["Digest"].isNullOrEmpty()
+			request.headers["Digest"].isNullOrEmpty()
 		)
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
@@ -59,7 +60,7 @@ class ApValidationService {
 			)
 
 		if (
-			call.request.headers["Signature"].isNullOrEmpty()
+			request.headers["Signature"].isNullOrEmpty()
 		)
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
@@ -67,7 +68,7 @@ class ApValidationService {
 			)
 
 		if (
-			!call.request.headers["Digest"]!!.startsWith("SHA-256=")
+			!request.headers["Digest"]!!.startsWith("SHA-256=")
 		)
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
@@ -75,14 +76,14 @@ class ApValidationService {
 			)
 
 		if (
-			isDigestValid(call.request.headers["Digest"]!!, body)
+			isDigestValid(request.headers["Digest"]!!, body)
 		)
 			throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
 				"Digest invalid."
 			)
 
-		val parsedSignatureHeader = HttpSignature.parseHeaderString(call.request.headers["Signature"]!!)
+		val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
 
 		val actorApId = parsedSignatureHeader.keyId.substringBefore("#")
 
@@ -98,8 +99,8 @@ class ApValidationService {
 
 		val isSignatureValid = parsedSignatureHeader.signature.verify(
 			keypairService.pemToPublicKey(actor.publicKey),
-			LocalDateTime.parse(call.request.headers["Date"]!!),
-			call.receive()
+			parseHttpDate(request.headers["Date"]!!),
+			body
 		)
 
 		if (
@@ -117,6 +118,13 @@ class ApValidationService {
 		val ourDigest = md.digest(data)
 
 		return digest == Base64.encode(ourDigest)
+	}
+
+	fun parseHttpDate(date: String): LocalDateTime {
+		return ZonedDateTime
+			.parse(date, DateTimeFormatter.RFC_1123_DATE_TIME)
+			.toLocalDateTime()
+			.toKotlinLocalDateTime()
 	}
 
 	enum class ApValidationExceptionType {
