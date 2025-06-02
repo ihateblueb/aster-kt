@@ -8,8 +8,11 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.httpSignatures.HttpSignature
+import site.remlit.blueb.httpSignatures.IllegalSignatureException
 import site.remlit.blueb.model.Configuration
 import site.remlit.blueb.model.PolicyType
+import site.remlit.blueb.model.ap.ApValidationException
+import site.remlit.blueb.model.ap.ApValidationExceptionType
 import site.remlit.blueb.service.KeypairService
 import site.remlit.blueb.service.PolicyService
 import java.security.MessageDigest
@@ -96,11 +99,19 @@ class ApValidationService {
 				"Actor not found."
 			)
 
-		val isSignatureValid = parsedSignatureHeader.signature.verify(
-			keypairService.pemToPublicKey(actor.publicKey),
-			parseHttpDate(request.headers["Date"]!!),
-			body
-		)
+		// todo: fix date error here
+		val isSignatureValid = try {
+			parsedSignatureHeader.signature.verify(
+				keypairService.pemToPublicKey(actor.publicKey),
+				parseHttpDate(request.headers["Date"]!!),
+				body
+			)
+		} catch (e: IllegalSignatureException) {
+			throw ApValidationException(
+				ApValidationExceptionType.Forbidden,
+				"Signature invalid: ${e.message}"
+			)
+		}
 
 		if (
 			!isSignatureValid
@@ -125,14 +136,6 @@ class ApValidationService {
 			.toLocalDateTime()
 			.toKotlinLocalDateTime()
 	}
-
-	enum class ApValidationExceptionType {
-		Unauthorized,
-		Forbidden
-	}
-
-	class ApValidationException(
-		type: ApValidationExceptionType = ApValidationExceptionType.Unauthorized,
-		message: String = "Validation failed."
-	) : Exception(message)
 }
+
+

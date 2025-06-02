@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 import site.remlit.blueb.db.Database
 import site.remlit.blueb.model.Configuration
 
-class QueueService {
+object QueueService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
 	private val configuration = Configuration()
@@ -75,16 +75,13 @@ class QueueService {
 
 	fun processInboxJob(message: Message<String, Unit>) {
 		logger.info("Processing inbox job ${message.id}")
-		consumer.delete(inboxQueue, message.id)
 	}
 
 	fun processDeliverJob(message: Message<String, Unit>) {
 		logger.info("Processing deliver job ${message.id}")
-		consumer.delete(deliverQueue, message.id)
 	}
 
 	fun processSystemJob(message: Message<String, Unit>) {
 		logger.info("Processing system job ${message.id}")
-		consumer.delete(systemQueue, message.id)
 	}
 }

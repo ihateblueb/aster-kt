@@ -5,17 +5,15 @@ import kolbasa.schema.SchemaHelpers
 import site.remlit.blueb.db.Database
 import site.remlit.blueb.service.QueueService
 
-private val queueService = QueueService()
-
 fun Application.configureQueue() {
 	SchemaHelpers.updateDatabaseSchema(
 		Database.dataSource,
 		listOf(
-			queueService.inboxQueue,
-			queueService.deliverQueue,
-			queueService.systemQueue
+			QueueService.inboxQueue,
+			QueueService.deliverQueue,
+			QueueService.systemQueue
 		)
 	)
 
-	queueService.initConsumers()
+	QueueService.initConsumers()
 }
