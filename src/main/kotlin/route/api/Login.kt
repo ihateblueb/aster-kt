@@ -40,7 +40,7 @@ fun Route.login() {
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
 					message = "Username required",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post
@@ -51,7 +51,7 @@ fun Route.login() {
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
 					message = "Password required",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post
@@ -67,7 +67,7 @@ fun Route.login() {
 				status = HttpStatusCode.NotFound,
 				message = ApiError(
 					message = "User not found",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post
@@ -82,7 +82,7 @@ fun Route.login() {
 				status = HttpStatusCode.NotFound,
 				message = ApiError(
 					message = "User's private table not found",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post
@@ -95,7 +95,7 @@ fun Route.login() {
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
 					message = "Incorrect password",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post

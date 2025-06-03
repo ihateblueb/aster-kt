@@ -10,8 +10,9 @@ class InviteEntity(id: EntityID<String>) : Entity<String>(id) {
 
 	var code by InviteTable.code
 
-	var user by UserEntity referencedOn InviteTable.user
-	var creator by UserEntity referencedOn InviteTable.user
+	var user by UserEntity optionalReferencedOn InviteTable.user
+	var creator by UserEntity referencedOn InviteTable.creator
 
 	var createdAt by InviteTable.createdAt
+	var usedAt by InviteTable.usedAt
 }

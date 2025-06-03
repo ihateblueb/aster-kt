@@ -6,11 +6,10 @@ import site.remlit.blueb.db.entity.AuthEntity
 import site.remlit.blueb.db.entity.UserEntity
 import site.remlit.blueb.db.suspendTransaction
 import site.remlit.blueb.db.table.AuthTable
-import java.math.BigInteger
-import java.security.SecureRandom
 
 class AuthService {
 	private val identifierService = IdentifierService()
+	private val randomService = RandomService()
 
 	suspend fun get(where: Op<Boolean>): AuthEntity? = suspendTransaction {
 		AuthEntity
@@ -20,20 +19,9 @@ class AuthService {
 
 	suspend fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
-	fun generateToken(): String {
-		val random = SecureRandom()
-
-		val bytes = ByteArray(16)
-		random.nextBytes(bytes)
-
-		return BigInteger(1, bytes)
-			.toString(32)
-			.padStart(16, '0')
-	}
-
 	suspend fun registerToken(userEntity: UserEntity): String {
 		val id = identifierService.generate()
-		val generatedToken = generateToken()
+		val generatedToken = randomService.generateString()
 
 		suspendTransaction {
 			AuthEntity.new(id) {

@@ -40,7 +40,18 @@ fun Route.register() {
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
 					message = "Registrations closed",
-					requestId = call.callId
+					callId = call.callId
+				)
+			)
+			return@post
+		}
+
+		if (configuration.registrations == InstanceRegistrationsType.Invite && body.invite == null) {
+			call.respond(
+				status = HttpStatusCode.BadRequest,
+				message = ApiError(
+					message = "Invite required",
+					callId = call.callId
 				)
 			)
 			return@post
@@ -51,17 +62,13 @@ fun Route.register() {
 				status = HttpStatusCode.NotImplemented,
 				message = ApiError(
 					message = "Invite system not implemented",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post
 		}
 
-		/*if (configService.registrations == InstanceRegistrationsMode.Invite && body.invite == null)
-			call.respond(
-				status = HttpStatusCode.BadRequest,
-				message = "Invite required",
-			)*/
+		// todo: implement invite usage
 
 		val username = formatService.toASCII(body.username)
 
@@ -70,7 +77,7 @@ fun Route.register() {
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
 					message = "Username contains non-alphanumeric characters",
-					requestId = call.callId
+					callId = call.callId
 				)
 			)
 			return@post

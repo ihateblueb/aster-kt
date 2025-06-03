@@ -77,7 +77,7 @@ fun Route.note() {
 				return@delete
 			}
 
-			noteService.deleteById(note.id.toString())
+			noteService.deleteById(note.id)
 
 			call.respond(HttpStatusCode.OK)
 		}
@@ -96,7 +96,7 @@ fun Route.note() {
 					HttpStatusCode.BadRequest,
 					ApiError(
 						message = "Content is required",
-						requestId = call.callId
+						callId = call.callId
 					)
 				)
 				return@post
@@ -116,7 +116,20 @@ fun Route.note() {
 				}
 			}
 
-			call.respond(HttpStatusCode.NotImplemented)
+			val note = noteService.getById(id)
+
+			if (note == null) {
+				call.respond(
+					HttpStatusCode.NotFound,
+					ApiError(
+						"Note couldn't be found after creation",
+						call.callId
+					)
+				)
+				return@post
+			}
+
+			call.respond(note)
 		}
 
 		post("/note/{id}/repeat") {

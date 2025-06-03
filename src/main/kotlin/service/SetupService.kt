@@ -15,8 +15,6 @@ import site.remlit.blueb.model.Configuration
 import site.remlit.blueb.model.KeyType
 import site.remlit.blueb.model.RoleType
 import site.remlit.blueb.service.ap.ApIdService
-import java.math.BigInteger
-import java.security.SecureRandom
 
 class SetupService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -26,6 +24,7 @@ class SetupService {
 	private val userService = UserService()
 	private val keypairService = KeypairService()
 	private val identifierService = IdentifierService()
+	private val randomService = RandomService()
 	private val roleService = RoleService()
 
 	private val configuration = Configuration()
@@ -86,14 +85,7 @@ class SetupService {
 		} else {
 			logger.warn("Instance actor missing, generating...")
 
-			val random = SecureRandom()
-
-			val bytes = ByteArray(16)
-			random.nextBytes(bytes)
-
-			val securePassword = BigInteger(1, bytes)
-				.toString(32)
-				.padStart(16, '0')
+			val securePassword = randomService.generateString()
 
 			val id = identifierService.generate()
 			val hashedPassword = BCrypt.withDefaults().hashToString(12, securePassword.toCharArray())

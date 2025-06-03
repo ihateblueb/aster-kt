@@ -69,7 +69,7 @@ fun Application.configureAuthentication() {
 								HttpStatusCode.Forbidden,
 								ApiError(
 									message = "Account inactive",
-									requestId = callId
+									callId = callId
 								)
 							)
 							return@authenticate false
@@ -81,7 +81,7 @@ fun Application.configureAuthentication() {
 							HttpStatusCode.Unauthorized,
 							ApiError(
 								message = "Authentication required",
-								requestId = callId
+								callId = callId
 							)
 						)
 						return@authenticate false
@@ -91,7 +91,7 @@ fun Application.configureAuthentication() {
 						HttpStatusCode.Unauthorized,
 						ApiError(
 							message = "Authentication required",
-							requestId = callId
+							callId = callId
 						)
 					)
 					return@authenticate false
@@ -121,7 +121,7 @@ fun Application.configureAuthentication() {
 								HttpStatusCode.Forbidden,
 								ApiError(
 									message = "Account inactive",
-									requestId = callId
+									callId = callId
 								)
 							)
 							return@authenticate false
@@ -133,7 +133,7 @@ fun Application.configureAuthentication() {
 									HttpStatusCode.Forbidden,
 									ApiError(
 										message = "Account does not have a mod role",
-										requestId = callId
+										callId = callId
 									)
 								)
 								return@authenticate false
@@ -144,7 +144,7 @@ fun Application.configureAuthentication() {
 							HttpStatusCode.Unauthorized,
 							ApiError(
 								message = "Authentication required",
-								requestId = callId
+								callId = callId
 							)
 						)
 						return@authenticate false
@@ -154,7 +154,7 @@ fun Application.configureAuthentication() {
 						HttpStatusCode.Unauthorized,
 						ApiError(
 							message = "Authentication required",
-							requestId = callId
+							callId = callId
 						)
 					)
 					return@authenticate false
@@ -184,7 +184,7 @@ fun Application.configureAuthentication() {
 								HttpStatusCode.Forbidden,
 								ApiError(
 									message = "Account inactive",
-									requestId = callId
+									callId = callId
 								)
 							)
 							return@authenticate false
@@ -196,7 +196,7 @@ fun Application.configureAuthentication() {
 									HttpStatusCode.Forbidden,
 									ApiError(
 										message = "Account does not have an admin role",
-										requestId = callId
+										callId = callId
 									)
 								)
 								return@authenticate false
@@ -207,7 +207,7 @@ fun Application.configureAuthentication() {
 							HttpStatusCode.Unauthorized,
 							ApiError(
 								message = "Authentication required",
-								requestId = callId
+								callId = callId
 							)
 						)
 						return@authenticate false
@@ -217,7 +217,7 @@ fun Application.configureAuthentication() {
 						HttpStatusCode.Unauthorized,
 						ApiError(
 							message = "Authentication required",
-							requestId = callId
+							callId = callId
 						)
 					)
 					return@authenticate false
