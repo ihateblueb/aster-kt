@@ -1,22 +1,31 @@
+## Name
 # Display name for instance
+##
 name: "Aster"
 
+## URL ##
 # URL instance is to be accessible by.
 # Do not reuse domains after starting an instance.
 # Do not change after you start the instance for the first time.
+##
 url: "https://aster.example.com/"
 
+## Registrations ##
 # options:
 #   open      - anyone can register
 #   approval  - anyone can register but cannot use their account until approved
 #   invite    - only people with invite codes can register
 #   closed    - nobody can register
+##
 registrations: invite
 
+## Identifiers ##
 # ID format to use. Keep as default unless migrating from elsewhere.
 # options: aidx, aid, uuid
+##
 identifiers: aidx
 
+## Database ##
 database:
     host: localhost
     port: 5432
@@ -24,9 +33,11 @@ database:
     user: aster
     password: aster
 
+## Queue ##
 # Queues are how Aster handles federating and system tasks
 #   threads: how many threads to have for a queue
 #   concurrency: how many jobs can be run on a thread at a time
+##
 queue:
     inbox:
         threads: 8
@@ -37,3 +48,25 @@ queue:
     system:
         threads: 4
         concurrency: 4
+
+## Timeline ##
+# Default objects:
+#   Too high of a number will allow users to cause more
+#   strain on the server.
+# Max objects:
+#   Too high of a number will slow down timeline requests.
+# Authentication:
+#   You may want to make your timelines require auth if
+#   your infrastructure can't handle extra pressure from
+#   people outside your instance.
+##
+timeline:
+    defaultObjects: 20
+    maxObjects: 45
+
+    local:
+        authRequired: false
+    bubble:
+        authRequired: false
+    public:
+        authRequired: false

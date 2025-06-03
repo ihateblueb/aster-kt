@@ -19,6 +19,7 @@ class Configuration {
 
 	val database: ConfigurationDatabase
 	val queue: ConfigurationQueue
+	val timeline: ConfigurationTimeline
 
 	init {
 		fun lower(string: String): String {
@@ -54,6 +55,7 @@ class Configuration {
 
 		database = ConfigurationDatabase()
 		queue = ConfigurationQueue()
+		timeline = ConfigurationTimeline()
 	}
 }
 
@@ -118,4 +120,38 @@ class ConfigurationQueue {
 data class ConfigurationSpecificQueue(
 	val threads: Int,
 	val concurrency: Int
+)
+
+class ConfigurationTimeline {
+	val defaultObjects: Int
+	val maxObjects: Int
+
+	val local: ConfigurationSpecificTimeline
+	val bubble: ConfigurationSpecificTimeline
+	val public: ConfigurationSpecificTimeline
+
+	init {
+		var defaultObjectsProp = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull()
+		defaultObjects = defaultObjectsProp ?: 20
+
+		var maxObjectsProp = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull()
+		maxObjects = maxObjectsProp ?: 20
+
+		local = ConfigurationSpecificTimeline(
+			authRequired = (config?.propertyOrNull("timeline.local.authRequired")?.getString()?.toBooleanStrictOrNull()
+				?: false)
+		)
+		bubble = ConfigurationSpecificTimeline(
+			authRequired = (config?.propertyOrNull("timeline.bubble.authRequired")?.getString()?.toBooleanStrictOrNull()
+				?: false)
+		)
+		public = ConfigurationSpecificTimeline(
+			authRequired = (config?.propertyOrNull("timeline.public.authRequired")?.getString()?.toBooleanStrictOrNull()
+				?: false)
+		)
+	}
+}
+
+data class ConfigurationSpecificTimeline(
+	val authRequired: Boolean,
 )
