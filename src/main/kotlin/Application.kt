@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.autohead.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -60,7 +61,7 @@ fun Application.module() {
 	install(CallLogging) {
 		format { call ->
 			val method = call.request.httpMethod.value
-			val status = call.response.status()
+			val status = call.response.status()?.value
 			val uri = call.request.uri
 
 			"$status $method - $uri"
@@ -80,6 +81,7 @@ fun Application.module() {
 		allowHost("127.0.0.1:5173")
 	}
 
+	install(AutoHeadResponse)
 	install(DefaultHeaders)
 	install(ForwardedHeaders)
 

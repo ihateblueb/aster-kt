@@ -300,6 +300,11 @@
 			<artifactId>ktor-server-status-pages-jvm</artifactId>
 			<version>${ktor_version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-server-auto-head-response-jvm</artifactId>
+			<version>${ktor_version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>site.remlit.blueb</groupId>
