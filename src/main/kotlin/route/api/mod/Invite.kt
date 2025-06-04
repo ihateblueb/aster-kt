@@ -14,12 +14,12 @@ import site.remlit.blueb.service.InviteService
 import site.remlit.blueb.service.RandomService
 import site.remlit.blueb.service.TimelineService
 
-private val identifierService = IdentifierService()
-private val inviteService = InviteService()
-private val randomService = RandomService()
-private val timelineService = TimelineService()
-
 fun Route.modInvite() {
+	val identifierService = IdentifierService()
+	val inviteService = InviteService()
+	val randomService = RandomService()
+	val timelineService = TimelineService()
+
 	authenticate("authRequiredMod") {
 		get("/api/mod/invites") {
 			val since = timelineService.normalizeSince(call.parameters["since"])

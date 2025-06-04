@@ -22,7 +22,7 @@ fun Route.apNote() {
 			note == null ||
 			!note.user.activated ||
 			note.user.suspended ||
-			!note.user.host.isNullOrEmpty() ||
+			!note.user.host.isNullOrBlank() ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
 		)
@@ -40,7 +40,7 @@ fun Route.apNote() {
 			note == null ||
 			!note.user.activated ||
 			note.user.suspended ||
-			!note.user.host.isNullOrEmpty() ||
+			!note.user.host.isNullOrBlank() ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
 		)

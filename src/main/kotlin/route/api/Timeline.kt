@@ -7,11 +7,11 @@ import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.Configuration
 import site.remlit.blueb.service.TimelineService
 
-private val configuration = Configuration()
-
-private val timelineService = TimelineService()
-
 fun Route.timeline() {
+	val configuration = Configuration()
+
+	val timelineService = TimelineService()
+
 	authenticate("authRequired") {
 		get("/api/timeline/home") {
 			val since = timelineService.normalizeSince(call.parameters["since"])

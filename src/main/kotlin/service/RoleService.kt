@@ -43,6 +43,4 @@ class RoleService {
 
 		return false
 	}
-
-	// todo: userHasRoleType with Admin,Mod
 }

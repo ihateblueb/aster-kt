@@ -10,6 +10,9 @@ import site.remlit.blueb.db.table.InviteTable
 import site.remlit.blueb.model.Invite
 
 class InviteService {
+	private val userService = UserService()
+	private val timeService = TimeService()
+
 	suspend fun get(where: Op<Boolean>): Invite? = suspendTransaction {
 		val invite = InviteEntity
 			.find { where }
@@ -34,5 +37,25 @@ class InviteService {
 	suspend fun deleteById(id: String) = delete(InviteTable.id eq id)
 	suspend fun deleteByCode(code: String) = delete(InviteTable.code eq code)
 
-	// todo: useInvite(user: String)
+	suspend fun useInvite(code: String, userId: String) {
+		val invite = suspendTransaction {
+			InviteEntity
+				.find { InviteTable.code eq code }
+				.singleOrNull()
+		}
+
+		if (invite == null)
+			throw IllegalArgumentException("Invite does not exist")
+
+		val user = userService.getById(userId)
+
+		if (user == null)
+			throw IllegalArgumentException("User does not exist")
+
+		suspendTransaction {
+			invite.user = user
+			invite.usedAt = timeService.now()
+			invite.flush()
+		}
+	}
 }

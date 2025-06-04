@@ -23,13 +23,13 @@ data class PostNoteBody(
 )
 
 fun Route.note() {
-	Configuration()
+	val configuration = Configuration()
 
 	val identifierService = IdentifierService()
 	val apIdService = ApIdService()
 	val noteService = NoteService()
 	val roleService = RoleService()
-	TimeService()
+	val timeService = TimeService()
 	val sanitizerService = SanitizerService()
 
 	get("/api/note/{id}") {

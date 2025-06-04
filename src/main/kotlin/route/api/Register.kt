@@ -26,7 +26,9 @@ fun Route.register() {
 
 	val apIdService = ApIdService()
 
+	val authService = AuthService()
 	val identifierService = IdentifierService()
+	val inviteService = InviteService()
 	val userService = UserService()
 	val keypairService = KeypairService()
 	val validationService = ValidationService()
@@ -57,8 +59,15 @@ fun Route.register() {
 			return@post
 		}
 
-		if (configuration.registrations == InstanceRegistrationsType.Invite)
-			throw ApiException(HttpStatusCode.NotImplemented, "Invite system not implemented")
+		if (configuration.registrations == InstanceRegistrationsType.Invite) {
+			if (body.invite.isNullOrBlank())
+				throw ApiException(HttpStatusCode.BadRequest, "Invite required")
+
+			val invite = inviteService.getByCode(body.invite)
+
+			if (invite == null || invite.user != null)
+				throw ApiException(HttpStatusCode.BadRequest, "Invite invalid")
+		}
 
 		// todo: implement invite usage
 
@@ -109,6 +118,11 @@ fun Route.register() {
 		if (user == null)
 			throw ApiException(HttpStatusCode.NotFound, "User not found after creation")
 
-		call.respond(User.fromEntity(user))
+		if (configuration.registrations == InstanceRegistrationsType.Invite)
+			inviteService.useInvite(body.invite!!, user.id.toString())
+
+		val token = authService.registerToken(user)
+
+		call.respond(AuthResponse(token, User.fromEntity(user)))
 	}
 }

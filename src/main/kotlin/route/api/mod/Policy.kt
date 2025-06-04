@@ -14,9 +14,6 @@ import site.remlit.blueb.model.PolicyType
 import site.remlit.blueb.service.PolicyService
 import site.remlit.blueb.service.TimelineService
 
-private val policyService = PolicyService()
-private val timelineService = TimelineService()
-
 @Serializable
 data class PolicyBody(
 	val type: PolicyType,
@@ -25,6 +22,9 @@ data class PolicyBody(
 )
 
 fun Route.modPolicy() {
+	val policyService = PolicyService()
+	val timelineService = TimelineService()
+
 	authenticate("authRequiredMod") {
 		get("/api/mod/policies") {
 			val since = timelineService.normalizeSince(call.parameters["since"])

@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.db.table.UserPrivateTable
 import site.remlit.blueb.db.table.UserTable
 import site.remlit.blueb.model.ApiException
+import site.remlit.blueb.model.AuthResponse
 import site.remlit.blueb.model.User
 import site.remlit.blueb.service.AuthService
 import site.remlit.blueb.service.UserService
@@ -19,12 +20,6 @@ import site.remlit.blueb.service.UserService
 data class LoginBody(
 	val username: String,
 	val password: String
-)
-
-@Serializable
-data class LoginResponse(
-	val token: String,
-	val user: User
 )
 
 fun Route.login() {
@@ -62,6 +57,6 @@ fun Route.login() {
 
 		val token = authService.registerToken(user)
 
-		call.respond(LoginResponse(token, User.fromEntity(user)))
+		call.respond(AuthResponse(token, User.fromEntity(user)))
 	}
 }

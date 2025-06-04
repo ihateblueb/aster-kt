@@ -10,10 +10,10 @@ import site.remlit.blueb.service.QueueService
 import site.remlit.blueb.service.ap.ApUtilityService
 import site.remlit.blueb.service.ap.ApValidationService
 
-private val apValidationService = ApValidationService()
-private val apUtilityService = ApUtilityService()
-
 fun Route.inbox() {
+	val apValidationService = ApValidationService()
+	val apUtilityService = ApUtilityService()
+
 	post("/inbox") {
 		val body = call.receive<ByteArray>()
 
