@@ -10,10 +10,16 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import site.remlit.blueb.db.Database
+import site.remlit.blueb.model.ApiError
+import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.model.ap.ApValidationException
+import site.remlit.blueb.model.ap.ApValidationExceptionType
 import site.remlit.blueb.service.CommandLineService
 import site.remlit.blueb.service.IdentifierService
 import site.remlit.blueb.service.PluginService
@@ -94,6 +100,42 @@ fun Application.module() {
 			ContentType.parse("application/jrd+json"),
 			KotlinxSerializationConverter(jsonConfig)
 		)
+	}
+
+	install(StatusPages) {
+		exception<Throwable> { call, cause ->
+			if (cause is ApiException) {
+				call.respond(
+					cause.status,
+					ApiError(
+						cause.message,
+						call.callId,
+						cause.stackTrace.joinToString("\n")
+					)
+				)
+			}
+
+			if (cause is ApValidationException) {
+				call.respond(
+					if (cause.type == ApValidationExceptionType.Unauthorized) HttpStatusCode.Unauthorized else HttpStatusCode.Forbidden,
+					ApiError(
+						cause.message,
+						call.callId,
+						cause.stackTrace.joinToString("\n")
+					)
+				)
+				return@exception
+			}
+
+			call.respond(
+				HttpStatusCode.InternalServerError, ApiError(
+					cause.message,
+					call.callId,
+					cause.stackTrace.joinToString("\n")
+				)
+			)
+			return@exception
+		}
 	}
 
 	configureAuthentication()

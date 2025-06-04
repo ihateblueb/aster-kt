@@ -57,31 +57,15 @@ fun Route.register() {
 			return@post
 		}
 
-		if (configuration.registrations == InstanceRegistrationsType.Invite) {
-			call.respond(
-				status = HttpStatusCode.NotImplemented,
-				message = ApiError(
-					message = "Invite system not implemented",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (configuration.registrations == InstanceRegistrationsType.Invite)
+			throw ApiException(HttpStatusCode.NotImplemented, "Invite system not implemented")
 
 		// todo: implement invite usage
 
 		val username = formatService.toASCII(body.username)
 
-		if (validationService.containsNonAlphanumeric(username)) {
-			call.respond(
-				status = HttpStatusCode.BadRequest,
-				message = ApiError(
-					message = "Username contains non-alphanumeric characters",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (validationService.containsNonAlphanumeric(username))
+			throw ApiException(HttpStatusCode.BadRequest, "Username contains non-alphanumeric characters")
 
 		// todo: check if username is used
 		// ilike?
@@ -122,10 +106,8 @@ fun Route.register() {
 
 		val user = userService.getById(id)
 
-		if (user == null) {
-			call.respond(HttpStatusCode.NotFound)
-			return@post
-		}
+		if (user == null)
+			throw ApiException(HttpStatusCode.NotFound, "User not found after creation")
 
 		call.respond(User.fromEntity(user))
 	}

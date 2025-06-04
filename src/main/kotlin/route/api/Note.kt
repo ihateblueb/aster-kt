@@ -11,10 +11,7 @@ import kotlinx.serialization.Serializable
 import site.remlit.blueb.authenticatedUserKey
 import site.remlit.blueb.db.entity.NoteEntity
 import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.model.ApiError
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.RoleType
-import site.remlit.blueb.model.Visibility
+import site.remlit.blueb.model.*
 import site.remlit.blueb.service.*
 import site.remlit.blueb.service.ap.ApIdService
 
@@ -44,16 +41,14 @@ fun Route.note() {
 			note.user.suspended ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
-		) {
-			call.respond(HttpStatusCode.NotFound)
-			return@get
-		}
+		)
+			throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
 		call.respond(note)
 	}
 
 	get("/api/note/{id}/replies") {
-		call.respond(HttpStatusCode.NotImplemented)
+		throw ApiException(HttpStatusCode.NotImplemented)
 	}
 
 	authenticate("authRequired") {
@@ -62,20 +57,16 @@ fun Route.note() {
 
 			val note = noteService.getById(call.parameters.getOrFail("id"))
 
-			if (note == null) {
-				call.respond(HttpStatusCode.NotFound)
-				return@delete
-			}
+			if (note == null)
+				throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
 			if (
 				note.user.id != authenticatedUser.id.toString() && (!roleService.userHasRoleOfType(
 					authenticatedUser.id.toString(),
 					RoleType.Admin
 				) || !roleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
-			) {
-				call.respond(HttpStatusCode.Forbidden)
-				return@delete
-			}
+			)
+				throw ApiException(HttpStatusCode.Forbidden, "You don't have permission to delete this.")
 
 			noteService.deleteById(note.id)
 
@@ -83,7 +74,7 @@ fun Route.note() {
 		}
 
 		patch("/api/note/{id}") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		post("/api/note") {
@@ -91,16 +82,8 @@ fun Route.note() {
 
 			val body = call.receive<PostNoteBody>()
 
-			if (body.content.isNullOrBlank()) {
-				call.respond(
-					HttpStatusCode.BadRequest,
-					ApiError(
-						message = "Content is required",
-						callId = call.callId
-					)
-				)
-				return@post
-			}
+			if (body.content.isNullOrBlank())
+				throw ApiException(HttpStatusCode.BadRequest, "Content required")
 
 			val id = identifierService.generate()
 
@@ -133,29 +116,29 @@ fun Route.note() {
 		}
 
 		post("/note/{id}/repeat") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		post("/note/{id}/like") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		post("/note/{id}/react") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		post("/note/{id}/bookmark") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		/* Hide post and all replies to it, use conversation to determine replies */
 		post("/note/{id}/hide") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		/* stop receiving notifications for this post, user conversation for this, too */
 		post("/note/{id}/mute") {
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 	}
 }

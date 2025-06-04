@@ -42,10 +42,8 @@ fun Route.nodeInfo() {
 	get("/nodeinfo/{version}") {
 		val version = call.parameters.getOrFail("version")
 
-		if (version != "2.0" && version != "2.1") {
-			call.respond(HttpStatusCode.BadRequest)
-			return@get
-		}
+		if (version != "2.0" && version != "2.1")
+			throw ApiException(HttpStatusCode.BadRequest, "Invalid version")
 
 		val userCount = userService.count(
 			UserTable.host eq null

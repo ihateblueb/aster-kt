@@ -53,7 +53,7 @@ fun Route.user() {
 			return@patch
 		}
 
-		call.respond(HttpStatusCode.NotImplemented)
+		throw ApiException(HttpStatusCode.NotImplemented)
 	}
 
 	post("/api/user/{id}/mute") {
@@ -64,7 +64,7 @@ fun Route.user() {
 			return@post
 		}
 
-		call.respond(HttpStatusCode.NotImplemented)
+		throw ApiException(HttpStatusCode.NotImplemented)
 	}
 
 	post("/api/user/{id}/block") {
@@ -75,7 +75,7 @@ fun Route.user() {
 			return@post
 		}
 
-		call.respond(HttpStatusCode.NotImplemented)
+		throw ApiException(HttpStatusCode.NotImplemented)
 	}
 
 	post("/api/user/{id}/refetch") {
@@ -86,6 +86,6 @@ fun Route.user() {
 			return@post
 		}
 
-		call.respond(HttpStatusCode.NotImplemented)
+		throw ApiException(HttpStatusCode.NotImplemented)
 	}
 }

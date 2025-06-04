@@ -19,7 +19,7 @@ fun Route.timeline() {
 
 			val local = call.request.queryParameters["local"]?.toBoolean() ?: true
 
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 	}
 
@@ -28,7 +28,7 @@ fun Route.timeline() {
 			val since = timelineService.normalizeSince(call.parameters["since"])
 			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 	}
 
@@ -37,7 +37,7 @@ fun Route.timeline() {
 			val since = timelineService.normalizeSince(call.parameters["since"])
 			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 	}
 
@@ -46,7 +46,7 @@ fun Route.timeline() {
 			val since = timelineService.normalizeSince(call.parameters["since"])
 			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-			call.respond(HttpStatusCode.NotImplemented)
+			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 	}
 }

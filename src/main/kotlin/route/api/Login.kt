@@ -2,7 +2,6 @@ package site.remlit.blueb.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import io.ktor.http.*
-import io.ktor.server.plugins.callid.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,7 +10,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.db.table.UserPrivateTable
 import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.ApiError
+import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.User
 import site.remlit.blueb.service.AuthService
 import site.remlit.blueb.service.UserService
@@ -35,71 +34,31 @@ fun Route.login() {
 	post("/api/login") {
 		val body = call.receive<LoginBody>()
 
-		if (body.username.isBlank()) {
-			call.respond(
-				status = HttpStatusCode.BadRequest,
-				message = ApiError(
-					message = "Username required",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (body.username.isBlank())
+			throw ApiException(HttpStatusCode.BadRequest, "Username required")
 
-		if (body.password.isBlank()) {
-			call.respond(
-				status = HttpStatusCode.BadRequest,
-				message = ApiError(
-					message = "Password required",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (body.password.isBlank())
+			throw ApiException(HttpStatusCode.BadRequest, "Password required")
 
 		val user = userService.get(
 			UserTable.username eq body.username
 				and (UserTable.host eq null)
 		)
 
-		if (user == null) {
-			call.respond(
-				status = HttpStatusCode.NotFound,
-				message = ApiError(
-					message = "User not found",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (user == null)
+			throw ApiException(HttpStatusCode.NotFound)
 
 		val userPrivate = userService.getPrivate(
 			UserPrivateTable.id eq user.id
 		)
 
-		if (userPrivate == null) {
-			call.respond(
-				status = HttpStatusCode.NotFound,
-				message = ApiError(
-					message = "User's private table not found",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (userPrivate == null)
+			throw ApiException(HttpStatusCode.BadRequest, "User's private table not found")
 
 		val passwordValid = BCrypt.verifyer().verify(body.password.toCharArray(), userPrivate.password.toCharArray())
 
-		if (!passwordValid.verified) {
-			call.respond(
-				status = HttpStatusCode.BadRequest,
-				message = ApiError(
-					message = "Incorrect password",
-					callId = call.callId
-				)
-			)
-			return@post
-		}
+		if (!passwordValid.verified)
+			throw ApiException(HttpStatusCode.BadRequest, "Incorrect password")
 
 		val token = authService.registerToken(user)
 

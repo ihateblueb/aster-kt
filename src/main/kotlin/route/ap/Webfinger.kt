@@ -7,6 +7,7 @@ import io.ktor.server.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.Configuration
 import site.remlit.blueb.model.WellKnown
 import site.remlit.blueb.model.WellKnownLink
@@ -21,10 +22,8 @@ fun Route.webfinger() {
 
 		call.response.headers.append("Content-Type", "application/activity+json")
 
-		if (!resource.startsWith("acct:") || resource == "acct:") {
-			call.respond(HttpStatusCode.BadRequest)
-			return@get
-		}
+		if (!resource.startsWith("acct:") || resource == "acct:")
+			throw ApiException(HttpStatusCode.BadRequest, "Only 'acct' resource type supported")
 
 		val username = resource
 			.replace("acct:@", "")
@@ -37,10 +36,8 @@ fun Route.webfinger() {
 				and (UserTable.host eq null)
 		)
 
-		if (user == null || user.suspended || !user.activated) {
-			call.respond(HttpStatusCode.NotFound)
-			return@get
-		}
+		if (user == null || user.suspended || !user.activated)
+			throw ApiException(HttpStatusCode.NotFound)
 
 		call.respond(
 			status = HttpStatusCode.OK,

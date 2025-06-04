@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
+import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.Visibility
 import site.remlit.blueb.model.activity.ApCreateActivity
 import site.remlit.blueb.model.ap.ApNote
@@ -24,10 +25,8 @@ fun Route.apNote() {
 			!note.user.host.isNullOrEmpty() ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
-		) {
-			call.respond(HttpStatusCode.NotFound)
-			return@get
-		}
+		)
+			throw ApiException(HttpStatusCode.NotFound)
 
 		call.respond(ApNote.fromEntity(note))
 	}
@@ -44,10 +43,8 @@ fun Route.apNote() {
 			!note.user.host.isNullOrEmpty() ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
-		) {
-			call.respond(HttpStatusCode.NotFound)
-			return@get
-		}
+		)
+			throw ApiException(HttpStatusCode.NotFound)
 
 		call.respond(
 			ApCreateActivity(
