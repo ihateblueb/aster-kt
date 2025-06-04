@@ -7,6 +7,7 @@ import io.ktor.server.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.User
 import site.remlit.blueb.service.UserService
 

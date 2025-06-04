@@ -2,8 +2,8 @@ package site.remlit.blueb.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import site.remlit.blueb.model.ApiException
 import site.remlit.blueb.model.Configuration
 import site.remlit.blueb.service.TimelineService
 
