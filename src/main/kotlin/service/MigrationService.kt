@@ -60,4 +60,8 @@ class MigrationService {
 			flyway.migrate()
 		}
 	}
+
+	fun repair() {
+		flyway.repair()
+	}
 }

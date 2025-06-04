@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import site.remlit.blueb.model.ApiError
 import site.remlit.blueb.model.ap.ApValidationException
 import site.remlit.blueb.model.ap.ApValidationExceptionType
+import site.remlit.blueb.model.queue.InboxQueueMessage
 import site.remlit.blueb.service.QueueService
 import site.remlit.blueb.service.ap.ApUtilityService
 import site.remlit.blueb.service.ap.ApValidationService
@@ -31,7 +32,7 @@ fun Route.inbox() {
 			)
 		}
 
-		QueueService.producer.send(QueueService.inboxQueue, String(body))
+		QueueService.producer.send(QueueService.inboxQueue, InboxQueueMessage("", String(body)).toString())
 
 		call.respond(HttpStatusCode.OK)
 	}

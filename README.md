@@ -25,6 +25,12 @@ After that, run `./path/to/aster.jar migration:execute` and your database will b
 
 After setting up a user, you can promote them to an Admin role with the CLI. First, get the ID of the generated Admin role by running `./path/to/aster.jar role:list`, and then `./path/to/aster.jar role:give {User ID} {Role ID}`. 
 
+## Troubleshooting
+
+### Migration checksum mismatch
+
+This usually happens when you run a migration before it's been formatted. Afterward, the checksum will be different. You can run `./path/to/aster.jar migration:repair` to fix them.
+
 ## Contributing
 
 Contributions are welcome, but Aster is in early development and I may have plans for how to do things already. You should contact me before opening a pull request or working on anything so we can get on the same page. 

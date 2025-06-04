@@ -20,17 +20,18 @@ class CommandLineService {
 		logger.info("help					Show this page")
 		logger.info("migration:generate			Generate migrations (for developer use)")
 		logger.info("migration:execute			Execute migrations")
+		logger.info("migration:repair			Repair database migrations")
 		logger.info("role:list				List all roles")
 		logger.info("role:create				Create a role")
 		logger.info("role:give				Give role to user")
 		logger.info("role:revoke				Revoke role from user")
 	}
 
-	suspend fun continuous() {
+	suspend fun prompt() {
 		val scanner = Scanner(System.`in`)
 		val line = scanner.nextLine()
 
-		logger.info("Starting continuous scanner.")
+		logger.info("Starting prompt.")
 
 		when (line) {
 			"exit" -> scanner.close()
@@ -52,8 +53,8 @@ class CommandLineService {
 					return
 				}
 
-				"continuous" -> {
-					continuous()
+				"prompt" -> {
+					prompt()
 					return
 				}
 
@@ -64,6 +65,11 @@ class CommandLineService {
 
 				"migration:execute" -> {
 					MigrationService().execute()
+					return
+				}
+
+				"migration:repair" -> {
+					MigrationService().repair()
 					return
 				}
 

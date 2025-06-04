@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Repair migrations" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="site.remlit.blueb.ApplicationKt" />
+    <module name="aster" />
+    <option name="PROGRAM_PARAMETERS" value="migration:repair" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
