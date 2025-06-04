@@ -25,6 +25,15 @@ class UserService() {
 	suspend fun getByApId(apId: String): UserEntity? = get(UserTable.apId eq apId)
 	suspend fun getByUsername(username: String): UserEntity? = get(UserTable.username eq username)
 
+	suspend fun getInstanceActor(): UserEntity {
+		val user = getByUsername("instance.actor")
+
+		if (user == null)
+			throw RuntimeException("Instance actor can't be null")
+
+		return user
+	}
+
 	suspend fun getPrivateById(id: String): UserPrivateEntity? = getPrivate(UserPrivateTable.id eq id)
 
 	suspend fun count(where: Op<Boolean>): Long = suspendTransaction {

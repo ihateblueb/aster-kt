@@ -2,6 +2,7 @@ package site.remlit.blueb.service
 
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.db.Database
+import site.remlit.blueb.db.entity.InviteEntity
 import site.remlit.blueb.db.suspendTransaction
 import site.remlit.blueb.model.PackageInformation
 import java.util.*
@@ -13,6 +14,8 @@ class CommandLineService {
 
 	private val userService = UserService()
 	private val roleService = RoleService()
+	private val identifierService = IdentifierService()
+	private val randomService = RandomService()
 
 	fun help() {
 		logger.info("${packageInformation.name} ${packageInformation.version}")
@@ -25,6 +28,7 @@ class CommandLineService {
 		logger.info("role:create				Create a role")
 		logger.info("role:give				Give role to user")
 		logger.info("role:revoke				Revoke role from user")
+		logger.info("invite:generate			Generate invite")
 	}
 
 	suspend fun prompt() {
@@ -159,6 +163,22 @@ class CommandLineService {
 					}
 
 					println("Revoked role ${role.name} from ${user.displayName ?: user.username}")
+				}
+
+				"invite:generate" -> {
+					val instanceActor = userService.getInstanceActor()
+
+					val id = identifierService.generate()
+					val code = randomService.generateString()
+
+					suspendTransaction {
+						InviteEntity.new(id) {
+							this.code = code
+							creator = instanceActor
+						}
+					}
+
+					println("Created new invite: $code")
 				}
 
 				else -> println("Unknown command ${args[0]}. Run with 'help' for commands.")
