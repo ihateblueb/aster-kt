@@ -63,8 +63,6 @@ fun Application.module() {
 			val status = call.response.status()
 			val uri = call.request.uri
 
-			println(call.request.headers["Accept"])
-
 			"$status $method - $uri"
 		}
 	}

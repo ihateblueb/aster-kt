@@ -4,11 +4,119 @@ info:
     description: "Aster API"
     version: "1.0.0"
 paths:
-    /actor/{id}:
+    /.well-known/host-meta:
+        get:
+            description: ""
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/WellKnown"
+                            examples:
+                                Example#1:
+                                    description: ""
+                                    value:
+                                        subject: "null"
+                                        aliases: "null"
+                                        links:
+                                            -   rel: "lrdd"
+                                                href: "null"
+                                                type: "application/jrd+json"
+                                                template: "null"
+                    headers:
+                        Content-Type:
+                            required: true
+                            schema:
+                                type: "string"
+    /.well-known/nodeinfo:
+        get:
+            description: ""
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/WellKnown"
+                            examples:
+                                Example#1:
+                                    description: ""
+                                    value:
+                                        subject: "null"
+                                        aliases: "null"
+                                        links:
+                                            -   rel: "http://nodeinfo.diaspora.software/ns/schema/2.1"
+                                                href: "null"
+                                                type: "null"
+                                                template: "null"
+                                            -   rel: "http://nodeinfo.diaspora.software/ns/schema/2.0"
+                                                href: "null"
+                                                type: "null"
+                                                template: "null"
+                    headers:
+                        Content-Type:
+                            required: true
+                            schema:
+                                type: "string"
+    /.well-known/webfinger:
         get:
             description: ""
             parameters:
-                -   name: "id"
+                -   name: "resource"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/WellKnown"
+                            examples:
+                                Example#1:
+                                    description: ""
+                                    value:
+                                        subject: "null"
+                                        aliases: [ ]
+                                        links:
+                                            -   rel: "self"
+                                                href: "null"
+                                                type: "application/activity+json"
+                                                template: "null"
+                                            -   rel: "http://webfinger.net/rel/profile-page"
+                                                href: "null"
+                                                type: "text/html"
+                                                template: "null"
+                    headers:
+                        Content-Type:
+                            required: true
+                            schema:
+                                type: "string"
+    /api/login:
+        post:
+            description: ""
+            requestBody:
+                content:
+                    '*/*':
+                        schema:
+                            $ref: "#/components/schemas/LoginBody"
+                required: true
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/LoginResponse"
+    /api/lookup/{handle}:
+        get:
+            description: ""
+            parameters:
+                -   name: "handle"
                     in: "path"
                     required: true
                     schema:
@@ -25,23 +133,292 @@ paths:
                     content:
                         '*/*':
                             schema:
-                                $ref: "#/components/schemas/ApActor"
+                                $ref: "#/components/schemas/User"
+    /api/meta:
+        get:
+            description: ""
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/Meta"
+    /api/mod/invite:
+        post:
+            description: ""
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/Invite"
+    /api/mod/invite/{id}:
+        delete:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+    /api/mod/invites:
+        get:
+            description: ""
+            parameters:
+                -   name: "since"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "take"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "integer"
+    /api/mod/policies:
+        get:
+            description: ""
+            parameters:
+                -   name: "since"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "take"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "integer"
+            responses:
+                "204":
+                    description: "No Content"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/PolicyEntity"
+    /api/mod/policy:
+        post:
+            description: ""
+            requestBody:
+                content:
+                    '*/*':
+                        schema:
+                            $ref: "#/components/schemas/PolicyBody"
+                required: true
+    /api/mod/policy/{id}:
+        delete:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+        patch:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /api/note:
+        post:
+            description: ""
+            requestBody:
+                content:
+                    '*/*':
+                        schema:
+                            $ref: "#/components/schemas/PostNoteBody"
+                required: true
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/ApiError"
+                            examples:
+                                Example#1:
+                                    description: ""
+                                    value:
+                                        message: "Note couldn't be found after creation"
+                                        callId: "null"
+                                        stackTrace: "null"
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/Note"
+    /api/note/{id}:
+        delete:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/Note"
+        patch:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /api/note/{id}/replies:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
     /api/register:
         post:
             description: ""
             requestBody:
                 content:
-                    application/json:
+                    '*/*':
                         schema:
                             $ref: "#/components/schemas/RegisterBody"
                 required: true
             responses:
-                "501":
-                    description: "Not Implemented"
+                "400":
+                    description: "Bad Request"
                     content:
                         '*/*':
                             schema:
-                                type: "object"
+                                $ref: "#/components/schemas/ApiError"
+                            examples:
+                                Example#1:
+                                    description: ""
+                                    value:
+                                        message: "Invite required"
+                                        callId: "null"
+                                        stackTrace: "null"
+                                Example#2:
+                                    description: ""
+                                    value:
+                                        message: "Registrations closed"
+                                        callId: "null"
+                                        stackTrace: "null"
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/User"
+    /api/timeline/bubble:
+        get:
+            description: ""
+            parameters:
+                -   name: "since"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "take"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "integer"
+    /api/timeline/home:
+        get:
+            description: ""
+            parameters:
+                -   name: "since"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "take"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "integer"
+                -   name: "local"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "boolean"
+    /api/timeline/local:
+        get:
+            description: ""
+            parameters:
+                -   name: "since"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "take"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "integer"
+    /api/timeline/public:
+        get:
+            description: ""
+            parameters:
+                -   name: "since"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "take"
+                    in: "query"
+                    required: false
+                    schema:
+                        type: "integer"
     /api/user/{id}:
         get:
             description: ""
@@ -63,7 +440,135 @@ paths:
                     content:
                         '*/*':
                             schema:
-                                $ref: "#/components/schemas/ExposedUser"
+                                $ref: "#/components/schemas/User"
+        patch:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+    /api/user/{id}/block:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+    /api/user/{id}/mute:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+    /api/user/{id}/refetch:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "404":
+                    description: "Not Found"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
+    /inbox:
+        post:
+            description: ""
+            parameters:
+                -   name: "Host"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Host"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Date"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Digest"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Signature"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Digest"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Digest"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Signature"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+                -   name: "Date"
+                    in: "header"
+                    required: false
+                    schema:
+                        type: "string"
+            requestBody:
+                content:
+                    '*/*':
+                        schema:
+                            type: "array"
+                            items:
+                                type: "string"
+                                format: "byte"
+                required: true
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                type: "object"
     /nodeinfo/{version}:
         get:
             description: ""
@@ -74,69 +579,222 @@ paths:
                     schema:
                         type: "string"
             responses:
-                "400":
-                    description: "Bad Request"
-                    content:
-                        '*/*':
-                            schema:
-                                type: "object"
                 "200":
                     description: "OK"
                     content:
                         '*/*':
                             schema:
-                                $ref: "#/components/schemas/Nodeinfo"
+                                $ref: "#/components/schemas/NodeInfo"
                             examples:
                                 Example#1:
                                     description: ""
                                     value:
                                         version: "null"
-                                        software:
-                                            name: "aster"
-                                            version: "null"
+                                        software: "null"
                                         protocols:
                                             - "activitypub"
-                                        openRegistrations: true
-                                        usage:
-                                            users:
-                                                total: 0
-                                            localPosts: 0
+                                        openRegistrations: "null"
+                                        usage: "null"
+    /note/{id}/bookmark:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /note/{id}/hide:
+        post:
+            description: "Hide post and all replies to it, use conversation to determine\
+        \ replies"
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /note/{id}/like:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /note/{id}/mute:
+        post:
+            description: "stop receiving notifications for this post, user conversation\
+        \ for this, too"
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /note/{id}/react:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /note/{id}/repeat:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /notes/{id}:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/ApNote"
+                    headers:
+                        Content-Type:
+                            required: true
+                            schema:
+                                type: "string"
+    /notes/{id}/activity:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/ApCreateActivity"
+                    headers:
+                        Content-Type:
+                            required: true
+                            schema:
+                                type: "string"
+    /outbox:
+        get:
+            description: ""
+    /user/{id}/inbox:
+        post:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /user/{id}/outbox:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /users/{id}:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    content:
+                        '*/*':
+                            schema:
+                                $ref: "#/components/schemas/ApActor"
+    /users/{id}/followers:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
+    /users/{id}/following:
+        get:
+            description: ""
+            parameters:
+                -   name: "id"
+                    in: "path"
+                    required: true
+                    schema:
+                        type: "string"
 components:
     schemas:
-        LdContextItem:
-            type: "object"
-            properties: { }
-        ApActor:
+        ApiError:
             type: "object"
             properties:
-                context:
-                    type: "array"
-                    items:
-                        $ref: "#/components/schemas/LdContextItem"
-                id:
+                message:
+                    type: "string"
+                    nullable: true
+                callId:
+                    type: "string"
+                    nullable: true
+                stackTrace:
+                    type: "string"
+                    nullable: true
+        WellKnownLink:
+            type: "object"
+            properties:
+                rel:
+                    type: "string"
+                href:
                     type: "string"
                 type:
                     type: "string"
-                    enum:
-                        - "Person"
-                        - "Service"
-                        - "Note"
-                        - "Image"
-                        - "Key"
-                url:
-                    type: "string"
                     nullable: true
-                preferredUsername:
-                    type: "string"
-                name:
+                template:
                     type: "string"
                     nullable: true
             required:
-                - "context"
-                - "id"
-                - "type"
-                - "preferredUsername"
-        RegisterBody:
+                - "rel"
+                - "href"
+        WellKnown:
+            type: "object"
+            properties:
+                subject:
+                    type: "string"
+                    nullable: true
+                aliases:
+                    type: "array"
+                    nullable: true
+                    items:
+                        type: "string"
+                links:
+                    type: "array"
+                    nullable: true
+                    items:
+                        $ref: "#/components/schemas/WellKnownLink"
+        LoginBody:
             type: "object"
             properties:
                 username:
@@ -146,7 +804,10 @@ components:
             required:
                 - "username"
                 - "password"
-        ExposedUser:
+        Map:
+            type: "object"
+            properties: { }
+        User:
             type: "object"
             properties:
                 id:
@@ -193,6 +854,8 @@ components:
                     type: "boolean"
                 activated:
                     type: "boolean"
+                automated:
+                    type: "boolean"
                 discoverable:
                     type: "boolean"
                 indexable:
@@ -203,6 +866,20 @@ components:
                     type: "boolean"
                 speakAsCat:
                     type: "boolean"
+                createdAt:
+                    type: "string"
+                    format: "date-time"
+                updatedAt:
+                    type: "string"
+                    format: "date-time"
+                    nullable: true
+                publicKey:
+                    type: "string"
+                relationship:
+                    type: "array"
+                    nullable: true
+                    items:
+                        $ref: "#/components/schemas/Map"
             required:
                 - "id"
                 - "apId"
@@ -211,12 +888,239 @@ components:
                 - "locked"
                 - "suspended"
                 - "activated"
+                - "automated"
                 - "discoverable"
                 - "indexable"
                 - "sensitive"
                 - "isCat"
                 - "speakAsCat"
-        NodeinfoSoftare:
+                - "createdAt"
+                - "publicKey"
+        LoginResponse:
+            type: "object"
+            properties:
+                token:
+                    type: "string"
+                user:
+                    $ref: "#/components/schemas/User"
+            required:
+                - "token"
+                - "user"
+        MetaVersion:
+            type: "object"
+            properties:
+                aster:
+                    type: "string"
+                java:
+                    type: "string"
+                kotlin:
+                    type: "string"
+                system:
+                    type: "string"
+            required:
+                - "aster"
+                - "java"
+                - "kotlin"
+                - "system"
+        MetaStatCount:
+            type: "object"
+            properties:
+                local:
+                    type: "integer"
+                    format: "int64"
+                remote:
+                    type: "integer"
+                    format: "int64"
+                total:
+                    type: "integer"
+                    format: "int64"
+            required:
+                - "local"
+                - "remote"
+                - "total"
+        MetaStats:
+            type: "object"
+            properties:
+                users:
+                    $ref: "#/components/schemas/MetaStatCount"
+                notes:
+                    $ref: "#/components/schemas/MetaStatCount"
+            required:
+                - "users"
+                - "notes"
+        MetaStaff:
+            type: "object"
+            properties:
+                admin:
+                    type: "array"
+                    items:
+                        $ref: "#/components/schemas/User"
+                mod:
+                    type: "array"
+                    items:
+                        $ref: "#/components/schemas/User"
+            required:
+                - "admin"
+                - "mod"
+        Meta:
+            type: "object"
+            properties:
+                version:
+                    $ref: "#/components/schemas/MetaVersion"
+                plugins:
+                    type: "array"
+                    items:
+                        $ref: "#/components/schemas/Map"
+                stats:
+                    $ref: "#/components/schemas/MetaStats"
+                staff:
+                    $ref: "#/components/schemas/MetaStaff"
+            required:
+                - "version"
+                - "plugins"
+                - "stats"
+                - "staff"
+        Invite:
+            type: "object"
+            properties:
+                id:
+                    type: "string"
+                code:
+                    type: "string"
+                user:
+                    nullable: true
+                    $ref: "#/components/schemas/User"
+                creator:
+                    $ref: "#/components/schemas/User"
+                createdAt:
+                    type: "string"
+                    format: "date-time"
+                usedAt:
+                    type: "string"
+                    format: "date-time"
+                    nullable: true
+            required:
+                - "id"
+                - "code"
+                - "creator"
+                - "createdAt"
+        Object:
+            type: "object"
+            properties: { }
+        ResultRow:
+            type: "object"
+            properties:
+                fieldIndex:
+                    type: "object"
+            required:
+                - "fieldIndex"
+        PolicyEntity:
+            type: "object"
+            properties:
+                writeValues:
+                    $ref: "#/components/schemas/Object"
+                _readValues:
+                    nullable: true
+                    $ref: "#/components/schemas/ResultRow"
+            required:
+                - "writeValues"
+        PolicyBody:
+            type: "object"
+            properties:
+                type:
+                    type: "string"
+                    enum:
+                        - "Block"
+                        - "Silence"
+                        - "ForceContentWarning"
+                        - "ForceSensitive"
+                        - "ForceFollowRequest"
+                host:
+                    type: "string"
+                    nullable: true
+                content:
+                    type: "string"
+                    nullable: true
+            required:
+                - "type"
+        PostNoteBody:
+            type: "object"
+            properties:
+                cw:
+                    type: "string"
+                    nullable: true
+                content:
+                    type: "string"
+                    nullable: true
+                visibility:
+                    type: "string"
+            required:
+                - "visibility"
+        Note:
+            type: "object"
+            properties:
+                id:
+                    type: "string"
+                apId:
+                    type: "string"
+                conversation:
+                    type: "string"
+                    nullable: true
+                user:
+                    $ref: "#/components/schemas/User"
+                replyingTo:
+                    nullable: true
+                    $ref: "#/components/schemas/Note"
+                cw:
+                    type: "string"
+                    nullable: true
+                content:
+                    type: "string"
+                visibility:
+                    type: "string"
+                    enum:
+                        - "Public"
+                        - "Unlisted"
+                        - "Followers"
+                        - "Direct"
+                to:
+                    type: "array"
+                    nullable: true
+                    items:
+                        type: "string"
+                tags:
+                    type: "array"
+                    nullable: true
+                    items:
+                        type: "string"
+                createdAt:
+                    type: "string"
+                    format: "date-time"
+                updatedAt:
+                    type: "string"
+                    format: "date-time"
+                    nullable: true
+            required:
+                - "id"
+                - "apId"
+                - "user"
+                - "content"
+                - "visibility"
+                - "createdAt"
+        RegisterBody:
+            type: "object"
+            properties:
+                username:
+                    type: "string"
+                password:
+                    type: "string"
+                invite:
+                    type: "string"
+                    nullable: true
+            required:
+                - "username"
+                - "password"
+        NodeInfoSoftware:
             type: "object"
             properties:
                 name:
@@ -226,7 +1130,7 @@ components:
             required:
                 - "name"
                 - "version"
-        NodeinfoUsageUsers:
+        NodeInfoUsageUsers:
             type: "object"
             properties:
                 total:
@@ -234,24 +1138,24 @@ components:
                     format: "int32"
             required:
                 - "total"
-        NodeinfoUsage:
+        NodeInfoUsage:
             type: "object"
             properties:
                 users:
-                    $ref: "#/components/schemas/NodeinfoUsageUsers"
+                    $ref: "#/components/schemas/NodeInfoUsageUsers"
                 localPosts:
                     type: "integer"
                     format: "int32"
             required:
                 - "users"
                 - "localPosts"
-        Nodeinfo:
+        NodeInfo:
             type: "object"
             properties:
                 version:
                     type: "string"
                 software:
-                    $ref: "#/components/schemas/NodeinfoSoftare"
+                    $ref: "#/components/schemas/NodeInfoSoftware"
                 protocols:
                     type: "array"
                     items:
@@ -259,10 +1163,225 @@ components:
                 openRegistrations:
                     type: "boolean"
                 usage:
-                    $ref: "#/components/schemas/NodeinfoUsage"
+                    $ref: "#/components/schemas/NodeInfoUsage"
             required:
                 - "version"
                 - "software"
                 - "protocols"
                 - "openRegistrations"
                 - "usage"
+        JsonArray:
+            type: "object"
+            properties: { }
+        ApNote:
+            type: "object"
+            properties:
+                id:
+                    type: "string"
+                type:
+                    type: "string"
+                    enum:
+                        - "Person"
+                        - "Service"
+                        - "Note"
+                        - "Image"
+                        - "Key"
+                actor:
+                    type: "string"
+                attributedTo:
+                    type: "string"
+                summary:
+                    type: "string"
+                    nullable: true
+                _misskey_summary:
+                    type: "string"
+                    nullable: true
+                content:
+                    type: "string"
+                    nullable: true
+                _misskey_content:
+                    type: "string"
+                    nullable: true
+                sensitive:
+                    type: "boolean"
+                published:
+                    type: "string"
+                visibility:
+                    type: "string"
+                    enum:
+                        - "Public"
+                        - "Unlisted"
+                        - "Followers"
+                        - "Direct"
+                to:
+                    type: "array"
+                    items:
+                        type: "string"
+                cc:
+                    type: "array"
+                    items:
+                        type: "string"
+                context:
+                    $ref: "#/components/schemas/JsonArray"
+            required:
+                - "id"
+                - "type"
+                - "actor"
+                - "attributedTo"
+                - "sensitive"
+                - "published"
+                - "visibility"
+                - "to"
+                - "cc"
+                - "context"
+        ApCreateActivity:
+            type: "object"
+            properties:
+                type:
+                    type: "string"
+                    enum:
+                        - "Accept"
+                        - "Add"
+                        - "Bite"
+                        - "Create"
+                        - "Delete"
+                        - "Reject"
+                        - "Block"
+                        - "Follow"
+                actor:
+                    type: "string"
+                    nullable: true
+                object:
+                    $ref: "#/components/schemas/Object"
+                context:
+                    $ref: "#/components/schemas/JsonArray"
+            required:
+                - "type"
+                - "object"
+                - "context"
+        ApImage:
+            type: "object"
+            properties:
+                type:
+                    type: "string"
+                    enum:
+                        - "Person"
+                        - "Service"
+                        - "Note"
+                        - "Image"
+                        - "Key"
+                src:
+                    type: "string"
+                sensitive:
+                    type: "boolean"
+                name:
+                    type: "string"
+                    nullable: true
+                alt:
+                    type: "string"
+                    nullable: true
+            required:
+                - "type"
+                - "src"
+                - "sensitive"
+        ApKey:
+            type: "object"
+            properties:
+                id:
+                    type: "string"
+                type:
+                    type: "string"
+                    enum:
+                        - "Person"
+                        - "Service"
+                        - "Note"
+                        - "Image"
+                        - "Key"
+                owner:
+                    type: "string"
+                publicKeyPem:
+                    type: "string"
+            required:
+                - "id"
+                - "type"
+                - "owner"
+                - "publicKeyPem"
+        ApActor:
+            type: "object"
+            properties:
+                id:
+                    type: "string"
+                type:
+                    type: "string"
+                    enum:
+                        - "Person"
+                        - "Service"
+                        - "Note"
+                        - "Image"
+                        - "Key"
+                url:
+                    type: "string"
+                    nullable: true
+                preferredUsername:
+                    type: "string"
+                name:
+                    type: "string"
+                    nullable: true
+                icon:
+                    nullable: true
+                    $ref: "#/components/schemas/ApImage"
+                image:
+                    nullable: true
+                    $ref: "#/components/schemas/ApImage"
+                summary:
+                    type: "string"
+                    nullable: true
+                _misskey_summary:
+                    type: "string"
+                    nullable: true
+                sensitive:
+                    type: "boolean"
+                discoverable:
+                    type: "boolean"
+                manuallyApprovesFollowers:
+                    type: "boolean"
+                noindex:
+                    type: "boolean"
+                isCat:
+                    type: "boolean"
+                speakAsCat:
+                    type: "boolean"
+                vcardBday:
+                    type: "string"
+                    nullable: true
+                vcardAddress:
+                    type: "string"
+                    nullable: true
+                published:
+                    type: "string"
+                inbox:
+                    type: "string"
+                outbox:
+                    type: "string"
+                    nullable: true
+                sharedInbox:
+                    type: "string"
+                publicKey:
+                    $ref: "#/components/schemas/ApKey"
+                context:
+                    $ref: "#/components/schemas/JsonArray"
+            required:
+                - "id"
+                - "type"
+                - "preferredUsername"
+                - "sensitive"
+                - "discoverable"
+                - "manuallyApprovesFollowers"
+                - "noindex"
+                - "isCat"
+                - "speakAsCat"
+                - "published"
+                - "inbox"
+                - "sharedInbox"
+                - "publicKey"
+                - "context"

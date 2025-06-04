@@ -12,11 +12,13 @@ import site.remlit.blueb.service.UserService
 data class Meta(
 	val version: MetaVersion,
 	val plugins: List<Map<String, String>?> = listOf(),
+	val registrations: InstanceRegistrationsType,
 	val stats: MetaStats,
 	val staff: MetaStaff
 ) {
 	companion object {
 		private val packageInformation = PackageInformation()
+		private val configuration = Configuration()
 
 		private val userService = UserService()
 		private val noteService = NoteService()
@@ -29,6 +31,7 @@ data class Meta(
 					kotlin = KotlinVersion.CURRENT.toString(),
 					system = "${System.getProperty("os.name")} ${System.getProperty("os.version")}",
 				),
+				registrations = configuration.registrations,
 				stats = MetaStats(
 					users = MetaStatCount(
 						local = userService.count(UserTable.host eq null and (UserTable.username neq "instance.actor")),
