@@ -11,12 +11,19 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RegisterImport } from './routes/register'
 import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as NoteNoteIdImport } from './routes/note/$noteId'
 
 // Create/Update Routes
+
+const RegisterRoute = RegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LogoutRoute = LogoutImport.update({
   id: '/logout',
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutImport
       parentRoute: typeof rootRoute
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
     '/note/$noteId': {
       id: '/note/$noteId'
       path: '/note/$noteId'
@@ -83,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/register': typeof RegisterRoute
   '/note/$noteId': typeof NoteNoteIdRoute
 }
 
@@ -90,6 +105,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/register': typeof RegisterRoute
   '/note/$noteId': typeof NoteNoteIdRoute
 }
 
@@ -98,15 +114,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/register': typeof RegisterRoute
   '/note/$noteId': typeof NoteNoteIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/logout' | '/note/$noteId'
+  fullPaths: '/' | '/login' | '/logout' | '/register' | '/note/$noteId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/logout' | '/note/$noteId'
-  id: '__root__' | '/' | '/login' | '/logout' | '/note/$noteId'
+  to: '/' | '/login' | '/logout' | '/register' | '/note/$noteId'
+  id: '__root__' | '/' | '/login' | '/logout' | '/register' | '/note/$noteId'
   fileRoutesById: FileRoutesById
 }
 
@@ -114,6 +131,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
+  RegisterRoute: typeof RegisterRoute
   NoteNoteIdRoute: typeof NoteNoteIdRoute
 }
 
@@ -121,6 +139,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
+  RegisterRoute: RegisterRoute,
   NoteNoteIdRoute: NoteNoteIdRoute,
 }
 
@@ -137,6 +156,7 @@ export const routeTree = rootRoute
         "/",
         "/login",
         "/logout",
+        "/register",
         "/note/$noteId"
       ]
     },
@@ -148,6 +168,9 @@ export const routeTree = rootRoute
     },
     "/logout": {
       "filePath": "logout.tsx"
+    },
+    "/register": {
+      "filePath": "register.tsx"
     },
     "/note/$noteId": {
       "filePath": "note/$noteId.tsx"

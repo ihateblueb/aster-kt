@@ -1,9 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start Server" type="KtorApplicationConfigurationType" factoryName="Ktor">
+    <option name="ALTERNATIVE_JRE_PATH" value="jbr-21" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="site.remlit.blueb.ApplicationKt" />
     <module name="aster" />
-    <option name="alternativeJrePath" />
-    <option name="alternativeJrePathEnabled" value="false" />
+    <option name="alternativeJrePath" value="jbr-21" />
+    <option name="alternativeJrePathEnabled" value="true" />
     <option name="includeProvidedScope" value="false" />
     <option name="mainClass" value="site.remlit.blueb.ApplicationKt" />
     <option name="passParentEnvs" value="true" />

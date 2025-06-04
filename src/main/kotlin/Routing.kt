@@ -27,6 +27,7 @@ fun Application.configureRouting() {
 		modInvite()
 
 		login()
+		meta()
 		note()
 		register()
 		timeline()
