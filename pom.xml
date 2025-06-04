@@ -309,7 +309,7 @@
 		<dependency>
 			<groupId>site.remlit.blueb</groupId>
 			<artifactId>httpSignatureUtility</artifactId>
-			<version>2025.6.1.2-SNAPSHOT</version>
+			<version>2025.6.4.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>

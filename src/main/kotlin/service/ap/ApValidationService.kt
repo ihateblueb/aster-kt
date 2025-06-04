@@ -8,7 +8,7 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.httpSignatures.HttpSignature
-import site.remlit.blueb.httpSignatures.IllegalSignatureException
+import site.remlit.blueb.httpSignatures.SignatureException
 import site.remlit.blueb.model.Configuration
 import site.remlit.blueb.model.PolicyType
 import site.remlit.blueb.model.ap.ApValidationException
@@ -106,7 +106,7 @@ class ApValidationService {
 				parseHttpDate(request.headers["Date"]!!),
 				body
 			)
-		} catch (e: IllegalSignatureException) {
+		} catch (e: SignatureException) {
 			throw ApValidationException(
 				ApValidationExceptionType.Forbidden,
 				"Signature invalid: ${e.message}"
