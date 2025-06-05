@@ -1,4 +1,4 @@
-package site.remlit.blueb.util
+package site.remlit.blueb.aster.util
 
 import kotlinx.serialization.json.Json
 

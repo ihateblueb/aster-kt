@@ -1,4 +1,4 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -12,10 +12,10 @@ import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.JsonObject
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.PackageInformation
-import site.remlit.blueb.model.PolicyType
-import site.remlit.blueb.util.jsonConfig
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.PackageInformation
+import site.remlit.blueb.aster.model.PolicyType
+import site.remlit.blueb.aster.util.jsonConfig
 
 class ResolverService {
 	private val logger = LoggerFactory.getLogger(this::class.java)

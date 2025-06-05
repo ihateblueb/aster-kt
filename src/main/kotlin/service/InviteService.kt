@@ -1,13 +1,13 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import site.remlit.blueb.db.entity.InviteEntity
-import site.remlit.blueb.db.entity.NoteEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.db.table.InviteTable
-import site.remlit.blueb.model.Invite
+import site.remlit.blueb.aster.db.entity.InviteEntity
+import site.remlit.blueb.aster.db.entity.NoteEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.InviteTable
+import site.remlit.blueb.aster.model.Invite
 
 class InviteService {
 	private val userService = UserService()

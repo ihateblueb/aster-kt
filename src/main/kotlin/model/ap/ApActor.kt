@@ -1,11 +1,11 @@
-package site.remlit.blueb.model.ap
+package site.remlit.blueb.aster.model.ap
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.service.FormatService
-import site.remlit.blueb.service.ap.ApIdService
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.service.FormatService
+import site.remlit.blueb.aster.service.ap.ApIdService
 
 private val configuration = Configuration()
 

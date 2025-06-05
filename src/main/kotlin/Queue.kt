@@ -1,9 +1,9 @@
-package site.remlit.blueb
+package site.remlit.blueb.aster
 
 import io.ktor.server.application.*
 import kolbasa.schema.SchemaHelpers
-import site.remlit.blueb.db.Database
-import site.remlit.blueb.queue.Queues
+import site.remlit.blueb.aster.db.Database
+import site.remlit.blueb.aster.queue.Queues
 
 fun Application.configureQueue() {
 	SchemaHelpers.updateDatabaseSchema(

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Execute migrations" type="JetRunConfigurationType">
-    <option name="MAIN_CLASS_NAME" value="site.remlit.blueb.ApplicationKt" />
+    <option name="MAIN_CLASS_NAME" value="site.remlit.blueb.aster.ApplicationKt" />
     <module name="aster" />
     <option name="PROGRAM_PARAMETERS" value="migration:execute" />
     <shortenClasspath name="NONE" />

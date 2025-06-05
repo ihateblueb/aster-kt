@@ -1,20 +1,20 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.db.entity.RoleEntity
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.db.entity.UserPrivateEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.db.table.RoleTable
-import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.KeyType
-import site.remlit.blueb.model.RoleType
-import site.remlit.blueb.service.ap.ApIdService
+import site.remlit.blueb.aster.db.entity.RoleEntity
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.db.entity.UserPrivateEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.RoleTable
+import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.KeyType
+import site.remlit.blueb.aster.model.RoleType
+import site.remlit.blueb.aster.service.ap.ApIdService
 
 class SetupService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)

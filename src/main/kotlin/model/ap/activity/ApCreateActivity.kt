@@ -1,9 +1,9 @@
-package site.remlit.blueb.model.activity
+package site.remlit.blueb.aster.model.activity
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.model.ap.ApObjectWithContext
-import site.remlit.blueb.model.ap.ApType
+import site.remlit.blueb.aster.model.ap.ApObjectWithContext
+import site.remlit.blueb.aster.model.ap.ApType
 
 @Serializable
 data class ApCreateActivity(

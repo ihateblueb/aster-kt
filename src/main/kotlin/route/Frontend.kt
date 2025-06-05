@@ -1,4 +1,4 @@
-package site.remlit.blueb.route
+package site.remlit.blueb.aster.route
 
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*

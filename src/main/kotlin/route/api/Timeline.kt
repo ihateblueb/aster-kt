@@ -1,11 +1,11 @@
-package site.remlit.blueb.route.api
+package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.*
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.service.TimelineService
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.service.TimelineService
 
 fun Route.timeline() {
 	val configuration = Configuration()

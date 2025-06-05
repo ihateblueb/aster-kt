@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.api
+package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -8,12 +8,12 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.authenticatedUserKey
-import site.remlit.blueb.db.entity.NoteEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.model.*
-import site.remlit.blueb.service.*
-import site.remlit.blueb.service.ap.ApIdService
+import site.remlit.blueb.aster.authenticatedUserKey
+import site.remlit.blueb.aster.db.entity.NoteEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.model.*
+import site.remlit.blueb.aster.service.*
+import site.remlit.blueb.aster.service.ap.ApIdService
 
 @Serializable
 data class PostNoteBody(

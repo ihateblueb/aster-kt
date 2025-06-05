@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.ap
+package site.remlit.blueb.aster.route.ap
 
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -7,10 +7,10 @@ import io.ktor.server.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
 import org.jetbrains.exposed.sql.and
-import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.*
-import site.remlit.blueb.service.NoteService
-import site.remlit.blueb.service.UserService
+import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.model.*
+import site.remlit.blueb.aster.service.NoteService
+import site.remlit.blueb.aster.service.UserService
 
 fun Route.nodeInfo() {
 	val configuration = Configuration()

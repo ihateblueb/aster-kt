@@ -1,4 +1,4 @@
-package site.remlit.blueb.model.ap
+package site.remlit.blueb.aster.model.ap
 
 enum class ApValidationExceptionType {
 	Unauthorized,

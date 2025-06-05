@@ -1,14 +1,14 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import site.remlit.blueb.db.entity.RelationshipEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.db.table.RelationshipTable
-import site.remlit.blueb.model.Relationship
-import site.remlit.blueb.model.RelationshipType
+import site.remlit.blueb.aster.db.entity.RelationshipEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.RelationshipTable
+import site.remlit.blueb.aster.model.Relationship
+import site.remlit.blueb.aster.model.RelationshipType
 
 class RelationshipService {
 	suspend fun get(where: Op<Boolean>): Relationship? = suspendTransaction {

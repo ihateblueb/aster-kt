@@ -1,18 +1,18 @@
-package site.remlit.blueb.route.api.mod
+package site.remlit.blueb.aster.route.api.mod
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import site.remlit.blueb.authenticatedUserKey
-import site.remlit.blueb.db.entity.InviteEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.service.IdentifierService
-import site.remlit.blueb.service.InviteService
-import site.remlit.blueb.service.RandomService
-import site.remlit.blueb.service.TimelineService
+import site.remlit.blueb.aster.authenticatedUserKey
+import site.remlit.blueb.aster.db.entity.InviteEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.service.IdentifierService
+import site.remlit.blueb.aster.service.InviteService
+import site.remlit.blueb.aster.service.RandomService
+import site.remlit.blueb.aster.service.TimelineService
 
 fun Route.modInvite() {
 	val identifierService = IdentifierService()

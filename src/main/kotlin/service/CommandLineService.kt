@@ -1,10 +1,10 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.db.Database
-import site.remlit.blueb.db.entity.InviteEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.model.PackageInformation
+import site.remlit.blueb.aster.db.Database
+import site.remlit.blueb.aster.db.entity.InviteEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.model.PackageInformation
 import java.util.*
 
 class CommandLineService {

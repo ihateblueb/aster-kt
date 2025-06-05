@@ -1,4 +1,4 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 class PluginService {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-	val pluginManager = site.remlit.blueb.util.pluginManager
+	val pluginManager = site.remlit.blueb.aster.util.pluginManager
 
 	fun initialize() {
 		pluginManager.loadPlugins()

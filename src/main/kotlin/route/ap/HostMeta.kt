@@ -1,11 +1,11 @@
-package site.remlit.blueb.route.ap
+package site.remlit.blueb.aster.route.ap
 
 import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.WellKnown
-import site.remlit.blueb.model.WellKnownLink
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.WellKnown
+import site.remlit.blueb.aster.model.WellKnownLink
 
 fun Route.hostMeta() {
 	val configuration = Configuration()

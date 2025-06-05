@@ -1,6 +1,6 @@
-package site.remlit.blueb.service.ap
+package site.remlit.blueb.aster.service.ap
 
-import site.remlit.blueb.model.Visibility
+import site.remlit.blueb.aster.model.Visibility
 
 class ApVisibilityService {
 	fun visibilityToCc(visibility: Visibility, followersUrl: String?, to: List<String>?): Map<String, List<String>> {

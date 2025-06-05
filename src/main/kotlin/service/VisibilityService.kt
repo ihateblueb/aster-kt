@@ -1,6 +1,6 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
-import site.remlit.blueb.model.Visibility
+import site.remlit.blueb.aster.model.Visibility
 
 class VisibilityService {
 	private val userService = UserService()

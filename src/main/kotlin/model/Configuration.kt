@@ -1,4 +1,4 @@
-package site.remlit.blueb.model
+package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*

@@ -1,14 +1,14 @@
-package site.remlit.blueb.route.ap
+package site.remlit.blueb.aster.route.ap
 
 import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.Visibility
-import site.remlit.blueb.model.activity.ApCreateActivity
-import site.remlit.blueb.model.ap.ApNote
-import site.remlit.blueb.service.NoteService
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Visibility
+import site.remlit.blueb.aster.model.activity.ApCreateActivity
+import site.remlit.blueb.aster.model.ap.ApNote
+import site.remlit.blueb.aster.service.NoteService
 
 fun Route.apNote() {
 	val noteService = NoteService()

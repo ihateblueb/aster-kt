@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.api.mod
+package site.remlit.blueb.aster.route.api.mod
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -8,11 +8,11 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
-import site.remlit.blueb.db.table.PolicyTable
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.PolicyType
-import site.remlit.blueb.service.PolicyService
-import site.remlit.blueb.service.TimelineService
+import site.remlit.blueb.aster.db.table.PolicyTable
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.PolicyType
+import site.remlit.blueb.aster.service.PolicyService
+import site.remlit.blueb.aster.service.TimelineService
 
 @Serializable
 data class PolicyBody(

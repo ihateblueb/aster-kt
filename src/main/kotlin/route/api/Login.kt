@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.api
+package site.remlit.blueb.aster.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import io.ktor.http.*
@@ -8,13 +8,13 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import site.remlit.blueb.db.table.UserPrivateTable
-import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.AuthResponse
-import site.remlit.blueb.model.User
-import site.remlit.blueb.service.AuthService
-import site.remlit.blueb.service.UserService
+import site.remlit.blueb.aster.db.table.UserPrivateTable
+import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.AuthResponse
+import site.remlit.blueb.aster.model.User
+import site.remlit.blueb.aster.service.AuthService
+import site.remlit.blueb.aster.service.UserService
 
 @Serializable
 data class LoginBody(

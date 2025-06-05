@@ -1,4 +1,4 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime

@@ -1,4 +1,4 @@
-package site.remlit.blueb.queue
+package site.remlit.blueb.aster.queue
 
 import kolbasa.consumer.Message
 import kolbasa.consumer.datasource.DatabaseConsumer
@@ -14,8 +14,8 @@ import kotlinx.coroutines.newFixedThreadPoolContext
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.db.Database
-import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.aster.db.Database
+import site.remlit.blueb.aster.model.Configuration
 
 object Queues {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -40,9 +40,9 @@ object Queues {
 				while (true) {
 					consumer.receive(inboxQueue, configuration.queue.inbox.concurrency).let { messages ->
 						for (message in messages) {
-                            runBlocking(inboxThreadPool) {
-                                processInboxJob(message)
-                            }
+							runBlocking(inboxThreadPool) {
+								processInboxJob(message)
+							}
 						}
 					}
 					Thread.sleep(500)
@@ -53,9 +53,9 @@ object Queues {
 				while (true) {
 					consumer.receive(deliverQueue, configuration.queue.deliver.concurrency).let { messages ->
 						for (message in messages) {
-                            runBlocking(deliverThreadPool) {
-                                processDeliverJob(message)
-                            }
+							runBlocking(deliverThreadPool) {
+								processDeliverJob(message)
+							}
 						}
 					}
 					Thread.sleep(500)
@@ -66,9 +66,9 @@ object Queues {
 				while (true) {
 					consumer.receive(systemQueue, configuration.queue.system.concurrency).let { messages ->
 						for (message in messages) {
-                            runBlocking(systemThreadPool) {
-                                processSystemJob(message)
-                            }
+							runBlocking(systemThreadPool) {
+								processSystemJob(message)
+							}
 						}
 					}
 					Thread.sleep(500)

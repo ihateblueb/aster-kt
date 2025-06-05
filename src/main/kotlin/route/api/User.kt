@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.api
+package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.authenticate
@@ -7,12 +7,12 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import site.remlit.blueb.authenticatedUserKey
-import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.User
-import site.remlit.blueb.service.RelationshipService
-import site.remlit.blueb.service.UserService
+import site.remlit.blueb.aster.authenticatedUserKey
+import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.User
+import site.remlit.blueb.aster.service.RelationshipService
+import site.remlit.blueb.aster.service.UserService
 
 fun Route.user() {
 	val userService = UserService()
@@ -94,9 +94,11 @@ fun Route.user() {
 
 			val requestingUser = call.attributes[authenticatedUserKey]
 
-			call.respond(relationshipService.mapPair(
-				relationshipService.getPair(requestingUser.id.toString(), user.id.toString())
-			))
+			call.respond(
+				relationshipService.mapPair(
+					relationshipService.getPair(requestingUser.id.toString(), user.id.toString())
+				)
+			)
 		}
 	}
 }

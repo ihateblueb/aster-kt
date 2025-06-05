@@ -1,4 +1,4 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import java.math.BigInteger
 import java.security.SecureRandom

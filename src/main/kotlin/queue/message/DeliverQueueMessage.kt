@@ -1,4 +1,4 @@
-package site.remlit.blueb.queue.message
+package site.remlit.blueb.aster.queue.message
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject

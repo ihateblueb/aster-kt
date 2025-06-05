@@ -1,4 +1,4 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime

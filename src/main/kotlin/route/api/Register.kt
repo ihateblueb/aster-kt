@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.api
+package site.remlit.blueb.aster.route.api
 
 import at.favre.lib.crypto.bcrypt.BCrypt
 import io.ktor.http.*
@@ -7,12 +7,12 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.db.entity.UserPrivateEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.model.*
-import site.remlit.blueb.service.*
-import site.remlit.blueb.service.ap.ApIdService
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.db.entity.UserPrivateEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.model.*
+import site.remlit.blueb.aster.service.*
+import site.remlit.blueb.aster.service.ap.ApIdService
 
 @Serializable
 data class RegisterBody(

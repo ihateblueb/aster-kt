@@ -1,6 +1,6 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
-import site.remlit.blueb.model.KeyType
+import site.remlit.blueb.aster.model.KeyType
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator

@@ -1,4 +1,4 @@
-package site.remlit.blueb
+package site.remlit.blueb.aster
 
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
@@ -15,17 +15,17 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
-import site.remlit.blueb.db.Database
-import site.remlit.blueb.model.ApiError
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.ap.ApValidationException
-import site.remlit.blueb.model.ap.ApValidationExceptionType
-import site.remlit.blueb.service.CommandLineService
-import site.remlit.blueb.service.IdentifierService
-import site.remlit.blueb.service.PluginService
-import site.remlit.blueb.service.SetupService
-import site.remlit.blueb.util.jsonConfig
+import site.remlit.blueb.aster.db.Database
+import site.remlit.blueb.aster.model.ApiError
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.ap.ApValidationException
+import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
+import site.remlit.blueb.aster.service.CommandLineService
+import site.remlit.blueb.aster.service.IdentifierService
+import site.remlit.blueb.aster.service.PluginService
+import site.remlit.blueb.aster.service.SetupService
+import site.remlit.blueb.aster.util.jsonConfig
 
 private val configuration = Configuration()
 

@@ -1,4 +1,4 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import MigrationUtils
 import org.flywaydb.core.Flyway
@@ -6,9 +6,9 @@ import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.db.Database
-import site.remlit.blueb.db.table.*
-import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.aster.db.Database
+import site.remlit.blueb.aster.db.table.*
+import site.remlit.blueb.aster.model.Configuration
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService {

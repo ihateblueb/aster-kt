@@ -1,4 +1,4 @@
-package site.remlit.blueb.db
+package site.remlit.blueb.aster.db
 
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Transaction

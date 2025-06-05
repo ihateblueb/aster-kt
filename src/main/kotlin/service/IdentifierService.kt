@@ -1,8 +1,8 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.IdentifierType
-import site.remlit.blueb.util.aidCounter
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.IdentifierType
+import site.remlit.blueb.aster.util.aidCounter
 import java.util.*
 
 class IdentifierService {

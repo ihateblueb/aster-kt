@@ -1,4 +1,4 @@
-package site.remlit.blueb.db.table
+package site.remlit.blueb.aster.db.table
 
 import org.jetbrains.exposed.dao.id.IdTable
 

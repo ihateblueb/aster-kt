@@ -1,4 +1,4 @@
-package site.remlit.blueb.service.ap
+package site.remlit.blueb.aster.service.ap
 
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -7,14 +7,14 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.PolicyType
+import site.remlit.blueb.aster.model.ap.ApValidationException
+import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
+import site.remlit.blueb.aster.service.KeypairService
+import site.remlit.blueb.aster.service.PolicyService
 import site.remlit.blueb.httpSignatures.HttpSignature
 import site.remlit.blueb.httpSignatures.SignatureException
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.PolicyType
-import site.remlit.blueb.model.ap.ApValidationException
-import site.remlit.blueb.model.ap.ApValidationExceptionType
-import site.remlit.blueb.service.KeypairService
-import site.remlit.blueb.service.PolicyService
 import java.security.MessageDigest
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

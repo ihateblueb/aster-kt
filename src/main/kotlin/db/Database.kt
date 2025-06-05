@@ -1,9 +1,9 @@
-package site.remlit.blueb.db
+package site.remlit.blueb.aster.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
-import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.aster.model.Configuration
 
 val configuration = Configuration()
 

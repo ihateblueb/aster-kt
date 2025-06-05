@@ -1,9 +1,9 @@
-package site.remlit.blueb.db.entity
+package site.remlit.blueb.aster.db.entity
 
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import site.remlit.blueb.db.table.AuthTable
+import site.remlit.blueb.aster.db.table.AuthTable
 
 class AuthEntity(id: EntityID<String>) : Entity<String>(id) {
 	companion object : EntityClass<String, AuthEntity>(AuthTable)

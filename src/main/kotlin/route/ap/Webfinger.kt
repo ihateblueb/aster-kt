@@ -1,4 +1,4 @@
-package site.remlit.blueb.route.ap
+package site.remlit.blueb.aster.route.ap
 
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -6,12 +6,12 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.Configuration
-import site.remlit.blueb.model.WellKnown
-import site.remlit.blueb.model.WellKnownLink
-import site.remlit.blueb.service.UserService
+import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.WellKnown
+import site.remlit.blueb.aster.model.WellKnownLink
+import site.remlit.blueb.aster.service.UserService
 
 fun Route.webfinger() {
 	val configuration = Configuration()

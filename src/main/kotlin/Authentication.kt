@@ -1,16 +1,16 @@
-package site.remlit.blueb
+package site.remlit.blueb.aster
 
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.util.*
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.model.ApiException
-import site.remlit.blueb.model.RoleType
-import site.remlit.blueb.service.AuthService
-import site.remlit.blueb.service.RoleService
-import site.remlit.blueb.service.UserService
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.RoleType
+import site.remlit.blueb.aster.service.AuthService
+import site.remlit.blueb.aster.service.RoleService
+import site.remlit.blueb.aster.service.UserService
 
 private val authService = AuthService()
 private val userService = UserService()

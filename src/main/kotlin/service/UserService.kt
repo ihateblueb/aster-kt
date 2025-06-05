@@ -1,13 +1,13 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import site.remlit.blueb.db.entity.RoleEntity
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.db.entity.UserPrivateEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.db.table.UserPrivateTable
-import site.remlit.blueb.db.table.UserTable
+import site.remlit.blueb.aster.db.entity.RoleEntity
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.db.entity.UserPrivateEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.UserPrivateTable
+import site.remlit.blueb.aster.db.table.UserTable
 
 class UserService() {
 	suspend fun get(where: Op<Boolean>): UserEntity? = suspendTransaction {

@@ -1,14 +1,14 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.json.contains
-import site.remlit.blueb.db.entity.RoleEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.db.table.RoleTable
-import site.remlit.blueb.db.table.UserTable
-import site.remlit.blueb.model.RoleType
-import site.remlit.blueb.model.User
+import site.remlit.blueb.aster.db.entity.RoleEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.RoleTable
+import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.model.RoleType
+import site.remlit.blueb.aster.model.User
 
 class RoleService {
 	private val userService = UserService()

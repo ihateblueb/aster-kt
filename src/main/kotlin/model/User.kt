@@ -1,9 +1,9 @@
-package site.remlit.blueb.model
+package site.remlit.blueb.aster.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.service.RelationshipService
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.service.RelationshipService
 
 @Serializable
 data class User(

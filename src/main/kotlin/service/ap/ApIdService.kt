@@ -1,6 +1,6 @@
-package site.remlit.blueb.service.ap
+package site.remlit.blueb.aster.service.ap
 
-import site.remlit.blueb.model.Configuration
+import site.remlit.blueb.aster.model.Configuration
 
 /*
 * Changing these can be bad!

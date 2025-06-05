@@ -1,11 +1,11 @@
-package site.remlit.blueb.service.ap
+package site.remlit.blueb.aster.service.ap
 
 import io.ktor.http.*
 import kotlinx.serialization.json.JsonObject
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.db.entity.UserEntity
-import site.remlit.blueb.db.suspendTransaction
-import site.remlit.blueb.service.*
+import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.service.*
 
 class ApActorService {
 	private val logger = LoggerFactory.getLogger(this::class.java)
