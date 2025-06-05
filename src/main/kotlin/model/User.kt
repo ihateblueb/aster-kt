@@ -39,14 +39,10 @@ data class User(
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null,
 
-	val publicKey: String,
-
-	val relationship: List<Map<String, Relationship?>>? = null,
+	val publicKey: String
 ) {
 	companion object {
-		private val relationshipService = RelationshipService()
-
-		fun fromEntity(entity: UserEntity, relationshipPair: Pair<Relationship?, Relationship?>? = null) = User(
+		fun fromEntity(entity: UserEntity) = User(
 			id = entity.id.toString(),
 			apId = entity.apId,
 			inbox = entity.inbox,
@@ -78,11 +74,7 @@ data class User(
 			createdAt = entity.createdAt,
 			updatedAt = entity.updatedAt,
 
-			publicKey = entity.publicKey,
-
-			relationship = if (relationshipPair != null)
-				relationshipService.mapPair(relationshipPair)
-			else null
+			publicKey = entity.publicKey
 		)
 	}
 }

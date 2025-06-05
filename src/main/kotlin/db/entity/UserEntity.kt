@@ -38,6 +38,9 @@ class UserEntity(id: EntityID<String>) : Entity<String>(id) {
 	var isCat by UserTable.isCat
 	var speakAsCat by UserTable.speakAsCat
 
+	var followingUrl by UserTable.followingUrl
+	var followersUrl by UserTable.followersUrl
+
 	var createdAt by UserTable.createdAt
 	var updatedAt by UserTable.updatedAt
 

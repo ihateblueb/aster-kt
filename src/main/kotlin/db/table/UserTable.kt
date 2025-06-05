@@ -39,6 +39,9 @@ object UserTable : IdTable<String>("user") {
 	val isCat = bool("isCat").default(false)
 	val speakAsCat = bool("speakAsCat").default(false)
 
+	val followingUrl = varchar("followingUrl", length = 1025).uniqueIndex("unique_user_followingUrl")
+	val followersUrl = varchar("followersUrl", length = 1025).uniqueIndex("unique_user_followersUrl")
+
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
