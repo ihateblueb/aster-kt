@@ -28,5 +28,7 @@ data class Relationship(
 			createdAt = entity.createdAt,
 			updatedAt = entity.updatedAt
 		)
+
+		fun fromEntities(entities: List<RelationshipEntity>): List<Relationship> = entities.map { fromEntity(it) }
 	}
 }

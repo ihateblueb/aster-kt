@@ -100,8 +100,9 @@ fun Application.configureAuthentication() {
 					throw ApiException(HttpStatusCode.Forbidden, "Account inactive")
 
 				val isMod = roleService.userHasRoleOfType(user.id.toString(), RoleType.Mod)
+				val isAdmin = roleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
 
-				if (!isMod)
+				if (!isMod && !isAdmin)
 					throw ApiException(HttpStatusCode.Forbidden, "Mod role missing")
 
 				return@authenticate true

@@ -3,7 +3,6 @@ package site.remlit.blueb.aster.model
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.db.entity.UserEntity
-import site.remlit.blueb.aster.service.RelationshipService
 
 @Serializable
 data class User(
@@ -76,5 +75,7 @@ data class User(
 
 			publicKey = entity.publicKey
 		)
+		
+		fun fromEntities(entities: List<UserEntity>): List<User> = entities.map { fromEntity(it) }
 	}
 }

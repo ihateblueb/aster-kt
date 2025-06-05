@@ -8,20 +8,25 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import site.remlit.blueb.aster.db.entity.PolicyEntity
+import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.PolicyTable
 import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Policy
 import site.remlit.blueb.aster.model.PolicyType
+import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.PolicyService
 import site.remlit.blueb.aster.service.TimelineService
 
 @Serializable
 data class PolicyBody(
 	val type: PolicyType,
-	val host: String? = null,
+	val host: String,
 	val content: String? = null
 )
 
 fun Route.modPolicy() {
+	val identifierService = IdentifierService()
 	val policyService = PolicyService()
 	val timelineService = TimelineService()
 
@@ -37,23 +42,33 @@ fun Route.modPolicy() {
 				return@get
 			}
 
-			call.respond(policies)
+			call.respond(Policy.fromEntities(policies))
 		}
 
 		post("/api/mod/policy") {
 			val body = call.receive<PolicyBody>()
 
 			if (
-				(body.type == PolicyType.Block || body.type == PolicyType.Silence || body.type == PolicyType.ForceSensitive || body.type == PolicyType.ForceContentWarning || body.type == PolicyType.ForceFollowRequest) && body.host == null
-			)
-				throw ApiException(HttpStatusCode.BadRequest, "This policy type requires a host")
-
-			if (
 				(body.type == PolicyType.ForceContentWarning) && body.content == null
 			)
 				throw ApiException(HttpStatusCode.BadRequest, "This policy type requires content")
 
-			throw ApiException(HttpStatusCode.NotImplemented)
+			val id = identifierService.generate()
+
+			suspendTransaction {
+				PolicyEntity.new(id) {
+					type = body.type
+					host = body.host
+					content = body.content
+				}
+			}
+
+			val policy = policyService.getById(id)
+
+			if (policy == null)
+				throw ApiException(HttpStatusCode.NotFound, "Policy doesn't exist after creation")
+
+			call.respond(Policy.fromEntity(policy))
 		}
 
 		patch("/api/mod/policy/{id}") {
@@ -71,7 +86,9 @@ fun Route.modPolicy() {
 			if (policy == null)
 				throw ApiException(HttpStatusCode.NotFound)
 
-			policy.delete()
+			suspendTransaction {
+				policy.delete()
+			}
 
 			call.respond(HttpStatusCode.OK)
 		}

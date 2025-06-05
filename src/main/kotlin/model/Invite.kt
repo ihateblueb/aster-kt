@@ -25,5 +25,7 @@ data class Invite(
 			createdAt = entity.createdAt,
 			usedAt = entity.usedAt
 		)
+
+		fun fromEntities(entities: List<InviteEntity>): List<Invite> = entities.map { fromEntity(it) }
 	}
 }
