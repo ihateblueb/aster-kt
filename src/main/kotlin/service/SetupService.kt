@@ -100,6 +100,8 @@ class SetupService {
 					username = "instance.actor"
 					activated = true
 					automated = true
+					followingUrl = apIdService.renderFollowingApId(id)
+					followersUrl = apIdService.renderFollowersApId(id)
 					publicKey = keypairService.keyToPem(KeyType.Public, keypair)
 				}
 				UserPrivateEntity.new(id) {

@@ -49,4 +49,18 @@ class ApIdService {
 	fun renderOutboxApId(id: String? = null): String {
 		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"
 	}
+
+	/**
+	 * @param id ID of a User
+	 */
+	fun renderFollowingApId(id: String): String {
+		return this.renderBaseApId() + "users/" + id + "/following"
+	}
+
+	/**
+	 * @param id ID of a User
+	 */
+	fun renderFollowersApId(id: String): String {
+		return this.renderBaseApId() + "users/" + id + "/followers"
+	}
 }

@@ -6,8 +6,12 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
 import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.db.table.UserTable
 import site.remlit.blueb.service.NoteService
+import site.remlit.blueb.service.RoleService
 import site.remlit.blueb.service.UserService
 
+/*
+* TODO: cache
+**/
 @Serializable
 data class Meta(
 	val version: MetaVersion,
@@ -22,6 +26,7 @@ data class Meta(
 
 		private val userService = UserService()
 		private val noteService = NoteService()
+		private val roleService = RoleService()
 
 		suspend fun get(): Meta {
 			return Meta(
@@ -43,7 +48,8 @@ data class Meta(
 					),
 				),
 				staff = MetaStaff(
-					// todo
+					admin = roleService.getUsersOfType(RoleType.Admin),
+					mod = roleService.getUsersOfType(RoleType.Mod)
 				)
 			)
 		}

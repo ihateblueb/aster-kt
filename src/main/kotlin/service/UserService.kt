@@ -2,6 +2,7 @@ package site.remlit.blueb.service
 
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import site.remlit.blueb.db.entity.RoleEntity
 import site.remlit.blueb.db.entity.UserEntity
 import site.remlit.blueb.db.entity.UserPrivateEntity
 import site.remlit.blueb.db.suspendTransaction
@@ -13,6 +14,12 @@ class UserService() {
 		UserEntity
 			.find { where }
 			.singleOrNull()
+	}
+
+	suspend fun getMany(where: Op<Boolean>): List<UserEntity> = suspendTransaction {
+		UserEntity
+			.find { where }
+			.toList()
 	}
 
 	suspend fun getPrivate(where: Op<Boolean>): UserPrivateEntity? = suspendTransaction {

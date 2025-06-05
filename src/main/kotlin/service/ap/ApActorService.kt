@@ -92,6 +92,8 @@ class ApActorService {
 			return null
 		}
 
+		// todo: following/followers urls
+
 		try {
 			suspendTransaction {
 				UserEntity.new(id) {

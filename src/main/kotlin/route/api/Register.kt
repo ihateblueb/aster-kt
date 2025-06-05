@@ -105,6 +105,8 @@ fun Route.register() {
 				outbox = apIdService.renderOutboxApId(id)
 				this.username = username
 				activated = configuration.registrations != InstanceRegistrationsType.Approval
+				followingUrl = apIdService.renderFollowingApId(id)
+				followersUrl = apIdService.renderFollowersApId(id)
 				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
 			}
 			UserPrivateEntity.new(id) {
