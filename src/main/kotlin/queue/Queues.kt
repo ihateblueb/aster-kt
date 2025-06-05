@@ -1,24 +1,30 @@
-package site.remlit.blueb.service
+package site.remlit.blueb.queue
 
 import kolbasa.consumer.Message
 import kolbasa.consumer.datasource.DatabaseConsumer
 import kolbasa.producer.datasource.DatabaseProducer
 import kolbasa.queue.PredefinedDataTypes
 import kolbasa.queue.Queue
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newFixedThreadPoolContext
+import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.db.Database
 import site.remlit.blueb.model.Configuration
 
-object QueueService {
+object Queues {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
 	private val configuration = Configuration()
 
-	val inboxQueue = Queue.of("inbox", PredefinedDataTypes.String)
-	val deliverQueue = Queue.of("deliver", PredefinedDataTypes.String)
-	val systemQueue = Queue.of("system", PredefinedDataTypes.String)
+	val inboxQueue = Queue.Companion.of("inbox", PredefinedDataTypes.String)
+	val deliverQueue = Queue.Companion.of("deliver", PredefinedDataTypes.String)
+	val systemQueue = Queue.Companion.of("system", PredefinedDataTypes.String)
 
 	val producer = DatabaseProducer(Database.dataSource)
 	val consumer = DatabaseConsumer(Database.dataSource)
@@ -34,9 +40,9 @@ object QueueService {
 				while (true) {
 					consumer.receive(inboxQueue, configuration.queue.inbox.concurrency).let { messages ->
 						for (message in messages) {
-							runBlocking(inboxThreadPool) {
-								processInboxJob(message)
-							}
+                            runBlocking(inboxThreadPool) {
+                                processInboxJob(message)
+                            }
 						}
 					}
 					Thread.sleep(500)
@@ -47,9 +53,9 @@ object QueueService {
 				while (true) {
 					consumer.receive(deliverQueue, configuration.queue.deliver.concurrency).let { messages ->
 						for (message in messages) {
-							runBlocking(deliverThreadPool) {
-								processDeliverJob(message)
-							}
+                            runBlocking(deliverThreadPool) {
+                                processDeliverJob(message)
+                            }
 						}
 					}
 					Thread.sleep(500)
@@ -60,9 +66,9 @@ object QueueService {
 				while (true) {
 					consumer.receive(systemQueue, configuration.queue.system.concurrency).let { messages ->
 						for (message in messages) {
-							runBlocking(systemThreadPool) {
-								processSystemJob(message)
-							}
+                            runBlocking(systemThreadPool) {
+                                processSystemJob(message)
+                            }
 						}
 					}
 					Thread.sleep(500)

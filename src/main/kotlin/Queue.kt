@@ -3,17 +3,17 @@ package site.remlit.blueb
 import io.ktor.server.application.*
 import kolbasa.schema.SchemaHelpers
 import site.remlit.blueb.db.Database
-import site.remlit.blueb.service.QueueService
+import site.remlit.blueb.queue.Queues
 
 fun Application.configureQueue() {
 	SchemaHelpers.updateDatabaseSchema(
 		Database.dataSource,
 		listOf(
-			QueueService.inboxQueue,
-			QueueService.deliverQueue,
-			QueueService.systemQueue
+			Queues.inboxQueue,
+			Queues.deliverQueue,
+			Queues.systemQueue
 		)
 	)
 
-	QueueService.initConsumers()
+	Queues.initConsumers()
 }

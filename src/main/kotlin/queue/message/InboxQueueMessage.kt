@@ -1,7 +1,6 @@
-package site.remlit.blueb.model.queue
+package site.remlit.blueb.queue.message
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class InboxQueueMessage(

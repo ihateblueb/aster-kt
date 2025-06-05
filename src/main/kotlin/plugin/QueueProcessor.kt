@@ -2,7 +2,7 @@ package site.remlit.blueb.plugin
 
 import org.pf4j.ExtensionPoint
 
-interface Processor : ExtensionPoint {
+interface QueueProcessor : ExtensionPoint {
 	val activityType: String
-	fun process(body: Any)
+	fun process(body: ByteArray)
 }
