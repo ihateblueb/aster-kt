@@ -64,7 +64,9 @@ fun Application.module() {
 			val status = call.response.status()?.value
 			val uri = call.request.uri
 
-			"$status $method - $uri"
+			if (!uri.startsWith("/assets") && !uri.startsWith("/fonts"))
+				"$status $method - $uri"
+			else ""
 		}
 	}
 

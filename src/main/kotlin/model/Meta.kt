@@ -48,8 +48,7 @@ data class Meta(
 					),
 				),
 				staff = MetaStaff(
-					admin = roleService.getUsersOfType(RoleType.Admin),
-					mod = roleService.getUsersOfType(RoleType.Mod)
+					// todo
 				)
 			)
 		}
