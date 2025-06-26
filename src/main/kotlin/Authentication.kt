@@ -12,17 +12,13 @@ import site.remlit.blueb.aster.service.AuthService
 import site.remlit.blueb.aster.service.RoleService
 import site.remlit.blueb.aster.service.UserService
 
-private val authService = AuthService()
-private val userService = UserService()
-private val roleService = RoleService()
-
 val authenticatedUserKey = AttributeKey<UserEntity>("authenticatedUser")
 
 fun Application.configureAuthentication() {
 	install(Authentication) {
 		bearer("authOptional") {
 			authenticate { credential ->
-				val auth = authService.getByToken(credential.token)
+				val auth = AuthService.getByToken(credential.token)
 
 				if (auth != null) {
 					// todo: if older than 3 months, invalidate
@@ -35,7 +31,7 @@ fun Application.configureAuthentication() {
 
 					UserIdPrincipal(authId)
 
-					val user = userService.getById(authId)
+					val user = UserService.getById(authId)
 					if (user != null && user.activated && !user.suspended) {
 						attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 					}
@@ -47,7 +43,7 @@ fun Application.configureAuthentication() {
 
 		bearer("authRequired") {
 			authenticate { credential ->
-				val auth = authService.getByToken(credential.token)
+				val auth = AuthService.getByToken(credential.token)
 
 				if (auth == null)
 					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
@@ -60,7 +56,7 @@ fun Application.configureAuthentication() {
 
 				UserIdPrincipal(authId)
 
-				val user = userService.getById(authId)
+				val user = UserService.getById(authId)
 
 				if (user == null)
 					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
@@ -76,7 +72,7 @@ fun Application.configureAuthentication() {
 
 		bearer("authRequiredMod") {
 			authenticate { credential ->
-				val auth = authService.getByToken(credential.token)
+				val auth = AuthService.getByToken(credential.token)
 
 				if (auth == null)
 					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
@@ -89,7 +85,7 @@ fun Application.configureAuthentication() {
 
 				UserIdPrincipal(authId)
 
-				val user = userService.getById(authId)
+				val user = UserService.getById(authId)
 
 				if (user == null)
 					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
@@ -99,8 +95,8 @@ fun Application.configureAuthentication() {
 				if (!user.activated || user.suspended)
 					throw ApiException(HttpStatusCode.Forbidden, "Account inactive")
 
-				val isMod = roleService.userHasRoleOfType(user.id.toString(), RoleType.Mod)
-				val isAdmin = roleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
+				val isMod = RoleService.userHasRoleOfType(user.id.toString(), RoleType.Mod)
+				val isAdmin = RoleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
 
 				if (!isMod && !isAdmin)
 					throw ApiException(HttpStatusCode.Forbidden, "Mod role missing")
@@ -111,7 +107,7 @@ fun Application.configureAuthentication() {
 
 		bearer("authRequiredAdmin") {
 			authenticate { credential ->
-				val auth = authService.getByToken(credential.token)
+				val auth = AuthService.getByToken(credential.token)
 
 				if (auth == null)
 					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
@@ -124,7 +120,7 @@ fun Application.configureAuthentication() {
 
 				UserIdPrincipal(authId)
 
-				val user = userService.getById(authId)
+				val user = UserService.getById(authId)
 
 				if (user == null)
 					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
@@ -134,7 +130,7 @@ fun Application.configureAuthentication() {
 				if (!user.activated || user.suspended)
 					throw ApiException(HttpStatusCode.Forbidden, "Account inactive")
 
-				val isMod = roleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
+				val isMod = RoleService.userHasRoleOfType(user.id.toString(), RoleType.Admin)
 
 				if (!isMod)
 					throw ApiException(HttpStatusCode.Forbidden, "Mod role missing")

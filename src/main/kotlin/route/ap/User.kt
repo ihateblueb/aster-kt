@@ -9,10 +9,8 @@ import site.remlit.blueb.aster.model.ap.ApActor
 import site.remlit.blueb.aster.service.UserService
 
 fun Route.apUser() {
-	val userService = UserService()
-
 	get("/users/{id}") {
-		val user = userService.getById(call.parameters.getOrFail("id"))
+		val user = UserService.getById(call.parameters.getOrFail("id"))
 
 		if (user == null || user.host != null || !user.activated || user.suspended)
 			throw ApiException(HttpStatusCode.NotFound)

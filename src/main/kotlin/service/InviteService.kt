@@ -8,54 +8,54 @@ import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.InviteTable
 import site.remlit.blueb.aster.model.Invite
+import site.remlit.blueb.aster.model.Service
 
-class InviteService {
-	private val userService = UserService()
-	private val timeService = TimeService()
-
-	suspend fun get(where: Op<Boolean>): Invite? = suspendTransaction {
-		val invite = InviteEntity
-			.find { where }
-			.singleOrNull()
-			?.load(NoteEntity::user)
-
-		if (invite != null)
-			Invite.fromEntity(invite)
-		else null
-	}
-
-	suspend fun getById(id: String): Invite? = get(InviteTable.id eq id)
-	suspend fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
-
-	suspend fun delete(where: Op<Boolean>) = suspendTransaction {
-		InviteEntity
-			.find { where }
-			.singleOrNull()
-			?.delete()
-	}
-
-	suspend fun deleteById(id: String) = delete(InviteTable.id eq id)
-	suspend fun deleteByCode(code: String) = delete(InviteTable.code eq code)
-
-	suspend fun useInvite(code: String, userId: String) {
-		val invite = suspendTransaction {
-			InviteEntity
-				.find { InviteTable.code eq code }
+class InviteService : Service() {
+	companion object {
+		suspend fun get(where: Op<Boolean>): Invite? = suspendTransaction {
+			val invite = InviteEntity
+				.find { where }
 				.singleOrNull()
+				?.load(NoteEntity::user)
+
+			if (invite != null)
+				Invite.fromEntity(invite)
+			else null
 		}
 
-		if (invite == null)
-			throw IllegalArgumentException("Invite does not exist")
+		suspend fun getById(id: String): Invite? = get(InviteTable.id eq id)
+		suspend fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
 
-		val user = userService.getById(userId)
+		suspend fun delete(where: Op<Boolean>) = suspendTransaction {
+			InviteEntity
+				.find { where }
+				.singleOrNull()
+				?.delete()
+		}
 
-		if (user == null)
-			throw IllegalArgumentException("User does not exist")
+		suspend fun deleteById(id: String) = delete(InviteTable.id eq id)
+		suspend fun deleteByCode(code: String) = delete(InviteTable.code eq code)
 
-		suspendTransaction {
-			invite.user = user
-			invite.usedAt = timeService.now()
-			invite.flush()
+		suspend fun useInvite(code: String, userId: String) {
+			val invite = suspendTransaction {
+				InviteEntity
+					.find { InviteTable.code eq code }
+					.singleOrNull()
+			}
+
+			if (invite == null)
+				throw IllegalArgumentException("Invite does not exist")
+
+			val user = UserService.getById(userId)
+
+			if (user == null)
+				throw IllegalArgumentException("User does not exist")
+
+			suspendTransaction {
+				invite.user = user
+				invite.usedAt = TimeService.now()
+				invite.flush()
+			}
 		}
 	}
 }

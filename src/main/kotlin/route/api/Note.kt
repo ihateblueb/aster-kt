@@ -12,7 +12,10 @@ import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.*
-import site.remlit.blueb.aster.service.*
+import site.remlit.blueb.aster.service.IdentifierService
+import site.remlit.blueb.aster.service.NoteService
+import site.remlit.blueb.aster.service.RoleService
+import site.remlit.blueb.aster.service.SanitizerService
 import site.remlit.blueb.aster.service.ap.ApIdService
 
 @Serializable
@@ -25,15 +28,8 @@ data class PostNoteBody(
 fun Route.note() {
 	val configuration = Configuration()
 
-	val identifierService = IdentifierService()
-	val apIdService = ApIdService()
-	val noteService = NoteService()
-	val roleService = RoleService()
-	val timeService = TimeService()
-	val sanitizerService = SanitizerService()
-
 	get("/api/note/{id}") {
-		val note = noteService.getById(call.parameters.getOrFail("id"))
+		val note = NoteService.getById(call.parameters.getOrFail("id"))
 
 		if (
 			note == null ||
@@ -55,20 +51,20 @@ fun Route.note() {
 		delete("/api/note/{id}") {
 			val authenticatedUser = call.attributes[authenticatedUserKey]
 
-			val note = noteService.getById(call.parameters.getOrFail("id"))
+			val note = NoteService.getById(call.parameters.getOrFail("id"))
 
 			if (note == null)
 				throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
 			if (
-				note.user.id != authenticatedUser.id.toString() && (!roleService.userHasRoleOfType(
+				note.user.id != authenticatedUser.id.toString() && (!RoleService.userHasRoleOfType(
 					authenticatedUser.id.toString(),
 					RoleType.Admin
-				) || !roleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
+				) || !RoleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
 			)
 				throw ApiException(HttpStatusCode.Forbidden, "You don't have permission to delete this.")
 
-			noteService.deleteById(note.id)
+			NoteService.deleteById(note.id)
 
 			call.respond(HttpStatusCode.OK)
 		}
@@ -85,21 +81,21 @@ fun Route.note() {
 			if (body.content.isNullOrBlank())
 				throw ApiException(HttpStatusCode.BadRequest, "Content required")
 
-			val id = identifierService.generate()
+			val id = IdentifierService.generate()
 
 			suspendTransaction {
 				NoteEntity.new(id) {
-					apId = apIdService.renderNoteApId(id)
+					apId = ApIdService.renderNoteApId(id)
 					user = authenticatedUser
-					cw = if (body.cw != null) sanitizerService.sanitize(body.cw, true) else null
-					content = sanitizerService.sanitize(body.content, true)
+					cw = if (body.cw != null) SanitizerService.sanitize(body.cw, true) else null
+					content = SanitizerService.sanitize(body.content, true)
 					visibility = Visibility.fromString(body.visibility)
 					to = listOf()
 					tags = listOf()
 				}
 			}
 
-			val note = noteService.getById(id)
+			val note = NoteService.getById(id)
 
 			if (note == null) {
 				call.respond(

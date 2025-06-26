@@ -26,16 +26,12 @@ data class PolicyBody(
 )
 
 fun Route.modPolicy() {
-	val identifierService = IdentifierService()
-	val policyService = PolicyService()
-	val timelineService = TimelineService()
-
 	authenticate("authRequiredMod") {
 		get("/api/mod/policies") {
-			val since = timelineService.normalizeSince(call.parameters["since"])
-			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
+			val since = TimelineService.normalizeSince(call.parameters["since"])
+			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-			val policies = policyService.getMany(PolicyTable.createdAt less since, take)
+			val policies = PolicyService.getMany(PolicyTable.createdAt less since, take)
 
 			if (policies.isEmpty()) {
 				call.respond(HttpStatusCode.NoContent)
@@ -53,7 +49,7 @@ fun Route.modPolicy() {
 			)
 				throw ApiException(HttpStatusCode.BadRequest, "This policy type requires content")
 
-			val id = identifierService.generate()
+			val id = IdentifierService.generate()
 
 			suspendTransaction {
 				PolicyEntity.new(id) {
@@ -63,7 +59,7 @@ fun Route.modPolicy() {
 				}
 			}
 
-			val policy = policyService.getById(id)
+			val policy = PolicyService.getById(id)
 
 			if (policy == null)
 				throw ApiException(HttpStatusCode.NotFound, "Policy doesn't exist after creation")
@@ -72,7 +68,7 @@ fun Route.modPolicy() {
 		}
 
 		patch("/api/mod/policy/{id}") {
-			val policy = policyService.getById(call.parameters.getOrFail("id"))
+			val policy = PolicyService.getById(call.parameters.getOrFail("id"))
 
 			if (policy == null)
 				throw ApiException(HttpStatusCode.NotFound)
@@ -81,7 +77,7 @@ fun Route.modPolicy() {
 		}
 
 		delete("/api/mod/policy/{id}") {
-			val policy = policyService.getById(call.parameters.getOrFail("id"))
+			val policy = PolicyService.getById(call.parameters.getOrFail("id"))
 
 			if (policy == null)
 				throw ApiException(HttpStatusCode.NotFound)

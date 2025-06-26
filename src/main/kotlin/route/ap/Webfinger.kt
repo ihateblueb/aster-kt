@@ -15,7 +15,6 @@ import site.remlit.blueb.aster.service.UserService
 
 fun Route.webfinger() {
 	val configuration = Configuration()
-	val userService = UserService()
 
 	get("/.well-known/webfinger") {
 		val resource = call.queryParameters.getOrFail("resource")
@@ -31,7 +30,7 @@ fun Route.webfinger() {
 			.replace("@${configuration.url.host}", "")
 			.replace("@", "")
 
-		val user = userService.get(
+		val user = UserService.get(
 			UserTable.username eq username
 				and (UserTable.host eq null)
 		)

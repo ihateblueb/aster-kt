@@ -11,12 +11,10 @@ import site.remlit.blueb.aster.model.ap.ApNote
 import site.remlit.blueb.aster.service.NoteService
 
 fun Route.apNote() {
-	val noteService = NoteService()
-
 	get("/notes/{id}") {
 		call.response.headers.append("Content-Type", "application/activity+json")
 
-		val note = noteService.getById(call.parameters.getOrFail("id"))
+		val note = NoteService.getById(call.parameters.getOrFail("id"))
 
 		if (
 			note == null ||
@@ -34,7 +32,7 @@ fun Route.apNote() {
 	get("/notes/{id}/activity") {
 		call.response.headers.append("Content-Type", "application/activity+json")
 
-		val note = noteService.getById(call.parameters.getOrFail("id"))
+		val note = NoteService.getById(call.parameters.getOrFail("id"))
 
 		if (
 			note == null ||

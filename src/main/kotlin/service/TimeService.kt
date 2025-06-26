@@ -4,9 +4,12 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import site.remlit.blueb.aster.model.Service
 
-class TimeService {
-	fun now(): LocalDateTime {
-		return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+class TimeService : Service() {
+	companion object {
+		fun now(): LocalDateTime {
+			return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+		}
 	}
 }

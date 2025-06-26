@@ -9,9 +9,6 @@ import site.remlit.blueb.aster.service.ap.ApIdService
 
 private val configuration = Configuration()
 
-private val apIdService = ApIdService()
-private val formatService = FormatService()
-
 /**
  * ActivityPub representation of [site.remlit.blueb.model.User]
  * Only to be used on local users (where host is null)
@@ -88,12 +85,12 @@ data class ApActor(
 				vcardBday = user.birthday,
 				vcardAddress = user.location,
 
-				published = formatService.formatToStandardDateTime(user.createdAt),
+				published = FormatService.formatToStandardDateTime(user.createdAt),
 
 				inbox = user.inbox,
 				outbox = user.outbox,
 
-				sharedInbox = apIdService.renderInboxApId(),
+				sharedInbox = ApIdService.renderInboxApId(),
 
 				publicKey = ApKey(
 					id = user.apId + "#main-key",

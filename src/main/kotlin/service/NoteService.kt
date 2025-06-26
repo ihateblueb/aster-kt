@@ -8,36 +8,39 @@ import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Note
+import site.remlit.blueb.aster.model.Service
 
-class NoteService {
-	suspend fun get(where: Op<Boolean>): Note? = suspendTransaction {
-		val note = NoteEntity
-			.find { where }
-			.singleOrNull()
-			?.load(NoteEntity::user)
+class NoteService : Service() {
+	companion object {
+		suspend fun get(where: Op<Boolean>): Note? = suspendTransaction {
+			val note = NoteEntity
+				.find { where }
+				.singleOrNull()
+				?.load(NoteEntity::user)
 
-		if (note != null)
-			Note.fromEntity(note)
-		else null
+			if (note != null)
+				Note.fromEntity(note)
+			else null
+		}
+
+		suspend fun getById(id: String): Note? = get(NoteTable.id eq id)
+		suspend fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
+
+		suspend fun count(where: Op<Boolean>): Long = suspendTransaction {
+			NoteTable
+				.leftJoin(UserTable)
+				.select(where)
+				.count()
+		}
+
+		suspend fun delete(where: Op<Boolean>) = suspendTransaction {
+			NoteEntity
+				.find { where }
+				.singleOrNull()
+				?.delete()
+		}
+
+		suspend fun deleteById(id: String) = delete(NoteTable.id eq id)
+		suspend fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 	}
-
-	suspend fun getById(id: String): Note? = get(NoteTable.id eq id)
-	suspend fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
-
-	suspend fun count(where: Op<Boolean>): Long = suspendTransaction {
-		NoteTable
-			.leftJoin(UserTable)
-			.select(where)
-			.count()
-	}
-
-	suspend fun delete(where: Op<Boolean>) = suspendTransaction {
-		NoteEntity
-			.find { where }
-			.singleOrNull()
-			?.delete()
-	}
-
-	suspend fun deleteById(id: String) = delete(NoteTable.id eq id)
-	suspend fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 }

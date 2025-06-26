@@ -6,7 +6,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
 import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.service.NoteService
-import site.remlit.blueb.aster.service.RoleService
 import site.remlit.blueb.aster.service.UserService
 
 /*
@@ -24,10 +23,6 @@ data class Meta(
 		private val packageInformation = PackageInformation()
 		private val configuration = Configuration()
 
-		private val userService = UserService()
-		private val noteService = NoteService()
-		private val roleService = RoleService()
-
 		suspend fun get(): Meta {
 			return Meta(
 				version = MetaVersion(
@@ -39,12 +34,12 @@ data class Meta(
 				registrations = configuration.registrations,
 				stats = MetaStats(
 					users = MetaStatCount(
-						local = userService.count(UserTable.host eq null and (UserTable.username neq "instance.actor")),
-						remote = userService.count(UserTable.host neq null),
+						local = UserService.count(UserTable.host eq null and (UserTable.username neq "instance.actor")),
+						remote = UserService.count(UserTable.host neq null),
 					),
 					notes = MetaStatCount(
-						local = noteService.count(UserTable.host eq null and (UserTable.username neq "instance.actor")),
-						remote = noteService.count(UserTable.host neq null),
+						local = NoteService.count(UserTable.host eq null and (UserTable.username neq "instance.actor")),
+						remote = NoteService.count(UserTable.host neq null),
 					),
 				),
 				staff = MetaStaff(

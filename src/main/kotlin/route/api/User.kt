@@ -1,7 +1,7 @@
 package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
-import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
@@ -15,16 +15,13 @@ import site.remlit.blueb.aster.service.RelationshipService
 import site.remlit.blueb.aster.service.UserService
 
 fun Route.user() {
-	val userService = UserService()
-	val relationshipService = RelationshipService()
-
 	get("/api/lookup/{handle}") {
 		val handle = call.parameters.getOrFail("handle").removePrefix("@")
 		val splitHandle = handle.split("@")
 
 		val host = if (splitHandle.size > 1) splitHandle[1].ifEmpty { null } else null
 
-		val user = userService.get(
+		val user = UserService.get(
 			UserTable.username eq splitHandle[0]
 				and (UserTable.host eq host)
 		)
@@ -36,7 +33,7 @@ fun Route.user() {
 	}
 
 	get("/api/user/{id}") {
-		val user = userService.getById(call.parameters.getOrFail("id"))
+		val user = UserService.getById(call.parameters.getOrFail("id"))
 
 		if (user == null || !user.activated || user.suspended)
 			throw ApiException(HttpStatusCode.NotFound)
@@ -48,7 +45,7 @@ fun Route.user() {
 
 	authenticate("authRequired") {
 		patch("/api/user/{id}") {
-			val user = userService.getById(call.parameters.getOrFail("id"))
+			val user = UserService.getById(call.parameters.getOrFail("id"))
 
 			if (user == null || !user.activated || user.suspended)
 				throw ApiException(HttpStatusCode.NotFound)
@@ -57,7 +54,7 @@ fun Route.user() {
 		}
 
 		post("/api/user/{id}/mute") {
-			val user = userService.getById(call.parameters.getOrFail("id"))
+			val user = UserService.getById(call.parameters.getOrFail("id"))
 
 			if (user == null || !user.activated || user.suspended)
 				throw ApiException(HttpStatusCode.NotFound)
@@ -66,7 +63,7 @@ fun Route.user() {
 		}
 
 		post("/api/user/{id}/block") {
-			val user = userService.getById(call.parameters.getOrFail("id"))
+			val user = UserService.getById(call.parameters.getOrFail("id"))
 
 			if (user == null || !user.activated || user.suspended)
 				throw ApiException(HttpStatusCode.NotFound)
@@ -75,7 +72,7 @@ fun Route.user() {
 		}
 
 		post("/api/user/{id}/refetch") {
-			val user = userService.getById(call.parameters.getOrFail("id"))
+			val user = UserService.getById(call.parameters.getOrFail("id"))
 
 			if (user == null || !user.activated || user.suspended)
 				throw ApiException(HttpStatusCode.NotFound)
@@ -87,7 +84,7 @@ fun Route.user() {
 		}
 
 		get("/api/user/{id}/relationship") {
-			val user = userService.getById(call.parameters.getOrFail("id"))
+			val user = UserService.getById(call.parameters.getOrFail("id"))
 
 			if (user == null || !user.activated || user.suspended)
 				throw ApiException(HttpStatusCode.NotFound)
@@ -95,8 +92,8 @@ fun Route.user() {
 			val requestingUser = call.attributes[authenticatedUserKey]
 
 			call.respond(
-				relationshipService.mapPair(
-					relationshipService.getPair(requestingUser.id.toString(), user.id.toString())
+				RelationshipService.mapPair(
+					RelationshipService.getPair(requestingUser.id.toString(), user.id.toString())
 				)
 			)
 		}

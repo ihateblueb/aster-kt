@@ -29,15 +29,10 @@ import site.remlit.blueb.aster.util.jsonConfig
 
 private val configuration = Configuration()
 
-private val commandLineService = CommandLineService()
-private val identifierService = IdentifierService()
-private val setupService = SetupService()
-private val pluginService = PluginService()
-
 fun main(args: Array<String>) {
 	if (args.isNotEmpty() && !args[0].startsWith("-")) {
 		runBlocking {
-			commandLineService.execute(args)
+			CommandLineService.execute(args)
 		}
 		return
 	}
@@ -47,7 +42,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
-	pluginService.initialize()
+	PluginService.initialize()
 
 	// access connection before using it
 	Database.database
@@ -55,7 +50,7 @@ fun Application.module() {
 	configureQueue()
 
 	runBlocking {
-		setupService.setup()
+		SetupService.setup()
 	}
 
 	install(CallLogging) {
@@ -64,15 +59,13 @@ fun Application.module() {
 			val status = call.response.status()?.value
 			val uri = call.request.uri
 
-			if (!uri.startsWith("/assets") && !uri.startsWith("/fonts"))
-				"$status $method - $uri"
-			else ""
+			"$status $method - $uri"
 		}
 	}
 
 	install(CallId) {
 		header(HttpHeaders.XRequestId)
-		generate { identifierService.generate() }
+		generate { IdentifierService.generate() }
 	}
 
 	install(CORS) {

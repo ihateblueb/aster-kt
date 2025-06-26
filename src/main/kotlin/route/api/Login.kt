@@ -23,9 +23,6 @@ data class LoginBody(
 )
 
 fun Route.login() {
-	val authService = AuthService()
-	val userService = UserService()
-
 	post("/api/login") {
 		val body = call.receive<LoginBody>()
 
@@ -35,7 +32,7 @@ fun Route.login() {
 		if (body.password.isBlank())
 			throw ApiException(HttpStatusCode.BadRequest, "Password required")
 
-		val user = userService.get(
+		val user = UserService.get(
 			UserTable.username eq body.username
 				and (UserTable.host eq null)
 		)
@@ -43,7 +40,7 @@ fun Route.login() {
 		if (user == null)
 			throw ApiException(HttpStatusCode.NotFound)
 
-		val userPrivate = userService.getPrivate(
+		val userPrivate = UserService.getPrivate(
 			UserPrivateTable.id eq user.id
 		)
 
@@ -55,7 +52,7 @@ fun Route.login() {
 		if (!passwordValid.verified)
 			throw ApiException(HttpStatusCode.BadRequest, "Incorrect password")
 
-		val token = authService.registerToken(user)
+		val token = AuthService.registerToken(user)
 
 		call.respond(AuthResponse(token, User.fromEntity(user)))
 	}

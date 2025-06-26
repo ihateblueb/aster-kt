@@ -24,16 +24,6 @@ data class RegisterBody(
 fun Route.register() {
 	val configuration = Configuration()
 
-	val apIdService = ApIdService()
-
-	val authService = AuthService()
-	val identifierService = IdentifierService()
-	val inviteService = InviteService()
-	val userService = UserService()
-	val keypairService = KeypairService()
-	val validationService = ValidationService()
-	val formatService = FormatService()
-
 	post("/api/register") {
 		val body = call.receive<RegisterBody>()
 
@@ -63,7 +53,7 @@ fun Route.register() {
 			if (body.invite.isNullOrBlank())
 				throw ApiException(HttpStatusCode.BadRequest, "Invite required")
 
-			val invite = inviteService.getByCode(body.invite)
+			val invite = InviteService.getByCode(body.invite)
 
 			if (invite == null || invite.user != null)
 				throw ApiException(HttpStatusCode.BadRequest, "Invite invalid")
@@ -71,9 +61,9 @@ fun Route.register() {
 
 		// todo: implement invite usage
 
-		val username = formatService.toASCII(body.username)
+		val username = FormatService.toASCII(body.username)
 
-		if (validationService.containsNonAlphanumeric(username))
+		if (ValidationService.containsNonAlphanumeric(username))
 			throw ApiException(HttpStatusCode.BadRequest, "Username contains non-alphanumeric characters")
 
 		// todo: check if username is used
@@ -93,37 +83,37 @@ fun Route.register() {
 		//			return@post
 		//		}
 
-		val id = identifierService.generate()
+		val id = IdentifierService.generate()
 		val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
 
-		val keypair = keypairService.generate()
+		val keypair = KeypairService.generate()
 
 		suspendTransaction {
 			UserEntity.new(id) {
-				apId = apIdService.renderUserApId(id)
-				inbox = apIdService.renderInboxApId(id)
-				outbox = apIdService.renderOutboxApId(id)
+				apId = ApIdService.renderUserApId(id)
+				inbox = ApIdService.renderInboxApId(id)
+				outbox = ApIdService.renderOutboxApId(id)
 				this.username = username
 				activated = configuration.registrations != InstanceRegistrationsType.Approval
-				followingUrl = apIdService.renderFollowingApId(id)
-				followersUrl = apIdService.renderFollowersApId(id)
-				publicKey = keypairService.keyToPem(KeyType.Public, keypair)
+				followingUrl = ApIdService.renderFollowingApId(id)
+				followersUrl = ApIdService.renderFollowersApId(id)
+				publicKey = KeypairService.keyToPem(KeyType.Public, keypair)
 			}
 			UserPrivateEntity.new(id) {
 				password = hashedPassword
-				privateKey = keypairService.keyToPem(KeyType.Private, keypair)
+				privateKey = KeypairService.keyToPem(KeyType.Private, keypair)
 			}
 		}
 
-		val user = userService.getById(id)
+		val user = UserService.getById(id)
 
 		if (user == null)
 			throw ApiException(HttpStatusCode.NotFound, "User not found after creation")
 
 		if (configuration.registrations == InstanceRegistrationsType.Invite)
-			inviteService.useInvite(body.invite!!, user.id.toString())
+			InviteService.useInvite(body.invite!!, user.id.toString())
 
-		val token = authService.registerToken(user)
+		val token = AuthService.registerToken(user)
 
 		call.respond(AuthResponse(token, User.fromEntity(user)))
 	}

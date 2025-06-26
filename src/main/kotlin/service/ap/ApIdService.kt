@@ -1,6 +1,7 @@
 package site.remlit.blueb.aster.service.ap
 
 import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.Service
 
 /*
 * Changing these can be bad!
@@ -14,53 +15,55 @@ import site.remlit.blueb.aster.model.Configuration
 * use case.
 * */
 
-class ApIdService {
-	private val configuration = Configuration()
+class ApIdService : Service() {
+	companion object {
+		private val configuration = Configuration()
 
-	fun renderBaseApId(): String {
-		return configuration.url.toString()
-	}
+		fun renderBaseApId(): String {
+			return configuration.url.toString()
+		}
 
-	/**
-	 * @param id ID of a Note
-	 */
-	fun renderNoteApId(id: String): String {
-		return this.renderBaseApId() + "notes/" + id
-	}
+		/**
+		 * @param id ID of a Note
+		 */
+		fun renderNoteApId(id: String): String {
+			return this.renderBaseApId() + "notes/" + id
+		}
 
-	/**
-	 * @param id ID of a User
-	 */
-	fun renderUserApId(id: String): String {
-		return this.renderBaseApId() + "users/" + id
-	}
+		/**
+		 * @param id ID of a User
+		 */
+		fun renderUserApId(id: String): String {
+			return this.renderBaseApId() + "users/" + id
+		}
 
-	/**
-	 * @param id ID of a User
-	 */
-	fun renderInboxApId(id: String? = null): String {
-		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/inbox" else this.renderBaseApId() + "inbox"
-	}
+		/**
+		 * @param id ID of a User
+		 */
+		fun renderInboxApId(id: String? = null): String {
+			return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/inbox" else this.renderBaseApId() + "inbox"
+		}
 
 
-	/**
-	 * @param id ID of a User
-	 */
-	fun renderOutboxApId(id: String? = null): String {
-		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"
-	}
+		/**
+		 * @param id ID of a User
+		 */
+		fun renderOutboxApId(id: String? = null): String {
+			return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"
+		}
 
-	/**
-	 * @param id ID of a User
-	 */
-	fun renderFollowingApId(id: String): String {
-		return this.renderBaseApId() + "users/" + id + "/following"
-	}
+		/**
+		 * @param id ID of a User
+		 */
+		fun renderFollowingApId(id: String): String {
+			return this.renderBaseApId() + "users/" + id + "/following"
+		}
 
-	/**
-	 * @param id ID of a User
-	 */
-	fun renderFollowersApId(id: String): String {
-		return this.renderBaseApId() + "users/" + id + "/followers"
+		/**
+		 * @param id ID of a User
+		 */
+		fun renderFollowersApId(id: String): String {
+			return this.renderBaseApId() + "users/" + id + "/followers"
+		}
 	}
 }

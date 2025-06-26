@@ -6,10 +6,6 @@ import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.service.FormatService
 import site.remlit.blueb.aster.service.ap.ApVisibilityService
 
-private val apVisibilityService = ApVisibilityService()
-
-private val formatService = FormatService()
-
 @Serializable
 data class ApNote(
 	val id: String,
@@ -38,7 +34,7 @@ data class ApNote(
 ) : ApObjectWithContext() {
 	companion object {
 		fun fromEntity(note: Note): ApNote {
-			val toCc = apVisibilityService.visibilityToCc(
+			val toCc = ApVisibilityService.visibilityToCc(
 				note.visibility,
 				followersUrl = null,
 				to = note.to
@@ -49,7 +45,7 @@ data class ApNote(
 				actor = note.user.apId,
 				content = note.content,
 				_misskey_content = note.content,
-				published = formatService.formatToStandardDateTime(note.createdAt),
+				published = FormatService.formatToStandardDateTime(note.createdAt),
 				visibility = note.visibility,
 				to = toCc["to"]!!,
 				cc = toCc["cc"]!!

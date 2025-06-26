@@ -16,9 +16,6 @@ fun Route.nodeInfo() {
 	val configuration = Configuration()
 	val packageInformation = PackageInformation()
 
-	val userService = UserService()
-	val noteService = NoteService()
-
 	get("/.well-known/nodeinfo") {
 		call.response.headers.append("Content-Type", "application/jrd+json")
 
@@ -45,12 +42,12 @@ fun Route.nodeInfo() {
 		if (version != "2.0" && version != "2.1")
 			throw ApiException(HttpStatusCode.BadRequest, "Invalid version")
 
-		val userCount = userService.count(
+		val userCount = UserService.count(
 			UserTable.host eq null
 				and (UserTable.username neq "instance.actor")
 		).toInt()
 
-		val noteCount = noteService.count(
+		val noteCount = NoteService.count(
 			UserTable.host eq null
 				and (UserTable.username neq "instance.actor")
 		).toInt()

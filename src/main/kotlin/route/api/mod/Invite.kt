@@ -15,15 +15,10 @@ import site.remlit.blueb.aster.service.RandomService
 import site.remlit.blueb.aster.service.TimelineService
 
 fun Route.modInvite() {
-	val identifierService = IdentifierService()
-	val inviteService = InviteService()
-	val randomService = RandomService()
-	val timelineService = TimelineService()
-
 	authenticate("authRequiredMod") {
 		get("/api/mod/invites") {
-			val since = timelineService.normalizeSince(call.parameters["since"])
-			val take = timelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
+			val since = TimelineService.normalizeSince(call.parameters["since"])
+			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
@@ -31,8 +26,8 @@ fun Route.modInvite() {
 		post("/api/mod/invite") {
 			val authenticatedUser = call.attributes[authenticatedUserKey]
 
-			val id = identifierService.generate()
-			val code = randomService.generateString()
+			val id = IdentifierService.generate()
+			val code = RandomService.generateString()
 
 			suspendTransaction {
 				InviteEntity.new(id) {
@@ -41,7 +36,7 @@ fun Route.modInvite() {
 				}
 			}
 
-			val invite = inviteService.getById(id)
+			val invite = InviteService.getById(id)
 
 			if (invite == null)
 				throw ApiException(HttpStatusCode.NotFound, "Not found after creation")
@@ -50,12 +45,12 @@ fun Route.modInvite() {
 		}
 
 		delete("/api/mod/invite/{id}") {
-			val invite = inviteService.getById(call.parameters.getOrFail("id"))
+			val invite = InviteService.getById(call.parameters.getOrFail("id"))
 
 			if (invite == null)
 				throw ApiException(HttpStatusCode.NotFound)
 
-			inviteService.deleteById(invite.id)
+			InviteService.deleteById(invite.id)
 
 			call.respond(HttpStatusCode.OK)
 		}
