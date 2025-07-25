@@ -14,6 +14,8 @@ class Configuration {
 	val name: String
 
 	val url: Url
+	val port: Int
+	val host: String
 	val registrations: InstanceRegistrationsType
 	val identifiers: IdentifierType
 
@@ -38,6 +40,12 @@ class Configuration {
 		} else {
 			throw Exception("Configuration is missing 'url' attribute.")
 		}
+
+		var hostProp = config?.propertyOrNull("host")?.getString()
+		host = hostProp ?: "0.0.0.0"
+
+		var portProp = config?.propertyOrNull("port")?.getString()?.toInt()
+		port = portProp ?: 9782
 
 		var registrationsProp = config?.propertyOrNull("registrations")?.getString()
 		registrations = if (registrationsProp != null) {

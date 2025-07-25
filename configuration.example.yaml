@@ -10,6 +10,9 @@ name: "Aster"
 ##
 url: "https://aster.example.com/"
 
+host: "0.0.0.0"
+port: 9782
+
 ## Registrations ##
 # options:
 #   open      - anyone can register

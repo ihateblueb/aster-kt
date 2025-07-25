@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Execute JAR" type="JarApplication">
-    <option name="JAR_PATH" value="$PROJECT_DIR$/target/aster-2025.5.1.0-SNAPSHOT-jar-with-dependencies.jar" />
-    <option name="PROGRAM_PARAMETERS" value="-port=9978" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
-    <method v="2" />
-  </configuration>
-</component>

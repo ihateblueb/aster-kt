@@ -4,6 +4,8 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import io.ktor.server.plugins.autohead.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.calllogging.*
@@ -30,15 +32,15 @@ import site.remlit.blueb.aster.util.jsonConfig
 private val configuration = Configuration()
 
 fun main(args: Array<String>) {
-	if (args.isNotEmpty() && !args[0].startsWith("-")) {
+	if (args.isNotEmpty() && ! args[0].startsWith("-")) {
 		runBlocking {
 			CommandLineService.execute(args)
 		}
 		return
 	}
 
-	io.ktor.server.netty.EngineMain
-		.main(args)
+	embeddedServer(Netty, configuration.port, configuration.host, module = Application::module)
+		.start(wait = true)
 }
 
 fun Application.module() {

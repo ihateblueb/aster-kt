@@ -4,9 +4,9 @@ ktor:
             - site.remlit.blueb.aster.ApplicationKt.module
     deployment:
         port: 9978
-        host: 127.0.0.1
+        host: 0.0.0.0
 
-# This is just for making the maven package details accessible
-name: ${project.artifactId}
-version: ${project.version}
-groupId: ${project.groupId}
+# This is just for making the package details accessible
+name: %artifactId%
+version: %version%
+groupId: %groupId%

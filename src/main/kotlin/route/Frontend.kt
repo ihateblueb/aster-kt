@@ -6,7 +6,7 @@ import io.ktor.server.routing.*
 
 fun Route.frontend() {
 	singlePageApplication {
-		val resource = javaClass.classLoader.getResource("frontend/dist")
+		val resource = javaClass.classLoader.getResource("frontend")
 
 		if (resource == null)
 			application.log.warn("Frontend resource not found, disabling.")
