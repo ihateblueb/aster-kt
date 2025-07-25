@@ -21,15 +21,15 @@ class PolicyService : Service() {
 		suspend fun getMany(where: Op<Boolean>, take: Int? = null): List<PolicyEntity> = suspendTransaction {
 			PolicyEntity
 				.find { where }
+				.sortedByDescending { it.createdAt }
 				.take(take ?: 15)
-				.sortedBy { it.createdAt }
 				.toList()
 		}
 
 		suspend fun getAllByType(type: PolicyType): List<PolicyEntity> = suspendTransaction {
 			PolicyEntity
 				.find { PolicyTable.type eq type }
-				.sortedBy { it.createdAt }
+				.sortedByDescending { it.createdAt }
 				.toList()
 		}
 

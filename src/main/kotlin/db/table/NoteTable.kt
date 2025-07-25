@@ -13,7 +13,7 @@ object NoteTable : IdTable<String>("note") {
 	val conversation = varchar("conversation", length = 1025).nullable()
 
 	val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
-	val replyingTo = reference("replyingTo", NoteTable, onDelete = ReferenceOption.CASCADE).nullable()
+	val replyingTo = optReference("replyingTo", NoteTable, onDelete = ReferenceOption.CASCADE)
 
 	val cw = varchar("cw", length = 5000).nullable().index("note_cw_index")
 	val content = varchar("content", length = 25000).index("note_content_index")

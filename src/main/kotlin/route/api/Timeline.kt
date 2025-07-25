@@ -2,9 +2,16 @@ package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import org.jetbrains.exposed.sql.and
+import site.remlit.blueb.aster.db.table.NoteTable
+import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.TimelineService
 
 fun Route.timeline() {
@@ -26,7 +33,14 @@ fun Route.timeline() {
 			val since = TimelineService.normalizeSince(call.parameters["since"])
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-			throw ApiException(HttpStatusCode.NotImplemented)
+			val notes = NoteService.getMany(UserTable.host eq null and (NoteTable.createdAt less since), take)
+
+			if (notes.isEmpty()) {
+				call.respond(HttpStatusCode.NoContent)
+				return@get
+			}
+
+			call.respond(notes)
 		}
 	}
 

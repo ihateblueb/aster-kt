@@ -26,6 +26,18 @@ class NoteService : Service() {
 		suspend fun getById(id: String): Note? = get(NoteTable.id eq id)
 		suspend fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
 
+		suspend fun getMany(where: Op<Boolean>, take: Int? = null): List<Note> = suspendTransaction {
+			val notes = NoteEntity
+				.find { where }
+				.sortedByDescending { it.createdAt }
+				.take(take ?: 15)
+				.toList()
+
+			if (!notes.isEmpty())
+				Note.fromEntities(notes)
+			else listOf()
+		}
+
 		suspend fun count(where: Op<Boolean>): Long = suspendTransaction {
 			NoteTable
 				.leftJoin(UserTable)

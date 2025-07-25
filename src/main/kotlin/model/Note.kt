@@ -41,5 +41,7 @@ data class Note(
 				updatedAt = entity.updatedAt,
 			)
 		}
+
+		fun fromEntities(entities: List<NoteEntity>): List<Note> = entities.map { fromEntity(it) }
 	}
 }

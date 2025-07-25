@@ -61,11 +61,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
-			<version>${kotlin_version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-test-junit</artifactId>
 			<version>${kotlin_version}</version>
 			<scope>test</scope>
@@ -75,6 +70,11 @@
 			<artifactId>kotlinx-coroutines-debug</artifactId>
 			<version>1.6.4</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>${kotlin_version}</version>
 		</dependency>
 
 		<dependency>
