@@ -75,7 +75,7 @@ dependencies {
 	api("org.apache.commons:commons-text:1.14.0")
 	api("org.pf4j:pf4j:3.13.0")
 
-	api("site.remlit.blueb:http-signature-utility:2025.7.2.0-SNAPSHOT")
+	api("site.remlit.blueb:http-signature-utility:2025.7.2.9-SNAPSHOT")
 }
 
 group = "site.remlit.blueb"

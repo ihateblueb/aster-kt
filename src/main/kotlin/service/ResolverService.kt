@@ -12,6 +12,7 @@ import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.JsonObject
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.aster.exception.ResolverException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.PackageInformation
 import site.remlit.blueb.aster.model.PolicyType
@@ -76,16 +77,14 @@ class ResolverService : Service() {
 
 				logger.info("${response.status} ${response.request.method} - ${response.request.url}")
 
+				if (response.status != HttpStatusCode.OK)
+					throw ResolverException(response.status, response.status.description)
+
 				val body: JsonObject? = response.body()
-				if (response.status == HttpStatusCode.OK)
-					return if (body != null) return body else null
+				return body
 			} catch (e: Exception) {
-				logger.error("Resolution $id failed! " + e.message)
-				logger.debug("Resolution $id exception: ", e)
 				return null
 			}
-
-			return null
 		}
 
 		/**
