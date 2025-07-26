@@ -74,7 +74,8 @@ dependencies {
 	api("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 	api("org.apache.commons:commons-text:1.14.0")
 	api("org.pf4j:pf4j:3.13.0")
-	api("site.remlit.blueb:http-signature-utility:2025.7.1.0-SNAPSHOT")
+
+	api("site.remlit.blueb:http-signature-utility:2025.7.2.0-SNAPSHOT")
 }
 
 group = "site.remlit.blueb"

@@ -17,10 +17,10 @@ import site.remlit.blueb.aster.service.PolicyService
 import site.remlit.blueb.httpSignatures.HttpSignature
 import site.remlit.blueb.httpSignatures.SignatureException
 import java.security.MessageDigest
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 class ApValidationService : Service() {
 	companion object {
@@ -67,7 +67,7 @@ class ApValidationService : Service() {
 				)
 
 			if (
-				!request.headers["Digest"]!!.startsWith("SHA-256=")
+				! request.headers["Digest"] !!.startsWith("SHA-256=")
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
@@ -75,14 +75,14 @@ class ApValidationService : Service() {
 				)
 
 			if (
-				isDigestValid(request.headers["Digest"]!!, body)
+				isDigestValid(request.headers["Digest"] !!, body)
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Digest invalid."
 				)
 
-			val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
+			val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"] !!)
 
 			val actorApId = parsedSignatureHeader.keyId.substringBefore("#")
 
@@ -100,7 +100,7 @@ class ApValidationService : Service() {
 			val isSignatureValid = try {
 				parsedSignatureHeader.signature.verify(
 					KeypairService.pemToPublicKey(actor.publicKey),
-					parseHttpDate(request.headers["Date"]!!),
+					parseHttpDate(request.headers["Date"] !!),
 					body
 				)
 			} catch (e: SignatureException) {
@@ -111,7 +111,7 @@ class ApValidationService : Service() {
 			}
 
 			if (
-				!isSignatureValid
+				! isSignatureValid
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Forbidden,
@@ -119,7 +119,6 @@ class ApValidationService : Service() {
 				)
 		}
 
-		@OptIn(ExperimentalEncodingApi::class)
 		fun isDigestValid(digest: String, data: ByteArray): Boolean {
 			val md = MessageDigest.getInstance("SHA-256")
 			val ourDigest = md.digest(data)
@@ -130,6 +129,7 @@ class ApValidationService : Service() {
 		fun parseHttpDate(date: String): LocalDateTime {
 			return ZonedDateTime
 				.parse(date, DateTimeFormatter.RFC_1123_DATE_TIME)
+				.withZoneSameInstant(ZoneId.systemDefault())
 				.toLocalDateTime()
 				.toKotlinLocalDateTime()
 		}
