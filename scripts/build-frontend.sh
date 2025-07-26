@@ -1,5 +1,3 @@
-./scripts/clean-frontend.sh
-
 cd frontend || exit
 
 pnpm install
