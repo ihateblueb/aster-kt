@@ -8,186 +8,186 @@ import Container from "../lib/components/Container.tsx";
 import Button from "../lib/components/Button.tsx";
 import Info from '../lib/components/Info.tsx';
 import localstore from "../lib/utils/localstore.ts";
-import router from "../lib/router.ts";
+import router from "../lib/router.tsx";
 import {useQuery} from "@tanstack/react-query";
 import getMeta from "../lib/api/meta/get.ts";
 import register from '../lib/api/register.ts';
 
 export const Route = createFileRoute('/register')({
-	component: RouteComponent,
-	onEnter: async () => {
-		const token = localstore.getParsed('token');
+    component: RouteComponent,
+    onEnter: async () => {
+        const token = localstore.getParsed('token');
 
-		if (token)
-			router.navigate({
-				href: "/"
-			});
-	}
+        if (token)
+            router.navigate({
+                href: "/"
+            });
+    }
 })
 
 function RouteComponent() {
-	const {isLoading, isError, error, data} = useQuery({
-		queryKey: ['meta'],
-		queryFn: () => getMeta(),
-	});
+    const {isLoading, isError, error, data} = useQuery({
+        queryKey: ['meta'],
+        queryFn: () => getMeta(),
+    });
 
-	const inviteParam = new URLSearchParams(window.location.search).get('invite');
+    const inviteParam = new URLSearchParams(window.location.search).get('invite');
 
-	const form = useForm({
-		defaultValues: {
-			invite: inviteParam ?? "",
-			username: '',
-			password: ''
-		},
-		onSubmit: async (values) => {
-			console.log(values);
-			await register(values.value.username, values.value.password, values.value.invite).then((result) => {
-				if (result.token && result.user) {
-					localstore.set("token", result.token);
-					localstore.set("self", JSON.stringify(result.user));
+    const form = useForm({
+        defaultValues: {
+            invite: inviteParam ?? "",
+            username: '',
+            password: ''
+        },
+        onSubmit: async (values) => {
+            console.log(values);
+            await register(values.value.username, values.value.password, values.value.invite).then((result) => {
+                if (result.token && result.user) {
+                    localstore.set("token", result.token);
+                    localstore.set("self", JSON.stringify(result.user));
 
-					router.navigate({
-						href: "/"
-					});
-				}
-			});
-		}
-	})
-	return (
-		<>
-			<PageHeader
-				icon={<IconUserPlus size={18}/>}
-				title={"Register"}
-			/>
-			<PageWrapper padding={"full"} center={true}>
-				<form
-					onSubmit={async (e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						await form.handleSubmit();
-					}}
-				>
-					{isLoading ? <p>Loading</p> : isError ? <p>Error: {error.message}</p> : (
-						<Container gap={"md"} align={"center"}>
-							<>
-								<form.Field
-									name={"username"}
-									validators={{
-										onChange: ({value}) =>
-											!value
-												? "Username required"
-												: (value.length < 1)
-													? "Username must be at least 1 character"
-													: undefined,
-										onChangeAsyncDebounceMs: 500
-									}}
-									children={(field) => {
-										return (
-											<>
-												<Input
-													id={field.name}
-													name={field.name}
-													placeholder={"Username"}
-													type={"username"}
-													value={field.state.value}
-													onBlur={field.handleBlur}
-													onChange={(e) => field.handleChange(e.target.value)}
-												/>
-												{!field.state.meta.isValid && (
-													<Info text={true}
-														  type={"danger"}>{field.state.meta.errors}</Info>
-												)}
-											</>
-										)
-									}}
-								/>
-								<form.Field
-									name={"password"}
-									validators={{
-										onChange: ({value}) =>
-											!value
-												? "Password required"
-												: (value.length < 6)
-													? "Password must be at least 6 characters"
-													: undefined,
-										onChangeAsyncDebounceMs: 500
-									}}
-									children={(field) => {
-										return (
-											<>
-												<Input
-													id={field.name}
-													name={field.name}
-													placeholder={"Password"}
-													type={"password"}
-													value={field.state.value}
-													onBlur={field.handleBlur}
-													onChange={(e) => field.handleChange(e.target.value)}
-												/>
-												{!field.state.meta.isValid && (
-													<Info text={true}
-														  type={"danger"}>{field.state.meta.errors}</Info>
-												)}
-											</>
-										)
-									}}
-								/>
-							</>
+                    router.navigate({
+                        href: "/"
+                    });
+                }
+            });
+        }
+    })
+    return (
+        <>
+            <PageHeader
+                icon={<IconUserPlus size={18}/>}
+                title={"Register"}
+            />
+            <PageWrapper padding={"full"} center={true}>
+                <form
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        await form.handleSubmit();
+                    }}
+                >
+                    {isLoading ? <p>Loading</p> : isError ? <p>Error: {error.message}</p> : (
+                        <Container gap={"md"} align={"center"}>
+                            <>
+                                <form.Field
+                                    name={"username"}
+                                    validators={{
+                                        onChange: ({value}) =>
+                                            !value
+                                                ? "Username required"
+                                                : (value.length < 1)
+                                                    ? "Username must be at least 1 character"
+                                                    : undefined,
+                                        onChangeAsyncDebounceMs: 500
+                                    }}
+                                    children={(field) => {
+                                        return (
+                                            <>
+                                                <Input
+                                                    id={field.name}
+                                                    name={field.name}
+                                                    placeholder={"Username"}
+                                                    type={"username"}
+                                                    value={field.state.value}
+                                                    onBlur={field.handleBlur}
+                                                    onChange={(e) => field.handleChange(e.target.value)}
+                                                />
+                                                {!field.state.meta.isValid && (
+                                                    <Info text={true}
+                                                          type={"danger"}>{field.state.meta.errors}</Info>
+                                                )}
+                                            </>
+                                        )
+                                    }}
+                                />
+                                <form.Field
+                                    name={"password"}
+                                    validators={{
+                                        onChange: ({value}) =>
+                                            !value
+                                                ? "Password required"
+                                                : (value.length < 6)
+                                                    ? "Password must be at least 6 characters"
+                                                    : undefined,
+                                        onChangeAsyncDebounceMs: 500
+                                    }}
+                                    children={(field) => {
+                                        return (
+                                            <>
+                                                <Input
+                                                    id={field.name}
+                                                    name={field.name}
+                                                    placeholder={"Password"}
+                                                    type={"password"}
+                                                    value={field.state.value}
+                                                    onBlur={field.handleBlur}
+                                                    onChange={(e) => field.handleChange(e.target.value)}
+                                                />
+                                                {!field.state.meta.isValid && (
+                                                    <Info text={true}
+                                                          type={"danger"}>{field.state.meta.errors}</Info>
+                                                )}
+                                            </>
+                                        )
+                                    }}
+                                />
+                            </>
 
-							{data?.registrations === "invite" ? (
-								<>
-									<br/>
-									<form.Field
-										name={"invite"}
-										validators={{
-											onChange: ({value}) =>
-												!value
-													? "Invite required"
-													: (value.length < 12)
-														? "Invite must be at least 16 characters"
-														: undefined,
-											onChangeAsyncDebounceMs: 500
-										}}
-										children={(field) => {
-											return (
-												<>
-													<Input
-														id={field.name}
-														name={field.name}
-														placeholder={"Invite"}
-														type={"text"}
-														value={field.state.value}
-														onBlur={field.handleBlur}
+                            {data?.registrations === "invite" ? (
+                                <>
+                                    <br/>
+                                    <form.Field
+                                        name={"invite"}
+                                        validators={{
+                                            onChange: ({value}) =>
+                                                !value
+                                                    ? "Invite required"
+                                                    : (value.length < 12)
+                                                        ? "Invite must be at least 16 characters"
+                                                        : undefined,
+                                            onChangeAsyncDebounceMs: 500
+                                        }}
+                                        children={(field) => {
+                                            return (
+                                                <>
+                                                    <Input
+                                                        id={field.name}
+                                                        name={field.name}
+                                                        placeholder={"Invite"}
+                                                        type={"text"}
+                                                        value={field.state.value}
+                                                        onBlur={field.handleBlur}
 
-														onChange={(e) => field.handleChange(e.target.value)}
-													/>
-													{!field.state.meta.isValid && (
-														<Info text={true}
-															  type={"danger"}>{field.state.meta.errors}</Info>
-													)}
-												</>
-											)
-										}}
-									/>
-								</>
-							) : null}
+                                                        onChange={(e) => field.handleChange(e.target.value)}
+                                                    />
+                                                    {!field.state.meta.isValid && (
+                                                        <Info text={true}
+                                                              type={"danger"}>{field.state.meta.errors}</Info>
+                                                    )}
+                                                </>
+                                            )
+                                        }}
+                                    />
+                                </>
+                            ) : null}
 
-							<Container align={"horizontal"}>
-								<Container align={"right"}>
-									<form.Subscribe
-										selector={(state) => [state.canSubmit, state.isSubmitting]}
-										children={([canSubmit, isSubmitting]) => (
-											<Button type="submit" disabled={!canSubmit}>
-												{isSubmitting ? '...' : 'Register'}
-											</Button>
-										)}
-									/>
-								</Container>
-							</Container>
-						</Container>
-					)}
-				</form>
-			</PageWrapper>
-		</>
-	)
+                            <Container align={"horizontal"}>
+                                <Container align={"right"}>
+                                    <form.Subscribe
+                                        selector={(state) => [state.canSubmit, state.isSubmitting]}
+                                        children={([canSubmit, isSubmitting]) => (
+                                            <Button type="submit" disabled={!canSubmit}>
+                                                {isSubmitting ? '...' : 'Register'}
+                                            </Button>
+                                        )}
+                                    />
+                                </Container>
+                            </Container>
+                        </Container>
+                    )}
+                </form>
+            </PageWrapper>
+        </>
+    )
 }

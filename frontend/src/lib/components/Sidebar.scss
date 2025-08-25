@@ -1,0 +1,20 @@
+.sidebar {
+  display: flex;
+
+  height: 100%;
+  box-sizing: border-box;
+  max-width: 300px;
+  min-width: 200px;
+  width: 100%;
+
+  padding-top: 50px;
+  gap: 10px;
+
+  .widget {
+    width: 100%;
+
+    &.padded {
+      padding: 0 10px;
+    }
+  }
+}

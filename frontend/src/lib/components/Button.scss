@@ -1,9 +1,25 @@
 .button {
-	&.thin {
-		padding: 6px 8px;
-	}
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
-	&.wide {
-		width: 100%;
-	}
+  cursor: pointer;
+
+  &.thin {
+    padding: 6px 8px;
+  }
+
+  &.wide {
+    width: 100%;
+  }
+
+  &.nav {
+    background-color: transparent;
+    box-shadow: none;
+
+    &:hover {
+      background-color: var(--bg-2);
+      box-shadow: var(--funky-effect);
+    }
+  }
 }
