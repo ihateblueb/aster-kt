@@ -34,10 +34,26 @@ function RouteComponent() {
             }, 100)
         }
 
+        let selectedIcon;
+        switch (timeline) {
+            case "home":
+                selectedIcon = <IconHome size={18}/>
+                break;
+            case "local":
+                selectedIcon = <IconUsers size={18}/>
+                break;
+            case "bubble":
+                selectedIcon = <IconChartBubble size={18}/>
+                break;
+            case "public":
+                selectedIcon = <IconPlanet size={18}/>
+                break;
+        }
+
         return (
             <>
                 <PageHeader
-                    icon={<IconHome size={18}/>}
+                    icon={selectedIcon}
                     title={"Timeline"}
                 >
                     <Tab onClick={() => updateTimeline("home")} selected={timeline === "home"}

@@ -19,16 +19,23 @@ function Note(
         )
     }
 
+    function renderAt() {
+        return `@${data?.user?.username}${data?.user?.host ? ("@" + data?.user?.host) : ""}`
+    }
+
     return (
         <article className={"note highlightable"} tabIndex={0}
-                 aria-label={`Note by @${data?.user?.username}${data?.user?.host ? ("@" + data?.user?.host) : ""}${data?.content ? ", " + data?.content : ""}`}>
+                 aria-label={`Note by @${renderAt()}${data?.content ? ", " + data?.content : ""}`}>
             <Container align={"horizontal"} gap={"lg"}>
                 <Container>
                     <Avatar user={data?.user}/>
                 </Container>
                 <Container align={"left"}>
-                    <p className={"displayName"}>{data?.user?.displayName ?? data?.user?.username}</p>
-                    <p className={"handle"}>{renderHandle()}</p>
+                    <a className={"names"}
+                       href={`/${renderAt()}`}>
+                        <p className={"displayName"}>{data?.user?.displayName ?? data?.user?.username}</p>
+                        <p className={"handle"}>{renderHandle()}</p>
+                    </a>
                 </Container>
                 <Container align={"right"}>
                     <p>{data?.createdAt}</p>
