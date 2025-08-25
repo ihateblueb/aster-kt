@@ -8,7 +8,6 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
-import site.remlit.blueb.aster.db.table.UserPrivateTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.AuthResponse
@@ -32,28 +31,23 @@ fun Route.login() {
 		if (body.password.isBlank())
 			throw ApiException(HttpStatusCode.BadRequest, "Password required")
 
-		val user = UserService.get(
-			UserTable.username eq body.username
-				and (UserTable.host eq null)
+		val user = User.fromEntity(
+			UserService.get(
+				UserTable.username eq body.username
+						and (UserTable.host eq null)
+			) ?: throw ApiException(HttpStatusCode.NotFound)
 		)
 
-		if (user == null)
-			throw ApiException(HttpStatusCode.NotFound)
-
-		val userPrivate = UserService.getPrivate(
-			UserPrivateTable.id eq user.id
-		)
-
-		if (userPrivate == null)
-			throw ApiException(HttpStatusCode.BadRequest, "User's private table not found")
+		val userPrivate = UserService.getPrivateById(user.id)
+			?: throw ApiException(HttpStatusCode.BadRequest, "User's private table not found")
 
 		val passwordValid = BCrypt.verifyer().verify(body.password.toCharArray(), userPrivate.password.toCharArray())
 
 		if (!passwordValid.verified)
 			throw ApiException(HttpStatusCode.BadRequest, "Incorrect password")
 
-		val token = AuthService.registerToken(user)
+		val token = AuthService.registerToken(user.id)
 
-		call.respond(AuthResponse(token, User.fromEntity(user)))
+		call.respond(AuthResponse(token, user))
 	}
 }

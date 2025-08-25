@@ -1,83 +1,88 @@
 let defaults = {
-	debug: {
-		type: 'boolean',
-		value: false
-	},
+    debug: {
+        type: 'boolean',
+        value: false
+    },
 
-	self: {
-		type: 'json',
-		value: undefined
-	},
-	token: {
-		type: 'string',
-		value: undefined
-	},
+    self: {
+        type: 'json',
+        value: undefined
+    },
+    token: {
+        type: 'string',
+        value: undefined
+    },
+
+    timeline: {
+        type: 'string',
+        value: 'home'
+    }
 };
 
 class localstore {
-	public defaults = defaults;
+    public defaults = defaults;
 
-	public get(key: string) {
-		if (key !== 'debug' && this.getParsed('debug'))
-			console.debug('[localstore get] ' + key);
+    public get(key: string) {
+        if (key !== 'debug' && this.getParsed('debug'))
+            console.debug('[localstore get] ' + key);
 
-		let toReturn;
+        let toReturn;
 
-		toReturn = localStorage.getItem('aster_' + key);
+        toReturn = localStorage.getItem('aster_' + key);
 
-		if (toReturn) {
-			return toReturn;
-		} else {
-			return defaults[key].value;
-		}
-	}
+        if (toReturn) {
+            return toReturn;
+        } else {
+            return defaults[key].value;
+        }
+    }
 
-	public getParsed(key: string) {
-		if (key !== 'debug' && this.getParsed('debug'))
-			console.debug('[localstore getParsed] ' + key);
+    public getParsed(key: string) {
+        if (key !== 'debug' && this.getParsed('debug'))
+            console.debug('[localstore getParsed] ' + key);
 
-		try {
-			let defaultObj: { type: string; value: any } | undefined =
-				defaults[key];
-			if (!defaultObj) return undefined;
+        try {
+            let defaultObj: { type: string; value: any } | undefined =
+                defaults[key];
+            if (!defaultObj) return undefined;
 
-			let toReturn;
-			toReturn = localStorage.getItem('aster_' + key);
+            let toReturn;
+            toReturn = localStorage.getItem('aster_' + key);
 
-			if (toReturn) {
-				if (defaultObj.type === 'string') return String(toReturn);
-				if (defaultObj.type === 'boolean') return Boolean(toReturn);
-				if (defaultObj.type === 'number') return Number(toReturn);
-				if (defaultObj.type === 'json') return JSON.parse(toReturn);
-			} else {
-				return defaultObj.value;
-			}
-		} catch (e) {
-			console.error('failed getParsed of ' + key, e);
-			return undefined;
-		}
-	}
+            if (toReturn) {
+                if (defaultObj.type === 'string') return String(toReturn);
+                if (defaultObj.type === 'boolean') return Boolean(toReturn);
+                if (defaultObj.type === 'number') return Number(toReturn);
+                if (defaultObj.type === 'json') return JSON.parse(toReturn);
+            } else {
+                return defaultObj.value;
+            }
+        } catch (e) {
+            console.error('failed getParsed of ' + key, e);
+            return undefined;
+        }
+    }
 
-	public set(key: string, val: string) {
-		if (this.getParsed('debug'))
-			console.debug('[localstore set] ' + key, val);
+    public set(key: string, val: string) {
+        if (this.getParsed('debug'))
+            console.debug('[localstore set] ' + key, val);
 
-		if (val) {
-			// a 'false' string is considered true!
-			localStorage.setItem('aster_' + key, val);
-		} else {
-			localStorage.setItem('aster_' + key, '');
-		}
+        if (val) {
+            // a 'false' string is considered true!
+            localStorage.setItem('aster_' + key, val);
+        } else {
+            localStorage.setItem('aster_' + key, '');
+        }
 
-		return;
-	}
+        return;
+    }
 
-	public delete(key: string) {
-		if (this.getParsed('debug'))
-			console.debug('[localstore delete] ' + key);
+    public delete(key: string) {
+        if (this.getParsed('debug'))
+            console.debug('[localstore delete] ' + key);
 
-		localStorage.removeItem('aster_' + key);
-	}
+        localStorage.removeItem('aster_' + key);
+    }
 }
 
 export default new localstore();

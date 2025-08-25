@@ -35,9 +35,9 @@ fun Application.configureAuthentication() {
 					if (user != null && user.activated && !user.suspended) {
 						attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 					}
-				} else {
-					null
 				}
+
+				return@authenticate true
 			}
 		}
 

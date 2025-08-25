@@ -1,0 +1,53 @@
+.tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  padding: 0 10px;
+  height: 50px;
+
+  color: var(--tx-2);
+  background: none;
+
+  border-radius: var(--br-md);
+  border: none;
+
+  font-family: var(--font);
+  font-feature-settings: var(--font-features);
+  font-size: var(--fs-md);
+
+  text-decoration: none;
+
+  transition: 0.1s,
+  width 0s,
+  height 0s,
+  border 0s;
+
+  &.selected {
+    color: var(--ac-1);
+  }
+}
+
+.bar {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 4px;
+  border-radius: var(--br-mx);
+  background-color: var(--ac-1);
+  min-width: var(--br-md);
+
+  bottom: 0;
+  z-index: -1;
+
+  transition: width 0.2s ease,
+  opacity 0.1s ease,
+  box-shadow 0.4s ease;
+
+  &.selected {
+    opacity: 1;
+    //box-shadow: 0 0 15px var(--ac-1);
+    width: 30px;
+  }
+}

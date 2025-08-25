@@ -6,8 +6,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Visibility
-import site.remlit.blueb.aster.model.activity.ApCreateActivity
 import site.remlit.blueb.aster.model.ap.ApNote
+import site.remlit.blueb.aster.model.ap.activity.ApCreateActivity
 import site.remlit.blueb.aster.service.NoteService
 
 fun Route.apNote() {
@@ -18,9 +18,9 @@ fun Route.apNote() {
 
 		if (
 			note == null ||
-			!note.user.activated ||
+			! note.user.activated ||
 			note.user.suspended ||
-			!note.user.host.isNullOrBlank() ||
+			! note.user.host.isNullOrBlank() ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
 		)
@@ -36,9 +36,9 @@ fun Route.apNote() {
 
 		if (
 			note == null ||
-			!note.user.activated ||
+			! note.user.activated ||
 			note.user.suspended ||
-			!note.user.host.isNullOrBlank() ||
+			! note.user.host.isNullOrBlank() ||
 			(note.visibility != Visibility.Public &&
 				note.visibility != Visibility.Unlisted)
 		)

@@ -105,16 +105,16 @@ fun Route.register() {
 			}
 		}
 
-		val user = UserService.getById(id)
-
-		if (user == null)
-			throw ApiException(HttpStatusCode.NotFound, "User not found after creation")
+		val user = User.fromEntity(
+			UserService.getById(id)
+				?: throw ApiException(HttpStatusCode.NotFound)
+		)
 
 		if (configuration.registrations == InstanceRegistrationsType.Invite)
-			InviteService.useInvite(body.invite!!, user.id.toString())
+			InviteService.useInvite(body.invite!!, user.id)
 
-		val token = AuthService.registerToken(user)
+		val token = AuthService.registerToken(user.id)
 
-		call.respond(AuthResponse(token, User.fromEntity(user)))
+		call.respond(AuthResponse(token, user))
 	}
 }

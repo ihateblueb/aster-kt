@@ -67,7 +67,7 @@ class ApValidationService : Service() {
 				)
 
 			if (
-				! request.headers["Digest"] !!.startsWith("SHA-256=")
+				!request.headers["Digest"]!!.startsWith("SHA-256=")
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
@@ -75,32 +75,27 @@ class ApValidationService : Service() {
 				)
 
 			if (
-				isDigestValid(request.headers["Digest"] !!, body)
+				isDigestValid(request.headers["Digest"]!!, body)
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Digest invalid."
 				)
 
-			val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"] !!)
+			val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
 
 			val actorApId = parsedSignatureHeader.keyId.substringBefore("#")
 
-			val actor = ApActorService.resolve(actorApId)
-
-			if (
-				actor == null
+			val actor = ApActorService.resolve(actorApId) ?: throw ApValidationException(
+				ApValidationExceptionType.Unauthorized,
+				"Actor not found."
 			)
-				throw ApValidationException(
-					ApValidationExceptionType.Unauthorized,
-					"Actor not found."
-				)
 
 			// todo: fix date error here
 			val isSignatureValid = try {
 				parsedSignatureHeader.signature.verify(
 					KeypairService.pemToPublicKey(actor.publicKey),
-					parseHttpDate(request.headers["Date"] !!),
+					parseHttpDate(request.headers["Date"]!!),
 					body
 				)
 			} catch (e: SignatureException) {
@@ -111,7 +106,7 @@ class ApValidationService : Service() {
 			}
 
 			if (
-				! isSignatureValid
+				!isSignatureValid
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Forbidden,
