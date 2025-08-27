@@ -2,8 +2,9 @@ import * as React from "react";
 import './Note.scss'
 import Container from "./Container.tsx";
 import Avatar from "./Avatar.tsx";
-import Visibility from "./Visibility.tsx";
 import {IconArrowBackUp, IconDots, IconPlus, IconRepeat, IconStar} from "@tabler/icons-react";
+import DateTime from "./DateTime.tsx";
+import Visibility from "./Visibility.tsx";
 
 function Note(
     {data}:
@@ -38,8 +39,10 @@ function Note(
                     </a>
                 </Container>
                 <Container align={"right"}>
-                    <p>{data?.createdAt}</p>
-                    <Visibility visibility={data?.visibility}/>
+                    <Container gap={"sm"}>
+                        <DateTime date={data?.createdAt} short={true}/>
+                        <Visibility visibility={data?.visibility}/>
+                    </Container>
                 </Container>
             </Container>
 

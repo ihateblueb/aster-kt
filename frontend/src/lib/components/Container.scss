@@ -1,47 +1,47 @@
 .container {
-	display: flex;
-	flex-direction: column;
-	box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 
-	&.center {
-		width: 100%;
-		align-items: center;
-		justify-content: center;
-	}
+  &.center {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
 
-	&.left {
-		width: 100%;
-		align-items: flex-start;
-		justify-content: center;
-	}
+  &.left {
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+  }
 
-	&.right {
-		width: 100%;
-		align-items: flex-end;
-		justify-content: center;
-	}
+  &.right {
+    width: 100%;
+    align-items: flex-end;
+    justify-content: center;
+  }
 
-	&.horizontal {
-		flex-direction: row;
+  &.horizontal {
+    flex-direction: row;
 
-		width: 100%;
-		align-items: center;
-		justify-content: normal;
-	}
+    width: 100%;
+    align-items: center;
+    justify-content: normal;
+  }
 
-	&.sm {
-		gap: 4px;
-	}
+  &.gap-sm {
+    gap: 4px;
+  }
 
-	&.md {
-		gap: 8px;
-	}
+  &.gap-md {
+    gap: 8px;
+  }
 
-	&.lg {
-		gap: 10px;
-	}
+  &.gap-lg {
+    gap: 10px;
+  }
 
-	&.xl {
-		gap: 12px;
-	}
+  &.gap-xl {
+    gap: 12px;
+  }
 }

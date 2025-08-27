@@ -1,7 +1,7 @@
 .button {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 
   cursor: pointer;
 
@@ -11,6 +11,27 @@
 
   &.wide {
     width: 100%;
+  }
+
+  &.center {
+    justify-content: center;
+  }
+
+  &.primary {
+    color: var(--ac-1);
+    background: var(--ac-1-50);
+  }
+
+  &.primary.nav {
+    color: var(--ac-1);
+    background: var(--ac-1-50);
+    box-shadow: var(--funky-effect);
+
+    &:hover {
+      color: var(--ac-1);
+      background: var(--ac-1-50);
+      box-shadow: var(--funky-effect);
+    }
   }
 
   &.nav {

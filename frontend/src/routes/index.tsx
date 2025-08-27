@@ -87,8 +87,11 @@ function RouteComponent() {
     } else {
         return (
             <>
-                <p>helo this is aster and its work in progress and the frontend isnt perfect and this unauthenticated
-                    view is super ultra low priority</p>
+                <h1>Aster-Kt</h1>
+                <p>
+                    This is heavily in development software.<br/>
+                    If you have an account, you can <a href={"/login"}>log in</a>.
+                </p>
             </>
         )
     }

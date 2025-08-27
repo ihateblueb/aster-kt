@@ -1,9 +1,13 @@
 .widget-navigation {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 
   list-style-type: none;
   margin: 0;
   padding: 0;
+
+  br {
+    margin: 5px 0;
+  }
 }

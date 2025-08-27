@@ -6,28 +6,30 @@ import {IconInfoCircle} from "@tabler/icons-react";
 import PageWrapper from '../lib/components/PageWrapper.tsx';
 
 export const Route = createFileRoute('/about')({
-	component: RouteComponent,
+    component: RouteComponent,
 })
 
 function RouteComponent() {
-	const {isLoading, isError, error, data} = useQuery({
-		queryKey: ['meta'],
-		queryFn: () => getMeta(),
-	});
+    const {data} = useQuery({
+        queryKey: ['meta'],
+        queryFn: () => getMeta(),
+    });
 
-	return (
-		<>
-			<PageHeader
-				icon={<IconInfoCircle size={18}/>}
-				title={"About"}
-			/>
-			<PageWrapper padding={"full"} center={true}>
-				<b>Version</b>
-				<p>
-					{data?.version?.aster}<br/>
-					(Kotlin {data?.version?.kotlin}, Runtime {data?.version?.java}, {data?.version?.system})
-				</p>
-			</PageWrapper>
-		</>
-	)
+    return (
+        <>
+            <PageHeader
+                icon={<IconInfoCircle size={18}/>}
+                title={"About"}
+            />
+            <PageWrapper padding={"full"} center={true}>
+                <b>Version</b>
+                <p>
+                    Aster {data?.version?.aster}<br/>
+                    Kotlin {data?.version?.kotlin}<br/>
+                    Runtime {data?.version?.java}<br/>
+                    {data?.version?.system}
+                </p>
+            </PageWrapper>
+        </>
+    )
 }

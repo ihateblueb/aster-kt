@@ -1,0 +1,18 @@
+.widget-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  bottom: 0;
+  margin-top: auto;
+
+  .names {
+    display: flex;
+    flex-direction: column;
+
+    :first-child {
+      font-size: calc(var(--fs-md) + 2px);
+      font-weight: 600;
+    }
+  }
+}

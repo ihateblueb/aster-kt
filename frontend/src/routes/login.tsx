@@ -36,9 +36,7 @@ function RouteComponent() {
                     localstore.set("token", result.token);
                     localstore.set("self", JSON.stringify(result.user));
 
-                    router.navigate({
-                        href: "/"
-                    });
+                    window.location.replace("/");
                 }
             });
         }
