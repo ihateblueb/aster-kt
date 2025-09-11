@@ -49,7 +49,7 @@ function Note(
 
     function renderContent() {
         // todo: screenreader check
-        if (data?.cw === undefined) {
+        if (!data?.cw) {
             return (
                 <Container>
                     <p>{data?.content}</p>
