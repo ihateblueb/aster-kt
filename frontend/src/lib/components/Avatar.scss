@@ -9,13 +9,19 @@
 
   overflow: hidden;
 
-  &.big {
+  &.lg {
     height: 50px;
     width: 50px;
     border-radius: var(--br-lg);
   }
 
-  &.small {
+  &.md {
+    height: 35px;
+    width: 35px;
+    border-radius: var(--br-md);
+  }
+
+  &.sm {
     height: 25px;
     width: 25px;
     border-radius: var(--br-sm);

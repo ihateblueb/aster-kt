@@ -34,6 +34,15 @@
     }
   }
 
+  .cw {
+    color: var(--warn);
+    background-color: var(--warn-50);
+    border-radius: var(--br-md);
+    padding: 6px 12px;
+    
+    box-shadow: var(--funky-effect);
+  }
+
   footer {
     display: flex;
     align-items: center;

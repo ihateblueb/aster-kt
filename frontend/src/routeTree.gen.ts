@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StyletestImport } from './routes/styletest'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as NoteNoteIdImport } from './routes/note/$noteId'
 
 // Create/Update Routes
+
+const StyletestRoute = StyletestImport.update({
+  id: '/styletest',
+  path: '/styletest',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const RegisterRoute = RegisterImport.update({
   id: '/register',
@@ -95,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
+    '/styletest': {
+      id: '/styletest'
+      path: '/styletest'
+      fullPath: '/styletest'
+      preLoaderRoute: typeof StyletestImport
+      parentRoute: typeof rootRoute
+    }
     '/note/$noteId': {
       id: '/note/$noteId'
       path: '/note/$noteId'
@@ -113,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/register': typeof RegisterRoute
+  '/styletest': typeof StyletestRoute
   '/note/$noteId': typeof NoteNoteIdRoute
 }
 
@@ -122,6 +137,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/register': typeof RegisterRoute
+  '/styletest': typeof StyletestRoute
   '/note/$noteId': typeof NoteNoteIdRoute
 }
 
@@ -132,6 +148,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/register': typeof RegisterRoute
+  '/styletest': typeof StyletestRoute
   '/note/$noteId': typeof NoteNoteIdRoute
 }
 
@@ -143,9 +160,17 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/register'
+    | '/styletest'
     | '/note/$noteId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/login' | '/logout' | '/register' | '/note/$noteId'
+  to:
+    | '/'
+    | '/about'
+    | '/login'
+    | '/logout'
+    | '/register'
+    | '/styletest'
+    | '/note/$noteId'
   id:
     | '__root__'
     | '/'
@@ -153,6 +178,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/register'
+    | '/styletest'
     | '/note/$noteId'
   fileRoutesById: FileRoutesById
 }
@@ -163,6 +189,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
   RegisterRoute: typeof RegisterRoute
+  StyletestRoute: typeof StyletestRoute
   NoteNoteIdRoute: typeof NoteNoteIdRoute
 }
 
@@ -172,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
   RegisterRoute: RegisterRoute,
+  StyletestRoute: StyletestRoute,
   NoteNoteIdRoute: NoteNoteIdRoute,
 }
 
@@ -190,6 +218,7 @@ export const routeTree = rootRoute
         "/login",
         "/logout",
         "/register",
+        "/styletest",
         "/note/$noteId"
       ]
     },
@@ -207,6 +236,9 @@ export const routeTree = rootRoute
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/styletest": {
+      "filePath": "styletest.tsx"
     },
     "/note/$noteId": {
       "filePath": "note/$noteId.tsx"

@@ -11,8 +11,8 @@ function AccountWidget() {
         return (
             <div className={"widget-account widget padded"}>
                 <Container align={"horizontal"} gap={"md"}>
-                    <Button wide center>Login</Button>
-                    <Button wide center>Register</Button>
+                    <Button wide center to={"/login"}>Login</Button>
+                    <Button wide center to={"/register"}>Register</Button>
                 </Container>
             </div>
         )

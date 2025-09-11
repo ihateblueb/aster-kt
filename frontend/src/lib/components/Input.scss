@@ -1,20 +1,20 @@
 .input {
-	width: 225px;
+  width: 225px;
 
-	&.wide {
-		width: 100%;
-	}
+  &.wide {
+    width: 100%;
+  }
 
-	::placeholder {
-		color: var(--tx-3);
-	}
+  ::placeholder {
+    color: var(--tx-3);
+  }
 }
 
 .inputLabel {
-	display: block;
+  display: block;
 
-	color: var(--tx-2);
-	font-size: var(--fs-sm);
+  color: var(--tx-2);
+  font-size: var(--fs-sm);
 
-	margin: 4px 0;
+  margin: 4px 0;
 }

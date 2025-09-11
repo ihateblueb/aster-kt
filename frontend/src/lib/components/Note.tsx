@@ -2,16 +2,16 @@ import * as React from "react";
 import './Note.scss'
 import Container from "./Container.tsx";
 import Avatar from "./Avatar.tsx";
-import {IconArrowBackUp, IconDots, IconPlus, IconRepeat, IconStar} from "@tabler/icons-react";
+import {IconAlertTriangle, IconArrowBackUp, IconDots, IconPlus, IconRepeat, IconStar} from "@tabler/icons-react";
 import DateTime from "./DateTime.tsx";
 import Visibility from "./Visibility.tsx";
+import Button from "./Button.tsx";
 
 function Note(
     {data}:
     { data: any }
 ) {
-    React.useEffect(() => {
-    })
+    let [cwOpen, setCwOpen] = React.useState(false)
 
     function renderHandle() {
         return (
@@ -22,6 +22,51 @@ function Note(
 
     function renderAt() {
         return `@${data?.user?.username}${data?.user?.host ? ("@" + data?.user?.host) : ""}`
+    }
+
+    function renderContentWarning() {
+        // todo: screenreader check
+        return (
+            <div className={"cw"}>
+                <Container gap={"md"} align={"horizontal"}>
+                    <Container>
+                        <IconAlertTriangle size={18}/>
+                    </Container>
+                    <Container>
+                        <span>{data?.cw}</span>
+                    </Container>
+                    <Container align={"right"}>
+                        {!cwOpen ? (
+                            <Button thin onClick={() => setCwOpen(true)}>Open</Button>
+                        ) : (
+                            <Button thin onClick={() => setCwOpen(false)}>Close</Button>
+                        )}
+                    </Container>
+                </Container>
+            </div>
+        )
+    }
+
+    function renderContent() {
+        // todo: screenreader check
+        if (data?.cw === undefined) {
+            return (
+                <Container>
+                    <p>{data?.content}</p>
+                </Container>
+            )
+        } else {
+            return (
+                <Container gap={"md"}>
+                    {!cwOpen ? renderContentWarning() : (
+                        <>
+                            {renderContentWarning()}
+                            <p>{data?.content}</p>
+                        </>
+                    )}
+                </Container>
+            )
+        }
     }
 
     return (
@@ -46,9 +91,7 @@ function Note(
                 </Container>
             </Container>
 
-            <Container>
-                <p>{data?.content}</p>
-            </Container>
+            {renderContent()}
 
             <footer>
                 <button className={"highlightable"} title={"Reply"}>
