@@ -75,6 +75,8 @@ dependencies {
 	implementation("org.apache.commons:commons-text:1.14.0")
 
 	implementation("site.remlit.blueb:http-signature-utility:2025.7.2.9-SNAPSHOT")
+
+	compileOnly("org.jetbrains:annotations:26.0.2-1")
 }
 
 group = "site.remlit.blueb"
