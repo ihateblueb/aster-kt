@@ -6,6 +6,7 @@ import {IconAlertTriangle, IconArrowBackUp, IconDots, IconPlus, IconRepeat, Icon
 import DateTime from "./DateTime.tsx";
 import Visibility from "./Visibility.tsx";
 import Button from "./Button.tsx";
+import {Link} from "@tanstack/react-router";
 
 function Note(
     {data}:
@@ -69,9 +70,30 @@ function Note(
         }
     }
 
+    function renderTags() {
+        if (!data.tags || data.tags.length === 0) return null
+
+        let tags: React.JSX.Element[] = []
+        for (const tag of data.tags) {
+            tags.push(
+                <div className={"tag " + tag}>
+                    <Link to={"/tag/" + tag}>
+                        #{tag}
+                    </Link>
+                </div>
+            )
+        }
+
+        return (
+            <Container align={"horizontal"} gap={"sm"}>
+                {tags}
+            </Container>
+        )
+    }
+
     return (
         <article className={"note highlightable"} tabIndex={0}
-                 aria-label={`Note by @${renderAt()}${data?.content ? ", " + data?.content : ""}`}>
+                 aria-label={`Note by ${renderAt()}${data?.content ? ", " + data?.content : ""}`}>
             <Container align={"horizontal"} gap={"lg"}>
                 <Container>
                     <Avatar user={data?.user}/>
@@ -92,6 +114,8 @@ function Note(
             </Container>
 
             {renderContent()}
+
+            {renderTags()}
 
             <footer>
                 <button className={"highlightable"} title={"Reply"}>

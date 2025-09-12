@@ -7,6 +7,12 @@ import Button from "./Button.tsx";
 import TextArea from "./TextArea.tsx";
 
 function Compose() {
+    const placeholders = [
+        "What's on your mind?",
+        "What are you thinking about?",
+        "Hows your day going?"
+    ]
+
     let account = localstore.getParsed("self")
 
     if (account === undefined) return <></>
@@ -60,7 +66,11 @@ function Compose() {
         <div className={`compose`}>
             <Container gap={"md"}>
                 {renderHeader()}
-                <TextArea wide rows={5}/>
+                <TextArea
+                    wide
+                    rows={5}
+                    placeholder={placeholders[Math.floor(Math.random() * placeholders.length)]}
+                />
                 {renderFooter()}
             </Container>
         </div>

@@ -50,7 +50,7 @@ function DateTime({date, short}: { date: Date; short: boolean }) {
     })
 
     return (
-        <span key={"Time-" + date.toString()}>
+        <span key={"Time-" + date.toString()} title={date.toString()}>
             {short ? value : date.toLocaleDateString()}
         </span>
     )
