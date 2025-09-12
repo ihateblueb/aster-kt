@@ -5,6 +5,8 @@ import PageWrapper from "../../lib/components/PageWrapper.tsx";
 import {useQuery} from '@tanstack/react-query'
 import getNote from '../../lib/api/note/get.ts'
 import Note from "../../lib/components/Note.tsx";
+import Loading from "../../lib/components/Loading.tsx";
+import Error from "../../lib/components/Error.tsx";
 
 export const Route = createFileRoute('/note/$noteId')({
     component: RouteComponent,
@@ -13,7 +15,7 @@ export const Route = createFileRoute('/note/$noteId')({
 function RouteComponent() {
     const {noteId} = Route.useParams()
 
-    const {isPending, isError, data} = useQuery({
+    const {isPending, isFetching, error, data, refetch} = useQuery({
         queryKey: ['note_' + noteId],
         queryFn: () => getNote(noteId)
     });
@@ -25,10 +27,10 @@ function RouteComponent() {
                 title={`Note ${data ? ("by " + (data?.user?.displayName ?? data?.user?.username)) : ""}`}
             />
             <PageWrapper padding={"timeline"} center={false}>
-                {isPending ? (
-                    <p>Pending</p>
-                ) : isError ? (
-                    <p>Errored</p>
+                {isPending || isFetching ? (
+                    <Loading fill/>
+                ) : error ? (
+                    <Error error={error} retry={refetch}/>
                 ) : (
                     <Note data={data}/>
                 )}

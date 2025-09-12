@@ -2,84 +2,88 @@ import ApiError from "./ApiError.ts";
 import localstore from "./localstore.ts";
 
 class Https {
-	private start() {	}
-	private async end(res: Response) {
-		let body;
-		try {
-			body = await res.json() ?? undefined;
-		} catch { /* empty */ }
+    public async get(url: string, auth?: boolean) {
+        this.start()
 
-		if (!res.ok)
-			throw new ApiError(
-				res.status,
-				body?.message ?? "Something went wrong"
-			);
+        const req = await fetch(url, {
+            method: 'GET',
+            headers: auth
+                ? {
+                    Authorization: 'Bearer ' + localstore.getParsed('token')
+                }
+                : {}
+        });
 
-		console.log(body);
+        return await this.end(req)
+    }
 
-		return body;
-	}
+    public async post(url: string, auth?: boolean, body?: any) {
+        this.start()
 
-	public async get(url: string, auth?: boolean) {
-		this.start()
+        const req = await fetch(url, {
+            method: 'POST',
+            headers: auth ? {
+                "Content-Type": "application/json",
+                Authorization: 'Bearer ' + localstore.getParsed('token')
+            } : {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
 
-		const req = await fetch(url, {
-			method: 'GET',
-			headers: auth
-				? {
-					Authorization: 'Bearer ' + localstore.getParsed('token')
-				}
-				: {}
-		});
+        return await this.end(req)
+    }
 
-		return await this.end(req)
-	}
+    public async patch(url: string, body?: any) {
+        this.start()
 
-	public async post(url: string, auth?: boolean, body?: any) {
-		this.start()
+        const req = await fetch(url, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: 'Bearer ' + localstore.getParsed('token')
+            },
+            body: JSON.stringify(body)
+        });
 
-		const req = await fetch(url, {
-			method: 'POST',
-			headers: auth ? {
-				"Content-Type": "application/json",
-				Authorization: 'Bearer ' + localstore.getParsed('token')
-			} : {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(body)
-		});
+        return await this.end(req)
+    }
 
-		return await this.end(req)
-	}
+    public async delete(url: string) {
+        this.start()
 
-	public async patch(url: string, body?: any) {
-		this.start()
+        const req = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: 'Bearer ' + localstore.getParsed('token')
+            }
+        });
 
-		const req = await fetch(url, {
-			method: 'PATCH',
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: 'Bearer ' + localstore.getParsed('token')
-			},
-			body: JSON.stringify(body)
-		});
+        return await this.end(req)
+    }
 
-		return await this.end(req)
-	}
+    private start() {
+    }
 
-	public async delete(url: string) {
-		this.start()
+    private async end(res: Response) {
+        let body;
+        try {
+            body = await res.json() ?? undefined;
+        } catch { /* empty */
+        }
 
-		const req = await fetch(url, {
-			method: 'DELETE',
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: 'Bearer ' + localstore.getParsed('token')
-			}
-		});
+        if (!res.ok)
+            throw new ApiError(
+                res.status,
+                body?.message,
+                body?.stackTrace
+            );
 
-		return await this.end(req)
-	}
+        console.log(body);
+
+        return body;
+    }
 }
 
 export default new Https();

@@ -1,0 +1,46 @@
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .note {
+    position: absolute;
+    margin-top: -8px;
+    opacity: 0;
+    transition: .1s;
+  }
+
+  &.fill {
+    width: 100%;
+    height: 100%;
+
+    .note {
+      &.show {
+        position: relative;
+        margin-top: 0;
+        opacity: 1;
+      }
+    }
+  }
+
+  &:not(.fill) {
+    padding: 5px;
+  }
+
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: loading 0.5s infinite linear;
+  }
+}

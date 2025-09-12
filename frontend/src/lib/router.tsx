@@ -1,19 +1,19 @@
 import {createRouter} from "@tanstack/react-router";
 import {routeTree} from "../routeTree.gen.ts";
 import PageHeader from "./components/PageHeader.tsx";
-import {IconExclamationCircle} from "@tabler/icons-react";
+import {IconAlertTriangle} from "@tabler/icons-react";
 import PageWrapper from "./components/PageWrapper.tsx";
-import Button from "./components/Button.tsx";
+import Error from "./components/Error.tsx";
+import ApiError from "./utils/ApiError.ts";
 
 const router = createRouter({
     routeTree,
     defaultNotFoundComponent: () => {
         return (
             <>
-                <PageHeader icon={<IconExclamationCircle size={18}/>} title={"Something went wrong"}/>
+                <PageHeader icon={<IconAlertTriangle size={18}/>} title={"Something went wrong"}/>
                 <PageWrapper padding={"full"} center={true}>
-                    <h1>Not found</h1>
-                    <Button onClick={() => window.location.reload()}>Retry</Button>
+                    <Error error={new ApiError(0, "Not found", "")}/>
                 </PageWrapper>
             </>
         )

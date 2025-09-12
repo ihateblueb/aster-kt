@@ -9,6 +9,8 @@ import {useQuery} from "@tanstack/react-query";
 import getTimeline from "../lib/api/timeline.ts";
 import {useState} from "react";
 import Tab from "../lib/components/Tab.tsx";
+import Loading from "../lib/components/Loading.tsx";
+import Error from "../lib/components/Error.tsx";
 
 export const Route = createFileRoute('/')({
     component: RouteComponent,
@@ -75,9 +77,9 @@ function RouteComponent() {
                 </PageHeader>
                 <PageWrapper padding={"full"} center={false}>
                     {isPending || isFetching ? (
-                        <p>Loading...</p>
+                        <Loading fill/>
                     ) : error ? (
-                        <p>Errored</p>
+                        <Error error={error} retry={refetch}/>
                     ) : (
                         <Timeline data={data} Component={Note}/>
                     )}

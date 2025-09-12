@@ -16,6 +16,12 @@
     width: 100%;
     box-sizing: border-box;
 
+    &:not(.widget-account) {
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--bg-3) var(--bg-1);
+    }
+
     &.padded {
       padding: 0 10px;
     }
