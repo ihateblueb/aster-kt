@@ -91,7 +91,6 @@ class ApValidationService : Service() {
 				"Actor not found."
 			)
 
-			// todo: fix date error here
 			val isSignatureValid = try {
 				parsedSignatureHeader.signature.verify(
 					KeypairService.pemToPublicKey(actor.publicKey),

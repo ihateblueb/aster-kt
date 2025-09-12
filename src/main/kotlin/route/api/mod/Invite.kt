@@ -36,19 +36,15 @@ fun Route.modInvite() {
 				}
 			}
 
-			val invite = InviteService.getById(id)
-
-			if (invite == null)
-				throw ApiException(HttpStatusCode.NotFound, "Not found after creation")
+			val invite =
+				InviteService.getById(id) ?: throw ApiException(HttpStatusCode.NotFound, "Not found after creation")
 
 			call.respond(invite)
 		}
 
 		delete("/api/mod/invite/{id}") {
-			val invite = InviteService.getById(call.parameters.getOrFail("id"))
-
-			if (invite == null)
-				throw ApiException(HttpStatusCode.NotFound)
+			val invite =
+				InviteService.getById(call.parameters.getOrFail("id")) ?: throw ApiException(HttpStatusCode.NotFound)
 
 			InviteService.deleteById(invite.id)
 

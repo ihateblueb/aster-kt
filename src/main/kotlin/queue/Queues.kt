@@ -17,9 +17,9 @@ class Queues {
 
 		private val configuration = Configuration()
 
-		val inboxQueue = Queue.Companion.of("inbox", PredefinedDataTypes.String)
-		val deliverQueue = Queue.Companion.of("deliver", PredefinedDataTypes.String)
-		val systemQueue = Queue.Companion.of("system", PredefinedDataTypes.String)
+		val inboxQueue = Queue.of("inbox", PredefinedDataTypes.String)
+		val deliverQueue = Queue.of("deliver", PredefinedDataTypes.String)
+		val systemQueue = Queue.of("system", PredefinedDataTypes.String)
 
 		val producer = DatabaseProducer(Database.dataSource)
 		val consumer = DatabaseConsumer(Database.dataSource)

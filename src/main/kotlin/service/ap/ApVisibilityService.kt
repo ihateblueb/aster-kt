@@ -12,47 +12,23 @@ class ApVisibilityService : Service() {
 		): Map<String, List<String>> {
 			return when (visibility) {
 				Visibility.Public -> mapOf(
-					Pair(
-						"to",
-						listOf("https://www.w3.org/ns/activitystreams#Public")
-					),
-					Pair(
-						"cc",
-						listOf()
-					),
+					"to" to listOf("https://www.w3.org/ns/activitystreams#Public"),
+					"cc" to emptyList()
 				)
 
 				Visibility.Unlisted -> mapOf(
-					Pair(
-						"to",
-						if (followersUrl != null) listOf(followersUrl) else listOf()
-					),
-					Pair(
-						"cc",
-						listOf("https://www.w3.org/ns/activitystreams#Public")
-					),
+					"to" to if (followersUrl != null) listOf(followersUrl) else listOf(),
+					"cc" to listOf("https://www.w3.org/ns/activitystreams#Public")
 				)
 
 				Visibility.Followers -> mapOf(
-					Pair(
-						"to",
-						if (followersUrl != null) listOf(followersUrl) else listOf()
-					),
-					Pair(
-						"cc",
-						listOf()
-					),
+					"to" to if (followersUrl != null) listOf(followersUrl) else listOf(),
+					"cc" to emptyList()
 				)
 
 				Visibility.Direct -> mapOf(
-					Pair(
-						"to",
-						to ?: listOf()
-					),
-					Pair(
-						"cc",
-						listOf()
-					),
+					"to" to emptyList(), // todo: to
+					"cc" to emptyList()
 				)
 			}
 		}

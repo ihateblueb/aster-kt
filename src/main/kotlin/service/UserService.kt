@@ -34,10 +34,7 @@ class UserService() : Service() {
 		suspend fun getByUsername(username: String): UserEntity? = get(UserTable.username eq username)
 
 		suspend fun getInstanceActor(): UserEntity {
-			val user = getByUsername("instance.actor")
-
-			if (user == null)
-				throw RuntimeException("Instance actor can't be null")
+			val user = getByUsername("instance.actor") ?: throw RuntimeException("Instance actor can't be null")
 
 			return user
 		}

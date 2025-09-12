@@ -36,7 +36,7 @@ fun Route.note() {
 			!note.user.activated ||
 			note.user.suspended ||
 			(note.visibility != Visibility.Public &&
-				note.visibility != Visibility.Unlisted)
+					note.visibility != Visibility.Unlisted)
 		)
 			throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
@@ -51,10 +51,10 @@ fun Route.note() {
 		delete("/api/note/{id}") {
 			val authenticatedUser = call.attributes[authenticatedUserKey]
 
-			val note = NoteService.getById(call.parameters.getOrFail("id"))
-
-			if (note == null)
-				throw ApiException(HttpStatusCode.NotFound, "Note not found.")
+			val note = NoteService.getById(call.parameters.getOrFail("id")) ?: throw ApiException(
+				HttpStatusCode.NotFound,
+				"Note not found."
+			)
 
 			if (
 				note.user.id != authenticatedUser.id.toString() && (!RoleService.userHasRoleOfType(

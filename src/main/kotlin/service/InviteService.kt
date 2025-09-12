@@ -46,10 +46,7 @@ class InviteService : Service() {
 			if (invite == null)
 				throw IllegalArgumentException("Invite does not exist")
 
-			val user = UserService.getById(userId)
-
-			if (user == null)
-				throw IllegalArgumentException("User does not exist")
+			val user = UserService.getById(userId) ?: throw IllegalArgumentException("User does not exist")
 
 			suspendTransaction {
 				invite.user = user

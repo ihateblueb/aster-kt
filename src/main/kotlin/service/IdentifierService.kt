@@ -64,7 +64,7 @@ class IdentifierService : Service() {
 		}
 
 		fun generateAid(): String {
-			var id: String = ""
+			var id = ""
 
 			val now = Date()
 			val time2000 = Date(946684800000L)
@@ -82,7 +82,7 @@ class IdentifierService : Service() {
 		}
 
 		fun generateAidx(): String {
-			var id: String = ""
+			var id = ""
 
 			val now = Date()
 			val time2000 = Date(946684800000L)

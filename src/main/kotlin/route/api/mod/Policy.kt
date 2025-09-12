@@ -59,28 +59,24 @@ fun Route.modPolicy() {
 				}
 			}
 
-			val policy = PolicyService.getById(id)
-
-			if (policy == null)
-				throw ApiException(HttpStatusCode.NotFound, "Policy doesn't exist after creation")
+			val policy = PolicyService.getById(id) ?: throw ApiException(
+				HttpStatusCode.NotFound,
+				"Policy doesn't exist"
+			)
 
 			call.respond(Policy.fromEntity(policy))
 		}
 
 		patch("/api/mod/policy/{id}") {
-			val policy = PolicyService.getById(call.parameters.getOrFail("id"))
-
-			if (policy == null)
-				throw ApiException(HttpStatusCode.NotFound)
+			val policy =
+				PolicyService.getById(call.parameters.getOrFail("id")) ?: throw ApiException(HttpStatusCode.NotFound)
 
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		delete("/api/mod/policy/{id}") {
-			val policy = PolicyService.getById(call.parameters.getOrFail("id"))
-
-			if (policy == null)
-				throw ApiException(HttpStatusCode.NotFound)
+			val policy =
+				PolicyService.getById(call.parameters.getOrFail("id")) ?: throw ApiException(HttpStatusCode.NotFound)
 
 			suspendTransaction {
 				policy.delete()

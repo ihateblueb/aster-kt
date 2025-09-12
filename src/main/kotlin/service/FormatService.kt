@@ -20,6 +20,6 @@ class FormatService : Service() {
 			return offsetTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 		}
 
-		fun toASCII(string: String) = IDN.toASCII(string)
+		fun toASCII(string: String): String = IDN.toASCII(string)
 	}
 }
