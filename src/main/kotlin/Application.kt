@@ -23,27 +23,37 @@ import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.ap.ApValidationException
 import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
+import site.remlit.blueb.aster.plugin.PluginRegistry
 import site.remlit.blueb.aster.service.CommandLineService
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.PluginService
 import site.remlit.blueb.aster.service.SetupService
 import site.remlit.blueb.aster.util.jsonConfig
+import kotlin.concurrent.thread
 
 private val configuration = Configuration()
 
 fun main(args: Array<String>) {
-	if (args.isNotEmpty() && ! args[0].startsWith("-")) {
+	if (args.isNotEmpty() && !args[0].startsWith("-")) {
 		runBlocking {
 			CommandLineService.execute(args)
 		}
 		return
 	}
 
-	embeddedServer(Netty, configuration.port, configuration.host, module = Application::module)
-		.start(wait = true)
+	val server = embeddedServer(Netty, configuration.port, configuration.host, module = Application::module)
+	server.start(wait = true)
 }
 
 fun Application.module() {
+	Runtime.getRuntime().addShutdownHook(
+		thread(name = "ShutdownTask", start = false) {
+			this.log.info("Shutting down...")
+			PluginRegistry.disableAll()
+			Database.dataSource.close()
+		}
+	)
+
 	PluginService.initialize()
 
 	// access connection before using it

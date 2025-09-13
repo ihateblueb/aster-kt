@@ -2,21 +2,19 @@ package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
-import io.ktor.server.plugins.callid.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.authenticatedUserKey
-import site.remlit.blueb.aster.db.entity.NoteEntity
-import site.remlit.blueb.aster.db.suspendTransaction
-import site.remlit.blueb.aster.model.*
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.RoleType
+import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.RoleService
-import site.remlit.blueb.aster.service.SanitizerService
-import site.remlit.blueb.aster.service.ap.ApIdService
 
 @Serializable
 data class PostNoteBody(
@@ -81,32 +79,13 @@ fun Route.note() {
 			if (body.content.isNullOrBlank())
 				throw ApiException(HttpStatusCode.BadRequest, "Content required")
 
-			val id = IdentifierService.generate()
-
-			suspendTransaction {
-				NoteEntity.new(id) {
-					apId = ApIdService.renderNoteApId(id)
-					user = authenticatedUser
-					cw = if (body.cw != null) SanitizerService.sanitize(body.cw, true) else null
-					content = SanitizerService.sanitize(body.content, true)
-					visibility = Visibility.fromString(body.visibility)
-					to = listOf()
-					tags = listOf()
-				}
-			}
-
-			val note = NoteService.getById(id)
-
-			if (note == null) {
-				call.respond(
-					HttpStatusCode.NotFound,
-					ApiError(
-						"Note couldn't be found after creation",
-						call.callId
-					)
-				)
-				return@post
-			}
+			val note = NoteService.create(
+				IdentifierService.generate(),
+				authenticatedUser,
+				body.cw,
+				body.content,
+				Visibility.fromString(body.visibility)
+			)
 
 			call.respond(note)
 		}

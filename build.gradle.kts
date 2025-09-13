@@ -1,8 +1,11 @@
 plugins {
 	application
+	`java-library`
+	`maven-publish`
 	kotlin("jvm") version "2.2.0"
 	kotlin("plugin.serialization") version "2.2.0"
 	id("com.gradleup.shadow") version "8.3.0"
+	id("org.jetbrains.dokka") version "2.0.0"
 }
 
 repositories {
@@ -80,7 +83,7 @@ dependencies {
 }
 
 group = "site.remlit.blueb"
-version = "2025.9.1.0-SNAPSHOT"
+version = "2025.9.1.1-SNAPSHOT"
 
 kotlin {
 	jvmToolchain(21)
@@ -89,6 +92,36 @@ kotlin {
 application {
 	mainClass = "site.remlit.blueb.aster.ApplicationKt"
 }
+
+// docs
+
+val sourcesJar by tasks.registering(Jar::class) {
+	archiveBaseName = "aster"
+	archiveClassifier = "sources"
+	from(sourceSets.main.get().allSource)
+}
+
+val dokkaJavadocZip by tasks.registering(Zip::class) {
+	archiveBaseName = "aster"
+	archiveClassifier = "javadoc"
+	dependsOn(tasks.dokkaJavadoc)
+	from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+}
+
+val dokkaHtmlZip by tasks.registering(Zip::class) {
+	archiveBaseName = "aster"
+	archiveClassifier = "dokka"
+	dependsOn(tasks.dokkaHtml)
+	from(tasks.dokkaHtml.map { it.outputDirectory })
+}
+
+artifacts {
+	add("archives", sourcesJar)
+	add("archives", dokkaJavadocZip)
+	add("archives", dokkaHtmlZip)
+}
+
+// building
 
 tasks.register<Exec>("cleanFrontend") {
 	executable("./scripts/clean-frontend.sh")
@@ -121,4 +154,67 @@ tasks.shadowJar {
 
 tasks.build {
 	dependsOn("shadowJar")
+}
+
+// publishing
+
+tasks.publish {
+	dependsOn("sourcesJar")
+	dependsOn("dokkaHtml")
+	dependsOn("javadoc")
+}
+
+publishing {
+	repositories {
+		maven {
+			name = "remlitSiteMain"
+			url = if (version.toString()
+					.contains("SNAPSHOT")
+			) uri("https://repo.remlit.site/snapshots") else uri("https://repo.remlit.site/releases")
+
+			credentials {
+				username = System.getenv("REPO_ACTOR")
+				password = System.getenv("REPO_TOKEN")
+			}
+		}
+	}
+	publications {
+		create<MavenPublication>("maven") {
+			groupId = "site.remlit.blueb"
+			artifactId = "aster"
+			version = project.version.toString()
+
+			from(components["java"])
+
+			artifact(sourcesJar)
+			artifact(dokkaJavadocZip)
+			artifact(dokkaHtmlZip)
+
+			pom {
+				name = "aster"
+				url = "https://github.com/ihateblueb/aster-kt"
+
+				licenses {
+					license {
+						name = "AGPLv3 License"
+						url = "https://opensource.org/license/agpl-v3"
+					}
+				}
+
+				developers {
+					developer {
+						id = "ihateblueb"
+						name = "ihateblueb"
+						email = "ihateblueb@proton.me"
+					}
+				}
+
+				scm {
+					connection = "scm:git:git://github.com/ihateblueb/aster-kt.git"
+					developerConnection = "scm:git:ssh://github.com/ihateblueb/aster-kt.git"
+					url = "https://github.com/ihateblueb/aster-kt"
+				}
+			}
+		}
+	}
 }

@@ -39,3 +39,5 @@ target/
 .DS_Store
 configuration.yaml
 .kotlin/
+.env
+plugins/

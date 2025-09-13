@@ -4,11 +4,15 @@ import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import site.remlit.blueb.aster.db.entity.NoteEntity
+import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.event.note.NoteCreateEvent
 import site.remlit.blueb.aster.model.Note
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.model.Visibility
+import site.remlit.blueb.aster.service.ap.ApIdService
 
 class NoteService : Service() {
 	companion object {
@@ -43,6 +47,46 @@ class NoteService : Service() {
 				.leftJoin(UserTable)
 				.select(where)
 				.count()
+		}
+
+		/**
+		 * Create a note
+		 *
+		 * @param id ID of the note
+		 * @param user User authoring the post
+		 * @param cw Content warning of the note
+		 * @param content Content of the note
+		 * @param visibility Visibility of the note
+		 * @param to List of users mentioned
+		 * @param tags List of extracted hashtags
+		 *
+		 * @return Created note
+		 * */
+		suspend fun create(
+			id: String = IdentifierService.generate(),
+			user: UserEntity,
+			cw: String?,
+			content: String,
+			visibility: Visibility,
+			to: List<String> = listOf(),
+			tags: List<String> = listOf()
+		): Note {
+			suspendTransaction {
+				NoteEntity.new(id) {
+					apId = ApIdService.renderNoteApId(id)
+					this.user = user
+					this.cw = if (cw != null) SanitizerService.sanitize(cw, true) else null
+					this.content = SanitizerService.sanitize(content, true)
+					this.visibility = visibility
+					this.to = to
+					this.tags = tags
+				}
+			}
+
+			val note = getById(id) ?: throw Exception("Failed to create note")
+			NoteCreateEvent(note).call()
+
+			return note
 		}
 
 		suspend fun delete(where: Op<Boolean>) = suspendTransaction {

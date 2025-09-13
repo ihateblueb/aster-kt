@@ -13,9 +13,11 @@ class ApActorService : Service() {
 		private val logger = LoggerFactory.getLogger(this::class.java)
 
 		/**
-		 * Resolve an ActivityPub Actor by their ID
+		 * Resolve an actor by their ID
 		 *
-		 * @return [UserEntity] or null
+		 * @param apId ActivityPub ID of an actor
+		 *
+		 * @return UserEntity or null
 		 * */
 		suspend fun resolve(apId: String): UserEntity? {
 			val existingUser = UserService.getByApId(apId)
@@ -34,6 +36,13 @@ class ApActorService : Service() {
 			return null
 		}
 
+		/**
+		 * Register a new actor
+		 *
+		 * @param json JSON representation of an actor
+		 *
+		 * @return UserEntity or null
+		 * */
 		suspend fun register(json: JsonObject): UserEntity? {
 			val id = IdentifierService.generate()
 
