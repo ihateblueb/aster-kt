@@ -11,6 +11,12 @@ class SanitizerService : Service() {
 			.and(Sanitizers.LINKS)
 			.and(Sanitizers.BLOCKS)
 
+		/**
+		 * Sanitizes user input
+		 *
+		 * @param string String to sanitize
+		 * @param escape Whether to escape instead of sanitizing
+		 * */
 		fun sanitize(string: String, escape: Boolean = false): String {
 			if (escape)
 				return StringEscapeUtils.escapeHtml4(string)

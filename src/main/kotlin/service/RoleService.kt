@@ -13,26 +13,60 @@ import site.remlit.blueb.aster.model.User
 
 class RoleService : Service() {
 	companion object {
+		/**
+		 * Get a role.
+		 *
+		 * @param where Query to find role
+		 *
+		 * @return Found role, if any
+		 * */
 		suspend fun get(where: Op<Boolean>): RoleEntity? = suspendTransaction {
 			RoleEntity
 				.find { where }
 				.singleOrNull()
 		}
 
+		/**
+		 * Get a list of roles.
+		 *
+		 * @param where Query to find roles
+		 *
+		 * @return List of found roles
+		 * */
 		suspend fun getMany(where: Op<Boolean>): List<RoleEntity> = suspendTransaction {
 			RoleEntity
 				.find { where }
 				.toList()
 		}
 
+		/**
+		 * Get a list of every role
+		 *
+		 * @return List of roles
+		 * */
 		suspend fun getAll(): List<RoleEntity> = suspendTransaction {
 			RoleEntity
 				.all()
 				.toList()
 		}
 
+		/**
+		 * Get a role by ID.
+		 *
+		 * @param id ID of role
+		 *
+		 * @return Found role, if any
+		 * */
 		suspend fun getById(id: String): RoleEntity? = get(RoleTable.id eq id)
 
+		/**
+		 * Determines if a user has a role matching a role type
+		 *
+		 * @param userId ID of the user to check
+		 * @param type Type of role
+		 *
+		 * @return If the user has the role or not
+		 * */
 		suspend fun userHasRoleOfType(userId: String, type: RoleType): Boolean {
 			val user = UserService.getById(userId)
 			val rolesOfType = getMany(RoleTable.type eq type)
@@ -46,7 +80,14 @@ class RoleService : Service() {
 			return false
 		}
 
-		suspend fun getUsersOfType(type: RoleType): List<User?> {
+		/**
+		 * Gets a list of users with a role type
+		 *
+		 * @param type Type of role
+		 *
+		 * @return List of users with a role of a certain type
+		 * */
+		suspend fun getUsersOfType(type: RoleType): List<User> {
 			val rolesOfType = getMany(RoleTable.type eq type)
 
 			val usersOfType = mutableListOf<User>()

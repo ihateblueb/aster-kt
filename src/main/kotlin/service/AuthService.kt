@@ -10,14 +10,35 @@ import site.remlit.blueb.aster.model.Service
 
 class AuthService : Service() {
 	companion object {
+		/**
+		 * Get auth entity.
+		 *
+		 * @param where Query to find auth entity
+		 *
+		 * @return Auth entity, if it exists
+		 * */
 		suspend fun get(where: Op<Boolean>): AuthEntity? = suspendTransaction {
 			AuthEntity
 				.find { where }
 				.singleOrNull()
 		}
 
+		/**
+		 * Get auth entity by token.
+		 *
+		 * @param token Token to use to find an auth entity
+		 *
+		 * @return Auth entity, if it exists
+		 * */
 		suspend fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
+		/**
+		 * Creates a new auth token for a user
+		 *
+		 * @param user ID of a user
+		 *
+		 * @return Newly created auth token
+		 * */
 		suspend fun registerToken(user: String): String {
 			val id = IdentifierService.generate()
 			val generatedToken = RandomService.generateString()

@@ -13,6 +13,13 @@ import site.remlit.blueb.aster.model.Service
 
 class RelationshipService : Service() {
 	companion object {
+		/**
+		 * Get a relationship.
+		 *
+		 * @param where Query to find relationship
+		 *
+		 * @return Found relationship, if any
+		 * */
 		suspend fun get(where: Op<Boolean>): Relationship? = suspendTransaction {
 			val relationship = RelationshipEntity
 				.find { where }
@@ -25,6 +32,13 @@ class RelationshipService : Service() {
 			else null
 		}
 
+		/**
+		 * Gets ID of activity used to create a relationship
+		 *
+		 * @param relationshipId ID of the relationship
+		 *
+		 * @return ActivityPub ID of the activity used to create the relationship
+		 * */
 		suspend fun getActivityId(relationshipId: String): String? = suspendTransaction {
 			RelationshipEntity
 				.find { RelationshipTable.id eq relationshipId }
@@ -34,6 +48,10 @@ class RelationshipService : Service() {
 
 		/**
 		 * Get relationships in both directions for two users
+		 *
+		 * @param to Relationship target
+		 * @param from Relationship owner
+		 *
 		 * @return [Pair] of [Relationship], where first is to and second is from
 		 * */
 		suspend fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
@@ -46,22 +64,21 @@ class RelationshipService : Service() {
 		fun mapPair(pair: Pair<Relationship?, Relationship?>): List<Map<String, Relationship?>> {
 			return listOf(
 				mapOf(
-					Pair(
-						"to",
-						pair.first
-					)
+					"to" to pair.first
 				),
 				mapOf(
-					Pair(
-						"from",
-						pair.second
-					)
+					"from" to pair.second
 				)
 			)
 		}
 
 		/**
 		 * Determine if there is a [RelationshipType.Block] in either direction
+		 *
+		 * @param to First user
+		 * @param from Second user
+		 *
+		 * @return If either are blocking each other
 		 * */
 		suspend fun eitherBlocking(to: String, from: String): Boolean {
 			val pair = this.getPair(to, from)
@@ -77,6 +94,11 @@ class RelationshipService : Service() {
 
 		/**
 		 * Determine if there is a [RelationshipType.Mute] in one direction
+		 *
+		 * @param to Relationship target
+		 * @param from Relationship owner
+		 *
+		 * @return If `from` is muting `to`
 		 * */
 		suspend fun muteExists(to: String, from: String): Boolean {
 			val relationship = this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from))

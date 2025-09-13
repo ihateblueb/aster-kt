@@ -10,16 +10,37 @@ import java.time.format.DateTimeFormatter
 
 class FormatService : Service() {
 	companion object {
+		/**
+		 * Determine timezone offset compared to local time.
+		 *
+		 * @param localDateTime Date and time
+		 *
+		 * @return Calculated time offset
+		 * */
 		fun getTimeZoneOffset(localDateTime: LocalDateTime): ZoneOffset {
 			return ZoneId.systemDefault().rules.getOffset(localDateTime.toJavaLocalDateTime())
 		}
 
-		// See: https://www.w3.org/TR/activitystreams-core/#dates
+		/**
+		 * Formats to the standard ActivityPub date format that can be used in activities.
+		 * See: https://www.w3.org/TR/activitystreams-core/#dates
+		 *
+		 * @param localDateTime Local date and time
+		 *
+		 * @return Standard date format
+		 * */
 		fun formatToStandardDateTime(localDateTime: LocalDateTime): String {
 			val offsetTime = localDateTime.toJavaLocalDateTime().atOffset(getTimeZoneOffset(localDateTime))
 			return offsetTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 		}
 
+		/**
+		 * Convert string to ASCII string
+		 *
+		 * @param string Any string
+		 *
+		 * @return ASCII string
+		 * */
 		fun toASCII(string: String): String = IDN.toASCII(string)
 	}
 }

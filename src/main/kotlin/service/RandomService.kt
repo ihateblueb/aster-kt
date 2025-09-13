@@ -6,6 +6,13 @@ import java.security.SecureRandom
 
 class RandomService : Service() {
 	companion object {
+		/**
+		 * Securely generate a random string
+		 *
+		 * @param size Size in bytes
+		 *
+		 * @return Secure random string
+		 * */
 		fun generateString(size: Int = 16): String {
 			val random = SecureRandom()
 

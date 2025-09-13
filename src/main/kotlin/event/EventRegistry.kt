@@ -20,7 +20,7 @@ object EventRegistry {
 	/**
 	 * Adds a function to be called when an event fires
 	 *
-	 * @param event Class of the event to listen to (e.g. NoteCreateEvent::class)
+	 * @param event Class of the event to listen to (e.g. `NoteCreateEvent::class`)
 	 * @param listener Lambda to run when the event happens
 	 *
 	 * @since 2025.9.1.0-SNAPSHOT

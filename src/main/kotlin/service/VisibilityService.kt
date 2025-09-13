@@ -9,10 +9,12 @@ class VisibilityService : Service() {
 		 * Determines if a user can see an entity
 		 *
 		 * @param visibility Visibility of the entity
-		 * @param author Author ([site.remlit.blueb.model.User]) of the entity
-		 * @param to List of [site.remlit.blueb.model.User.id], other users who can see this entity (for [Visibility.Direct]). Not applicable to all entities.
+		 * @param author Author of the entity
+		 * @param to List of user ids, other users who can see this entity (for [Visibility.Direct]). Not applicable to all entities.
 		 * @param user User who is trying to view the entity
 		 * @param ignoreBlock Whether to take block relationships into account
+		 *
+		 * @return If the user can see the entity
 		 * */
 		suspend fun canISee(
 			visibility: Visibility,

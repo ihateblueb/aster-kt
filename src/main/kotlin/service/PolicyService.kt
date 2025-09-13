@@ -10,14 +10,35 @@ import site.remlit.blueb.aster.model.Service
 
 class PolicyService : Service() {
 	companion object {
+		/**
+		 * Get a policy.
+		 *
+		 * @param where Query to find policy
+		 *
+		 * @return Found policy, if any
+		 * */
 		suspend fun get(where: Op<Boolean>): PolicyEntity? = suspendTransaction {
 			PolicyEntity
 				.find { where }
 				.singleOrNull()
 		}
 
+		/**
+		 * Get a policy by ID.
+		 *
+		 * @param id ID of policy
+		 *
+		 * @return Found policy, if any
+		 * */
 		suspend fun getById(id: String): PolicyEntity? = get(PolicyTable.id eq id)
 
+		/**
+		 * Get many policies.
+		 *
+		 * @param where Query to find policies
+		 *
+		 * @return Found policies, if any
+		 * */
 		suspend fun getMany(where: Op<Boolean>, take: Int? = null): List<PolicyEntity> = suspendTransaction {
 			PolicyEntity
 				.find { where }
@@ -26,6 +47,13 @@ class PolicyService : Service() {
 				.toList()
 		}
 
+		/**
+		 * Get many policies by type.
+		 *
+		 * @param type Type of policy to find
+		 *
+		 * @return Found policies, if any
+		 * */
 		suspend fun getAllByType(type: PolicyType): List<PolicyEntity> = suspendTransaction {
 			PolicyEntity
 				.find { PolicyTable.type eq type }
@@ -34,9 +62,11 @@ class PolicyService : Service() {
 		}
 
 		/**
-		 * Reduce a [List] of [PolicyEntity] to [PolicyEntity.host]
+		 * Reduce a list of policies to their hosts
 		 *
-		 * @return [List] of [PolicyEntity.host] as [String]
+		 * @param policies List of policies to reduce
+		 *
+		 * @return List of hosts
 		 * */
 		fun reducePoliciesInListToHost(policies: List<PolicyEntity>): List<String> {
 			val reducedHosts: MutableList<String> = mutableListOf()

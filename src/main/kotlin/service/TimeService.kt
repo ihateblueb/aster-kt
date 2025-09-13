@@ -8,6 +8,11 @@ import site.remlit.blueb.aster.model.Service
 
 class TimeService : Service() {
 	companion object {
+		/**
+		 * Gets current LocalDateTime
+		 *
+		 * @return Current LocalDateTime
+		 * */
 		fun now(): LocalDateTime {
 			return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 		}

@@ -23,11 +23,17 @@ class SetupService : Service() {
 
 		private val configuration = Configuration()
 
+		/**
+		 * Setup instance
+		 * */
 		suspend fun setup() {
 			setupRoles()
 			setupInstanceActor()
 		}
 
+		/**
+		 * Creates admin and mod roles, if they don't already exist
+		 * */
 		suspend fun setupRoles() {
 			val existingAdminRole = RoleService.get(RoleTable.type eq RoleType.Admin)
 
@@ -68,10 +74,14 @@ class SetupService : Service() {
 			}
 		}
 
+
+		/**
+		 * Creates instance actor, if it doesn't already exist
+		 * */
 		suspend fun setupInstanceActor() {
 			val existingActor = UserService.get(
 				UserTable.username eq "instance.actor"
-					and (UserTable.host eq null)
+						and (UserTable.host eq null)
 			)
 
 			if (existingActor != null) {

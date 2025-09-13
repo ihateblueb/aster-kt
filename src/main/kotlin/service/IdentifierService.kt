@@ -10,7 +10,7 @@ class IdentifierService : Service() {
 	companion object {
 		private val configuration = Configuration()
 
-		var aidAlphabet =
+		private val aidAlphabet =
 			listOf(
 				"0",
 				"1",
@@ -50,6 +50,11 @@ class IdentifierService : Service() {
 				"z",
 			)
 
+		/**
+		 * Generate ID with default format
+		 *
+		 * @return Generated ID
+		 * */
 		fun generate(): String {
 			if (configuration.identifiers == IdentifierType.Aid)
 				return this.generateAid()
@@ -63,6 +68,11 @@ class IdentifierService : Service() {
 			return this.generateAidx()
 		}
 
+		/**
+		 * Generate ID with Aid format
+		 *
+		 * @return Generated ID
+		 * */
 		fun generateAid(): String {
 			var id = ""
 
@@ -81,6 +91,11 @@ class IdentifierService : Service() {
 			return id
 		}
 
+		/**
+		 * Generate ID with Aidx format
+		 *
+		 * @return Generated ID
+		 * */
 		fun generateAidx(): String {
 			var id = ""
 
