@@ -23,6 +23,8 @@ class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
 	var tags by NoteTable.tags
 	var emojis by NoteTable.emojis
 
+	var repeat by NoteEntity optionalReferencedOn NoteTable.repeat
+
 	var createdAt by NoteTable.createdAt
 	var updatedAt by NoteTable.updatedAt
 }

@@ -21,6 +21,8 @@ data class Note(
 	val to: List<String>? = null,
 	val tags: List<String>? = null,
 
+	val repeat: Note? = null,
+
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null,
 ) {
@@ -37,6 +39,7 @@ data class Note(
 				visibility = entity.visibility,
 				to = entity.to,
 				tags = entity.tags,
+				repeat = null, // todo: fix Note.fromEntity(entity.repeat) recursion
 				createdAt = entity.createdAt,
 				updatedAt = entity.updatedAt,
 			)

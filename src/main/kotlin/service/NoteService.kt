@@ -9,6 +9,8 @@ import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.event.note.NoteCreateEvent
+import site.remlit.blueb.aster.event.note.NoteDeleteEvent
+import site.remlit.blueb.aster.exception.InsertFailureException
 import site.remlit.blueb.aster.model.Note
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.Visibility
@@ -83,17 +85,20 @@ class NoteService : Service() {
 				}
 			}
 
-			val note = getById(id) ?: throw Exception("Failed to create note")
+			val note = getById(id) ?: throw InsertFailureException("Failed to create note")
 			NoteCreateEvent(note).call()
 
 			return note
 		}
 
 		suspend fun delete(where: Op<Boolean>) = suspendTransaction {
-			NoteEntity
+			val entity = NoteEntity
 				.find { where }
 				.singleOrNull()
-				?.delete()
+			if (entity == null) return@suspendTransaction
+
+			NoteDeleteEvent(Note.fromEntity(entity)).call()
+			entity.delete()
 		}
 
 		suspend fun deleteById(id: String) = delete(NoteTable.id eq id)

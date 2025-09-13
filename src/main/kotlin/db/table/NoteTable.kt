@@ -24,6 +24,8 @@ object NoteTable : IdTable<String>("note") {
 	val tags = array<String>("tags").default(listOf())
 	val emojis = array<String>("emojis").default(listOf())
 
+	val repeat = optReference("repeat", NoteTable, onDelete = ReferenceOption.CASCADE)
+
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
