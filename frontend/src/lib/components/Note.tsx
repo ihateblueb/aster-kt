@@ -7,22 +7,39 @@ import DateTime from "./DateTime.tsx";
 import Visibility from "./Visibility.tsx";
 import Button from "./Button.tsx";
 import {Link} from "@tanstack/react-router";
+import localstore from "../utils/localstore.ts";
+import likeNote from "../api/note/like.ts";
 
 function Note(
     {data}:
     { data: any }
 ) {
+    let [note, setNote] = React.useState(data)
+
+    let self = localstore.getParsed("self")
+    let isOwnPost = note?.user?.id === self?.id
+
     let [cwOpen, setCwOpen] = React.useState(false)
+
+    /* Interactions */
+
+    function like() {
+        likeNote(note?.id).then((e) => {
+            if (e?.id === note?.id) setNote(e)
+        })
+    }
+
+    /* Rendering */
 
     function renderHandle() {
         return (
-            <span className={"username"}>@{data?.user?.username}{data?.user?.host !== null ? (
-                <span className={"host"}>@{data?.user?.host}</span>) : null}</span>
+            <span className={"username"}>@{note?.user?.username}{note?.user?.host !== null ? (
+                <span className={"host"}>@{note?.user?.host}</span>) : null}</span>
         )
     }
 
     function renderAt() {
-        return `@${data?.user?.username}${data?.user?.host ? ("@" + data?.user?.host) : ""}`
+        return `@${note?.user?.username}${note?.user?.host ? ("@" + note?.user?.host) : ""}`
     }
 
     function renderContentWarning() {
@@ -34,7 +51,7 @@ function Note(
                         <IconAlertTriangle size={18}/>
                     </Container>
                     <Container>
-                        <span>{data?.cw}</span>
+                        <span>{note?.cw}</span>
                     </Container>
                     <Container align={"right"}>
                         {!cwOpen ? (
@@ -50,10 +67,10 @@ function Note(
 
     function renderContent() {
         // todo: screenreader check
-        if (!data?.cw) {
+        if (!note?.cw) {
             return (
                 <Container>
-                    <p>{data?.content}</p>
+                    <p>{note?.content}</p>
                 </Container>
             )
         } else {
@@ -62,7 +79,7 @@ function Note(
                     {!cwOpen ? renderContentWarning() : (
                         <>
                             {renderContentWarning()}
-                            <p>{data?.content}</p>
+                            <p>{note?.content}</p>
                         </>
                     )}
                 </Container>
@@ -71,10 +88,10 @@ function Note(
     }
 
     function renderTags() {
-        if (!data.tags || data.tags.length === 0) return null
+        if (!note.tags || note.tags.length === 0) return null
 
         let tags: React.JSX.Element[] = []
-        for (const tag of data.tags) {
+        for (const tag of note.tags) {
             tags.push(
                 <div className={"tag " + tag}>
                     <Link to={"/tag/" + tag}>
@@ -93,22 +110,22 @@ function Note(
 
     return (
         <article className={"note highlightable"} tabIndex={0}
-                 aria-label={`Note by ${renderAt()}${data?.content ? ", " + data?.content : ""}`}>
+                 aria-label={`Note by ${renderAt()}${note?.content ? ", " + note?.content : ""}`}>
             <Container align={"horizontal"} gap={"lg"}>
                 <Container>
-                    <Avatar user={data?.user}/>
+                    <Avatar user={note?.user}/>
                 </Container>
                 <Container align={"left"}>
                     <a className={"names"}
                        href={`/${renderAt()}`}>
-                        <p className={"displayName"}>{data?.user?.displayName ?? data?.user?.username}</p>
+                        <p className={"displayName"}>{note?.user?.displayName ?? note?.user?.username}</p>
                         <p className={"handle"}>{renderHandle()}</p>
                     </a>
                 </Container>
                 <Container align={"right"}>
                     <Container gap={"sm"}>
-                        <DateTime date={data?.createdAt} short={true}/>
-                        <Visibility visibility={data?.visibility}/>
+                        <DateTime date={note?.createdAt} short={true}/>
+                        <Visibility visibility={note?.visibility}/>
                     </Container>
                 </Container>
             </Container>
@@ -121,11 +138,19 @@ function Note(
                 <button className={"highlightable"} title={"Reply"}>
                     <IconArrowBackUp aria-hidden={true} size={20}/>
                 </button>
-                <button className={"highlightable"} title={"Repeat"}>
+                <button
+                    className={"highlightable" + ((note?.repeats?.some((e) => e?.id === self?.id)) ? " repeated" : "")}
+                    title={"Repeat"}>
                     <IconRepeat aria-hidden={true} size={20}/>
+                    {(note?.repeats?.length >= 1) ? <span>{note?.repeats?.length}</span> : null}
                 </button>
-                <button className={"highlightable"} title={"Like"}>
+                <button
+                    className={"highlightable" + ((note?.likes?.some((e) => e?.id === self?.id)) ? " liked" : "")}
+                    title={"Like"}
+                    onClick={() => like()}
+                >
                     <IconStar aria-hidden={true} size={20}/>
+                    {(note?.likes?.length >= 1) ? <span>{note?.likes?.length}</span> : null}
                 </button>
                 <button className={"highlightable"} title={"React"}>
                     <IconPlus aria-hidden={true} size={20}/>

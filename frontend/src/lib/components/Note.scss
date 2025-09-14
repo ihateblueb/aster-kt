@@ -97,6 +97,12 @@
     }
   }
 
+  @keyframes interaction {
+    100% {
+      rotate: 360deg;
+    }
+  }
+
   footer {
     display: flex;
     align-items: center;
@@ -107,6 +113,7 @@
       justify-content: center;
       flex-wrap: wrap;
 
+      gap: 4px;
       padding: 4px 6px;
       margin-right: 50px;
       border-radius: var(--br-mx);
@@ -114,6 +121,38 @@
       color: var(--tx-3);
       background: none;
       border: none;
+
+      span {
+        font-size: var(--fs-sm);
+      }
+
+      &.repeated, &.liked {
+        > svg {
+          animation: .65s ease-in-out 0s;
+          animation-name: interaction;
+        }
+      }
+
+      &.repeated {
+        > svg {
+          color: var(--repeat);
+        }
+
+        span {
+          color: var(--repeat);
+        }
+      }
+
+      &.liked {
+        > svg {
+          color: var(--like);
+          fill: var(--like)
+        }
+
+        span {
+          color: var(--like);
+        }
+      }
 
       &:hover {
         color: var(--tx-2);
