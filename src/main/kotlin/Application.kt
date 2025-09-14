@@ -18,6 +18,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import site.remlit.blueb.aster.db.Database
+import site.remlit.blueb.aster.event.EventRegistry
 import site.remlit.blueb.aster.model.ApiError
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
@@ -26,8 +27,7 @@ import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
 import site.remlit.blueb.aster.plugin.PluginRegistry
 import site.remlit.blueb.aster.service.*
 import site.remlit.blueb.aster.util.jsonConfig
-import kotlin.concurrent.thread
-import kotlin.system.exitProcess
+import java.util.concurrent.TimeUnit
 
 private val configuration = Configuration()
 
@@ -40,24 +40,32 @@ fun main(args: Array<String>) {
 	}
 
 	val server = embeddedServer(Netty, configuration.port, configuration.host, module = Application::module)
+
+	Runtime.getRuntime().addShutdownHook(Thread {
+		Thread.currentThread().name = "ShutdownMain"
+		runBlocking {
+			server.stop(1, 10, TimeUnit.SECONDS)
+			Database.dataSource.close()
+		}
+	})
+
 	server.start(wait = true)
 }
 
 fun Application.module() {
-	Runtime.getRuntime().addShutdownHook(
-		thread(name = "ShutdownTask", start = false) {
-			this.log.info("Shutting down...")
-			PluginRegistry.disableAll()
-			Database.dataSource.close()
-			exitProcess(0)
-		}
-	)
+	// this hook completes first, always
+	Runtime.getRuntime().addShutdownHook(Thread {
+		Thread.currentThread().name = "ShutdownModule"
+		this.log.info("Shutting down...")
+		PluginRegistry.disableAll()
+		EventRegistry.clearListeners()
+	})
 
 	PluginService.initialize()
 
 	// access connection before using it
 	Database.database
-	MigrationService.initialize()
+
 	MigrationService.isUpToDate()
 	configureQueue()
 
