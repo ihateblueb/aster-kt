@@ -1,0 +1,14 @@
+package site.remlit.blueb.aster.event.note
+
+import site.remlit.blueb.aster.model.Note
+import site.remlit.blueb.aster.model.User
+
+/**
+ * Event for when a note is unliked by a user
+ *
+ * @param note Note liked
+ * @param user User who liked the note
+ *
+ * @since 2025.9.1.1-SNAPSHOT
+ * */
+class NoteUnlikeEvent(note: Note, user: User) : NoteInteractionEvent(note, user)

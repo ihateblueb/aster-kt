@@ -1,6 +1,7 @@
 package site.remlit.blueb.aster.service
 
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.model.Visibility
 
 class VisibilityService : Service() {
@@ -23,30 +24,29 @@ class VisibilityService : Service() {
 			user: String,
 			ignoreBlock: Boolean? = false
 		): Boolean {
-			val author = UserService.getById(author)
-			val user = UserService.getById(user)
+			val author = User.fromEntity(UserService.getById(author) ?: throw Exception("Author not found"))
+			val user = User.fromEntity(UserService.getById(user) ?: throw Exception("User not found"))
 
-			require(author != null, { "Author not found, author must be an existing user's id" })
-			require(user != null, { "User not found, user must be an existing user's id" })
-
-			if (RelationshipService.eitherBlocking(user.id.toString(), author.id.toString()))
+			if (RelationshipService.eitherBlocking(user.id, author.id))
 				return false
 
 			when (visibility) {
 				Visibility.Public -> {
+					return true
 				}
 
 				Visibility.Unlisted -> {
+					return true
 				}
 
 				Visibility.Followers -> {
+					return false
 				}
 
 				Visibility.Direct -> {
+					return false
 				}
 			}
-
-			return true
 		}
 	}
 }

@@ -1,8 +1,12 @@
 package site.remlit.blueb.aster.model
 
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.db.entity.NoteEntity
+import site.remlit.blueb.aster.db.entity.NoteLikeEntity
+import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.NoteLikeTable
 
 @Serializable
 data class Note(
@@ -25,6 +29,10 @@ data class Note(
 
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null,
+
+	val likes: List<SmallUser> = emptyList(),
+	val reactions: List<SmallUser> = emptyList(),
+	val repeats: List<Note> = emptyList()
 ) {
 	companion object {
 		fun fromEntity(entity: NoteEntity): Note {
@@ -42,7 +50,27 @@ data class Note(
 				repeat = null, // todo: fix Note.fromEntity(entity.repeat) recursion
 				createdAt = entity.createdAt,
 				updatedAt = entity.updatedAt,
+				likes = runBlocking { findLikes(entity.id.toString()) }
 			)
+		}
+
+		suspend fun findLikes(id: String): List<SmallUser> {
+			val likes = suspendTransaction {
+				NoteLikeEntity
+					.find { NoteLikeTable.note eq id }
+					.sortedByDescending { it.createdAt }
+					.toList()
+			}
+
+			val users = mutableListOf<SmallUser>()
+
+			likes.forEach {
+				users.add(
+					SmallUser.fromUser(User.fromEntity(it.user))
+				)
+			}
+
+			return users.toList()
 		}
 
 		fun fromEntities(entities: List<NoteEntity>): List<Note> = entities.map { fromEntity(it) }

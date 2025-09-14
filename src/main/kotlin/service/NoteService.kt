@@ -3,16 +3,23 @@ package site.remlit.blueb.aster.service
 import org.jetbrains.exposed.dao.load
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import site.remlit.blueb.aster.db.entity.NoteEntity
+import site.remlit.blueb.aster.db.entity.NoteLikeEntity
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.NoteLikeTable
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.event.note.NoteCreateEvent
 import site.remlit.blueb.aster.event.note.NoteDeleteEvent
+import site.remlit.blueb.aster.event.note.NoteLikeEvent
+import site.remlit.blueb.aster.event.note.NoteUnlikeEvent
 import site.remlit.blueb.aster.exception.InsertFailureException
+import site.remlit.blueb.aster.exception.TargetNotFoundException
 import site.remlit.blueb.aster.model.Note
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.service.ap.ApIdService
 
@@ -89,6 +96,48 @@ class NoteService : Service() {
 			NoteCreateEvent(note).call()
 
 			return note
+		}
+
+		/**
+		 * Like a note as a user, or removes a like if it's already there.
+		 *
+		 * @param user User liking the note
+		 * @param noteId ID of the target note
+		 *
+		 * @since 2025.9.1.1-SNAPSHOT
+		 * */
+		suspend fun like(
+			user: User,
+			noteId: String,
+		) {
+			val note = getById(noteId) ?: throw TargetNotFoundException("Note not found")
+
+			if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
+				throw TargetNotFoundException("Note not found")
+
+			val existing = suspendTransaction {
+				NoteLikeEntity
+					.find {
+						NoteLikeTable.note eq note.id and
+								(NoteLikeTable.user eq user.id)
+					}
+					.singleOrNull()
+			}
+
+			if (existing != null) {
+				suspendTransaction { existing.delete() }
+				NoteUnlikeEvent(note, user).call()
+				return
+			}
+
+			suspendTransaction {
+				NoteLikeEntity.new(IdentifierService.generate()) {
+					this.user = UserEntity[user.id]
+					this.note = NoteEntity[note.id]
+				}
+			}
+
+			NoteLikeEvent(note, user).call()
 		}
 
 		/**

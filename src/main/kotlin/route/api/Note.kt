@@ -8,10 +8,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.authenticatedUserKey
-import site.remlit.blueb.aster.model.ApiException
-import site.remlit.blueb.aster.model.Configuration
-import site.remlit.blueb.aster.model.RoleType
-import site.remlit.blueb.aster.model.Visibility
+import site.remlit.blueb.aster.model.*
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.RoleService
@@ -26,19 +23,21 @@ data class PostNoteBody(
 fun Route.note() {
 	val configuration = Configuration()
 
-	get("/api/note/{id}") {
-		val note = NoteService.getById(call.parameters.getOrFail("id"))
+	authenticate("authOptional") {
+		get("/api/note/{id}") {
+			val note = NoteService.getById(call.parameters.getOrFail("id"))
 
-		if (
-			note == null ||
-			!note.user.activated ||
-			note.user.suspended ||
-			(note.visibility != Visibility.Public &&
-					note.visibility != Visibility.Unlisted)
-		)
-			throw ApiException(HttpStatusCode.NotFound, "Note not found.")
+			if (
+				note == null ||
+				!note.user.activated ||
+				note.user.suspended ||
+				(note.visibility != Visibility.Public &&
+						note.visibility != Visibility.Unlisted)
+			)
+				throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
-		call.respond(note)
+			call.respond(note)
+		}
 	}
 
 	get("/api/note/{id}/replies") {
@@ -90,29 +89,40 @@ fun Route.note() {
 			call.respond(note)
 		}
 
-		post("/note/{id}/repeat") {
+		post("/api/note/{id}/repeat") {
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
-		post("/note/{id}/like") {
+		post("/api/note/{id}/like") {
+			val authenticatedUser = call.attributes[authenticatedUserKey]
+
+			val id = call.parameters.getOrFail("id")
+			NoteService.like(
+				User.fromEntity(authenticatedUser),
+				id
+			)
+
+			call.respond(
+				HttpStatusCode.OK,
+				NoteService.getById(id) ?: throw ApiException(HttpStatusCode.NotFound, "Note not found")
+			)
+		}
+
+		post("/api/note/{id}/react") {
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
-		post("/note/{id}/react") {
-			throw ApiException(HttpStatusCode.NotImplemented)
-		}
-
-		post("/note/{id}/bookmark") {
+		post("/api/note/{id}/bookmark") {
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		/* Hide post and all replies to it, use conversation to determine replies */
-		post("/note/{id}/hide") {
+		post("/api/note/{id}/hide") {
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 
 		/* stop receiving notifications for this post, user conversation for this, too */
-		post("/note/{id}/mute") {
+		post("/api/note/{id}/mute") {
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}
 	}
