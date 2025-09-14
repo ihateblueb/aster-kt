@@ -31,3 +31,4 @@
 1748992829779_Migration_invite.sql
 1749139540472_Migration_user.sql
 1757814744147_Migration_note.sql
+1757864017013_Migration_note_like.sql

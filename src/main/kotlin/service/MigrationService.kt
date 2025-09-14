@@ -63,6 +63,7 @@ class MigrationService : Service() {
 					AuthTable,
 					InviteTable,
 					NoteTable,
+					NoteLikeTable,
 					NotificationTable,
 					PolicyTable,
 					RelationshipTable,
@@ -162,14 +163,14 @@ class MigrationService : Service() {
 
 					resource.openStream().bufferedReader(Charsets.UTF_8)
 						.readText()
-						.lines()
-						.forEach { line ->
+						.split(";")
+						.forEach { sql ->
 							conn.createStatement().use { stmt ->
 								// this SQL is safe, it's provided by the jar
-								logger.info("   $line")
+								println(sql)
 
 								@Suppress("SqlSourceToSinkFlow")
-								stmt.execute(line)
+								stmt.execute(sql)
 							}
 						}
 
