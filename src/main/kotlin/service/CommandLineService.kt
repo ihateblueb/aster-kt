@@ -20,7 +20,6 @@ class CommandLineService : Service() {
 			logger.info("help					Show this page")
 			logger.info("migration:generate			Generate migrations (for developer use)")
 			logger.info("migration:execute			Execute migrations")
-			logger.info("migration:repair			Repair database migrations")
 			logger.info("role:list				List all roles")
 			logger.info("role:create				Create a role")
 			logger.info("role:give				Give role to user")
@@ -66,11 +65,6 @@ class CommandLineService : Service() {
 
 					"migration:execute" -> {
 						MigrationService.execute()
-						return
-					}
-
-					"migration:repair" -> {
-						MigrationService.repair()
 						return
 					}
 

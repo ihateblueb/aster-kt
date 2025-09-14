@@ -1,15 +1,17 @@
 package site.remlit.blueb.aster.service
 
 import MigrationUtils
-import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.db.table.*
+import site.remlit.blueb.aster.exception.MigrationException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
+import java.nio.file.Files
+import kotlin.io.path.*
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService : Service() {
@@ -18,18 +20,42 @@ class MigrationService : Service() {
 
 		private val configuration = Configuration()
 
-		private val migrationPath: String = "src/main/resources/migrations"
+		val migrationsDir = Path("src/main/resources/migrations")
+		val manifestPath = Path("$migrationsDir/_manifest.txt")
+
 		private val database = Database.database
+		private val dataSource = Database.dataSource
 
-		val flyway: Flyway = Flyway.configure()
-			.dataSource(
-				"jdbc:postgresql://${configuration.database.host}:${configuration.database.port}/${configuration.database.db}",
-				configuration.database.user,
-				configuration.database.password
-			)
-			.locations("filesystem:$migrationPath")
-			.load()
+		/**
+		 * Creates the database meta table that tracks which migrations have been run if not present.
+		 * Also deletes the old migration system if it remains.
+		 * */
+		fun initialize() {
+			/*
+			* Why isn't this using Exposed?
+			* I felt it would be weird and potentially conflicting if I used Exposed, so instead
+			* did this Unnecessary, maybe a little.
+			* */
+			dataSource.connection.use { conn ->
+				val dbMeta = conn.metaData
 
+				if (!dbMeta.getTables(null, null, "database_meta", null).next()) {
+					conn.createStatement().use { stmt ->
+						stmt.execute("CREATE TABLE database_meta (migration text unique, \"createdAt\" timestamp default CURRENT_TIMESTAMP);")
+					}
+				}
+
+				if (dbMeta.getTables(null, null, "flyway_schema_history", null).next()) {
+					conn.createStatement().use { stmt ->
+						stmt.execute("DROP TABLE flyway_schema_history;")
+					}
+				}
+			}
+		}
+
+		/**
+		 * Generates migration scripts based on current database schema.
+		 * */
 		fun generate() {
 			transaction(database) {
 				// todo: automatically look for these
@@ -49,21 +75,110 @@ class MigrationService : Service() {
 					logger.info("Generating migration script for table " + table.tableName)
 					MigrationUtils.generateMigrationScript(
 						table,
-						scriptDirectory = migrationPath,
-						scriptName = "V${System.currentTimeMillis()}__Migration_${table.tableName}_${IdentifierService.generate()}",
+						scriptDirectory = migrationsDir.toString(),
+						scriptName = "${System.currentTimeMillis()}_Migration_${table.tableName}",
 					)
 				}
 			}
+
+			if (manifestPath.exists()) Files.delete(manifestPath)
+			val manifestWriter = Files.createFile(manifestPath).writer()
+
+			for (entry in migrationsDir.listDirectoryEntries().sortedBy { it.name }) {
+				if (!entry.name.endsWith(".sql")) continue
+
+				var delete = true
+
+				Files.readAllLines(entry).forEach { line ->
+					if (line.isNotBlank()) delete = false
+				}
+
+				if (delete) {
+					logger.info("Deleting empty script ${entry.name}")
+					Files.delete(entry)
+				} else {
+					manifestWriter.write("${entry.name}\n")
+				}
+			}
+
+			manifestWriter.flush()
 		}
 
-		fun execute() {
-			transaction(database) {
-				flyway.migrate()
+		/**
+		 * Determines if a database is up to date or not, and stops server if it isn't
+		 * */
+		fun isUpToDate() {
+			if (getPendingMigrations().isNotEmpty()) {
+				logger.error("Theres one or more pending migrations. Please run them before continuing.")
+				Runtime.getRuntime().exit(1)
 			}
 		}
 
-		fun repair() {
-			flyway.repair()
+		/**
+		 * Gets currently pending migration scripts.
+		 *
+		 * @return List of migration scripts
+		 * */
+		fun getPendingMigrations(): List<String> {
+			val pending = mutableListOf<String>()
+
+			val resource = this::class.java.classLoader.getResource("migrations/_manifest.txt")
+				?: throw MigrationException("Cannot find migration manifest, is the jar malformed?")
+
+			dataSource.connection.use { conn ->
+				resource.openStream().bufferedReader(Charsets.UTF_8)
+					.readText()
+					.lines()
+					.forEach { line ->
+						if (line.isBlank()) return@forEach
+						conn.prepareStatement("SELECT * FROM database_meta WHERE migration = ?").use { stmt ->
+							stmt.setString(1, line.replace(".sql", ""))
+							stmt.executeQuery().use { rs ->
+								if (!rs.next()) pending.add(line)
+							}
+						}
+					}
+			}
+
+			return pending
+		}
+
+		/**
+		 * Executes any pending migrations.
+		 * */
+		fun execute() {
+			initialize()
+
+			val pending = getPendingMigrations()
+
+			dataSource.connection.use { conn ->
+				for (pending in pending) {
+					if (pending.isBlank()) continue
+
+					val resource = this::class.java.classLoader.getResource("migrations/$pending")
+						?: continue
+
+					logger.info("Executing migration $pending...")
+
+					resource.openStream().bufferedReader(Charsets.UTF_8)
+						.readText()
+						.lines()
+						.forEach { line ->
+							conn.createStatement().use { stmt ->
+								// this SQL is safe, it's provided by the jar
+								logger.info("   $line")
+
+								@Suppress("SqlSourceToSinkFlow")
+								stmt.execute(line)
+							}
+						}
+
+					conn.prepareStatement("INSERT INTO database_meta (migration) VALUES (?);").use { stmt ->
+						stmt.setString(1, pending.replace(".sql", ""))
+						stmt.execute()
+					}
+				}
+			}
 		}
 	}
 }

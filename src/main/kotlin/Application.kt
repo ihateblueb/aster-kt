@@ -24,12 +24,10 @@ import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.ap.ApValidationException
 import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
 import site.remlit.blueb.aster.plugin.PluginRegistry
-import site.remlit.blueb.aster.service.CommandLineService
-import site.remlit.blueb.aster.service.IdentifierService
-import site.remlit.blueb.aster.service.PluginService
-import site.remlit.blueb.aster.service.SetupService
+import site.remlit.blueb.aster.service.*
 import site.remlit.blueb.aster.util.jsonConfig
 import kotlin.concurrent.thread
+import kotlin.system.exitProcess
 
 private val configuration = Configuration()
 
@@ -51,6 +49,7 @@ fun Application.module() {
 			this.log.info("Shutting down...")
 			PluginRegistry.disableAll()
 			Database.dataSource.close()
+			exitProcess(0)
 		}
 	)
 
@@ -58,7 +57,8 @@ fun Application.module() {
 
 	// access connection before using it
 	Database.database
-
+	MigrationService.initialize()
+	MigrationService.isUpToDate()
 	configureQueue()
 
 	runBlocking {

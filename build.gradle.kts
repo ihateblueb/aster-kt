@@ -69,8 +69,6 @@ dependencies {
 	implementation("org.jetbrains.exposed:exposed-json:0.61.0")
 	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.61.0")
 	implementation("org.jetbrains.exposed:exposed-migration:0.61.0")
-	implementation("org.flywaydb:flyway-core:11.10.4")
-	implementation("org.flywaydb:flyway-database-postgresql:11.10.4")
 
 	// misc
 	implementation("at.favre.lib:bcrypt:0.10.2")

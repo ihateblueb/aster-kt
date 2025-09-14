@@ -50,8 +50,11 @@ object PluginRegistry {
 	 * */
 	fun disableAll() {
 		runBlocking {
-			for (plugin in plugins) {
-				disablePlugin(plugin.second)
+			try {
+				for (plugin in plugins) {
+					disablePlugin(plugin.second)
+				}
+			} catch (_: Exception) {
 			}
 		}
 	}

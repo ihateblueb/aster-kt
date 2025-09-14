@@ -91,6 +91,11 @@ class NoteService : Service() {
 			return note
 		}
 
+		/**
+		 * Delete a note.
+		 *
+		 * @param where Query to find note
+		 * */
 		suspend fun delete(where: Op<Boolean>) = suspendTransaction {
 			val entity = NoteEntity
 				.find { where }
@@ -101,7 +106,18 @@ class NoteService : Service() {
 			entity.delete()
 		}
 
+		/**
+		 * Delete a note by ID.
+		 *
+		 * @param id ID of note
+		 * */
 		suspend fun deleteById(id: String) = delete(NoteTable.id eq id)
+
+		/**
+		 * Delete a note by ActivityPub ID.
+		 *
+		 * @param apId ActivityPub ID of note
+		 * */
 		suspend fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 	}
 }
