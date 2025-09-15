@@ -5,11 +5,10 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.or
 import site.remlit.blueb.aster.db.table.NoteTable
-import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Visibility
@@ -35,7 +34,12 @@ fun Route.timeline() {
 			val since = TimelineService.normalizeSince(call.parameters["since"])
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-			val notes = NoteService.getMany(UserTable.host eq null and (NoteTable.createdAt less since), take)
+			val notes = NoteService.getMany(
+				NoteTable.visibility inList listOf(Visibility.Public, Visibility.Unlisted)
+						and (NoteTable.user eq null)
+						and (NoteTable.createdAt less since),
+				take
+			)
 
 			if (notes.isEmpty()) {
 				call.respond(HttpStatusCode.NoContent)
@@ -61,7 +65,7 @@ fun Route.timeline() {
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 			val notes = NoteService.getMany(
-				NoteTable.visibility eq Visibility.Public or (NoteTable.visibility eq Visibility.Unlisted)
+				NoteTable.visibility inList listOf(Visibility.Public, Visibility.Unlisted)
 						and (NoteTable.createdAt less since),
 				take
 			)
