@@ -1,51 +1,51 @@
 package site.remlit.blueb.aster.db.table
 
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.ktorm.schema.Table
+import org.ktorm.schema.boolean
+import org.ktorm.schema.timestamp
+import org.ktorm.schema.varchar
+import site.remlit.blueb.aster.db.entity.UserEntity
 
-object UserTable : IdTable<String>("user") {
-	override val id: Column<EntityID<String>> = varchar("id", length = 125).uniqueIndex("unique_user_id").entityId()
+class UserTable : Table<UserEntity>("user") {
+	val id = varchar("id").primaryKey()
 
-	val apId = varchar("apId", length = 1025).uniqueIndex("unique_user_apId")
-	val inbox = varchar("inbox", length = 1025).uniqueIndex("unique_user_inbox")
-	val outbox = varchar("outbox", length = 1025).nullable()
+	val apId = varchar("apId")
+	val inbox = varchar("inbox")
+	val outbox = varchar("outbox")
 
-	val username = varchar("username", length = 250)
-	val host = varchar("host", length = 500).nullable()
-	val displayName = varchar("displayName", length = 500).nullable()
-	val bio = varchar("bio", length = 25000).nullable()
-	val location = varchar("location", length = 1025).nullable()
-	val birthday = varchar("birthday", length = 1025).nullable()
+	val username = varchar("username")
+	val host = varchar("host")
+	val displayName = varchar("displayName")
 
-	val avatar = varchar("avatar", length = 1025).nullable()
-	val avatarAlt = varchar("avatarAlt", length = 25000).nullable()
-	val banner = varchar("banner", length = 1025).nullable()
-	val bannerAlt = varchar("bannerAlt", length = 25000).nullable()
+	val bio = varchar("bio")
+	val location = varchar("location")
+	val birthday = varchar("birthday")
 
-	val locked = bool("locked").default(false)
-	val suspended = bool("suspended").default(false)
-	val activated = bool("activated").default(false)
-	val automated = bool("automated").default(false)
-	val discoverable = bool("discoverable").default(false)
-	val indexable = bool("indexable").default(false)
-	val sensitive = bool("sensitive").default(false)
+	val avatar = varchar("avatar")
+	val avatarAlt = varchar("avatarAlt")
+	val banner = varchar("banner")
+	val bannerAlt = varchar("bannerAlt")
 
-	val roles = array<String>("roles").default(listOf())
-	val emojis = array<String>("emojis").default(listOf())
+	val locked = boolean("locked")
+	val suspended = boolean("suspended")
+	val activated = boolean("activated")
+	val discoverable = boolean("discoverable")
+	val indexable = boolean("indexable")
+	val sensitive = boolean("sensitive")
+	val automated = boolean("automated")
+	val isCat = boolean("isCat")
+	val speakAsCat = boolean("speakAsCat")
 
-	val isCat = bool("isCat").default(false)
-	val speakAsCat = bool("speakAsCat").default(false)
+	val publicKey = varchar("publicKey")
 
-	val followingUrl = varchar("followingUrl", length = 1025).uniqueIndex("unique_user_followingUrl").nullable()
-	val followersUrl = varchar("followersUrl", length = 1025).uniqueIndex("unique_user_followersUrl").nullable()
+	val createdAt = timestamp("createdAt")
+	val updatedAt = timestamp("updatedAt")
 
-	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
-	val updatedAt = datetime("updatedAt").nullable()
+	// todo: roles
+	// todo: emojis
 
-	val publicKey = varchar("publicKey", length = 5000)
+	val followingUrl = varchar("followingUrl")
+	val followersUrl = varchar("followersUrl")
 
-	override val primaryKey = PrimaryKey(NoteTable.id)
+
 }

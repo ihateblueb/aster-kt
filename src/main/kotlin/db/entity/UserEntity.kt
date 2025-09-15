@@ -1,48 +1,43 @@
 package site.remlit.blueb.aster.db.entity
 
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import site.remlit.blueb.aster.db.table.UserTable
+import kotlinx.datetime.LocalDateTime
+import org.ktorm.entity.Entity
 
-class UserEntity(id: EntityID<String>) : Entity<String>(id) {
-	companion object : EntityClass<String, UserEntity>(UserTable)
+interface UserEntity : Entity<UserEntity> {
+	val id: String
 
-	var apId by UserTable.apId
-	var inbox by UserTable.inbox
-	var outbox by UserTable.outbox
+	val apId: String
+	val inbox: String
+	val outbox: String?
 
-	var username by UserTable.username
-	var host by UserTable.host
-	var displayName by UserTable.displayName
-	var bio by UserTable.bio
-	var location by UserTable.location
-	var birthday by UserTable.birthday
+	val username: String
+	val host: String?
+	var displayName: String?
 
-	var avatar by UserTable.avatar
-	var avatarAlt by UserTable.avatarAlt
-	var banner by UserTable.banner
-	var bannerAlt by UserTable.bannerAlt
+	var bio: String?
+	var location: String?
+	var birthday: String?
 
-	var locked by UserTable.locked
-	var suspended by UserTable.suspended
-	var activated by UserTable.activated
-	var automated by UserTable.automated
-	var discoverable by UserTable.discoverable
-	var indexable by UserTable.indexable
-	var sensitive by UserTable.sensitive
+	var avatar: String?
+	var avatarAlt: String?
+	var banner: String?
+	var bannerAlt: String?
 
-	var roles by UserTable.roles
-	var emojis by UserTable.emojis
+	var locked: Boolean
+	var suspended: Boolean
+	var activated: Boolean
+	var discoverable: Boolean
+	var indexable: Boolean
+	var sensitive: Boolean
+	var automated: Boolean
+	var isCat: Boolean
+	var speakAsCat: Boolean
 
-	var isCat by UserTable.isCat
-	var speakAsCat by UserTable.speakAsCat
+	val publicKey: String
 
-	var followingUrl by UserTable.followingUrl
-	var followersUrl by UserTable.followersUrl
+	val createdAt: LocalDateTime
+	var updatedAt: LocalDateTime?
 
-	var createdAt by UserTable.createdAt
-	var updatedAt by UserTable.updatedAt
-
-	var publicKey by UserTable.publicKey
+	val followingUrl: String?
+	val followersUrl: String?
 }

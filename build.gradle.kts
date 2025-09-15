@@ -62,13 +62,8 @@ dependencies {
 	// database
 	implementation("com.zaxxer:HikariCP:6.3.0")
 	implementation("org.postgresql:postgresql:42.7.7")
-	implementation("io.github.vgv:kolbasa:0.120.0")
-	implementation("org.jetbrains.exposed:exposed-core:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-dao:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-jdbc:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-json:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.61.0")
-	implementation("org.jetbrains.exposed:exposed-migration:0.61.0")
+	implementation("org.ktorm:ktorm-core:4.1.1")
+	implementation("org.ktorm:ktorm-support-postgresql:4.1.1")
 
 	// misc
 	implementation("at.favre.lib:bcrypt:0.10.2")
