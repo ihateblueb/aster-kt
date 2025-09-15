@@ -3,6 +3,11 @@ package site.remlit.blueb.aster.db.entity
 import kotlinx.datetime.LocalDateTime
 import org.ktorm.entity.Entity
 
+/**
+ * Table for storing user information.
+ *
+ * @since 2025.9.1.2-SNAPSHOT
+ * */
 interface UserEntity : Entity<UserEntity> {
 	val id: String
 

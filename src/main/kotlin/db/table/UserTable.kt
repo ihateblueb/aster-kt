@@ -6,7 +6,7 @@ import org.ktorm.schema.timestamp
 import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.UserEntity
 
-class UserTable : Table<UserEntity>("user") {
+object UserTable : Table<UserEntity>("user") {
 	val id = varchar("id").primaryKey()
 
 	val apId = varchar("apId")

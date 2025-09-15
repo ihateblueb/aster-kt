@@ -8,6 +8,9 @@ plugins {
 	id("org.jetbrains.dokka") version "2.0.0"
 }
 
+group = "site.remlit.blueb"
+version = "2025.9.1.2-SNAPSHOT"
+
 repositories {
 	mavenCentral()
 	maven {
@@ -74,9 +77,6 @@ dependencies {
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 }
-
-group = "site.remlit.blueb"
-version = "2025.9.1.1-SNAPSHOT"
 
 kotlin {
 	jvmToolchain(21)
