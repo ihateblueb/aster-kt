@@ -1,7 +1,7 @@
 package site.remlit.blueb.aster.db.table
 
 import org.ktorm.schema.Table
-import org.ktorm.schema.timestamp
+import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.AuthEntity
 
@@ -15,5 +15,5 @@ object AuthTable : Table<AuthEntity>("auth") {
 	val token = varchar("token")
 	val user = varchar("user")
 		.references(UserTable) { it.user }
-	val createdAt = timestamp("createdAt")
+	val createdAt = datetime("createdAt")
 }

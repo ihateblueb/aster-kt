@@ -1,7 +1,7 @@
 package site.remlit.blueb.aster.db.table
 
 import org.ktorm.schema.Table
-import org.ktorm.schema.timestamp
+import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.InviteEntity
 
@@ -19,6 +19,6 @@ object InviteTable : Table<InviteEntity>("invite") {
 	val creator = varchar("creator")
 		.references(UserTable) { it.creator }
 
-	val createdAt = timestamp("createdAt")
-	val usedAt = timestamp("usedAt")
+	val createdAt = datetime("createdAt")
+	val usedAt = datetime("usedAt")
 }

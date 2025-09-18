@@ -2,7 +2,7 @@ package site.remlit.blueb.aster.db.table
 
 import org.ktorm.schema.Table
 import org.ktorm.schema.boolean
-import org.ktorm.schema.timestamp
+import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.UserEntity
 
@@ -38,8 +38,8 @@ object UserTable : Table<UserEntity>("user") {
 
 	val publicKey = varchar("publicKey")
 
-	val createdAt = timestamp("createdAt")
-	val updatedAt = timestamp("updatedAt")
+	val createdAt = datetime("createdAt")
+	val updatedAt = datetime("updatedAt")
 
 	// todo: roles
 	// todo: emojis
