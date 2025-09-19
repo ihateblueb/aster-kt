@@ -14,6 +14,7 @@ import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.*
 import site.remlit.blueb.aster.service.*
 import site.remlit.blueb.aster.service.ap.ApIdService
+import site.remlit.blueb.aster.util.bcryptCost
 
 @Serializable
 data class RegisterBody(
@@ -75,7 +76,7 @@ fun Route.register() {
 			throw ApiException(HttpStatusCode.BadRequest, "Username is already in use")
 
 		val id = IdentifierService.generate()
-		val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
+        val hashedPassword = BCrypt.withDefaults().hashToString(bcryptCost, body.password.toCharArray())
 
 		val keypair = KeypairService.generate()
 

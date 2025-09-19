@@ -47,10 +47,10 @@ class AuthService : Service() {
 		 * @return Newly created auth token
 		 * */
 		suspend fun registerToken(user: String): String {
-			val id = IdentifierService.generate()
-			val generatedToken = RandomService.generateString()
+			val id = _root_ide_package_.site.remlit.blueb.aster.service.IdentifierService.Companion.generate()
+			val generatedToken = _root_ide_package_.site.remlit.blueb.aster.service.RandomService.Companion.generateString()
 
-			val user = UserService.get(UserTable.id eq user)!!
+			val user = _root_ide_package_.site.remlit.blueb.aster.service.UserService.Companion.get(UserTable.id eq user)!!
 
 			suspendTransaction {
 				AuthEntity.new(id) {

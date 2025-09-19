@@ -16,6 +16,7 @@ import site.remlit.blueb.aster.model.KeyType
 import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.service.ap.ApIdService
+import site.remlit.blueb.aster.util.bcryptCost
 
 class SetupService : Service() {
 	companion object {
@@ -92,7 +93,7 @@ class SetupService : Service() {
 				val securePassword = RandomService.generateString()
 
 				val id = IdentifierService.generate()
-				val hashedPassword = BCrypt.withDefaults().hashToString(12, securePassword.toCharArray())
+				val hashedPassword = BCrypt.withDefaults().hashToString(bcryptCost, securePassword.toCharArray())
 
 				val keypair = KeypairService.generate()
 

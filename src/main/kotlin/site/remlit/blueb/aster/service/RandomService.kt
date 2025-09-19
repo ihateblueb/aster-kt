@@ -20,7 +20,7 @@ class RandomService : Service() {
 			random.nextBytes(bytes)
 
 			return BigInteger(1, bytes)
-				.toString(32)
+				.toString(size * 2)
 				.padStart(size, '0')
 		}
 	}

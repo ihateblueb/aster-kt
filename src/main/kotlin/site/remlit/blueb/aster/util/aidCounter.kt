@@ -5,4 +5,5 @@ import kotlin.random.Random
 /**
  * Global counter used for Aid and Aidx ID formats
  * */
-var aidCounter = Random.nextInt(0, 10)
+@Suppress("MagicNumber")
+var aidCounter = Random.nextInt(0, 20)

@@ -1,0 +1,10 @@
+config:
+  validation: true
+
+style:
+  UseRequire:
+    active: false
+  UseCheckOrError:
+    active: false
+  ThrowsCount:
+    active: false

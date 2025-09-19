@@ -91,6 +91,7 @@ class ApValidationService : Service() {
 				"Actor not found."
 			)
 
+            @Suppress("SwallowedException")
 			val isSignatureValid = try {
 				parsedSignatureHeader.signature.verify(
 					KeypairService.pemToPublicKey(actor.publicKey),
