@@ -33,9 +33,8 @@ class MigrationService : Service() {
 		 * */
 		fun initialize() {
 			/*
-			* Why isn't this using Exposed?
 			* I felt it would be weird and potentially conflicting if I used Exposed, so instead
-			* did this Unnecessary, maybe a little.
+			* did this. Unnecessary, maybe a little.
 			* */
 			dataSource.connection.use { conn ->
 				val dbMeta = conn.metaData
