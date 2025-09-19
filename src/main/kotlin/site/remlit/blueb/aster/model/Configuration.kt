@@ -2,6 +2,7 @@ package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*
+import site.remlit.blueb.aster.exception.ConfigurationException
 import java.io.File
 import java.util.Locale.getDefault
 
@@ -10,6 +11,7 @@ var configPath = workingDir + "configuration.yaml"
 
 val config = YamlConfig(configPath)
 
+@Suppress("MagicNumber")
 class Configuration {
 	val name: String
 
@@ -31,30 +33,30 @@ class Configuration {
 				}
 		}
 
-		var nameProp = config?.propertyOrNull("name")?.getString()
+		val nameProp = config?.propertyOrNull("name")?.getString()
 		name = nameProp ?: "Aster"
 
-		var urlProp = config?.propertyOrNull("url")?.getString()
+		val urlProp = config?.propertyOrNull("url")?.getString()
 		url = if (urlProp != null) {
 			Url(urlProp)
 		} else {
-			throw Exception("Configuration is missing 'url' attribute.")
+			throw ConfigurationException("Configuration is missing 'url' attribute.")
 		}
 
-		var hostProp = config?.propertyOrNull("host")?.getString()
+		val hostProp = config.propertyOrNull("host")?.getString()
 		host = hostProp ?: "0.0.0.0"
 
-		var portProp = config?.propertyOrNull("port")?.getString()?.toInt()
+		val portProp = config.propertyOrNull("port")?.getString()?.toInt()
 		port = portProp ?: 9782
 
-		var registrationsProp = config?.propertyOrNull("registrations")?.getString()
+		val registrationsProp = config.propertyOrNull("registrations")?.getString()
 		registrations = if (registrationsProp != null) {
 			InstanceRegistrationsType.valueOf(lower(registrationsProp))
 		} else {
 			InstanceRegistrationsType.Closed
 		}
 
-		var identifiersProp = config?.propertyOrNull("identifiers")?.getString()
+		val identifiersProp = config.propertyOrNull("identifiers")?.getString()
 		identifiers = if (identifiersProp != null) {
 			IdentifierType.valueOf(lower(identifiersProp))
 		} else {
@@ -75,54 +77,37 @@ class ConfigurationDatabase {
 	val password: String
 
 	init {
-		var databaseHostProp = config?.propertyOrNull("database.host")?.getString()
+		val databaseHostProp = config?.propertyOrNull("database.host")?.getString()
 		host = databaseHostProp ?: "127.0.0.1"
 
-		var databasePortProp = config?.propertyOrNull("database.port")?.getString()
+		val databasePortProp = config?.propertyOrNull("database.port")?.getString()
 		port = databasePortProp ?: "5432"
 
-		var databaseDbProp = config?.propertyOrNull("database.db")?.getString()
-		db = if (databaseDbProp != null) {
-			databaseDbProp
-		} else {
-			throw Exception("Configuration is missing 'database.db' attribute.")
-		}
+		val databaseDbProp = config?.propertyOrNull("database.db")?.getString()
+		db = databaseDbProp ?: throw ConfigurationException("Configuration is missing 'database.db' attribute.")
 
-		var databaseUserProp = config?.propertyOrNull("database.user")?.getString()
-		user = if (databaseUserProp != null) {
-			databaseUserProp
-		} else {
-			throw Exception("Configuration is missing 'database.user' attribute.")
-		}
+		val databaseUserProp = config.propertyOrNull("database.user")?.getString()
+		user = databaseUserProp ?: throw ConfigurationException("Configuration is missing 'database.user' attribute.")
 
-		var databasePasswordProp = config?.propertyOrNull("database.password")?.getString()
-		password = if (databasePasswordProp != null) {
-			databasePasswordProp
-		} else {
-			throw Exception("Configuration is missing 'database.password' attribute.")
-		}
+		val databasePasswordProp = config.propertyOrNull("database.password")?.getString()
+		password = databasePasswordProp
+			?: throw ConfigurationException("Configuration is missing 'database.password' attribute.")
 	}
 }
 
 class ConfigurationQueue {
-	val inbox: ConfigurationSpecificQueue
-	val deliver: ConfigurationSpecificQueue
-	val system: ConfigurationSpecificQueue
-
-	init {
-		inbox = ConfigurationSpecificQueue(
-			threads = ((config?.propertyOrNull("queue.inbox.threads")?.getString()?.toInt()) ?: 8),
-			concurrency = ((config?.propertyOrNull("queue.inbox.concurrency")?.getString()?.toInt()) ?: 8)
-		)
-		deliver = ConfigurationSpecificQueue(
-			threads = ((config?.propertyOrNull("queue.deliver.threads")?.getString()?.toInt()) ?: 6),
-			concurrency = ((config?.propertyOrNull("queue.deliver.concurrency")?.getString()?.toInt()) ?: 6)
-		)
-		system = ConfigurationSpecificQueue(
-			threads = ((config?.propertyOrNull("queue.system.threads")?.getString()?.toInt()) ?: 4),
-			concurrency = ((config?.propertyOrNull("queue.system.concurrency")?.getString()?.toInt()) ?: 4)
-		)
-	}
+	val inbox: ConfigurationSpecificQueue = ConfigurationSpecificQueue(
+		threads = ((config?.propertyOrNull("queue.inbox.threads")?.getString()?.toInt()) ?: 8),
+		concurrency = ((config?.propertyOrNull("queue.inbox.concurrency")?.getString()?.toInt()) ?: 8)
+	)
+	val deliver: ConfigurationSpecificQueue = ConfigurationSpecificQueue(
+		threads = ((config?.propertyOrNull("queue.deliver.threads")?.getString()?.toInt()) ?: 6),
+		concurrency = ((config?.propertyOrNull("queue.deliver.concurrency")?.getString()?.toInt()) ?: 6)
+	)
+	val system: ConfigurationSpecificQueue = ConfigurationSpecificQueue(
+		threads = ((config?.propertyOrNull("queue.system.threads")?.getString()?.toInt()) ?: 4),
+		concurrency = ((config?.propertyOrNull("queue.system.concurrency")?.getString()?.toInt()) ?: 4)
+	)
 }
 
 data class ConfigurationSpecificQueue(
@@ -139,10 +124,10 @@ class ConfigurationTimeline {
 	val public: ConfigurationSpecificTimeline
 
 	init {
-		var defaultObjectsProp = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull()
+		val defaultObjectsProp = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull()
 		defaultObjects = defaultObjectsProp ?: 20
 
-		var maxObjectsProp = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull()
+		val maxObjectsProp = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull()
 		maxObjects = maxObjectsProp ?: 20
 
 		local = ConfigurationSpecificTimeline(
