@@ -1,19 +1,17 @@
 package site.remlit.blueb.aster.db.entity
 
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import site.remlit.blueb.aster.db.table.RoleTable
+import kotlinx.datetime.LocalDateTime
+import org.ktorm.entity.Entity
+import site.remlit.blueb.aster.model.RoleType
 
+interface RoleEntity : Entity<RoleEntity> {
+	val id: String
 
-class RoleEntity(id: EntityID<String>) : Entity<String>(id) {
-	companion object : EntityClass<String, RoleEntity>(RoleTable)
+	val type: RoleType
 
-	var type by RoleTable.type
+	val name: String
+	val description: String?
 
-	var name by RoleTable.name
-	var description by RoleTable.description
-
-	var createdAt by RoleTable.createdAt
-	var updatedAt by RoleTable.updatedAt
+	val createdAt: LocalDateTime
+	val updatedAt: LocalDateTime?
 }

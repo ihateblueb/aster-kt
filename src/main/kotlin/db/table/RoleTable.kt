@@ -1,20 +1,20 @@
 package site.remlit.blueb.aster.db.table
 
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.ktorm.schema.Table
+import org.ktorm.schema.datetime
+import org.ktorm.schema.enum
+import org.ktorm.schema.varchar
+import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.model.RoleType
 
-object RoleTable : IdTable<String>("role") {
-	override val id = varchar("id", length = 125).uniqueIndex("unique_role_id").entityId()
+object RoleTable : Table<RoleEntity>("role") {
+	val id = varchar("id").primaryKey()
 
-	val type = enumeration("type", RoleType::class)
+	val type = enum<RoleType>("type")
 
-	val name = varchar("name", length = 500).uniqueIndex("unique_role_name")
-	val description = varchar("description", length = 2750).nullable()
+	val name = varchar("name")
+	val description = varchar("description")
 
-	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
-	val updatedAt = datetime("updatedAt").nullable()
-
-	override val primaryKey = PrimaryKey(PolicyTable.id)
+	val createdAt = datetime("created_at")
+	val updatedAt = datetime("updatedAt")
 }

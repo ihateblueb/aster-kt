@@ -1,12 +1,16 @@
 package site.remlit.blueb.aster.db.table
 
-import org.jetbrains.exposed.dao.id.IdTable
+import org.ktorm.schema.Table
+import org.ktorm.schema.varchar
+import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 
-object UserPrivateTable : IdTable<String>("user_private") {
-	override val id = varchar("id", length = 125).uniqueIndex("unique_user_private_id").entityId()
-
-	val password = varchar("password", length = 250)
-	val privateKey = varchar("privateKey", length = 5000)
-
-	override val primaryKey = PrimaryKey(NoteTable.id)
+/**
+ * Table for storing local users password hashes and private keys for federation.
+ *
+ * @since 2025.9.1.2-SNAPSHOT
+ * */
+object UserPrivateTable : Table<UserPrivateEntity>("user_private") {
+	val id = varchar("id").primaryKey()
+	var password = varchar("password")
+	val privateKey = varchar("privateKey")
 }

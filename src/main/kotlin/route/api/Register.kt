@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 import site.remlit.blueb.aster.db.suspendTransaction
+import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.*
 import site.remlit.blueb.aster.service.*
 import site.remlit.blueb.aster.service.ap.ApIdService
@@ -66,22 +67,12 @@ fun Route.register() {
 		if (ValidationService.containsNonAlphanumeric(username))
 			throw ApiException(HttpStatusCode.BadRequest, "Username contains non-alphanumeric characters")
 
-		// todo: check if username is used
-		// ilike?
-		// 		val existingUser = userService.get(
-		//			UserTable.username like body.username.lowercase()
-		//		)
-		//
-		//		if (existingUser != null) {
-		//			call.respond(
-		//				status = HttpStatusCode.BadRequest,
-		//				message = ApiError(
-		//					message = "Username taken",
-		//					requestId = call.callId
-		//				)
-		//			)
-		//			return@post
-		//		}
+		val existingUsers = UserService.getMany(
+			UserTable.host eq null
+		)
+
+		if (existingUsers.find { it.username.toLowerCase() == username } != null)
+			throw ApiException(HttpStatusCode.BadRequest, "Username is already in use")
 
 		val id = IdentifierService.generate()
 		val hashedPassword = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())

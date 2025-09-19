@@ -1,15 +1,13 @@
 package site.remlit.blueb.aster.db.entity
 
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import site.remlit.blueb.aster.db.table.NoteLikeTable
+import kotlinx.datetime.LocalDateTime
+import org.ktorm.entity.Entity
 
-class NoteLikeEntity(id: EntityID<String>) : Entity<String>(id) {
-	companion object : EntityClass<String, NoteLikeEntity>(NoteLikeTable)
+interface NoteLikeEntity : Entity<NoteLikeEntity> {
+	val id: String
 
-	var user by UserEntity referencedOn NoteLikeTable.user
-	var note by NoteEntity referencedOn NoteLikeTable.note
-	var createdAt by NoteLikeTable.createdAt
+	val user: UserEntity
+	val note: NoteEntity
+
+	val createdAt: LocalDateTime
 }
-

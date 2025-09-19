@@ -67,7 +67,6 @@ fun Application.module() {
 	Database.database
 
 	MigrationService.isUpToDate()
-	configureQueue()
 
 	runBlocking {
 		SetupService.setup()

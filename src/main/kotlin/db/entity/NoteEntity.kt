@@ -1,30 +1,29 @@
 package site.remlit.blueb.aster.db.entity
 
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import site.remlit.blueb.aster.db.table.NoteTable
+import kotlinx.datetime.LocalDateTime
+import org.ktorm.entity.Entity
+import site.remlit.blueb.aster.model.Visibility
 
-class NoteEntity(id: EntityID<String>) : Entity<String>(id) {
-	companion object : EntityClass<String, NoteEntity>(NoteTable)
+interface NoteEntity : Entity<NoteEntity> {
+	val id: String
 
-	var apId by NoteTable.apId
-	var conversation by NoteTable.conversation
+	val apId: String
+	val conversation: String?
 
-	var user by UserEntity referencedOn NoteTable.user
-	var replyingTo by NoteEntity optionalReferencedOn NoteTable.replyingTo
+	val user: UserEntity
+	val replyingTo: NoteEntity?
 
-	var cw by NoteTable.cw
-	var content by NoteTable.content
+	var cw: String?
+	var content: String?
 
-	var visibility by NoteTable.visibility
+	val visibility: Visibility
 
-	var to by NoteTable.to
-	var tags by NoteTable.tags
-	var emojis by NoteTable.emojis
+	//var to: List<String>
+	//var tags: List<String>
+	//var emojis: List<String>
 
-	var repeat by NoteEntity optionalReferencedOn NoteTable.repeat
+	val repeat: NoteEntity?
 
-	var createdAt by NoteTable.createdAt
-	var updatedAt by NoteTable.updatedAt
+	val createdAt: LocalDateTime
+	var updatedAt: LocalDateTime?
 }

@@ -1,18 +1,15 @@
 package site.remlit.blueb.aster.db.entity
 
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import site.remlit.blueb.aster.db.table.InviteTable
+import kotlinx.datetime.LocalDateTime
+import org.ktorm.entity.Entity
 
-class InviteEntity(id: EntityID<String>) : Entity<String>(id) {
-	companion object : EntityClass<String, InviteEntity>(InviteTable)
+interface InviteEntity : Entity<InviteEntity> {
+	val id: String
+	val code: String
 
-	var code by InviteTable.code
+	var user: UserEntity?
+	val creator: UserEntity
 
-	var user by UserEntity optionalReferencedOn InviteTable.user
-	var creator by UserEntity referencedOn InviteTable.creator
-
-	var createdAt by InviteTable.createdAt
-	var usedAt by InviteTable.usedAt
+	val createdAt: LocalDateTime
+	var usedAt: LocalDateTime?
 }

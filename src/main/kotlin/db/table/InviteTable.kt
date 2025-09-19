@@ -1,20 +1,24 @@
 package site.remlit.blueb.aster.db.table
 
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.ktorm.schema.Table
+import org.ktorm.schema.datetime
+import org.ktorm.schema.varchar
+import site.remlit.blueb.aster.db.entity.InviteEntity
 
-object InviteTable : IdTable<String>("invite") {
-	override val id = varchar("id", length = 125).uniqueIndex("unique_invite_id").entityId()
+/**
+ * Table to store invites to join the instance.
+ *
+ * @since 2025.9.1.2-SNAPSHOT
+ * */
+object InviteTable : Table<InviteEntity>("invite") {
+	val id = varchar("id").primaryKey()
+	val code = varchar("code")
 
-	val code = varchar("code", length = 275).uniqueIndex("unique_invite_code")
+	val user = varchar("user")
+		.references(UserTable) { it.user }
+	val creator = varchar("creator")
+		.references(UserTable) { it.creator }
 
-	val user = optReference("user", UserTable, onDelete = ReferenceOption.CASCADE)
-	val creator = reference("creator", UserTable, onDelete = ReferenceOption.CASCADE)
-
-	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
-	val usedAt = datetime("usedAt").nullable()
-
-	override val primaryKey = PrimaryKey(id)
+	val createdAt = datetime("createdAt")
+	val usedAt = datetime("usedAt")
 }

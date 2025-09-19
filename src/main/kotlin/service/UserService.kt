@@ -1,10 +1,10 @@
 package site.remlit.blueb.aster.service
 
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.ktorm.dsl.*
+import org.ktorm.schema.ColumnDeclaring
+import site.remlit.blueb.aster.db.Database.database
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.UserPrivateTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Service
@@ -18,24 +18,28 @@ class UserService() : Service() {
 		 *
 		 * @return Found user, if any
 		 * */
-		suspend fun get(where: Op<Boolean>): UserEntity? = suspendTransaction {
-			UserEntity
-				.find { where }
-				.singleOrNull()
-		}
-
+		suspend fun get(where: () -> ColumnDeclaring<Boolean>): UserEntity? =
+			database
+				.from(UserTable)
+				.select()
+				.where(where)
+				.limit(1)
+				.map { row -> UserTable.createEntity(row) }
+				.firstOrNull()
+		
 		/**
-		 * Get a user.
+		 * Get users.
 		 *
-		 * @param where Query to find user
+		 * @param where Query to find users
 		 *
-		 * @return Found user, if any
+		 * @return Found users
 		 * */
-		suspend fun getMany(where: Op<Boolean>): List<UserEntity> = suspendTransaction {
-			UserEntity
-				.find { where }
-				.toList()
-		}
+		fun getMany(where: () -> ColumnDeclaring<Boolean>): List<UserEntity> =
+			database
+				.from(UserTable)
+				.select()
+				.where(where)
+				.map { row -> UserTable.createEntity(row) }
 
 		/**
 		 * Get a user's private information.
@@ -44,11 +48,14 @@ class UserService() : Service() {
 		 *
 		 * @return Found user private, if any
 		 * */
-		suspend fun getPrivate(where: Op<Boolean>): UserPrivateEntity? = suspendTransaction {
-			UserPrivateEntity
-				.find { where }
-				.singleOrNull()
-		}
+		suspend fun getPrivate(where: () -> ColumnDeclaring<Boolean>): UserPrivateEntity? =
+			database
+				.from(UserPrivateTable)
+				.select()
+				.where(where)
+				.limit(1)
+				.map { row -> UserPrivateTable.createEntity(row) }
+				.firstOrNull()
 
 		/**
 		 * Get user by ID.
@@ -57,7 +64,7 @@ class UserService() : Service() {
 		 *
 		 * @return Found user, if any
 		 * */
-		suspend fun getById(id: String): UserEntity? = get(UserTable.id eq id)
+		suspend fun getById(id: String): UserEntity? = get { UserTable.id eq id }
 
 		/**
 		 * Get user by ActivityPub ID.
@@ -66,7 +73,7 @@ class UserService() : Service() {
 		 *
 		 * @return Found user, if any
 		 * */
-		suspend fun getByApId(apId: String): UserEntity? = get(UserTable.apId eq apId)
+		suspend fun getByApId(apId: String): UserEntity? = get { UserTable.apId eq apId }
 
 		/**
 		 * Get user by username.
@@ -75,7 +82,7 @@ class UserService() : Service() {
 		 *
 		 * @return Found user, if any
 		 * */
-		suspend fun getByUsername(username: String): UserEntity? = get(UserTable.username eq username)
+		suspend fun getByUsername(username: String): UserEntity? = get { UserTable.username eq username }
 
 		/**
 		 * Get instance actor.
@@ -95,7 +102,7 @@ class UserService() : Service() {
 		 *
 		 * @return Found user private, if any
 		 * */
-		suspend fun getPrivateById(id: String): UserPrivateEntity? = getPrivate(UserPrivateTable.id eq id)
+		suspend fun getPrivateById(id: String): UserPrivateEntity? = getPrivate { UserPrivateTable.id eq id }
 
 		/**
 		 * Count users
@@ -104,17 +111,21 @@ class UserService() : Service() {
 		 *
 		 * @return Count of users where query applies
 		 * */
-		suspend fun count(where: Op<Boolean>): Long = suspendTransaction {
-			UserEntity
-				.find { where }
-				.count()
-		}
+		suspend fun count(where: () -> ColumnDeclaring<Boolean>): Int =
+			database
+				.from(UserTable)
+				.select()
+				.where(where)
+				.totalRecordsInAllPages
+
 
 		/**
 		 * Delete user
 		 *
 		 * @param where Query to find user
 		 * */
-		suspend fun delete(where: Op<Boolean>) = get(where)?.delete()
+		suspend fun delete(where: () -> ColumnDeclaring<Boolean>) {
+			get(where)?.delete()
+		}
 	}
 }
