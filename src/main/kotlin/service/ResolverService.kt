@@ -86,7 +86,7 @@ class ResolverService : Service() {
 
 				val body: JsonObject? = response.body()
 				return body
-			} catch (e: Exception) {
+			} catch (_: Exception) {
 				return null
 			}
 		}

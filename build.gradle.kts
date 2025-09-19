@@ -6,6 +6,7 @@ plugins {
 	kotlin("plugin.serialization") version "2.2.0"
 	id("com.gradleup.shadow") version "8.3.0"
 	id("org.jetbrains.dokka") version "2.0.0"
+	id("io.gitlab.arturbosch.detekt") version ("1.23.8")
 }
 
 group = "site.remlit.blueb"
@@ -84,6 +85,14 @@ kotlin {
 
 application {
 	mainClass = "site.remlit.blueb.aster.ApplicationKt"
+}
+
+// style, format, etc
+
+detekt {
+	toolVersion = "1.23.8"
+	config.setFrom(file("detekt.yml"))
+	buildUponDefaultConfig = true
 }
 
 // docs
