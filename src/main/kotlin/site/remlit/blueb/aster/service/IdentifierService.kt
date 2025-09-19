@@ -6,6 +6,10 @@ import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.util.aidCounter
 import java.util.*
 
+/*
+* There's a lot of constant values here that would just be weird to turn into separate values.
+* */
+@Suppress("MagicNumber")
 class IdentifierService : Service() {
 	companion object {
 		private val configuration = Configuration()
@@ -50,7 +54,7 @@ class IdentifierService : Service() {
 				"z",
 			)
 
-        private val time2000 = Date(946684800000L)
+		private val time2000 = Date(946684800000L)
 
 		/**
 		 * Generate ID with default format

@@ -12,13 +12,12 @@ import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.InviteService
 import site.remlit.blueb.aster.service.RandomService
-import site.remlit.blueb.aster.service.TimelineService
 
 fun Route.modInvite() {
 	authenticate("authRequiredMod") {
 		get("/api/mod/invites") {
-			val since = TimelineService.normalizeSince(call.parameters["since"])
-			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
+			//val since = TimelineService.normalizeSince(call.parameters["since"])
+			//val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 			throw ApiException(HttpStatusCode.NotImplemented)
 		}

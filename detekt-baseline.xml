@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexCondition:Note.kt$note == null || ! note.user.activated || note.user.suspended || ! note.user.host.isNullOrBlank() || (note.visibility != Visibility.Public &amp;&amp; note.visibility != Visibility.Unlisted)</ID>
+    <ID>ComplexCondition:Note.kt$note == null || !note.user.activated || note.user.suspended || (note.visibility != Visibility.Public &amp;&amp; note.visibility != Visibility.Unlisted)</ID>
+    <ID>ComplexCondition:User.kt$user == null || user.host != null || !user.activated || user.suspended</ID>
+    <ID>ConstructorParameterNaming:ApActor.kt$ApActor$val _misskey_summary: String? = null</ID>
+    <ID>ConstructorParameterNaming:ApNote.kt$ApNote$val _misskey_content: String? = null</ID>
+    <ID>ConstructorParameterNaming:ApNote.kt$ApNote$val _misskey_summary: String? = null</ID>
+    <ID>CyclomaticComplexMethod:ApActorService.kt$ApActorService.Companion$suspend fun register(json: JsonObject): UserEntity?</ID>
+    <ID>CyclomaticComplexMethod:Authentication.kt$fun Application.configureAuthentication()</ID>
+    <ID>CyclomaticComplexMethod:CommandLineService.kt$CommandLineService.Companion$suspend fun execute(args: Array&lt;String>)</ID>
+    <ID>CyclomaticComplexMethod:User.kt$fun Route.user()</ID>
+    <ID>EmptyFunctionBlock:Queue.kt${}</ID>
+    <ID>ForbiddenComment:ApActorService.kt$ApActorService.Companion$/*	TODO: this createdAt = try { ApUtilityService.extractString(json["published"])?.let { LocalDateTime.parse(it) } ?: timeService.now() } catch (e: DateTimeParseException) { timeService.now() }*/</ID>
+    <ID>ForbiddenComment:ApActorService.kt$ApActorService.Companion$// TODO: birthday, location</ID>
+    <ID>ForbiddenComment:ApActorService.kt$ApActorService.Companion$// TODO: update</ID>
+    <ID>ForbiddenComment:Authentication.kt$// TODO: this needs an entire rewrite</ID>
+    <ID>ForbiddenComment:Meta.kt$Meta$/* * TODO: cache **/</ID>
+    <ID>FunctionOnlyReturningConstant:ResolverService.kt$ResolverService.Companion$@ApiStatus.Experimental suspend fun resolveSigned(url: String, accept: String = "application/activity+json"): JsonObject?</ID>
+    <ID>LongMethod:ApActorService.kt$ApActorService.Companion$suspend fun register(json: JsonObject): UserEntity?</ID>
+    <ID>LongMethod:ApValidationService.kt$ApValidationService.Companion$suspend fun validate(request: RoutingRequest, body: ByteArray)</ID>
+    <ID>LongMethod:Application.kt$fun Application.module()</ID>
+    <ID>LongMethod:Authentication.kt$fun Application.configureAuthentication()</ID>
+    <ID>LongMethod:CommandLineService.kt$CommandLineService.Companion$suspend fun execute(args: Array&lt;String>)</ID>
+    <ID>LongMethod:Note.kt$fun Route.note()</ID>
+    <ID>LongMethod:Register.kt$fun Route.register()</ID>
+    <ID>LongMethod:User.kt$fun Route.user()</ID>
+    <ID>LongParameterList:NoteService.kt$NoteService.Companion$( id: String = IdentifierService.generate(), user: UserEntity, cw: String?, content: String, visibility: Visibility, to: List&lt;String> = listOf(), tags: List&lt;String> = listOf() )</ID>
+    <ID>LoopWithTooManyJumpStatements:MigrationService.kt$MigrationService.Companion$for</ID>
+    <ID>MagicNumber:Application.kt$10</ID>
+    <ID>MagicNumber:Configuration.kt$ConfigurationTimeline$20</ID>
+    <ID>MagicNumber:KeypairService.kt$KeypairService.Companion$2048</ID>
+    <ID>MagicNumber:NoteService.kt$NoteService.Companion$15</ID>
+    <ID>MagicNumber:PolicyService.kt$PolicyService.Companion$15</ID>
+    <ID>MagicNumber:TimelineService.kt$TimelineService.Companion$45</ID>
+    <ID>MatchingDeclarationName:Login.kt$LoginBody</ID>
+    <ID>MatchingDeclarationName:Note.kt$PostNoteBody</ID>
+    <ID>MatchingDeclarationName:Policy.kt$PolicyBody</ID>
+    <ID>MatchingDeclarationName:Register.kt$RegisterBody</ID>
+    <ID>MaxLineLength:ApIdService.kt$ApIdService.Companion$return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"</ID>
+    <ID>MaxLineLength:VisibilityService.kt$VisibilityService.Companion$*</ID>
+    <ID>MemberNameEqualsClassName:Database.kt$Database$val database by lazy { Database.connect(datasource = dataSource) }</ID>
+    <ID>NestedBlockDepth:MigrationService.kt$MigrationService.Companion$fun execute()</ID>
+    <ID>NestedBlockDepth:MigrationService.kt$MigrationService.Companion$fun getPendingMigrations(): List&lt;String></ID>
+    <ID>NestedBlockDepth:PluginService.kt$PluginService.Companion$@OptIn(ExperimentalSerializationApi::class) fun initialize()</ID>
+    <ID>NewLineAtEndOfFile:AsterPlugin.kt$site.remlit.blueb.aster.plugin.AsterPlugin.kt</ID>
+    <ID>NewLineAtEndOfFile:ConfigurationException.kt$site.remlit.blueb.aster.exception.ConfigurationException.kt</ID>
+    <ID>NewLineAtEndOfFile:Event.kt$site.remlit.blueb.aster.event.Event.kt</ID>
+    <ID>NewLineAtEndOfFile:InsertFailureException.kt$site.remlit.blueb.aster.exception.InsertFailureException.kt</ID>
+    <ID>NewLineAtEndOfFile:MigrationException.kt$site.remlit.blueb.aster.exception.MigrationException.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteCreateEvent.kt$site.remlit.blueb.aster.event.note.NoteCreateEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteDeleteEvent.kt$site.remlit.blueb.aster.event.note.NoteDeleteEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteEditEvent.kt$site.remlit.blueb.aster.event.note.NoteEditEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteEvent.kt$site.remlit.blueb.aster.event.note.NoteEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteInteractionEvent.kt$site.remlit.blueb.aster.event.note.NoteInteractionEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteLikeEvent.kt$site.remlit.blueb.aster.event.note.NoteLikeEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:NoteUnlikeEvent.kt$site.remlit.blueb.aster.event.note.NoteUnlikeEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:PluginRegistry.kt$site.remlit.blueb.aster.plugin.PluginRegistry.kt</ID>
+    <ID>NewLineAtEndOfFile:RelationshipConflictException.kt$site.remlit.blueb.aster.exception.RelationshipConflictException.kt</ID>
+    <ID>NewLineAtEndOfFile:TargetNotFoundException.kt$site.remlit.blueb.aster.exception.TargetNotFoundException.kt</ID>
+    <ID>NewLineAtEndOfFile:UserCreateEvent.kt$site.remlit.blueb.aster.event.user.UserCreateEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:UserDeleteEvent.kt$site.remlit.blueb.aster.event.user.UserDeleteEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:UserEditEvent.kt$site.remlit.blueb.aster.event.user.UserEditEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:UserEvent.kt$site.remlit.blueb.aster.event.user.UserEvent.kt</ID>
+    <ID>NewLineAtEndOfFile:bcrypt.kt$site.remlit.blueb.aster.util.bcrypt.kt</ID>
+    <ID>ReturnCount:ApActorService.kt$ApActorService.Companion$suspend fun register(json: JsonObject): UserEntity?</ID>
+    <ID>ReturnCount:ApActorService.kt$ApActorService.Companion$suspend fun resolve(apId: String): UserEntity?</ID>
+    <ID>ReturnCount:CommandLineService.kt$CommandLineService.Companion$suspend fun execute(args: Array&lt;String>)</ID>
+    <ID>ReturnCount:IdentifierService.kt$IdentifierService.Companion$fun generate(): String</ID>
+    <ID>ReturnCount:RelationshipService.kt$RelationshipService.Companion$suspend fun eitherBlocking(to: String, from: String): Boolean</ID>
+    <ID>ReturnCount:ResolverService.kt$ResolverService.Companion$suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject?</ID>
+    <ID>ReturnCount:TimelineService.kt$TimelineService.Companion$fun normalizeTake(take: Int?): Int</ID>
+    <ID>ReturnCount:VisibilityService.kt$VisibilityService.Companion$suspend fun canISee( visibility: Visibility, author: String, to: List&lt;String>? = null, user: String, ignoreBlock: Boolean? = false ): Boolean</ID>
+    <ID>TooGenericExceptionCaught:ApActorService.kt$ApActorService.Companion$e: Exception</ID>
+    <ID>TooGenericExceptionThrown:UserService.kt$UserService.Companion$throw RuntimeException("Instance actor can't be null")</ID>
+    <ID>TooGenericExceptionThrown:VisibilityService.kt$VisibilityService.Companion$throw Exception("Author not found")</ID>
+    <ID>TooGenericExceptionThrown:VisibilityService.kt$VisibilityService.Companion$throw Exception("User not found")</ID>
+    <ID>TopLevelPropertyNaming:bcrypt.kt$const val bcryptCost = 12</ID>
+    <ID>UnusedParameter:ResolverService.kt$ResolverService.Companion$accept: String = "application/activity+json"</ID>
+    <ID>UnusedParameter:ResolverService.kt$ResolverService.Companion$url: String</ID>
+    <ID>UnusedParameter:VisibilityService.kt$VisibilityService.Companion$ignoreBlock: Boolean? = false</ID>
+    <ID>UnusedParameter:VisibilityService.kt$VisibilityService.Companion$to: List&lt;String>? = null</ID>
+    <ID>UnusedPrivateProperty:ApActor.kt$private val configuration = Configuration()</ID>
+    <ID>UnusedPrivateProperty:ApValidationService.kt$ApValidationService.Companion$private val logger: Logger = LoggerFactory.getLogger(this::class.java)</ID>
+    <ID>UnusedPrivateProperty:MigrationService.kt$MigrationService.Companion$private val configuration = Configuration()</ID>
+    <ID>UnusedPrivateProperty:ResolverService.kt$ResolverService.Companion$val id = IdentifierService.generate()</ID>
+    <ID>UnusedPrivateProperty:SetupService.kt$SetupService.Companion$private val configuration = Configuration()</ID>
+    <ID>WildcardImport:ApActorService.kt$import site.remlit.blueb.aster.service.*</ID>
+    <ID>WildcardImport:ApContext.kt$import kotlinx.serialization.json.*</ID>
+    <ID>WildcardImport:ApUtilityService.kt$import kotlinx.serialization.json.*</ID>
+    <ID>WildcardImport:EventRegistry.kt$import kotlinx.coroutines.*</ID>
+    <ID>WildcardImport:MigrationService.kt$import kotlin.io.path.*</ID>
+    <ID>WildcardImport:MigrationService.kt$import site.remlit.blueb.aster.db.table.*</ID>
+    <ID>WildcardImport:NodeInfo.kt$import site.remlit.blueb.aster.model.*</ID>
+    <ID>WildcardImport:PluginService.kt$import kotlin.io.path.*</ID>
+    <ID>WildcardImport:Register.kt$import site.remlit.blueb.aster.model.*</ID>
+    <ID>WildcardImport:Register.kt$import site.remlit.blueb.aster.service.*</ID>
+  </CurrentIssues>
+</SmellBaseline>
