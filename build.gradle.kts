@@ -6,7 +6,11 @@ plugins {
 	kotlin("plugin.serialization") version "2.2.0"
 	id("com.gradleup.shadow") version "8.3.0"
 	id("org.jetbrains.dokka") version "2.0.0"
+	id("io.gitlab.arturbosch.detekt") version ("1.23.8")
 }
+
+group = "site.remlit.blueb"
+version = "2025.9.1.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -80,15 +84,20 @@ dependencies {
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 }
 
-group = "site.remlit.blueb"
-version = "2025.9.1.1-SNAPSHOT"
-
 kotlin {
 	jvmToolchain(21)
 }
 
 application {
 	mainClass = "site.remlit.blueb.aster.ApplicationKt"
+}
+
+// style, format, etc
+
+detekt {
+	toolVersion = "1.23.8"
+	config.setFrom(file("detekt.yml"))
+	buildUponDefaultConfig = true
 }
 
 // docs
