@@ -9,7 +9,7 @@ import site.remlit.blueb.aster.db.table.UserPrivateTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Service
 
-class UserService() : Service() {
+class UserService : Service() {
 	companion object {
 		/**
 		 * Get a user.

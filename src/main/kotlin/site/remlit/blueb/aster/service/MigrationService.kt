@@ -13,6 +13,7 @@ import site.remlit.blueb.aster.model.Service
 import java.nio.file.Files
 import kotlin.io.path.*
 
+@Suppress("MaxLineLength")
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService : Service() {
 	companion object {

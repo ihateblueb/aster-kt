@@ -14,6 +14,7 @@ import site.remlit.blueb.aster.service.UserService
 
 val authenticatedUserKey = AttributeKey<UserEntity>("authenticatedUser")
 
+// TODO: this needs an entire rewrite
 fun Application.configureAuthentication() {
 	install(Authentication) {
 		bearer("authOptional") {
@@ -43,12 +44,12 @@ fun Application.configureAuthentication() {
 
 		bearer("authRequired") {
 			authenticate { credential ->
-				val auth = AuthService.getByToken(credential.token)
+                val auth = AuthService.getByToken(credential.token) ?: throw ApiException(
+                    HttpStatusCode.Unauthorized,
+                    "Authentication required"
+                )
 
-				if (auth == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
-
-				var authId = ""
+                var authId = ""
 
 				suspendTransaction {
 					authId = auth.user.id.toString()
@@ -56,12 +57,12 @@ fun Application.configureAuthentication() {
 
 				UserIdPrincipal(authId)
 
-				val user = UserService.getById(authId)
+                val user = UserService.getById(authId) ?: throw ApiException(
+                    HttpStatusCode.Unauthorized,
+                    "Authentication required"
+                )
 
-				if (user == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
-
-				attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
+                attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 
 				if (!user.activated || user.suspended)
 					throw ApiException(HttpStatusCode.Forbidden, "Account inactive")
@@ -72,12 +73,12 @@ fun Application.configureAuthentication() {
 
 		bearer("authRequiredMod") {
 			authenticate { credential ->
-				val auth = AuthService.getByToken(credential.token)
+                val auth = AuthService.getByToken(credential.token) ?: throw ApiException(
+                    HttpStatusCode.Unauthorized,
+                    "Authentication required"
+                )
 
-				if (auth == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
-
-				var authId = ""
+                var authId = ""
 
 				suspendTransaction {
 					authId = auth.user.id.toString()
@@ -85,12 +86,12 @@ fun Application.configureAuthentication() {
 
 				UserIdPrincipal(authId)
 
-				val user = UserService.getById(authId)
+                val user = UserService.getById(authId) ?: throw ApiException(
+                    HttpStatusCode.Unauthorized,
+                    "Authentication required"
+                )
 
-				if (user == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
-
-				attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
+                attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 
 				if (!user.activated || user.suspended)
 					throw ApiException(HttpStatusCode.Forbidden, "Account inactive")
@@ -107,12 +108,12 @@ fun Application.configureAuthentication() {
 
 		bearer("authRequiredAdmin") {
 			authenticate { credential ->
-				val auth = AuthService.getByToken(credential.token)
+                val auth = AuthService.getByToken(credential.token) ?: throw ApiException(
+                    HttpStatusCode.Unauthorized,
+                    "Authentication required"
+                )
 
-				if (auth == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
-
-				var authId = ""
+                var authId = ""
 
 				suspendTransaction {
 					authId = auth.user.id.toString()
@@ -120,12 +121,12 @@ fun Application.configureAuthentication() {
 
 				UserIdPrincipal(authId)
 
-				val user = UserService.getById(authId)
+                val user = UserService.getById(authId) ?: throw ApiException(
+                    HttpStatusCode.Unauthorized,
+                    "Authentication required"
+                )
 
-				if (user == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
-
-				attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
+                attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 
 				if (!user.activated || user.suspended)
 					throw ApiException(HttpStatusCode.Forbidden, "Account inactive")

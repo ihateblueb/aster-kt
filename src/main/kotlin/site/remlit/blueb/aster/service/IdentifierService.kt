@@ -50,6 +50,8 @@ class IdentifierService : Service() {
 				"z",
 			)
 
+        private val time2000 = Date(946684800000L)
+
 		/**
 		 * Generate ID with default format
 		 *
@@ -77,7 +79,6 @@ class IdentifierService : Service() {
 			var id = ""
 
 			val now = Date()
-			val time2000 = Date(946684800000L)
 
 			var time: Long
 			time = (now.time - time2000.time)
@@ -100,7 +101,6 @@ class IdentifierService : Service() {
 			var id = ""
 
 			val now = Date()
-			val time2000 = Date(946684800000L)
 
 			var time: Long
 			time = (now.time - time2000.time)

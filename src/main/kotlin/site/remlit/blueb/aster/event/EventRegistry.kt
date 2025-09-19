@@ -20,7 +20,7 @@ object EventRegistry {
 	/**
 	 * Adds a function to be called when an event fires
 	 *
-	 * @param event Class of the event to listen to (e.g. `NoteCreateEvent::class`)
+	 * @param site.remlit.blueb.aster.event Class of the event to listen to (e.g. `NoteCreateEvent::class`)
 	 * @param listener Lambda to run when the event happens
 	 *
 	 * @since 2025.9.1.0-SNAPSHOT
@@ -40,7 +40,7 @@ object EventRegistry {
 	 *
 	 * This function will launch a coroutine that will run listeners for the specified event in order they were registered.
 	 *
-	 * @param event Instance of an event to be executed
+	 * @param site.remlit.blueb.aster.event Instance of an event to be executed
 	 *
 	 * @since 2025.9.1.0-SNAPSHOT
 	 * */

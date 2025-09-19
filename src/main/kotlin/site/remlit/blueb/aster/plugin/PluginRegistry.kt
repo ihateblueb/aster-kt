@@ -16,7 +16,7 @@ object PluginRegistry {
 	/**
 	 * Adds plugin to registry and runs it's enable hook.
 	 *
-	 * @param plugin Plugin to enable
+	 * @param site.remlit.blueb.aster.plugin Plugin to enable
 	 * */
 	fun enablePlugin(manifest: PluginManifest, plugin: AsterPlugin) {
 		if (
@@ -33,7 +33,7 @@ object PluginRegistry {
 	/**
 	 * Removes plugin to registry and runs it's disable hook.
 	 *
-	 * @param plugin Plugin to disable
+	 * @param site.remlit.blueb.aster.plugin Plugin to disable
 	 * */
 	fun disablePlugin(plugin: AsterPlugin) {
 		val pair = plugins.find { it.second == plugin }

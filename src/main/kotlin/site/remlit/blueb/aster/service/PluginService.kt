@@ -48,6 +48,12 @@ class PluginService : Service() {
 
 							logger.debug("Current URLClassLoader URLS: {}", classLoader.urLs)
 
+                            /*
+                            * Plugins should not bring the whole server crashing down when they start,
+                            * catching any possible exception makes sense here and is fine, since it's still
+                            * shown to the user.
+                            * */
+                            @Suppress("TooGenericExceptionCaught")
 							try {
 								val mainClass = classLoader.loadClass(manifest.mainClass)
 								PluginRegistry.enablePlugin(
