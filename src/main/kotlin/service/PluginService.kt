@@ -22,6 +22,9 @@ class PluginService : Service() {
 
 		private val pluginDir = Path("plugins")
 
+        /**
+         * Find and register plugins with the plugin registry.
+         * */
 		@OptIn(ExperimentalSerializationApi::class)
 		fun initialize() {
 			if (!pluginDir.exists()) pluginDir.createDirectories()

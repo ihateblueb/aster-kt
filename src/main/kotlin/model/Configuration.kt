@@ -2,6 +2,7 @@ package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*
+import site.remlit.blueb.aster.exception.ConfigurationException
 import java.io.File
 import java.util.Locale.getDefault
 
@@ -38,7 +39,7 @@ class Configuration {
 		url = if (urlProp != null) {
 			Url(urlProp)
 		} else {
-			throw Exception("Configuration is missing 'url' attribute.")
+			throw ConfigurationException("Configuration is missing 'url' attribute.")
 		}
 
 		var hostProp = config?.propertyOrNull("host")?.getString()
@@ -85,21 +86,21 @@ class ConfigurationDatabase {
 		db = if (databaseDbProp != null) {
 			databaseDbProp
 		} else {
-			throw Exception("Configuration is missing 'database.db' attribute.")
+			throw ConfigurationException("Configuration is missing 'database.db' attribute.")
 		}
 
 		var databaseUserProp = config?.propertyOrNull("database.user")?.getString()
 		user = if (databaseUserProp != null) {
 			databaseUserProp
 		} else {
-			throw Exception("Configuration is missing 'database.user' attribute.")
+			throw ConfigurationException("Configuration is missing 'database.user' attribute.")
 		}
 
 		var databasePasswordProp = config?.propertyOrNull("database.password")?.getString()
 		password = if (databasePasswordProp != null) {
 			databasePasswordProp
 		} else {
-			throw Exception("Configuration is missing 'database.password' attribute.")
+			throw ConfigurationException("Configuration is missing 'database.password' attribute.")
 		}
 	}
 }
