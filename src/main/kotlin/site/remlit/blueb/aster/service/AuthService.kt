@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.service
 
+import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.limit
 import org.ktorm.dsl.map
@@ -21,7 +22,7 @@ class AuthService : Service() {
 		 *
 		 * @return Auth entity, if it exists
 		 * */
-		suspend fun get(where: () -> ColumnDeclaring<Boolean>): AuthEntity? =
+		fun get(where: () -> ColumnDeclaring<Boolean>): AuthEntity? =
 			database
 				.from(AuthTable)
 				.select()
@@ -37,7 +38,7 @@ class AuthService : Service() {
 		 *
 		 * @return Auth entity, if it exists
 		 * */
-		suspend fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
+		fun getByToken(token: String): AuthEntity? = get { AuthTable.token eq token }
 
 		/**
 		 * Creates a new auth token for a user
@@ -47,19 +48,20 @@ class AuthService : Service() {
 		 * @return Newly created auth token
 		 * */
 		suspend fun registerToken(user: String): String {
-			val id = _root_ide_package_.site.remlit.blueb.aster.service.IdentifierService.Companion.generate()
-			val generatedToken = _root_ide_package_.site.remlit.blueb.aster.service.RandomService.Companion.generateString()
+			val id = IdentifierService.generate()
+			val generatedToken = RandomService.generateString()
 
-			val user = _root_ide_package_.site.remlit.blueb.aster.service.UserService.Companion.get(UserTable.id eq user)!!
+			val user = UserService.get { UserTable.id eq user }!!
 
-			suspendTransaction {
-				AuthEntity.new(id) {
-					token = generatedToken
+			val auth =
+				AuthEntity {
+					this.id = id
+					this.token = generatedToken
 					this.user = user
+					this.createdAt = TimeService.now()
 				}
-			}
 
-			return generatedToken
+			return auth.token
 		}
 	}
 }

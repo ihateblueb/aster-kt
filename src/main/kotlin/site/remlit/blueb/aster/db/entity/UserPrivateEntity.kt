@@ -3,7 +3,10 @@ package site.remlit.blueb.aster.db.entity
 import org.ktorm.entity.Entity
 
 interface UserPrivateEntity : Entity<UserPrivateEntity> {
-	val id: String
+	var id: String
+
 	var password: String
-	val privateKey: String
+	var privateKey: String
+
+	companion object : Entity.Factory<UserPrivateEntity>()
 }

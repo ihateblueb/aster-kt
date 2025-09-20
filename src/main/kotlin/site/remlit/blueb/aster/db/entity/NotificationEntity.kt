@@ -5,14 +5,16 @@ import org.ktorm.entity.Entity
 import site.remlit.blueb.aster.model.NotificationType
 
 interface NotificationEntity : Entity<NotificationEntity> {
-	val id: String
-	val type: NotificationType
+	var id: String
+	var type: NotificationType
 
-	val to: UserEntity
-	val from: UserEntity?
+	var to: UserEntity
+	var from: UserEntity?
 
-	val note: NoteEntity?
-	val relationship: RelationshipEntity?
+	var note: NoteEntity?
+	var relationship: RelationshipEntity?
 
-	val createdAt: LocalDateTime
+	var createdAt: LocalDateTime
+
+	companion object : Entity.Factory<NotificationEntity>()
 }

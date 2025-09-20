@@ -9,14 +9,14 @@ import org.ktorm.entity.Entity
  * @since 2025.9.1.2-SNAPSHOT
  * */
 interface UserEntity : Entity<UserEntity> {
-	val id: String
+	var id: String
 
-	val apId: String
-	val inbox: String
-	val outbox: String?
+	var apId: String
+	var inbox: String
+	var outbox: String?
 
-	val username: String
-	val host: String?
+	var username: String
+	var host: String?
 	var displayName: String?
 
 	var bio: String?
@@ -38,11 +38,13 @@ interface UserEntity : Entity<UserEntity> {
 	var isCat: Boolean
 	var speakAsCat: Boolean
 
-	val publicKey: String
+	var publicKey: String
 
-	val createdAt: LocalDateTime
+	var createdAt: LocalDateTime
 	var updatedAt: LocalDateTime?
 
-	val followingUrl: String?
-	val followersUrl: String?
+	var followingUrl: String?
+	var followersUrl: String?
+
+	companion object : Entity.Factory<UserEntity>()
 }

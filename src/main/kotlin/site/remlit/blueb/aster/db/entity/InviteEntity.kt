@@ -4,12 +4,14 @@ import kotlinx.datetime.LocalDateTime
 import org.ktorm.entity.Entity
 
 interface InviteEntity : Entity<InviteEntity> {
-	val id: String
-	val code: String
+	var id: String
+	var code: String
 
 	var user: UserEntity?
-	val creator: UserEntity
+	var creator: UserEntity
 
-	val createdAt: LocalDateTime
+	var createdAt: LocalDateTime
 	var usedAt: LocalDateTime?
+
+	companion object : Entity.Factory<InviteEntity>()
 }

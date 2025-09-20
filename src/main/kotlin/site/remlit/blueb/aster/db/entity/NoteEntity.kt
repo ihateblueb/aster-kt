@@ -5,25 +5,27 @@ import org.ktorm.entity.Entity
 import site.remlit.blueb.aster.model.Visibility
 
 interface NoteEntity : Entity<NoteEntity> {
-	val id: String
+	var id: String
 
-	val apId: String
-	val conversation: String?
+	var apId: String
+	var conversation: String?
 
-	val user: UserEntity
-	val replyingTo: NoteEntity?
+	var user: UserEntity
+	var replyingTo: NoteEntity?
 
 	var cw: String?
 	var content: String?
 
-	val visibility: Visibility
+	var visibility: Visibility
 
 	//var to: List<String>
 	//var tags: List<String>
 	//var emojis: List<String>
 
-	val repeat: NoteEntity?
+	var repeat: NoteEntity?
 
-	val createdAt: LocalDateTime
+	var createdAt: LocalDateTime
 	var updatedAt: LocalDateTime?
+
+	companion object : Entity.Factory<NoteEntity>()
 }

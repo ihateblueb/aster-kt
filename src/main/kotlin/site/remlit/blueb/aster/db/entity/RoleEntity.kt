@@ -5,13 +5,15 @@ import org.ktorm.entity.Entity
 import site.remlit.blueb.aster.model.RoleType
 
 interface RoleEntity : Entity<RoleEntity> {
-	val id: String
+	var id: String
 
-	val type: RoleType
+	var type: RoleType
 
-	val name: String
-	val description: String?
+	var name: String
+	var description: String?
 
-	val createdAt: LocalDateTime
-	val updatedAt: LocalDateTime?
+	var createdAt: LocalDateTime
+	var updatedAt: LocalDateTime?
+
+	companion object : Entity.Factory<RoleEntity>()
 }

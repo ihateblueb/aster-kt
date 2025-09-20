@@ -5,14 +5,16 @@ import org.ktorm.entity.Entity
 import site.remlit.blueb.aster.model.RelationshipType
 
 interface RelationshipEntity : Entity<RelationshipEntity> {
-	val id: String
+	var id: String
 	var type: RelationshipType
 
-	val to: UserEntity
-	val from: UserEntity
+	var to: UserEntity
+	var from: UserEntity
 
-	val activityId: String
+	var activityId: String
 
-	val createdAt: LocalDateTime
-	val updatedAt: LocalDateTime?
+	var createdAt: LocalDateTime
+	var updatedAt: LocalDateTime?
+
+	companion object : Entity.Factory<RelationshipEntity>()
 }

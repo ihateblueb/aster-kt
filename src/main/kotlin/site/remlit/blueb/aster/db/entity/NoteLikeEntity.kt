@@ -4,10 +4,12 @@ import kotlinx.datetime.LocalDateTime
 import org.ktorm.entity.Entity
 
 interface NoteLikeEntity : Entity<NoteLikeEntity> {
-	val id: String
+	var id: String
 
-	val user: UserEntity
-	val note: NoteEntity
+	var user: UserEntity
+	var note: NoteEntity
 
-	val createdAt: LocalDateTime
+	var createdAt: LocalDateTime
+
+	companion object : Entity.Factory<NoteLikeEntity>()
 }

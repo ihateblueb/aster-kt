@@ -4,8 +4,12 @@ import kotlinx.datetime.LocalDateTime
 import org.ktorm.entity.Entity
 
 interface AuthEntity : Entity<AuthEntity> {
-	val id: String
-	val token: String
-	val user: UserEntity
-	val createdAt: LocalDateTime
+	var id: String
+
+	var token: String
+	var user: UserEntity
+
+	var createdAt: LocalDateTime
+
+	companion object : Entity.Factory<AuthEntity>()
 }
