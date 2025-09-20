@@ -7,6 +7,11 @@ import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.model.RoleType
 
+/**
+ * Table for storing user roles.
+ *
+ * @since 2025.9.1.2-SNAPSHOT
+ * */
 object RoleTable : Table<RoleEntity>("role") {
 	val id = varchar("id").primaryKey()
 

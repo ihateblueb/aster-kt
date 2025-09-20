@@ -1,6 +1,5 @@
 package site.remlit.blueb.aster.db.entity
 
-import RelationshipEntity
 import kotlinx.datetime.LocalDateTime
 import org.ktorm.entity.Entity
 import site.remlit.blueb.aster.model.NotificationType

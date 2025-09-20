@@ -6,6 +6,11 @@ import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.UserEntity
 
+/**
+ * Table for storing users.
+ *
+ * @since 2025.9.1.2-SNAPSHOT
+ * */
 object UserTable : Table<UserEntity>("user") {
 	val id = varchar("id").primaryKey()
 
