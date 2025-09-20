@@ -10,10 +10,22 @@ import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 import site.remlit.blueb.aster.db.suspendTransaction
-import site.remlit.blueb.aster.model.*
-import site.remlit.blueb.aster.service.*
+import site.remlit.blueb.aster.model.ApiError
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.AuthResponse
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.InstanceRegistrationsType
+import site.remlit.blueb.aster.model.KeyType
+import site.remlit.blueb.aster.model.User
+import site.remlit.blueb.aster.service.AuthService
+import site.remlit.blueb.aster.service.FormatService
+import site.remlit.blueb.aster.service.IdentifierService
+import site.remlit.blueb.aster.service.InviteService
+import site.remlit.blueb.aster.service.KeypairService
+import site.remlit.blueb.aster.service.UserService
+import site.remlit.blueb.aster.service.ValidationService
 import site.remlit.blueb.aster.service.ap.ApIdService
-import site.remlit.blueb.aster.util.bcryptCost
+import site.remlit.blueb.aster.util.BCRYPT_COST
 
 @Serializable
 data class RegisterBody(
@@ -85,7 +97,7 @@ fun Route.register() {
 		//		}
 
 		val id = IdentifierService.generate()
-        val hashedPassword = BCrypt.withDefaults().hashToString(bcryptCost, body.password.toCharArray())
+		val hashedPassword = BCrypt.withDefaults().hashToString(BCRYPT_COST, body.password.toCharArray())
 
 		val keypair = KeypairService.generate()
 

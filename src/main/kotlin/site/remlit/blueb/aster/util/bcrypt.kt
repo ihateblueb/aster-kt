@@ -1,3 +1,3 @@
 package site.remlit.blueb.aster.util
 
-const val bcryptCost = 12
+const val BCRYPT_COST = 12
