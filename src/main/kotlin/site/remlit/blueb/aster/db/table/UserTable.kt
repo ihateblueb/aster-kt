@@ -5,6 +5,7 @@ import org.ktorm.schema.boolean
 import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 import site.remlit.blueb.aster.db.entity.UserEntity
+import site.remlit.blueb.aster.db.type.list
 
 /**
  * Table for storing users.
@@ -46,8 +47,8 @@ object UserTable : Table<UserEntity>("user") {
 	val createdAt = datetime("createdAt")
 	val updatedAt = datetime("updatedAt")
 
-	// todo: roles
-	// todo: emojis
+	val roles = list("roles")
+	val emojis = list("emojis")
 
 	val followingUrl = varchar("followingUrl")
 	val followersUrl = varchar("followersUrl")

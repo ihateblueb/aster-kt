@@ -43,6 +43,9 @@ interface UserEntity : Entity<UserEntity> {
 	var createdAt: LocalDateTime
 	var updatedAt: LocalDateTime?
 
+	var roles: List<String>
+	var emojis: List<String>
+
 	var followingUrl: String?
 	var followersUrl: String?
 

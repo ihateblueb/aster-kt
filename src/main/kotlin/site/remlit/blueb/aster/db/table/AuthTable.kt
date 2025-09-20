@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.db.table
 
+import kotlinx.datetime.toJavaLocalDateTime
 import org.ktorm.schema.Table
 import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
@@ -12,8 +13,13 @@ import site.remlit.blueb.aster.db.entity.AuthEntity
  * */
 object AuthTable : Table<AuthEntity>("auth") {
 	val id = varchar("id").primaryKey()
+		.bindTo { it.id }
+
 	val token = varchar("token")
+		.bindTo { it.token }
 	val user = varchar("user")
 		.references(UserTable) { it.user }
+
 	val createdAt = datetime("createdAt")
+		.bindTo { it.createdAt.toJavaLocalDateTime() }
 }

@@ -3,7 +3,6 @@ package site.remlit.blueb.aster.service
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.db.entity.InviteEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.PackageInformation
 import site.remlit.blueb.aster.model.Service
 import java.util.*
@@ -106,13 +105,11 @@ class CommandLineService : Service() {
 							return
 						}
 
-						suspendTransaction {
-							val roles = user.roles.toMutableList()
-							roles.add(roleId)
+						user.roles
+							.toMutableList()
+							.add(role.id)
 
-							user.roles = roles.toList()
-							user.flush()
-						}
+						user.flushChanges()
 
 						println("Gave role ${role.name} to ${user.displayName ?: user.username}")
 					}
@@ -141,13 +138,11 @@ class CommandLineService : Service() {
 							return
 						}
 
-						suspendTransaction {
-							val roles = user.roles.toMutableList()
-							roles.remove(roleId)
+						user.roles
+							.toMutableList()
+							.remove(role.id)
 
-							user.roles = roles
-							user.storeWrittenValues()
-						}
+						user.flushChanges()
 
 						println("Revoked role ${role.name} from ${user.displayName ?: user.username}")
 					}
@@ -158,14 +153,15 @@ class CommandLineService : Service() {
 						val id = IdentifierService.generate()
 						val code = RandomService.generateString()
 
-						suspendTransaction {
-							InviteEntity.new(id) {
+						val invite =
+							InviteEntity {
+								this.id = id
 								this.code = code
-								creator = instanceActor
+								this.creator = instanceActor
+								this.createdAt = TimeService.now()
 							}
-						}
 
-						println("Created new invite: $code")
+						println("Created new invite: ${invite.code}")
 					}
 
 					else -> println("Unknown command ${args[0]}. Run with 'help' for commands.")

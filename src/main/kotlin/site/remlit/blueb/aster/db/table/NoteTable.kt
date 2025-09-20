@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.db.table
 
+import kotlinx.datetime.toJavaLocalDateTime
 import org.ktorm.schema.Table
 import org.ktorm.schema.datetime
 import org.ktorm.schema.enum
@@ -14,9 +15,12 @@ import site.remlit.blueb.aster.model.Visibility
  * */
 object NoteTable : Table<NoteEntity>("note") {
 	val id = varchar("id").primaryKey()
+		.bindTo { it.id }
 
 	val apId = varchar("apId")
+		.bindTo { it.apId }
 	val conversation = varchar("conversation")
+		.bindTo { it.conversation }
 
 	val user = varchar("user")
 		.references(UserTable) { it.user }
@@ -24,13 +28,18 @@ object NoteTable : Table<NoteEntity>("note") {
 		.references(NoteTable) { it.replyingTo }
 
 	val cw = varchar("cw")
+		.bindTo { it.cw }
 	val content = varchar("content")
+		.bindTo { it.content }
 
 	val visibility = enum<Visibility>("visibility")
+		.bindTo { it.visibility }
 
 	val repeat = varchar("repeat")
 		.references(NoteTable) { it.repeat }
 
 	val createdAt = datetime("createdAt")
+		.bindTo { it.createdAt.toJavaLocalDateTime() }
 	val updatedAt = datetime("updatedAt")
+		.bindTo { it.updatedAt?.toJavaLocalDateTime() }
 }

@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.db.table
 
+import kotlinx.datetime.toJavaLocalDateTime
 import org.ktorm.schema.Table
 import org.ktorm.schema.datetime
 import org.ktorm.schema.enum
@@ -14,7 +15,9 @@ import site.remlit.blueb.aster.model.NotificationType
  * */
 object NotificationTable : Table<NotificationEntity>("notification") {
 	val id = varchar("id").primaryKey()
+		.bindTo { it.id }
 	val type = enum<NotificationType>("type")
+		.bindTo { it.type }
 
 	val to = varchar("to")
 		.references(UserTable) { it.to }
@@ -25,4 +28,5 @@ object NotificationTable : Table<NotificationEntity>("notification") {
 		.references(NoteTable) { it.note }
 
 	val createdAt = datetime("createdAt")
+		.bindTo { it.createdAt.toJavaLocalDateTime() }
 }

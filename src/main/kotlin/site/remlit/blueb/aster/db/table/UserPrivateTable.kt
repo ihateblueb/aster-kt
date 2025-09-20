@@ -10,7 +10,11 @@ import site.remlit.blueb.aster.db.entity.UserPrivateEntity
  * @since 2025.9.1.2-SNAPSHOT
  * */
 object UserPrivateTable : Table<UserPrivateEntity>("user_private") {
-	val id = varchar("id").primaryKey()
+	var id = varchar("id").primaryKey()
+		.bindTo { it.id }
+
 	var password = varchar("password")
-	val privateKey = varchar("privateKey")
+		.bindTo { it.password }
+	var privateKey = varchar("privateKey")
+		.bindTo { it.privateKey }
 }

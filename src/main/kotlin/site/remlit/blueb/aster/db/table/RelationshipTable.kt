@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.db.table
 
+import kotlinx.datetime.toJavaLocalDateTime
 import org.ktorm.schema.Table
 import org.ktorm.schema.datetime
 import org.ktorm.schema.enum
@@ -14,7 +15,10 @@ import site.remlit.blueb.aster.model.RelationshipType
  * */
 object RelationshipTable : Table<RelationshipEntity>("relationship") {
 	val id = varchar("id").primaryKey()
+		.bindTo { it.id }
+
 	val type = enum<RelationshipType>("type")
+		.bindTo { it.type }
 
 	val to = varchar("to")
 		.references(UserTable) { it.to }
@@ -22,7 +26,10 @@ object RelationshipTable : Table<RelationshipEntity>("relationship") {
 		.references(UserTable) { it.from }
 
 	val activityId = varchar("activityId")
+		.bindTo { it.activityId }
 
 	val createdAt = datetime("createdAt")
+		.bindTo { it.createdAt.toJavaLocalDateTime() }
 	val updatedAt = datetime("updatedAt")
+		.bindTo { it.updatedAt?.toJavaLocalDateTime() }
 }
