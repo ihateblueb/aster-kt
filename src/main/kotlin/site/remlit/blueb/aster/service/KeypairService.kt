@@ -11,12 +11,25 @@ import java.util.*
 
 class KeypairService : Service() {
 	companion object {
+        /**
+         * Generate an RSA keypair.
+         *
+         * @return Generated keypair
+         * */
 		fun generate(): KeyPair {
 			val generator = KeyPairGenerator.getInstance("RSA")
 			generator.initialize(2048)
 			return generator.generateKeyPair()
 		}
 
+        /**
+         * Convert a key to a PEM format string.
+         *
+         * @param type Type of key
+         * @param key Keypair to get key from
+         *
+         * @return PEM format string of key
+         * */
 		fun keyToPem(type: KeyType, key: KeyPair): String {
 			val base64Key =
 				Base64.getEncoder()
@@ -30,6 +43,13 @@ class KeypairService : Service() {
 				end
 		}
 
+        /**
+         * Convert a PEM format string to a public key.
+         *
+         * @param pem PEM format string to convert
+         *
+         * @return Public key from a PEM format string
+         * */
 		fun pemToPublicKey(pem: String): PublicKey {
 			val start = "-----BEGIN PUBLIC KEY-----\n"
 			val end = "\n-----END PUBLIC KEY-----\n"
