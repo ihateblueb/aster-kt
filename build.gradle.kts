@@ -154,6 +154,10 @@ tasks.processResources {
 tasks.shadowJar {
 	dependsOn("compileFrontend")
 	dependsOn("processResources")
+
+	from("frontend/dist") {
+		into("frontend")
+	}
 }
 
 tasks.build {
