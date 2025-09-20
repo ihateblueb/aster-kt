@@ -2,11 +2,17 @@ plugins {
 	application
 	`java-library`
 	`maven-publish`
-	kotlin("jvm") version "2.2.0"
-	kotlin("plugin.serialization") version "2.2.0"
+
+	kotlin("jvm") version "2.2.20"
+	kotlin("plugin.serialization") version "2.2.20"
+
 	id("com.gradleup.shadow") version "8.3.0"
 	id("org.jetbrains.dokka") version "2.0.0"
+	id("io.gitlab.arturbosch.detekt") version ("1.23.8")
 }
+
+group = "site.remlit.blueb"
+version = "2025.9.1.1-SNAPSHOT"
 
 repositories {
 	mavenCentral()
@@ -19,7 +25,8 @@ repositories {
 }
 
 dependencies {
-	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.0")
+	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
+	compileOnly("org.jetbrains:annotations:26.0.2-1")
 
 	implementation("ch.qos.logback:logback-classic:1.5.18")
 	implementation("org.slf4j:slf4j-api:2.0.17")
@@ -77,11 +84,7 @@ dependencies {
 
 	implementation("site.remlit.blueb:http-signature-utility:2025.7.2.9-SNAPSHOT")
 
-	compileOnly("org.jetbrains:annotations:26.0.2-1")
 }
-
-group = "site.remlit.blueb"
-version = "2025.9.1.1-SNAPSHOT"
 
 kotlin {
 	jvmToolchain(21)
@@ -89,6 +92,14 @@ kotlin {
 
 application {
 	mainClass = "site.remlit.blueb.aster.ApplicationKt"
+}
+
+// style, format, etc
+
+detekt {
+	toolVersion = "1.23.8"
+	config.setFrom(file("detekt.yml"))
+	buildUponDefaultConfig = true
 }
 
 // docs
@@ -148,6 +159,10 @@ tasks.processResources {
 tasks.shadowJar {
 	dependsOn("compileFrontend")
 	dependsOn("processResources")
+
+	from("frontend/dist") {
+		into("frontend")
+	}
 }
 
 tasks.build {
