@@ -5,8 +5,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
@@ -23,7 +23,7 @@ fun Route.user() {
 
 		val user = UserService.get(
 			UserTable.username eq splitHandle[0]
-				and (UserTable.host eq host)
+					and (UserTable.host eq host)
 		)
 
 		if (user == null || !user.activated || user.suspended)

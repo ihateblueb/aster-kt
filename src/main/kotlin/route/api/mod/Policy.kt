@@ -7,7 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import org.jetbrains.exposed.v1.core.less
 import site.remlit.blueb.aster.db.entity.PolicyEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.PolicyTable

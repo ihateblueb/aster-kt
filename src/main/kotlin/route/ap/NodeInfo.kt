@@ -4,11 +4,20 @@ import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.neq
 import site.remlit.blueb.aster.db.table.UserTable
-import site.remlit.blueb.aster.model.*
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.InstanceRegistrationsType
+import site.remlit.blueb.aster.model.NodeInfo
+import site.remlit.blueb.aster.model.NodeInfoSoftware
+import site.remlit.blueb.aster.model.NodeInfoUsage
+import site.remlit.blueb.aster.model.NodeInfoUsageUsers
+import site.remlit.blueb.aster.model.PackageInformation
+import site.remlit.blueb.aster.model.WellKnown
+import site.remlit.blueb.aster.model.WellKnownLink
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.UserService
 
@@ -44,12 +53,12 @@ fun Route.nodeInfo() {
 
 		val userCount = UserService.count(
 			UserTable.host eq null
-				and (UserTable.username neq "instance.actor")
+					and (UserTable.username neq "instance.actor")
 		).toInt()
 
 		val noteCount = NoteService.count(
 			UserTable.host eq null
-				and (UserTable.username neq "instance.actor")
+					and (UserTable.username neq "instance.actor")
 		).toInt()
 
 		val nodeInfo =

@@ -1,7 +1,7 @@
 package site.remlit.blueb.aster.service
 
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.db.entity.PolicyEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.PolicyTable

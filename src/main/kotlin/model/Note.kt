@@ -3,6 +3,7 @@ package site.remlit.blueb.aster.model
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.entity.NoteLikeEntity
 import site.remlit.blueb.aster.db.suspendTransaction

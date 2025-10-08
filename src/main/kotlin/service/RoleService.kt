@@ -1,8 +1,8 @@
 package site.remlit.blueb.aster.service
 
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.json.contains
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.json.contains
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.RoleTable
@@ -93,7 +93,7 @@ class RoleService : Service() {
 			val usersOfType = mutableListOf<User>()
 
 			for (role in rolesOfType) {
-				UserService.getMany(UserTable.roles.contains(role)).forEach { userEntity ->
+				UserService.getMany(UserTable.roles.contains(role.id)).forEach { userEntity ->
 					val user = User.fromEntity(userEntity)
 
 					if (!usersOfType.contains(user))

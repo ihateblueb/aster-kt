@@ -1,8 +1,8 @@
 package site.remlit.blueb.aster.db.table
 
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.jetbrains.exposed.v1.core.dao.id.IdTable
+import org.jetbrains.exposed.v1.datetime.CurrentDateTime
+import org.jetbrains.exposed.v1.datetime.datetime
 import site.remlit.blueb.aster.model.PolicyType
 
 object PolicyTable : IdTable<String>("policy") {

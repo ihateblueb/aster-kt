@@ -2,7 +2,7 @@ package site.remlit.blueb.aster.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.table.UserPrivateTable
 import site.remlit.blueb.aster.service.UserService

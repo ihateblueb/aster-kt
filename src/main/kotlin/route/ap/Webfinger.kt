@@ -4,8 +4,8 @@ import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
@@ -32,7 +32,7 @@ fun Route.webfinger() {
 
 		val user = UserService.get(
 			UserTable.username eq username
-				and (UserTable.host eq null)
+					and (UserTable.host eq null)
 		)
 
 		if (user == null || user.suspended || !user.activated)

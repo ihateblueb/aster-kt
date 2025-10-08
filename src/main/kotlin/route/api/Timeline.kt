@@ -4,10 +4,10 @@ import io.ktor.http.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.less
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
@@ -35,10 +35,10 @@ fun Route.timeline() {
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 			val notes = NoteService.getMany(
-				NoteTable.visibility inList listOf(Visibility.Public, Visibility.Unlisted)
+				where = NoteTable.visibility inList listOf(Visibility.Public, Visibility.Unlisted)
 						and (NoteTable.user eq null)
 						and (NoteTable.createdAt less since),
-				take
+				take = take
 			)
 
 			if (notes.isEmpty()) {

@@ -1,9 +1,10 @@
 package site.remlit.blueb.aster.service
 
-import org.jetbrains.exposed.dao.load
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.dao.load
+import org.jetbrains.exposed.v1.jdbc.select
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.entity.NoteLikeEntity
 import site.remlit.blueb.aster.db.entity.UserEntity

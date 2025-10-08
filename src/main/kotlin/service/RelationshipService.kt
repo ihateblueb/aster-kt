@@ -1,9 +1,9 @@
 package site.remlit.blueb.aster.service
 
-import org.jetbrains.exposed.dao.load
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.dao.load
 import site.remlit.blueb.aster.db.entity.RelationshipEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.RelationshipTable

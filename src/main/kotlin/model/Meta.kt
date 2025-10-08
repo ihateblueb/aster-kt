@@ -1,9 +1,9 @@
 package site.remlit.blueb.aster.model
 
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.neq
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.UserService

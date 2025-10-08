@@ -1,17 +1,30 @@
 package site.remlit.blueb.aster.service
 
-import MigrationUtils
-import org.jetbrains.exposed.sql.ExperimentalDatabaseMigrationApi
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.ExperimentalDatabaseMigrationApi
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.jetbrains.exposed.v1.migration.jdbc.MigrationUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
-import site.remlit.blueb.aster.db.table.*
+import site.remlit.blueb.aster.db.table.AuthTable
+import site.remlit.blueb.aster.db.table.InviteTable
+import site.remlit.blueb.aster.db.table.NoteLikeTable
+import site.remlit.blueb.aster.db.table.NoteTable
+import site.remlit.blueb.aster.db.table.NotificationTable
+import site.remlit.blueb.aster.db.table.PolicyTable
+import site.remlit.blueb.aster.db.table.RelationshipTable
+import site.remlit.blueb.aster.db.table.RoleTable
+import site.remlit.blueb.aster.db.table.UserPrivateTable
+import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.exception.MigrationException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 import java.nio.file.Files
-import kotlin.io.path.*
+import kotlin.io.path.Path
+import kotlin.io.path.exists
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
+import kotlin.io.path.writer
 
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService : Service() {
@@ -23,7 +36,7 @@ class MigrationService : Service() {
 		val migrationsDir = Path("src/main/resources/migrations")
 		val manifestPath = Path("$migrationsDir/_manifest.txt")
 
-		private val database = Database.database
+		private val database = Database.connection
 		private val dataSource = Database.dataSource
 
 		/**

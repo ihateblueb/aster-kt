@@ -1,8 +1,8 @@
 package site.remlit.blueb.aster.db.entity
 
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
-import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.dao.Entity
+import org.jetbrains.exposed.v1.dao.EntityClass
 import site.remlit.blueb.aster.db.table.UserPrivateTable
 
 class UserPrivateEntity(id: EntityID<String>) : Entity<String>(id) {

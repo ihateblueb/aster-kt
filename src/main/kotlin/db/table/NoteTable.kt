@@ -1,9 +1,9 @@
 package site.remlit.blueb.aster.db.table
 
-import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.jetbrains.exposed.v1.core.ReferenceOption
+import org.jetbrains.exposed.v1.core.dao.id.IdTable
+import org.jetbrains.exposed.v1.datetime.CurrentDateTime
+import org.jetbrains.exposed.v1.datetime.datetime
 import site.remlit.blueb.aster.model.Visibility
 
 object NoteTable : IdTable<String>("note") {
@@ -12,7 +12,7 @@ object NoteTable : IdTable<String>("note") {
 	val apId = varchar("apId", length = 1025).uniqueIndex("unique_note_apId")
 	val conversation = varchar("conversation", length = 1025).nullable()
 
-	val user = reference("user", UserTable, onDelete = ReferenceOption.CASCADE)
+	val user = reference("user", UserTable.id, onDelete = ReferenceOption.CASCADE)
 	val replyingTo = optReference("replyingTo", NoteTable, onDelete = ReferenceOption.CASCADE)
 
 	val cw = varchar("cw", length = 5000).nullable().index("note_cw_index")

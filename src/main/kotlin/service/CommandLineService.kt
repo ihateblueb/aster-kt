@@ -44,7 +44,7 @@ class CommandLineService : Service() {
 		suspend fun execute(args: Array<String>) {
 			println("debug: ${args.joinToString(" ")}")
 
-			Database.database
+			Database.connection
 
 			if (args.isNotEmpty()) {
 				when (args[0]) {

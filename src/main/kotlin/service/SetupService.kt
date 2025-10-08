@@ -1,8 +1,8 @@
 package site.remlit.blueb.aster.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.entity.RoleEntity
