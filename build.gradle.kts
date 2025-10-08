@@ -75,13 +75,13 @@ dependencies {
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 	implementation("org.apache.commons:commons-text:1.14.0")
 
-	implementation("site.remlit.blueb:http-signature-utility:2025.7.2.9-SNAPSHOT")
+	implementation("site.remlit.blueb:http-signature-utility:2025.10.1-SNAPSHOT")
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 }
 
 group = "site.remlit.blueb"
-version = "2025.9.1.1-SNAPSHOT"
+version = "2025.10.1.0-SNAPSHOT"
 
 kotlin {
 	jvmToolchain(21)

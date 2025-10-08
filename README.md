@@ -29,7 +29,3 @@ role by running `aster.jar role:list`, and then `aster.jar role:give {User ID} {
 
 Contributions are welcome, but Aster is in early development and I may have plans for how to do things already. You
 should contact me before opening a pull request or working on anything so we can get on the same page.
-
-## Todos
-
-- Consider migrating from Exposed to [Ktorm](https://www.ktorm.org/), seems less complicated and nicer to use.
