@@ -14,8 +14,6 @@ import site.remlit.blueb.aster.model.WellKnownLink
 import site.remlit.blueb.aster.service.UserService
 
 fun Route.webfinger() {
-	val configuration = Configuration()
-
 	get("/.well-known/webfinger") {
 		val resource = call.queryParameters.getOrFail("resource")
 
@@ -27,7 +25,7 @@ fun Route.webfinger() {
 		val username = resource
 			.replace("acct:@", "")
 			.replace("acct:", "")
-			.replace("@${configuration.url.host}", "")
+			.replace("@${Configuration.url.host}", "")
 			.replace("@", "")
 
 		val user = UserService.get(
@@ -41,10 +39,10 @@ fun Route.webfinger() {
 		call.respond(
 			status = HttpStatusCode.OK,
 			message = WellKnown(
-				subject = resource,
+				subject = "$resource@${Configuration.url.host}",
 				aliases = listOf(
 					user.apId,
-					configuration.url.toString() + "users/" + user.username,
+					Configuration.url.toString() + "users/" + user.username,
 				),
 				links = listOf(
 					WellKnownLink(
@@ -55,7 +53,7 @@ fun Route.webfinger() {
 					WellKnownLink(
 						rel = "http://webfinger.net/rel/profile-page",
 						type = "text/html",
-						href = configuration.url.toString() + "@" + user.username,
+						href = Configuration.url.toString() + "@" + user.username,
 					)
 				)
 			)

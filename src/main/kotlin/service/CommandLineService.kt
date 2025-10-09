@@ -12,10 +12,8 @@ class CommandLineService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(this::class.java)
 
-		private val packageInformation = PackageInformation()
-
 		fun help() {
-			logger.info("${packageInformation.name} ${packageInformation.version}")
+			logger.info("${PackageInformation.name} ${PackageInformation.version}")
 			logger.info("Run without arguments to start server")
 			logger.info("help					Show this page")
 			logger.info("migration:generate			Generate migrations (for developer use)")

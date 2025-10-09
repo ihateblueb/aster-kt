@@ -10,8 +10,20 @@ import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 import site.remlit.blueb.aster.db.suspendTransaction
-import site.remlit.blueb.aster.model.*
-import site.remlit.blueb.aster.service.*
+import site.remlit.blueb.aster.model.ApiError
+import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.AuthResponse
+import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.model.InstanceRegistrationsType
+import site.remlit.blueb.aster.model.KeyType
+import site.remlit.blueb.aster.model.User
+import site.remlit.blueb.aster.service.AuthService
+import site.remlit.blueb.aster.service.FormatService
+import site.remlit.blueb.aster.service.IdentifierService
+import site.remlit.blueb.aster.service.InviteService
+import site.remlit.blueb.aster.service.KeypairService
+import site.remlit.blueb.aster.service.UserService
+import site.remlit.blueb.aster.service.ValidationService
 import site.remlit.blueb.aster.service.ap.ApIdService
 
 @Serializable
@@ -22,12 +34,10 @@ data class RegisterBody(
 )
 
 fun Route.register() {
-	val configuration = Configuration()
-
 	post("/api/register") {
 		val body = call.receive<RegisterBody>()
 
-		if (configuration.registrations == InstanceRegistrationsType.Closed) {
+		if (Configuration.registrations == InstanceRegistrationsType.Closed) {
 			call.respond(
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
@@ -38,7 +48,7 @@ fun Route.register() {
 			return@post
 		}
 
-		if (configuration.registrations == InstanceRegistrationsType.Invite && body.invite == null) {
+		if (Configuration.registrations == InstanceRegistrationsType.Invite && body.invite == null) {
 			call.respond(
 				status = HttpStatusCode.BadRequest,
 				message = ApiError(
@@ -49,7 +59,7 @@ fun Route.register() {
 			return@post
 		}
 
-		if (configuration.registrations == InstanceRegistrationsType.Invite) {
+		if (Configuration.registrations == InstanceRegistrationsType.Invite) {
 			if (body.invite.isNullOrBlank())
 				throw ApiException(HttpStatusCode.BadRequest, "Invite required")
 
@@ -94,7 +104,7 @@ fun Route.register() {
 				inbox = ApIdService.renderInboxApId(id)
 				outbox = ApIdService.renderOutboxApId(id)
 				this.username = username
-				activated = configuration.registrations != InstanceRegistrationsType.Approval
+				activated = Configuration.registrations != InstanceRegistrationsType.Approval
 				followingUrl = ApIdService.renderFollowingApId(id)
 				followersUrl = ApIdService.renderFollowersApId(id)
 				publicKey = KeypairService.keyToPem(KeyType.Public, keypair)
@@ -110,7 +120,7 @@ fun Route.register() {
 				?: throw ApiException(HttpStatusCode.NotFound)
 		)
 
-		if (configuration.registrations == InstanceRegistrationsType.Invite)
+		if (Configuration.registrations == InstanceRegistrationsType.Invite)
 			InviteService.useInvite(body.invite!!, user.id)
 
 		val token = AuthService.registerToken(user.id)

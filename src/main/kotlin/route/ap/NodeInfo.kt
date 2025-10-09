@@ -22,9 +22,6 @@ import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.UserService
 
 fun Route.nodeInfo() {
-	val configuration = Configuration()
-	val packageInformation = PackageInformation()
-
 	get("/.well-known/nodeinfo") {
 		call.response.headers.append("Content-Type", "application/jrd+json")
 
@@ -34,11 +31,11 @@ fun Route.nodeInfo() {
 				links = listOf(
 					WellKnownLink(
 						rel = "http://nodeinfo.diaspora.software/ns/schema/2.1",
-						href = configuration.url.toString() + "nodeinfo/2.1",
+						href = Configuration.url.toString() + "nodeinfo/2.1",
 					),
 					WellKnownLink(
 						rel = "http://nodeinfo.diaspora.software/ns/schema/2.0",
-						href = configuration.url.toString() + "nodeinfo/2.0",
+						href = Configuration.url.toString() + "nodeinfo/2.0",
 					)
 				)
 			)
@@ -66,11 +63,11 @@ fun Route.nodeInfo() {
 				version = version,
 				software =
 					NodeInfoSoftware(
-						name = packageInformation.name,
-						version = packageInformation.version,
+						name = PackageInformation.name,
+						version = PackageInformation.version,
 					),
 				protocols = listOf("activitypub"),
-				openRegistrations = configuration.registrations == InstanceRegistrationsType.Open,
+				openRegistrations = Configuration.registrations == InstanceRegistrationsType.Open,
 				usage =
 					NodeInfoUsage(
 						users = NodeInfoUsageUsers(userCount),

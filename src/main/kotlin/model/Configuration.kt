@@ -2,68 +2,47 @@ package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*
+import site.remlit.blueb.aster.util.capitalize
 import java.io.File
-import java.util.Locale.getDefault
+import kotlin.concurrent.thread
 
 var workingDir = File(".").absolutePath.toString().removeSuffix(".")
 var configPath = workingDir + "configuration.yaml"
+var config = YamlConfig(configPath)
 
-val config = YamlConfig(configPath)
-
-class Configuration {
-	val name: String
+object Configuration {
+	val name: String get() = config?.propertyOrNull("name")?.getString() ?: "Aster"
 
 	val url: Url
-	val port: Int
-	val host: String
-	val registrations: InstanceRegistrationsType
-	val identifiers: IdentifierType
+		get() =
+			Url(
+				config?.propertyOrNull("url")?.getString()
+					?: throw Exception("Configuration is missing 'url' attribute.")
+			)
 
-	val database: ConfigurationDatabase
-	val queue: ConfigurationQueue
-	val timeline: ConfigurationTimeline
+	val port: Int get() = config?.propertyOrNull("port")?.getString()?.toInt() ?: 9782
+	val host: String get() = config?.propertyOrNull("host")?.getString() ?: "0.0.0.0"
+
+	val registrations: InstanceRegistrationsType
+		get() =
+			InstanceRegistrationsType.valueOf(
+				config?.propertyOrNull("registrations")?.getString()?.capitalize() ?: "Closed"
+			)
+	val identifiers: IdentifierType
+		get() =
+			IdentifierType.valueOf(config?.propertyOrNull("identifiers")?.getString()?.capitalize() ?: "Aidx")
+
+	val database: ConfigurationDatabase get() = ConfigurationDatabase()
+	val queue: ConfigurationQueue get() = ConfigurationQueue()
+	val timeline: ConfigurationTimeline get() = ConfigurationTimeline()
 
 	init {
-		fun lower(string: String): String {
-			return string
-				.replaceFirstChar {
-					if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString()
-				}
+		thread(name = "Configuration Refresher") {
+			while (true) {
+				Thread.sleep(30 * 1000L)
+				config = YamlConfig(configPath)
+			}
 		}
-
-		var nameProp = config?.propertyOrNull("name")?.getString()
-		name = nameProp ?: "Aster"
-
-		var urlProp = config?.propertyOrNull("url")?.getString()
-		url = if (urlProp != null) {
-			Url(urlProp)
-		} else {
-			throw Exception("Configuration is missing 'url' attribute.")
-		}
-
-		var hostProp = config?.propertyOrNull("host")?.getString()
-		host = hostProp ?: "0.0.0.0"
-
-		var portProp = config?.propertyOrNull("port")?.getString()?.toInt()
-		port = portProp ?: 9782
-
-		var registrationsProp = config?.propertyOrNull("registrations")?.getString()
-		registrations = if (registrationsProp != null) {
-			InstanceRegistrationsType.valueOf(lower(registrationsProp))
-		} else {
-			InstanceRegistrationsType.Closed
-		}
-
-		var identifiersProp = config?.propertyOrNull("identifiers")?.getString()
-		identifiers = if (identifiersProp != null) {
-			IdentifierType.valueOf(lower(identifiersProp))
-		} else {
-			IdentifierType.Aidx
-		}
-
-		database = ConfigurationDatabase()
-		queue = ConfigurationQueue()
-		timeline = ConfigurationTimeline()
 	}
 }
 

@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS deliver_queue (id VARCHAR(125) PRIMARY KEY, status INT NOT NULL, "content" bytea NOT NULL, sender VARCHAR(125) NULL, inbox VARCHAR(5000) NOT NULL, "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, retries INT NOT NULL, CONSTRAINT fk_deliver_queue_sender__id FOREIGN KEY (sender) REFERENCES "user"(id) ON DELETE CASCADE ON UPDATE RESTRICT);
+ALTER TABLE deliver_queue ADD CONSTRAINT unique_deliver_queue_id UNIQUE (id);

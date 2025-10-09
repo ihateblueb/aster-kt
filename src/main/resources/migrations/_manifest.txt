@@ -32,3 +32,5 @@
 1749139540472_Migration_user.sql
 1757814744147_Migration_note.sql
 1757864017013_Migration_note_like.sql
+1759967451790_Migration_deliver_queue.sql
+1759967451795_Migration_inbox_queue.sql

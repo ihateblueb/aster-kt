@@ -17,10 +17,8 @@ import site.remlit.blueb.aster.model.Service
 
 class ApIdService : Service() {
 	companion object {
-		private val configuration = Configuration()
-
 		fun renderBaseApId(): String {
-			return configuration.url.toString()
+			return Configuration.url.toString()
 		}
 
 		/**

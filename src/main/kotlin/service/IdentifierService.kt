@@ -8,8 +8,6 @@ import java.util.*
 
 class IdentifierService : Service() {
 	companion object {
-		private val configuration = Configuration()
-
 		private val aidAlphabet =
 			listOf(
 				"0",
@@ -56,13 +54,13 @@ class IdentifierService : Service() {
 		 * @return Generated ID
 		 * */
 		fun generate(): String {
-			if (configuration.identifiers == IdentifierType.Aid)
+			if (Configuration.identifiers == IdentifierType.Aid)
 				return this.generateAid()
 
-			if (configuration.identifiers == IdentifierType.Aidx)
+			if (Configuration.identifiers == IdentifierType.Aidx)
 				return this.generateAidx()
 
-			if (configuration.identifiers == IdentifierType.Uuid)
+			if (Configuration.identifiers == IdentifierType.Uuid)
 				return UUID.randomUUID().toString()
 
 			return this.generateAidx()

@@ -11,7 +11,6 @@ import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable
-import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.KeyType
 import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.model.Service
@@ -20,8 +19,6 @@ import site.remlit.blueb.aster.service.ap.ApIdService
 class SetupService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
-
-		private val configuration = Configuration()
 
 		/**
 		 * Setup instance

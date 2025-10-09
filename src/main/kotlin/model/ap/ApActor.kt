@@ -3,14 +3,11 @@ package site.remlit.blueb.aster.model.ap
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.db.entity.UserEntity
-import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.service.FormatService
 import site.remlit.blueb.aster.service.ap.ApIdService
 
-private val configuration = Configuration()
-
 /**
- * ActivityPub representation of [site.remlit.blueb.model.User]
+ * ActivityPub representation of User
  * Only to be used on local users (where host is null)
  * */
 @Serializable

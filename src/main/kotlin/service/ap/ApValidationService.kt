@@ -25,7 +25,6 @@ import kotlin.io.encoding.Base64
 class ApValidationService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
-		private val configuration = Configuration()
 
 		suspend fun validate(request: RoutingRequest, body: ByteArray) {
 			request.httpMethod == HttpMethod.Get
@@ -35,7 +34,7 @@ class ApValidationService : Service() {
 
 			if (
 				request.headers["Host"].isNullOrEmpty() ||
-				request.headers["Host"] != configuration.url.host
+				request.headers["Host"] != Configuration.url.host
 			)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,

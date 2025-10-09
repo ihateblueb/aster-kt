@@ -16,8 +16,6 @@ import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.TimelineService
 
 fun Route.timeline() {
-	val configuration = Configuration()
-
 	authenticate("authRequired") {
 		get("/api/timeline/home") {
 			val since = TimelineService.normalizeSince(call.parameters["since"])
@@ -29,7 +27,7 @@ fun Route.timeline() {
 		}
 	}
 
-	authenticate(if (configuration.timeline.local.authRequired) "authRequired" else "authOptional") {
+	authenticate(if (Configuration.timeline.local.authRequired) "authRequired" else "authOptional") {
 		get("/api/timeline/local") {
 			val since = TimelineService.normalizeSince(call.parameters["since"])
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
@@ -50,7 +48,7 @@ fun Route.timeline() {
 		}
 	}
 
-	authenticate(if (configuration.timeline.bubble.authRequired) "authRequired" else "authOptional") {
+	authenticate(if (Configuration.timeline.bubble.authRequired) "authRequired" else "authOptional") {
 		get("/api/timeline/bubble") {
 			val since = TimelineService.normalizeSince(call.parameters["since"])
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
@@ -59,7 +57,7 @@ fun Route.timeline() {
 		}
 	}
 
-	authenticate(if (configuration.timeline.public.authRequired) "authRequired" else "authOptional") {
+	authenticate(if (Configuration.timeline.public.authRequired) "authRequired" else "authOptional") {
 		get("/api/timeline/public") {
 			val since = TimelineService.normalizeSince(call.parameters["since"])
 			val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())

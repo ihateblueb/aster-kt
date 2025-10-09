@@ -7,6 +7,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.db.table.AuthTable
+import site.remlit.blueb.aster.db.table.DeliverQueueTable
+import site.remlit.blueb.aster.db.table.InboxQueueTable
 import site.remlit.blueb.aster.db.table.InviteTable
 import site.remlit.blueb.aster.db.table.NoteLikeTable
 import site.remlit.blueb.aster.db.table.NoteTable
@@ -17,7 +19,6 @@ import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserPrivateTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.exception.MigrationException
-import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 import java.nio.file.Files
 import kotlin.io.path.Path
@@ -30,8 +31,6 @@ import kotlin.io.path.writer
 class MigrationService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
-
-		private val configuration = Configuration()
 
 		val migrationsDir = Path("src/main/resources/migrations")
 		val manifestPath = Path("$migrationsDir/_manifest.txt")
@@ -74,6 +73,8 @@ class MigrationService : Service() {
 				// todo: automatically look for these
 				val tables = listOf(
 					AuthTable,
+					DeliverQueueTable,
+					InboxQueueTable,
 					InviteTable,
 					NoteTable,
 					NoteLikeTable,

@@ -24,15 +24,12 @@ class ResolverService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(this::class.java)
 
-		private val packageInformation = PackageInformation()
-		private val configuration = Configuration()
-
 		fun createClient(): HttpClient {
 			return HttpClient(CIO) {
 				defaultRequest {
 					headers.append(
 						"User-Agent",
-						"${packageInformation.name}/${packageInformation.version} (+${configuration.url})"
+						"${PackageInformation.name}/${PackageInformation.version} (+${Configuration.url})"
 					)
 				}
 

@@ -33,8 +33,6 @@ import site.remlit.blueb.aster.service.SetupService
 import site.remlit.blueb.aster.util.jsonConfig
 import java.util.concurrent.TimeUnit
 
-private val configuration = Configuration()
-
 fun main(args: Array<String>) {
 	if (args.isNotEmpty() && !args[0].startsWith("-")) {
 		runBlocking {
@@ -43,7 +41,7 @@ fun main(args: Array<String>) {
 		return
 	}
 
-	val server = embeddedServer(Netty, configuration.port, configuration.host, module = Application::module)
+	val server = embeddedServer(Netty, Configuration.port, Configuration.host, module = Application::module)
 
 	Runtime.getRuntime().addShutdownHook(Thread {
 		Thread.currentThread().name = "ShutdownMain"
@@ -95,7 +93,7 @@ fun Application.module() {
 	install(CORS) {
 		anyMethod()
 
-		allowHost(configuration.url.host)
+		allowHost(Configuration.url.host)
 		allowHost("127.0.0.1:9978")
 		allowHost("127.0.0.1:5173")
 	}

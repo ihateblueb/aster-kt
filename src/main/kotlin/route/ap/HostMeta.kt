@@ -8,8 +8,6 @@ import site.remlit.blueb.aster.model.WellKnown
 import site.remlit.blueb.aster.model.WellKnownLink
 
 fun Route.hostMeta() {
-	val configuration = Configuration()
-
 	get("/.well-known/host-meta") {
 		call.response.headers.append("Content-Type", "application/jrd+json")
 
@@ -20,7 +18,7 @@ fun Route.hostMeta() {
 					WellKnownLink(
 						rel = "lrdd",
 						type = "application/jrd+json",
-						href = configuration.url.toString() + ".well-known/webfinger?resource={uri}",
+						href = Configuration.url.toString() + ".well-known/webfinger?resource={uri}",
 					)
 				)
 			)

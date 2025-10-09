@@ -13,6 +13,7 @@ import site.remlit.blueb.aster.service.UserService
 **/
 @Serializable
 data class Meta(
+	val name: String,
 	val version: MetaVersion,
 	val plugins: List<Map<String, String>?> = listOf(),
 	val registrations: InstanceRegistrationsType,
@@ -20,18 +21,16 @@ data class Meta(
 	val staff: MetaStaff
 ) {
 	companion object {
-		private val packageInformation = PackageInformation()
-		private val configuration = Configuration()
-
 		suspend fun get(): Meta {
 			return Meta(
+				name = Configuration.name,
 				version = MetaVersion(
-					aster = packageInformation.version,
+					aster = PackageInformation.version,
 					java = "${System.getProperty("java.vendor")} ${System.getProperty("java.version")}",
 					kotlin = KotlinVersion.CURRENT.toString(),
 					system = "${System.getProperty("os.name")} ${System.getProperty("os.version")}",
 				),
-				registrations = configuration.registrations,
+				registrations = Configuration.registrations,
 				stats = MetaStats(
 					users = MetaStatCount(
 						local = UserService.count(UserTable.host eq null and (UserTable.username neq "instance.actor")),
