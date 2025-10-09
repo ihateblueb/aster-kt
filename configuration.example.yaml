@@ -30,11 +30,11 @@ identifiers: aidx
 
 ## Database ##
 database:
-    host: localhost
-    port: 5432
-    db: aster
-    user: aster
-    password: aster
+  host: localhost
+  port: 5432
+  db: aster
+  user: aster
+  password: aster
 
 ## Queue ##
 # Queues are how Aster handles federating and system tasks
@@ -42,34 +42,39 @@ database:
 #   concurrency: how many jobs can be run on a thread at a time
 ##
 queue:
-    inbox:
-        threads: 8
-        concurrency: 8
-    deliver:
-        threads: 6
-        concurrency: 6
-    system:
-        threads: 4
-        concurrency: 4
+  inbox:
+    concurrency: 8
+  deliver:
+    concurrency: 6
+  system:
+    concurrency: 4
 
 ## Timeline ##
 # Default objects:
 #   Too high of a number will allow users to cause more
 #   strain on the server.
 # Max objects:
-#   Too high of a number will slow down timeline requests.
+#   Too high of a number will allow higher amounts if needed,
+#   but not cause as much strain as a high default.
 # Authentication:
 #   You may want to make your timelines require auth if
 #   your infrastructure can't handle extra pressure from
 #   people outside your instance.
 ##
 timeline:
-    defaultObjects: 20
-    maxObjects: 45
+  defaultObjects: 20
+  maxObjects: 45
 
-    local:
-        authRequired: false
-    bubble:
-        authRequired: false
-    public:
-        authRequired: false
+  local:
+    authRequired: false
+  bubble:
+    authRequired: false
+  public:
+    authRequired: false
+
+## Hide remote content ##
+# This prevents potentially bad things to be hosted to the
+# public on your instance. Only authenticated uses will be
+# able to see remote content. Recommended to keep on, unless
+# you're a very active moderator.
+hideRemoteContent: true

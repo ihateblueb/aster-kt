@@ -1,7 +1,7 @@
 import "./UserPage.scss";
 import PageHeader from "../PageHeader.tsx";
 import PageWrapper from "../PageWrapper.tsx";
-import {IconDots, IconUser} from "@tabler/icons-react";
+import {IconCake, IconDots, IconUser} from "@tabler/icons-react";
 import {useQuery} from "@tanstack/react-query";
 import lookup from "../../api/user/lookup.ts";
 import Loading from "../Loading.tsx";
@@ -44,6 +44,29 @@ function UserPage(
 
                             <Button>Follow</Button>
                             <Button><IconDots size={18}/></Button>
+                        </Container>
+                    </div>
+                    <div className={"underHeader"}>
+                        <Container align={"left"} gap={"md"}>
+                            <span
+                                className={"bio" + ((data?.bio == null) ? " none" : "")}>{data?.bio ?? "This user hasn't written a description yet."}</span>
+
+                            {data?.birthday != null ? (
+                                <Container align={"horizontal"} gap={"md"}>
+                                    <IconCake size={18}/>
+                                    <span className={"birthday"}>Birthday!</span>
+                                </Container>
+                            ) : null}
+
+                            {data?.createdAt != null ? (
+                                <span className={"createdAt"}>Joined on {new Date(
+                                    data.createdAt
+                                ).toLocaleString(undefined, {
+                                    month: 'long',
+                                    day: 'numeric',
+                                    year: 'numeric'
+                                })}</span>
+                            ) : null}
                         </Container>
                     </div>
                 </Container>
