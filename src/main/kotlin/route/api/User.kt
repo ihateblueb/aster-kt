@@ -10,26 +10,33 @@ import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.service.RelationshipService
 import site.remlit.blueb.aster.service.UserService
 
 fun Route.user() {
-	get("/api/lookup/{handle}") {
-		val handle = call.parameters.getOrFail("handle").removePrefix("@")
-		val splitHandle = handle.split("@")
+	authenticate("authOptional") {
+		get("/api/lookup/{handle}") {
+			val handle = call.parameters.getOrFail("handle").removePrefix("@")
+			val splitHandle = handle.split("@")
 
-		val host = if (splitHandle.size > 1) splitHandle[1].ifEmpty { null } else null
+			val host = if (splitHandle.size > 1) splitHandle[1].ifEmpty { null } else null
 
-		val user = UserService.get(
-			UserTable.username eq splitHandle[0]
-					and (UserTable.host eq host)
-		)
+			val user = UserService.get(
+				UserTable.username eq splitHandle[0]
+						and (UserTable.host eq host)
+			)
 
-		if (user == null || !user.activated || user.suspended)
-			throw ApiException(HttpStatusCode.NotFound)
+			if (user == null || !user.activated || user.suspended ||
+				(Configuration.hideRemoteContent && user.host != null && call.attributes.getOrNull(
+					authenticatedUserKey
+				) == null)
+			)
+				throw ApiException(HttpStatusCode.NotFound)
 
-		call.respond(User.fromEntity(user))
+			call.respond(User.fromEntity(user))
+		}
 	}
 
 	get("/api/user/{id}") {

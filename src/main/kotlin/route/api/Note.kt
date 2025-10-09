@@ -9,6 +9,7 @@ import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.model.Visibility
@@ -33,7 +34,10 @@ fun Route.note() {
 				!note.user.activated ||
 				note.user.suspended ||
 				(note.visibility != Visibility.Public &&
-						note.visibility != Visibility.Unlisted)
+						note.visibility != Visibility.Unlisted) ||
+				(Configuration.hideRemoteContent && note.user.host != null && call.attributes.getOrNull(
+					authenticatedUserKey
+				) == null)
 			)
 				throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 

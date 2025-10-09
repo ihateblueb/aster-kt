@@ -69,6 +69,8 @@ fun Route.timeline() {
 				take
 			)
 
+			// todo: implement hideRemoteContent, making this essentially local tl 2
+
 			if (notes.isEmpty()) {
 				call.respond(HttpStatusCode.NoContent)
 				return@get

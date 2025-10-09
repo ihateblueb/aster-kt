@@ -23,6 +23,8 @@ object Configuration {
 	val port: Int get() = config?.propertyOrNull("port")?.getString()?.toInt() ?: 9782
 	val host: String get() = config?.propertyOrNull("host")?.getString() ?: "0.0.0.0"
 
+	val hideRemoteContent: Boolean get() = config?.propertyOrNull("hideRemoteContent")?.getString()?.toBoolean() ?: true
+
 	val registrations: InstanceRegistrationsType
 		get() =
 			InstanceRegistrationsType.valueOf(
