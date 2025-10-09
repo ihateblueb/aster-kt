@@ -1,17 +1,66 @@
+import "./UserPage.scss";
 import PageHeader from "../PageHeader.tsx";
 import PageWrapper from "../PageWrapper.tsx";
-import {IconAlertTriangle} from "@tabler/icons-react";
+import {IconDots, IconUser} from "@tabler/icons-react";
+import {useQuery} from "@tanstack/react-query";
+import lookup from "../../api/user/lookup.ts";
+import Loading from "../Loading.tsx";
+import Error from "../Error.tsx";
+import Avatar from "../Avatar.tsx";
+import {useState} from "react";
+import Container from "../Container.tsx";
+import Button from "../Button.tsx";
 
 function UserPage(
     {handle}: { handle: string }
 ) {
+    let [displayName, setDisplayName] = useState(handle);
+
+    const {isLoading, isError, error, data} = useQuery({
+        queryKey: [`user_${handle}`],
+        queryFn: () => lookup(handle).then((e) => {
+            setDisplayName(e?.displayName ?? e?.username ?? handle);
+            return e
+        }),
+    });
+
+    function render() {
+        return (
+            <>
+                <Container gap={"lg"}>
+                    <div className={"userHeader"} style={{backgroundImage: `url(${data?.banner})`}}></div>
+                    <div className={"userIdentity"}>
+                        <Container gap={"xl"} align={"horizontal"}>
+                            <Container align={"horizontal"} gap={"md"}>
+                                <Container>
+                                    <Avatar size={"xl"} user={data}/>
+                                </Container>
+                                <Container gap={"sm"}>
+                                    <span className={"displayName"}>{displayName}</span>
+                                    <span
+                                        className={"username"}>@{data.username}{(data.host === null) ? "" : `@${data.host}`}</span>
+                                </Container>
+                            </Container>
+
+                            <Button>Follow</Button>
+                            <Button><IconDots size={18}/></Button>
+                        </Container>
+                    </div>
+                </Container>
+            </>
+        )
+    }
+
     return (
-        <>
-            <PageHeader icon={<IconAlertTriangle size={18}/>} title={"User"}/>
-            <PageWrapper padding={"full"} center={true}>
-                <p>{handle}</p>
+        <div className={"userPage"}>
+            <PageHeader icon={(data === undefined) ? <IconUser size={18}/> : <Avatar size={"sm"} user={data}/>}
+                        title={displayName}/>
+            <PageWrapper padding={"full"} center={false}>
+                {isLoading ? (
+                    <Loading fill={true}/>
+                ) : isError ? (<Error error={error}/>) : render()}
             </PageWrapper>
-        </>
+        </div>
     )
 }
 

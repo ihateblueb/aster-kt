@@ -9,6 +9,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.less
 import site.remlit.blueb.aster.db.table.NoteTable
+import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Visibility
@@ -34,7 +35,7 @@ fun Route.timeline() {
 
 			val notes = NoteService.getMany(
 				where = NoteTable.visibility inList listOf(Visibility.Public, Visibility.Unlisted)
-						and (NoteTable.user eq null)
+						and (UserTable.host eq null)
 						and (NoteTable.createdAt less since),
 				take = take
 			)

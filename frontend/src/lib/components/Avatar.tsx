@@ -3,7 +3,7 @@ import './Avatar.scss'
 
 function Avatar(
     {user, size}:
-    { user: any, size?: undefined | 'lg' | 'md' | 'sm' }
+    { user: any, size?: undefined | 'xl' | 'lg' | 'md' | 'sm' }
 ) {
     React.useEffect(() => {
     })
