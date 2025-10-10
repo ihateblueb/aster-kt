@@ -6,13 +6,9 @@ import site.remlit.blueb.aster.model.ap.ApObjectWithContext
 import site.remlit.blueb.aster.model.ap.ApType
 
 @Serializable
-data class ApDeleteActivity(
+data class ApUndoActivity(
 	val id: String,
-	val type: ApType.Activity = ApType.Activity.Delete,
-
-	val actor: String? = null,
+	val type: ApType.Activity = ApType.Activity.Undo,
 	@Contextual val `object`: Any,
-
-	val to: List<String>,
-	val cc: List<String>
 ) : ApObjectWithContext()
+

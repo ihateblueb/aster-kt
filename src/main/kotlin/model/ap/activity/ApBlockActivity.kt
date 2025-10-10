@@ -6,13 +6,10 @@ import site.remlit.blueb.aster.model.ap.ApObjectWithContext
 import site.remlit.blueb.aster.model.ap.ApType
 
 @Serializable
-data class ApDeleteActivity(
+data class ApBlockActivity(
 	val id: String,
-	val type: ApType.Activity = ApType.Activity.Delete,
+	val type: ApType.Activity = ApType.Activity.Block,
 
 	val actor: String? = null,
 	@Contextual val `object`: Any,
-
-	val to: List<String>,
-	val cc: List<String>
 ) : ApObjectWithContext()

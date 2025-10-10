@@ -7,12 +7,18 @@ class ApType {
 	enum class Activity {
 		Accept,
 		Add,
+		Announce,
 		Bite,
+		Block,
 		Create,
 		Delete,
-		Reject,
-		Block,
+		EmojiReact,
 		Follow,
+		Like,
+		Reject,
+		Remove,
+		Undo,
+		Update
 	}
 
 	enum class Object {
