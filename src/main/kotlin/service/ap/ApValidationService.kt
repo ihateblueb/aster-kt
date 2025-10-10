@@ -12,10 +12,10 @@ import site.remlit.blueb.aster.model.PolicyType
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.ap.ApValidationException
 import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
+import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.KeypairService
 import site.remlit.blueb.aster.service.PolicyService
 import site.remlit.blueb.httpSignatures.HttpSignature
-import site.remlit.blueb.httpSignatures.SignatureException
 import java.security.MessageDigest
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -27,6 +27,8 @@ class ApValidationService : Service() {
 		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
 		suspend fun validate(request: RoutingRequest, body: ByteArray) {
+			val validationRequestId = IdentifierService.generate()
+
 			request.httpMethod == HttpMethod.Get
 
 			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
@@ -35,59 +37,83 @@ class ApValidationService : Service() {
 			if (
 				request.headers["Host"].isNullOrEmpty() ||
 				request.headers["Host"] != Configuration.url.host
-			)
+			) {
+				logger.debug("[{}] Missing or invalid host.", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Missing or invalid host."
 				)
+			}
 
 			if (
 				request.headers["Date"].isNullOrEmpty()
-			)
+			) {
+				logger.debug("[{}] Date not present.", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Date not present."
 				)
+			}
 
 			if (
 				request.headers["Digest"].isNullOrEmpty()
-			)
+			) {
+				logger.debug("[{}] Digest not present.", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Digest not present."
 				)
+			}
 
 			if (
 				request.headers["Signature"].isNullOrEmpty()
-			)
+			) {
+				logger.debug("[{}] Signature not present.", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Signature not present."
 				)
+			}
 
 			if (
 				!request.headers["Digest"]!!.startsWith("SHA-256=")
-			)
+			) {
+				logger.debug("[{}] Digest uses unsupported algorithm.", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Digest uses unsupported algorithm."
 				)
+			}
 
 			if (
 				isDigestValid(request.headers["Digest"]!!, body)
-			)
+			) {
+				logger.debug("[{}] Digest invalid.", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Unauthorized,
 					"Digest invalid."
 				)
+			}
 
 			val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
 
 			val actorApId = parsedSignatureHeader.keyId.substringBefore("#")
 
-			val actor = ApActorService.resolve(actorApId) ?: throw ApValidationException(
-				ApValidationExceptionType.Unauthorized,
-				"Actor not found."
+			val actor = ApActorService.resolve(actorApId)
+			if (actor == null) {
+				logger.debug("[{}] Actor not found.", validationRequestId)
+				throw ApValidationException(
+					ApValidationExceptionType.Unauthorized,
+					"Actor not found."
+				)
+			}
+
+			logger.debug("[{}] httpSigLib:alg {}", validationRequestId, parsedSignatureHeader.algorithm)
+			logger.debug(
+				"[{}] httpSigLib:sigv.1 {} {}",
+				validationRequestId,
+				Base64.decode(parsedSignatureHeader.signature.value).size,
+				Base64.decode(parsedSignatureHeader.signature.value)
 			)
 
 			val isSignatureValid = try {
@@ -96,7 +122,8 @@ class ApValidationService : Service() {
 					parseHttpDate(request.headers["Date"]!!),
 					body
 				)
-			} catch (e: SignatureException) {
+			} catch (e: Exception) {
+				logger.debug("[{}] Signature invalid. {}", validationRequestId, e.message)
 				throw ApValidationException(
 					ApValidationExceptionType.Forbidden,
 					"Signature invalid: ${e.message}"
@@ -105,11 +132,13 @@ class ApValidationService : Service() {
 
 			if (
 				!isSignatureValid
-			)
+			) {
+				logger.debug("[{}] Signature invalid", validationRequestId)
 				throw ApValidationException(
 					ApValidationExceptionType.Forbidden,
 					"Signature invalid."
 				)
+			}
 		}
 
 		fun isDigestValid(digest: String, data: ByteArray): Boolean {
