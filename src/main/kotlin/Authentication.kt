@@ -12,8 +12,6 @@ import site.remlit.blueb.aster.service.AuthService
 import site.remlit.blueb.aster.service.RoleService
 import site.remlit.blueb.aster.service.UserService
 
-val authenticatedUserKey = AttributeKey<UserEntity>("authenticatedUser")
-
 fun Application.configureAuthentication() {
 	install(Authentication) {
 		bearer("authOptional") {

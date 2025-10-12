@@ -7,13 +7,13 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
-import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.service.RelationshipService
 import site.remlit.blueb.aster.service.UserService
+import site.remlit.blueb.aster.util.authenticatedUserKey
 
 fun Route.user() {
 	authenticate("authOptional") {

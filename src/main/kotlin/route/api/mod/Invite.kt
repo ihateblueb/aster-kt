@@ -5,7 +5,6 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
-import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.db.entity.InviteEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.ApiException
@@ -13,6 +12,7 @@ import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.InviteService
 import site.remlit.blueb.aster.service.RandomService
 import site.remlit.blueb.aster.service.TimelineService
+import site.remlit.blueb.aster.util.authenticatedUserKey
 
 fun Route.modInvite() {
 	authenticate("authRequiredMod") {

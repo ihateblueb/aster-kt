@@ -21,6 +21,11 @@ class ApType {
 		Update
 	}
 
+	enum class Tag {
+		Emoji,
+		Hashtag
+	}
+
 	enum class Object {
 		Person,
 		Service,

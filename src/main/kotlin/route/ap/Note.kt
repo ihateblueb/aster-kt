@@ -9,6 +9,7 @@ import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.model.ap.ApNote
 import site.remlit.blueb.aster.model.ap.activity.ApCreateActivity
 import site.remlit.blueb.aster.service.NoteService
+import site.remlit.blueb.aster.service.ap.ApVisibilityService
 
 fun Route.apNote() {
 	get("/notes/{id}") {
@@ -18,11 +19,11 @@ fun Route.apNote() {
 
 		if (
 			note == null ||
-			! note.user.activated ||
+			!note.user.activated ||
 			note.user.suspended ||
-			! note.user.host.isNullOrBlank() ||
+			!note.user.host.isNullOrBlank() ||
 			(note.visibility != Visibility.Public &&
-				note.visibility != Visibility.Unlisted)
+					note.visibility != Visibility.Unlisted)
 		)
 			throw ApiException(HttpStatusCode.NotFound)
 
@@ -36,18 +37,24 @@ fun Route.apNote() {
 
 		if (
 			note == null ||
-			! note.user.activated ||
+			!note.user.activated ||
 			note.user.suspended ||
-			! note.user.host.isNullOrBlank() ||
+			!note.user.host.isNullOrBlank() ||
 			(note.visibility != Visibility.Public &&
-				note.visibility != Visibility.Unlisted)
+					note.visibility != Visibility.Unlisted)
 		)
 			throw ApiException(HttpStatusCode.NotFound)
 
+		// todo: these shouldnt be null
+		val toCc = ApVisibilityService.visibilityToCc(note.visibility, null, null)
+
 		call.respond(
 			ApCreateActivity(
+				id = note.apId,
 				actor = note.user.apId,
-				`object` = ApNote.fromEntity(note)
+				`object` = ApNote.fromEntity(note),
+				to = toCc["to"] ?: emptyList(),
+				cc = toCc["cc"] ?: emptyList()
 			)
 		)
 	}

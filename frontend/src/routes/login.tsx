@@ -34,6 +34,11 @@ function RouteComponent() {
             await login(values.value.username, values.value.password).then((result) => {
                 if (result.token && result.user) {
                     localstore.set("token", result.token);
+
+                    let expiresAt = new Date();
+                    expiresAt.setMonth((expiresAt.getMonth() !== 11) ? expiresAt.getMonth() + 1 : 0)
+
+                    document.cookie = `AsAuthorization=${result.token}; expires=${expiresAt.toUTCString()}; SameSite=Strict; Secure`;
                     localstore.set("self", JSON.stringify(result.user));
 
                     window.location.replace("/");

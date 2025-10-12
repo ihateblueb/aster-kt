@@ -2,6 +2,7 @@ package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.json.contains
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.db.suspendTransaction
@@ -58,6 +59,22 @@ class RoleService : Service() {
 		 * @return Found role, if any
 		 * */
 		suspend fun getById(id: String): RoleEntity? = get(RoleTable.id eq id)
+
+		/**
+		 * Gets the highest role type for a user
+		 *
+		 * @param userId ID of the user to check
+		 *
+		 * @return Highest tole type
+		 * */
+		suspend fun getUserHighestRole(userId: String): RoleType? {
+			val user = UserService.getById(userId) ?: return null
+			val rolesOfType = getMany(RoleTable.id inList user.roles)
+
+			if (rolesOfType.any { it.type == RoleType.Admin }) return RoleType.Admin
+			if (rolesOfType.any { it.type == RoleType.Mod }) return RoleType.Mod
+			return RoleType.Normal
+		}
 
 		/**
 		 * Determines if a user has a role matching a role type

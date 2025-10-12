@@ -4,6 +4,7 @@ plugins {
 	`maven-publish`
 	kotlin("jvm") version "2.2.20"
 	kotlin("plugin.serialization") version "2.2.20"
+	id("io.ktor.plugin") version "3.3.1"
 	id("com.gradleup.shadow") version "8.3.0"
 	id("org.jetbrains.dokka") version "2.0.0"
 }
@@ -28,39 +29,42 @@ dependencies {
 	implementation("org.slf4j:slf4j-api:2.0.17")
 
 	// ktor server
-	implementation("io.ktor:ktor-server-core-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-netty-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-core:3.3.0")
-	implementation("io.ktor:ktor-server-openapi:3.3.0")
-	implementation("io.ktor:ktor-server-csrf:3.3.0")
-	implementation("io.ktor:ktor-server-call-logging:3.3.0")
-	implementation("io.ktor:ktor-server-request-validation-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-swagger-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-request-validation:3.3.0")
-	implementation("io.ktor:ktor-server-call-id-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-call-id:3.3.0")
-	implementation("io.ktor:ktor-server-auth:3.3.0")
-	implementation("io.ktor:ktor-server-auth-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-cors-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-call-logging-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-default-headers:3.3.0")
-	implementation("io.ktor:ktor-server-default-headers-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-forwarded-header:3.3.0")
-	implementation("io.ktor:ktor-server-forwarded-header-jvm:3.3.0")
+	implementation("io.ktor:ktor-server-core-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-netty-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-auth:3.3.1")
+	implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-core:3.3.1")
+	implementation("io.ktor:ktor-server-openapi:3.3.1")
+	implementation("io.ktor:ktor-server-swagger:3.3.1")
+	implementation("io.ktor:ktor-server-csrf:3.3.1")
+	implementation("io.ktor:ktor-server-call-logging:3.3.1")
+	implementation("io.ktor:ktor-server-request-validation-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-request-validation:3.3.1")
+	implementation("io.ktor:ktor-server-call-id-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-call-id:3.3.1")
+	implementation("io.ktor:ktor-server-cors-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-call-logging-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-default-headers:3.3.1")
+	implementation("io.ktor:ktor-server-default-headers-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-forwarded-header:3.3.1")
+	implementation("io.ktor:ktor-server-forwarded-header-jvm:3.3.1")
+
+	// templating
+	implementation("io.ktor:ktor-server-html-builder:3.3.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
 
 	// serialization
-	implementation("io.ktor:ktor-server-content-negotiation-jvm:3.3.0")
-	implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.3.0")
+	implementation("io.ktor:ktor-server-content-negotiation-jvm:3.3.1")
+	implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.3.1")
 	implementation("tools.jackson.core:jackson-core:3.0.0")
 	implementation("tools.jackson.core:jackson-databind:3.0.0")
 
 	// ktor client
-	implementation("io.ktor:ktor-client-content-negotiation-jvm:3.3.0")
-	implementation("io.ktor:ktor-client-core-jvm:3.3.0")
-	implementation("io.ktor:ktor-client-cio-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-status-pages-jvm:3.3.0")
-	implementation("io.ktor:ktor-server-auto-head-response-jvm:3.3.0")
+	implementation("io.ktor:ktor-client-content-negotiation-jvm:3.3.1")
+	implementation("io.ktor:ktor-client-core-jvm:3.3.1")
+	implementation("io.ktor:ktor-client-cio-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-status-pages-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-auto-head-response-jvm:3.3.1")
 
 	// database
 	implementation("com.zaxxer:HikariCP:7.0.2")
@@ -90,6 +94,8 @@ kotlin {
 application {
 	mainClass = "site.remlit.blueb.aster.ApplicationKt"
 }
+
+ktor {}
 
 // docs
 

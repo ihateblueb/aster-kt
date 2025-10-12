@@ -7,7 +7,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.aster.authenticatedUserKey
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.RoleType
@@ -16,6 +15,7 @@ import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.RoleService
+import site.remlit.blueb.aster.util.authenticatedUserKey
 
 @Serializable
 data class PostNoteBody(

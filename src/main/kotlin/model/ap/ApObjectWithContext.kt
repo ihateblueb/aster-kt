@@ -10,4 +10,4 @@ import org.jetbrains.annotations.ApiStatus
 abstract class ApObjectWithContext(
 	@SerialName("@context")
 	val context: JsonArray = ApContext
-) : ApObject()
+) : ApObject
