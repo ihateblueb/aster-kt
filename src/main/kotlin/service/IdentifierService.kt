@@ -6,6 +6,11 @@ import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.util.aidCounter
 import java.util.*
 
+/**
+ * Service for generating identifiers.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class IdentifierService : Service() {
 	companion object {
 		private val aidAlphabet =

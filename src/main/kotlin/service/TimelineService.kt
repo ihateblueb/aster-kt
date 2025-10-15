@@ -3,6 +3,11 @@ package site.remlit.blueb.aster.service
 import kotlinx.datetime.LocalDateTime
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for timeline related utilities.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class TimelineService : Service() {
 	companion object {
 		/**

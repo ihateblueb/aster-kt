@@ -2,6 +2,11 @@ package site.remlit.blueb.aster.service
 
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for validating user submitted content.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class ValidationService : Service() {
 	companion object {
 		/**

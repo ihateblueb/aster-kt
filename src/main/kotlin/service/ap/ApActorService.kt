@@ -6,8 +6,17 @@ import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.Service
-import site.remlit.blueb.aster.service.*
+import site.remlit.blueb.aster.service.FormatService
+import site.remlit.blueb.aster.service.IdentifierService
+import site.remlit.blueb.aster.service.ResolverService
+import site.remlit.blueb.aster.service.SanitizerService
+import site.remlit.blueb.aster.service.UserService
 
+/**
+ * Service to handle ActivityPub actors.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class ApActorService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(this::class.java)

@@ -22,6 +22,11 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.io.encoding.Base64
 
+/**
+ * Service for validating ActivityPub activities.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class ApValidationService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(this::class.java)

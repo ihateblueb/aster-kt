@@ -9,6 +9,11 @@ import site.remlit.blueb.aster.db.table.UserPrivateTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for managing users.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class UserService() : Service() {
 	companion object {
 		/**

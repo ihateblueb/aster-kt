@@ -11,6 +11,11 @@ import site.remlit.blueb.aster.model.Relationship
 import site.remlit.blueb.aster.model.RelationshipType
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for managing user relationships.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class RelationshipService : Service() {
 	companion object {
 		/**

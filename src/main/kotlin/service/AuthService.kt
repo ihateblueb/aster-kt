@@ -8,6 +8,11 @@ import site.remlit.blueb.aster.db.table.AuthTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for managing user authentication.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class AuthService : Service() {
 	companion object {
 		/**

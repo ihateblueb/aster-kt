@@ -8,6 +8,11 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
+/**
+ * Service for formatting various things.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class FormatService : Service() {
 	companion object {
 		/**

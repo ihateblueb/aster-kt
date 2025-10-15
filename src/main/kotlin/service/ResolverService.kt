@@ -20,10 +20,18 @@ import site.remlit.blueb.aster.model.PolicyType
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.util.jsonConfig
 
+/**
+ * Service for resolving URLs and ActivityPub objects.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class ResolverService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(this::class.java)
 
+		/**
+		 * Creates an HTTP client with default request headers and content negotiation rules for ActivityPub and more.
+		 * */
 		fun createClient(): HttpClient {
 			return HttpClient(CIO) {
 				defaultRequest {

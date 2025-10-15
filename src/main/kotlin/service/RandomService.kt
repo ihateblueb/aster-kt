@@ -4,6 +4,11 @@ import site.remlit.blueb.aster.model.Service
 import java.math.BigInteger
 import java.security.SecureRandom
 
+/**
+ * Service for creating truly random strings.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class RandomService : Service() {
 	companion object {
 		/**

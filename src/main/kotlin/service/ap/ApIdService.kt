@@ -15,6 +15,11 @@ import site.remlit.blueb.aster.model.Service
 * use case.
 * */
 
+/**
+ * Service to generate identifiers for ActivityPub objects.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class ApIdService : Service() {
 	companion object {
 		fun renderBaseApId(): String {

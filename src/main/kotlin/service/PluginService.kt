@@ -14,14 +14,27 @@ import java.net.URI
 import java.net.URLClassLoader
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
-import kotlin.io.path.*
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.createDirectories
+import kotlin.io.path.exists
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
 
+/**
+ * Service for managing plugins.
+ *
+ * @since 2025.9.1.1-SNAPSHOT
+ * */
 class PluginService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
 		private val pluginDir = Path("plugins")
 
+		/**
+		 * Find and enable plugins in plugins directory.
+		 * */
 		@OptIn(ExperimentalSerializationApi::class)
 		fun initialize() {
 			if (!pluginDir.exists()) pluginDir.createDirectories()

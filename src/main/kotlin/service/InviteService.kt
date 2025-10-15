@@ -10,6 +10,11 @@ import site.remlit.blueb.aster.db.table.InviteTable
 import site.remlit.blueb.aster.model.Invite
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for managing user invites.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class InviteService : Service() {
 	companion object {
 		suspend fun get(where: Op<Boolean>): Invite? = suspendTransaction {

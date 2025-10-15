@@ -8,6 +8,11 @@ import site.remlit.blueb.aster.model.PackageInformation
 import site.remlit.blueb.aster.model.Service
 import java.util.*
 
+/**
+ * Service for managing Aster via the command line.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class CommandLineService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(this::class.java)

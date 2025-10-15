@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
 fun Application.module() {
 	// this hook completes first, always
 	Runtime.getRuntime().addShutdownHook(Thread {
-		Thread.currentThread().name = "ShutdownModule"
+		Thread.currentThread().name = "ShutdownApplication"
 		this.log.info("Shutting down...")
 		PluginRegistry.disableAll()
 		EventRegistry.clearListeners()

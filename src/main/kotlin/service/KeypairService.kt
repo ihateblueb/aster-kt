@@ -9,6 +9,11 @@ import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
+/**
+ * Service for managing user public and private keys.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class KeypairService : Service() {
 	companion object {
 		fun generate(): KeyPair {
@@ -26,8 +31,8 @@ class KeypairService : Service() {
 			val end = if (type == KeyType.Private) "\n-----END PRIVATE KEY-----\n" else "\n-----END PUBLIC KEY-----\n"
 
 			return start +
-				base64Key.replace("(.{64})".toRegex(), "$1\n") +
-				end
+					base64Key.replace("(.{64})".toRegex(), "$1\n") +
+					end
 		}
 
 		fun pemToPublicKey(pem: String): PublicKey {

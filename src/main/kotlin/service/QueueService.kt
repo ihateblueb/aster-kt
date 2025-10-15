@@ -16,6 +16,11 @@ import site.remlit.blueb.aster.model.QueueStatus
 import site.remlit.blueb.aster.model.Service
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * Service for managing persistent queues.
+ *
+ * @since 2025.10.1.0-SNAPSHOT
+ * */
 class QueueService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(this::class.java)

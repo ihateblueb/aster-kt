@@ -27,6 +27,11 @@ import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
 import kotlin.io.path.writer
 
+/**
+ * Service for generating and executing database migrations.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService : Service() {
 	companion object {

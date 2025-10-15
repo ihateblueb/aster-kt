@@ -4,6 +4,11 @@ import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.model.Visibility
 
+/**
+ * Service for handling visibility in non-ActivityPub contexts.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class VisibilityService : Service() {
 	companion object {
 		/**

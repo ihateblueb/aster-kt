@@ -8,6 +8,11 @@ import site.remlit.blueb.aster.db.table.PolicyTable
 import site.remlit.blueb.aster.model.PolicyType
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for managing federation policies.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class PolicyService : Service() {
 	companion object {
 		/**

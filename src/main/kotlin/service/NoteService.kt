@@ -24,6 +24,11 @@ import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.service.ap.ApIdService
 
+/**
+ * Service for managing notes.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class NoteService : Service() {
 	companion object {
 		suspend fun get(where: Op<Boolean>): Note? = suspendTransaction {

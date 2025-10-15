@@ -12,6 +12,11 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service with extra utilities for handling ActivityPub objects.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class ApUtilityService : Service() {
 	companion object {
 		fun extractString(item: JsonElement?): String? = when (item) {

@@ -12,6 +12,11 @@ import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.User
 
+/**
+ * Service for managing user roles.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class RoleService : Service() {
 	companion object {
 		/**

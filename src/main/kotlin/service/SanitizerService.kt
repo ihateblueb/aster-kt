@@ -5,6 +5,11 @@ import org.owasp.html.PolicyFactory
 import org.owasp.html.Sanitizers
 import site.remlit.blueb.aster.model.Service
 
+/**
+ * Service for sanitizing and escaping user submitted content.
+ *
+ * @since 2025.5.1.0-SNAPSHOT
+ * */
 class SanitizerService : Service() {
 	companion object {
 		private val policy: PolicyFactory = Sanitizers.FORMATTING
