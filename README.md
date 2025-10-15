@@ -11,8 +11,8 @@ Decentralized social software using ActivityPub, written in Kotlin.
 
 ## Building
 
-To build Aster, you'll need at least Java 21. For development, the JetBrains Runtime is recommended.
-You'll also need Node.js (LTS version recommended) and pnpm (`npm i -g pnpm`).
+To build Aster, you'll need at least Java 21. You'll also need Node.js (Latest LTS version recommended) and pnpm (
+`npm i -g pnpm`).
 
 Run the build script `./gradlew build`, and then grab the JAR from `target/aster-*-all.jar`.
 
@@ -31,3 +31,17 @@ role by running `java -jar aster.jar role:list`, and then `java -jar aster.jar r
 
 Contributions are welcome, but Aster is in early development and I may have plans for how to do things already. You
 should contact me before opening a pull request or working on anything so we can get on the same page.
+
+### Development Environment
+
+IntelliJ IDEA is a requirement for working with Aster. For development, the JetBrains Runtime is recommended.
+
+When you clone Aster in IDEA, automatically it should recognize the build scripts in `.run`. Follow the building and
+running instructions above to create a JAR and prepare your database.
+
+Afterward, running `Backend Development Build` in the IDE should be all you need to develop, unless you need to use CLI
+commands. This script skips generating documentation and compiling the frontend, which significantly slows down the
+build time.
+
+If you are working on the frontend, running `pnpm dev` in the `frontend` directory will start a
+development server for the frontend which hot reloads.
