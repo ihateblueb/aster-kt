@@ -66,7 +66,7 @@ class IdentifierService : Service() {
 				return this.generateAidx()
 
 			if (Configuration.identifiers == IdentifierType.Uuid)
-				return UUID.randomUUID().toString()
+				return this.generateUuid()
 
 			return this.generateAidx()
 		}
@@ -120,5 +120,12 @@ class IdentifierService : Service() {
 
 			return id
 		}
+
+		/**
+		 * Generate ID with Uuid format
+		 *
+		 * @return Generated ID
+		 * */
+		fun generateUuid(): String = UUID.randomUUID().toString()
 	}
 }

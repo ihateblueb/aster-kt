@@ -86,6 +86,7 @@ dependencies {
 	implementation("site.remlit.blueb:http-signature-utility:2025.10.4-SNAPSHOT")
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
+	testImplementation(kotlin("test"))
 }
 
 kotlin {
