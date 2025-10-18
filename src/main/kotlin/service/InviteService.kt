@@ -4,11 +4,12 @@ import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.Invite
 import site.remlit.blueb.aster.db.entity.InviteEntity
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.table.InviteTable
-import site.remlit.blueb.aster.model.Invite
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for managing user invites.

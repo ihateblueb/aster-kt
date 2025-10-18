@@ -5,12 +5,13 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.json.contains
+import site.remlit.blueb.aster.common.model.RoleType
+import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable
-import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.model.Service
-import site.remlit.blueb.aster.model.User
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for managing user roles.

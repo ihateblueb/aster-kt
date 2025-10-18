@@ -5,11 +5,12 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.Relationship
+import site.remlit.blueb.aster.common.model.RelationshipType
 import site.remlit.blueb.aster.db.entity.RelationshipEntity
 import site.remlit.blueb.aster.db.table.RelationshipTable
-import site.remlit.blueb.aster.model.Relationship
-import site.remlit.blueb.aster.model.RelationshipType
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for managing user relationships.

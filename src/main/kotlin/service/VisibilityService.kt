@@ -1,8 +1,9 @@
 package site.remlit.blueb.aster.service
 
+import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.model.Service
-import site.remlit.blueb.aster.model.User
-import site.remlit.blueb.aster.model.Visibility
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for handling visibility in non-ActivityPub contexts.

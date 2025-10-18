@@ -14,7 +14,7 @@ import site.remlit.blueb.aster.model.PackageInformation
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.UserService
 
-fun Meta.Companion.get(): Meta {
+fun Meta.Companion.getMeta(): Meta {
 	return Meta(
 		name = Configuration.name,
 		version = MetaVersion(
