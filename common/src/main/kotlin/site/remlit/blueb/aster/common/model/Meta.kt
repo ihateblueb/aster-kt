@@ -1,7 +1,6 @@
-package site.remlit.blueb.aster.model
+package site.remlit.blueb.aster.common.model
 
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.neq
 import site.remlit.blueb.aster.db.table.UserTable

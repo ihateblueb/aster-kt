@@ -1,11 +1,8 @@
-package site.remlit.blueb.aster.model
+package site.remlit.blueb.aster.common.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.db.entity.UserEntity
-import site.remlit.blueb.aster.db.table.UserPrivateTable
-import site.remlit.blueb.aster.service.UserService
 
 @Serializable
 data class User(
@@ -43,8 +40,6 @@ data class User(
 
 	val publicKey: String
 ) {
-	suspend fun getPrivate() = UserService.getPrivate(UserPrivateTable.id eq id)
-
 	companion object {
 		fun fromEntity(entity: UserEntity) = User(
 			id = entity.id.toString(),

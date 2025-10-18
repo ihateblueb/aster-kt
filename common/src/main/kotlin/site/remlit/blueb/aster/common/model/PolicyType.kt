@@ -1,4 +1,4 @@
-package site.remlit.blueb.aster.model
+package site.remlit.blueb.aster.common.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -21,13 +21,13 @@ enum class PolicyType {
 	Silence,
 
 	/**
-	 * Append content warnings (`cw`) on incoming [Note].
+	 * Append content warnings (`cw`) on incoming [site.remlit.blueb.aster.model.Note].
 	 * */
 	@SerialName("forceContentWarning")
 	ForceContentWarning,
 
 	/**
-	 * Append sensitive tag on new [User].
+	 * Append sensitive tag on new [site.remlit.blueb.aster.model.User].
 	 * */
 	@SerialName("forceSensitive")
 	ForceSensitive,

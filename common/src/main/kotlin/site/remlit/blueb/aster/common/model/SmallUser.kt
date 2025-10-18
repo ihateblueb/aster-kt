@@ -1,4 +1,4 @@
-package site.remlit.blueb.aster.model
+package site.remlit.blueb.aster.common.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable

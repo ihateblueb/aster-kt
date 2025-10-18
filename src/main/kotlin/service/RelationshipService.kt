@@ -57,7 +57,7 @@ class RelationshipService : Service() {
 		 * @param to Relationship target
 		 * @param from Relationship owner
 		 *
-		 * @return [Pair] of [Relationship], where first is to and second is from
+		 * @return [Pair] of [site.remlit.blueb.aster.model.Relationship], where first is to and second is from
 		 * */
 		fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
 			return Pair(
@@ -78,7 +78,7 @@ class RelationshipService : Service() {
 		}
 
 		/**
-		 * Determine if there is a [RelationshipType.Block] in either direction
+		 * Determine if there is a [site.remlit.blueb.aster.model.RelationshipType.Block] in either direction
 		 *
 		 * @param to First user
 		 * @param from Second user
@@ -98,7 +98,7 @@ class RelationshipService : Service() {
 		}
 
 		/**
-		 * Determine if there is a [RelationshipType.Mute] in one direction
+		 * Determine if there is a [site.remlit.blueb.aster.model.RelationshipType.Mute] in one direction
 		 *
 		 * @param to Relationship target
 		 * @param from Relationship owner
