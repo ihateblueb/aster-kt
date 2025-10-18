@@ -1,8 +1,13 @@
 package site.remlit.blueb.aster.event
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.aster.model.Configuration
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
@@ -27,7 +32,7 @@ object EventRegistry {
 	 * */
 	fun addListener(event: KClass<*>, listener: (Event) -> Unit) {
 		if (!event.isSubclassOf(Event::class)) throw IllegalArgumentException("Event $event is not a derivative of the Event interface")
-		logger.debug("Added ${event.simpleName} listener ${listener::class.simpleName}")
+		if (Configuration.debug) logger.debug("Added ${event.simpleName} listener ${listener::class.simpleName}")
 		listeners.add(Pair(event, listener))
 	}
 

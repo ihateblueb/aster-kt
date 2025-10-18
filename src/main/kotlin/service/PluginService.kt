@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.plugin.PluginManifest
 import site.remlit.blueb.aster.plugin.AsterPlugin
@@ -59,7 +60,7 @@ class PluginService : Service() {
 								this::class.java.classLoader
 							)
 
-							logger.debug("Current URLClassLoader URLS: {}", classLoader.urLs)
+							if (Configuration.debug) logger.debug("Current URLClassLoader URLS: {}", classLoader.urLs)
 
 							try {
 								val mainClass = classLoader.loadClass(manifest.mainClass)
