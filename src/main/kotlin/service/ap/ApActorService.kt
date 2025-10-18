@@ -2,9 +2,9 @@ package site.remlit.blueb.aster.service.ap
 
 import io.ktor.http.*
 import kotlinx.serialization.json.JsonObject
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.entity.UserEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.service.FormatService
 import site.remlit.blueb.aster.service.IdentifierService
@@ -52,7 +52,7 @@ class ApActorService : Service() {
 		 *
 		 * @return UserEntity or null
 		 * */
-		suspend fun register(json: JsonObject): UserEntity? {
+		fun register(json: JsonObject): UserEntity? {
 			val id = IdentifierService.generate()
 
 			val extractedId = ApUtilityService.extractString(json["id"])
@@ -106,7 +106,7 @@ class ApActorService : Service() {
 			// todo: following/followers urls
 
 			try {
-				suspendTransaction {
+				transaction {
 					UserEntity.new(id) {
 						apId = extractedId
 						this.inbox = inbox

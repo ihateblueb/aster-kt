@@ -7,9 +7,9 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.ApiError
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.AuthResponse
@@ -101,7 +101,7 @@ object RegisterRoutes {
 
 				val keypair = KeypairService.generate()
 
-				suspendTransaction {
+				transaction {
 					UserEntity.new(id) {
 						apId = ApIdService.renderUserApId(id)
 						inbox = ApIdService.renderInboxApId(id)

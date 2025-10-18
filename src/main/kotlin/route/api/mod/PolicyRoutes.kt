@@ -8,8 +8,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.v1.core.less
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.PolicyEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.PolicyTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Policy
@@ -28,6 +28,7 @@ object PolicyRoutes {
 	)
 
 	fun register() =
+		// todo: some of this needs to be moved into the service
 		RouteRegistry.registerRoute {
 			authenticate("authRequiredMod") {
 				get("/api/mod/policies") {
@@ -54,7 +55,7 @@ object PolicyRoutes {
 
 					val id = IdentifierService.generate()
 
-					suspendTransaction {
+					transaction {
 						PolicyEntity.new(id) {
 							type = body.type
 							host = body.host
@@ -83,7 +84,7 @@ object PolicyRoutes {
 						PolicyService.getById(call.parameters.getOrFail("id"))
 							?: throw ApiException(HttpStatusCode.NotFound)
 
-					suspendTransaction {
+					transaction {
 						policy.delete()
 					}
 

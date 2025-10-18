@@ -1,13 +1,17 @@
+<!-- @formatter:off -->
 <configuration>
+    <conversionRule conversionWord="hlt" class="site.remlit.blueb.aster.util.log.HighlightConversion" />
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss} %cyan([%thread]) %highlight(%-5level) %logger{36} - %msg%n</pattern>
+            <pattern>%white(%d{HH:mm:ss}) %boldMagenta([%-12.12(%thread])) %hlt(%-5level) %white(%-35logger{16}) %msg%n</pattern>
         </encoder>
     </appender>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
+
     <logger name="com.zaxxer.hikari.pool" level="INFO"/>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>

@@ -4,8 +4,8 @@ import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.RelationshipEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.RelationshipTable
 import site.remlit.blueb.aster.model.Relationship
 import site.remlit.blueb.aster.model.RelationshipType
@@ -25,7 +25,7 @@ class RelationshipService : Service() {
 		 *
 		 * @return Found relationship, if any
 		 * */
-		suspend fun get(where: Op<Boolean>): Relationship? = suspendTransaction {
+		fun get(where: Op<Boolean>): Relationship? = transaction {
 			val relationship = RelationshipEntity
 				.find { where }
 				.singleOrNull()
@@ -44,7 +44,7 @@ class RelationshipService : Service() {
 		 *
 		 * @return ActivityPub ID of the activity used to create the relationship
 		 * */
-		suspend fun getActivityId(relationshipId: String): String? = suspendTransaction {
+		fun getActivityId(relationshipId: String): String? = transaction {
 			RelationshipEntity
 				.find { RelationshipTable.id eq relationshipId }
 				.singleOrNull()
@@ -59,7 +59,7 @@ class RelationshipService : Service() {
 		 *
 		 * @return [Pair] of [Relationship], where first is to and second is from
 		 * */
-		suspend fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
+		fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
 			return Pair(
 				this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from)),
 				this.get(RelationshipTable.to eq from and (RelationshipTable.from eq to))
@@ -85,7 +85,7 @@ class RelationshipService : Service() {
 		 *
 		 * @return If either are blocking each other
 		 * */
-		suspend fun eitherBlocking(to: String, from: String): Boolean {
+		fun eitherBlocking(to: String, from: String): Boolean {
 			val pair = this.getPair(to, from)
 
 			if (pair.first != null && pair.first?.type == RelationshipType.Block)
@@ -105,7 +105,7 @@ class RelationshipService : Service() {
 		 *
 		 * @return If `from` is muting `to`
 		 * */
-		suspend fun muteExists(to: String, from: String): Boolean {
+		fun muteExists(to: String, from: String): Boolean {
 			val relationship = this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from))
 
 			return relationship != null && relationship.type == RelationshipType.Mute

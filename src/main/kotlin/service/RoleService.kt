@@ -3,9 +3,9 @@ package site.remlit.blueb.aster.service
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.json.contains
 import site.remlit.blueb.aster.db.entity.RoleEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.RoleType
@@ -26,7 +26,7 @@ class RoleService : Service() {
 		 *
 		 * @return Found role, if any
 		 * */
-		suspend fun get(where: Op<Boolean>): RoleEntity? = suspendTransaction {
+		fun get(where: Op<Boolean>): RoleEntity? = transaction {
 			RoleEntity
 				.find { where }
 				.singleOrNull()
@@ -39,7 +39,7 @@ class RoleService : Service() {
 		 *
 		 * @return List of found roles
 		 * */
-		suspend fun getMany(where: Op<Boolean>): List<RoleEntity> = suspendTransaction {
+		fun getMany(where: Op<Boolean>): List<RoleEntity> = transaction {
 			RoleEntity
 				.find { where }
 				.toList()
@@ -50,7 +50,7 @@ class RoleService : Service() {
 		 *
 		 * @return List of roles
 		 * */
-		suspend fun getAll(): List<RoleEntity> = suspendTransaction {
+		fun getAll(): List<RoleEntity> = transaction {
 			RoleEntity
 				.all()
 				.toList()
@@ -63,7 +63,7 @@ class RoleService : Service() {
 		 *
 		 * @return Found role, if any
 		 * */
-		suspend fun getById(id: String): RoleEntity? = get(RoleTable.id eq id)
+		fun getById(id: String): RoleEntity? = get(RoleTable.id eq id)
 
 		/**
 		 * Gets the highest role type for a user
@@ -72,7 +72,7 @@ class RoleService : Service() {
 		 *
 		 * @return Highest tole type
 		 * */
-		suspend fun getUserHighestRole(userId: String): RoleType? {
+		fun getUserHighestRole(userId: String): RoleType? {
 			val user = UserService.getById(userId) ?: return null
 			val rolesOfType = getMany(RoleTable.id inList user.roles)
 
@@ -89,7 +89,7 @@ class RoleService : Service() {
 		 *
 		 * @return If the user has the role or not
 		 * */
-		suspend fun userHasRoleOfType(userId: String, type: RoleType): Boolean {
+		fun userHasRoleOfType(userId: String, type: RoleType): Boolean {
 			val user = UserService.getById(userId)
 			val rolesOfType = getMany(RoleTable.type eq type)
 
@@ -109,7 +109,7 @@ class RoleService : Service() {
 		 *
 		 * @return List of users with a role of a certain type
 		 * */
-		suspend fun getUsersOfType(type: RoleType): List<User> {
+		fun getUsersOfType(type: RoleType): List<User> {
 			val rolesOfType = getMany(RoleTable.type eq type)
 
 			val usersOfType = mutableListOf<User>()

@@ -1,9 +1,9 @@
 package site.remlit.blueb.aster.service
 
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.db.entity.InviteEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.PackageInformation
 import site.remlit.blueb.aster.model.Service
 import java.util.*
@@ -111,7 +111,7 @@ class CommandLineService : Service() {
 							return
 						}
 
-						suspendTransaction {
+						transaction {
 							val roles = user.roles.toMutableList()
 							roles.add(roleId)
 
@@ -148,7 +148,7 @@ class CommandLineService : Service() {
 							return
 						}
 
-						suspendTransaction {
+						transaction {
 							val roles = user.roles.toMutableList()
 							roles.remove(roleId)
 
@@ -165,7 +165,7 @@ class CommandLineService : Service() {
 						val id = IdentifierService.generate()
 						val code = RandomService.generateString()
 
-						suspendTransaction {
+						transaction {
 							InviteEntity.new(id) {
 								this.code = code
 								creator = instanceActor

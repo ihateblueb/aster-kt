@@ -5,8 +5,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.InviteEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.route.RouteRegistry
 import site.remlit.blueb.aster.service.IdentifierService
@@ -32,7 +32,7 @@ object InviteRoutes {
 					val id = IdentifierService.generate()
 					val code = RandomService.generateString()
 
-					suspendTransaction {
+					transaction {
 						InviteEntity.new(id) {
 							this.code = code
 							creator = authenticatedUser

@@ -3,12 +3,12 @@ package site.remlit.blueb.aster.service
 import at.favre.lib.crypto.bcrypt.BCrypt
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.KeyType
@@ -36,7 +36,7 @@ class SetupService : Service() {
 		/**
 		 * Creates admin and mod roles, if they don't already exist
 		 * */
-		suspend fun setupRoles() {
+		fun setupRoles() {
 			val existingAdminRole = RoleService.get(RoleTable.type eq RoleType.Admin)
 
 			if (existingAdminRole != null) {
@@ -46,7 +46,7 @@ class SetupService : Service() {
 
 				val id = IdentifierService.generate()
 
-				suspendTransaction {
+				transaction {
 					RoleEntity.new(id) {
 						name = "Admin"
 						type = RoleType.Admin
@@ -65,7 +65,7 @@ class SetupService : Service() {
 
 				val id = IdentifierService.generate()
 
-				suspendTransaction {
+				transaction {
 					RoleEntity.new(id) {
 						name = "Mod"
 						type = RoleType.Mod
@@ -80,7 +80,7 @@ class SetupService : Service() {
 		/**
 		 * Creates instance actor, if it doesn't already exist
 		 * */
-		suspend fun setupInstanceActor() {
+		fun setupInstanceActor() {
 			val existingActor = UserService.get(
 				UserTable.username eq "instance.actor"
 						and (UserTable.host eq null)
@@ -98,7 +98,7 @@ class SetupService : Service() {
 
 				val keypair = KeypairService.generate()
 
-				suspendTransaction {
+				transaction {
 					UserEntity.new(id) {
 						apId = ApIdService.renderUserApId(id)
 						inbox = ApIdService.renderInboxApId(id)

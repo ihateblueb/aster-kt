@@ -2,8 +2,8 @@ package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.AuthEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.AuthTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Service
@@ -22,7 +22,7 @@ class AuthService : Service() {
 		 *
 		 * @return Auth entity, if it exists
 		 * */
-		suspend fun get(where: Op<Boolean>): AuthEntity? = suspendTransaction {
+		fun get(where: Op<Boolean>): AuthEntity? = transaction {
 			AuthEntity
 				.find { where }
 				.singleOrNull()
@@ -35,7 +35,7 @@ class AuthService : Service() {
 		 *
 		 * @return Auth entity, if it exists
 		 * */
-		suspend fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
+		fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
 		/**
 		 * Creates a new auth token for a user
@@ -44,13 +44,13 @@ class AuthService : Service() {
 		 *
 		 * @return Newly created auth token
 		 * */
-		suspend fun registerToken(user: String): String {
+		fun registerToken(user: String): String {
 			val id = IdentifierService.generate()
 			val generatedToken = RandomService.generateString()
 
 			val user = UserService.get(UserTable.id eq user)!!
 
-			suspendTransaction {
+			transaction {
 				AuthEntity.new(id) {
 					token = generatedToken
 					this.user = user

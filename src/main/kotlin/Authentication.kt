@@ -4,8 +4,8 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.util.*
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.UserEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.service.AuthService
@@ -23,7 +23,7 @@ fun Application.configureAuthentication() {
 
 					var authId = ""
 
-					suspendTransaction {
+					transaction {
 						authId = auth.user.id.toString()
 					}
 
@@ -42,22 +42,24 @@ fun Application.configureAuthentication() {
 		bearer("authRequired") {
 			authenticate { credential ->
 				val auth = AuthService.getByToken(credential.token)
-
-				if (auth == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
+					?: throw ApiException(
+						HttpStatusCode.Unauthorized,
+						"Authentication required"
+					)
 
 				var authId = ""
 
-				suspendTransaction {
+				transaction {
 					authId = auth.user.id.toString()
 				}
 
 				UserIdPrincipal(authId)
 
 				val user = UserService.getById(authId)
-
-				if (user == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
+					?: throw ApiException(
+						HttpStatusCode.Unauthorized,
+						"Authentication required"
+					)
 
 				attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 
@@ -71,22 +73,24 @@ fun Application.configureAuthentication() {
 		bearer("authRequiredMod") {
 			authenticate { credential ->
 				val auth = AuthService.getByToken(credential.token)
-
-				if (auth == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
+					?: throw ApiException(
+						HttpStatusCode.Unauthorized,
+						"Authentication required"
+					)
 
 				var authId = ""
 
-				suspendTransaction {
+				transaction {
 					authId = auth.user.id.toString()
 				}
 
 				UserIdPrincipal(authId)
 
 				val user = UserService.getById(authId)
-
-				if (user == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
+					?: throw ApiException(
+						HttpStatusCode.Unauthorized,
+						"Authentication required"
+					)
 
 				attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 
@@ -106,22 +110,21 @@ fun Application.configureAuthentication() {
 		bearer("authRequiredAdmin") {
 			authenticate { credential ->
 				val auth = AuthService.getByToken(credential.token)
-
-				if (auth == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
+					?: throw ApiException(
+						HttpStatusCode.Unauthorized,
+						"Authentication required"
+					)
 
 				var authId = ""
 
-				suspendTransaction {
+				transaction {
 					authId = auth.user.id.toString()
 				}
 
 				UserIdPrincipal(authId)
 
 				val user = UserService.getById(authId)
-
-				if (user == null)
-					throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
+					?: throw ApiException(HttpStatusCode.Unauthorized, "Authentication required")
 
 				attributes.put(AttributeKey<UserEntity>("authenticatedUser"), user)
 

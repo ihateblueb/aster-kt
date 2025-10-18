@@ -18,7 +18,7 @@ if (RelationshipService.eitherBlocking(user.id.toString(), author.id.toString())
 ```
 
 ```kotlin
-suspend fun get(where: Op<Boolean>): UserEntity? = suspendTransaction {
+suspend fun get(where: Op<Boolean>): UserEntity? = transaction {
 	UserEntity
 		.find { where }
 		.singleOrNull()
@@ -27,7 +27,7 @@ suspend fun get(where: Op<Boolean>): UserEntity? = suspendTransaction {
 // rather than
 
 suspend fun get(where: Op<Boolean>): UserEntity? {
-	return suspendTransaction {
+	return transaction {
 		UserEntity
 			.find { where }
 			.singleOrNull()

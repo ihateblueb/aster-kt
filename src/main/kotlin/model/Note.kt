@@ -4,9 +4,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.entity.NoteLikeEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.NoteLikeTable
 
 @Serializable
@@ -56,7 +56,7 @@ data class Note(
 		}
 
 		suspend fun findLikes(id: String): List<SmallUser> {
-			val likes = suspendTransaction {
+			val likes = transaction {
 				NoteLikeEntity
 					.find { NoteLikeTable.note eq id }
 					.sortedByDescending { it.createdAt }

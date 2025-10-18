@@ -22,7 +22,7 @@ class VisibilityService : Service() {
 		 *
 		 * @return If the user can see the entity
 		 * */
-		suspend fun canISee(
+		fun canISee(
 			visibility: Visibility,
 			author: String,
 			to: List<String>? = null,

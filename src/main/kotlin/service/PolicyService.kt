@@ -2,8 +2,8 @@ package site.remlit.blueb.aster.service
 
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.PolicyEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.PolicyTable
 import site.remlit.blueb.aster.model.PolicyType
 import site.remlit.blueb.aster.model.Service
@@ -22,7 +22,7 @@ class PolicyService : Service() {
 		 *
 		 * @return Found policy, if any
 		 * */
-		suspend fun get(where: Op<Boolean>): PolicyEntity? = suspendTransaction {
+		fun get(where: Op<Boolean>): PolicyEntity? = transaction {
 			PolicyEntity
 				.find { where }
 				.singleOrNull()
@@ -35,7 +35,7 @@ class PolicyService : Service() {
 		 *
 		 * @return Found policy, if any
 		 * */
-		suspend fun getById(id: String): PolicyEntity? = get(PolicyTable.id eq id)
+		fun getById(id: String): PolicyEntity? = get(PolicyTable.id eq id)
 
 		/**
 		 * Get many policies.
@@ -44,7 +44,7 @@ class PolicyService : Service() {
 		 *
 		 * @return Found policies, if any
 		 * */
-		suspend fun getMany(where: Op<Boolean>, take: Int? = null): List<PolicyEntity> = suspendTransaction {
+		fun getMany(where: Op<Boolean>, take: Int? = null): List<PolicyEntity> = transaction {
 			PolicyEntity
 				.find { where }
 				.sortedByDescending { it.createdAt }
@@ -59,7 +59,7 @@ class PolicyService : Service() {
 		 *
 		 * @return Found policies, if any
 		 * */
-		suspend fun getAllByType(type: PolicyType): List<PolicyEntity> = suspendTransaction {
+		fun getAllByType(type: PolicyType): List<PolicyEntity> = transaction {
 			PolicyEntity
 				.find { PolicyTable.type eq type }
 				.sortedByDescending { it.createdAt }

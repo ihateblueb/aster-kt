@@ -1,3 +1,5 @@
+import io.ktor.plugin.*
+
 plugins {
 	application
 	`maven-publish`
@@ -97,25 +99,32 @@ application {
 	mainClass = "site.remlit.blueb.aster.ApplicationKt"
 }
 
-ktor {}
+ktor {
+	@OptIn(OpenApiPreview::class)
+	openApi {
+		title = project.name
+		version = project.version.toString()
+		target = project.layout.buildDirectory.file("openapi.json")
+	}
+}
 
 // docs
 
 val sourcesJar by tasks.registering(Jar::class) {
-	archiveBaseName = "aster"
+	archiveBaseName = project.name
 	archiveClassifier = "sources"
 	from(sourceSets.main.get().allSource)
 }
 
 val dokkaJavadocZip by tasks.registering(Zip::class) {
-	archiveBaseName = "aster"
+	archiveBaseName = project.name
 	archiveClassifier = "javadoc"
 	dependsOn(tasks.dokkaJavadoc)
 	from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
 }
 
 val dokkaHtmlZip by tasks.registering(Zip::class) {
-	archiveBaseName = "aster"
+	archiveBaseName = project.name
 	archiveClassifier = "dokka"
 	dependsOn(tasks.dokkaHtml)
 	from(tasks.dokkaHtml.map { it.outputDirectory })
@@ -154,6 +163,7 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
+	archiveFileName.set("${project.name}-${project.version}-all.jar")
 	dependsOn("compileFrontend")
 	dependsOn("processResources")
 }

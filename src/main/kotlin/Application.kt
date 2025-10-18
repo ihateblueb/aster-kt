@@ -19,6 +19,10 @@ import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.event.EventRegistry
+import site.remlit.blueb.aster.event.application.ApplicationBeginShutdownEvent
+import site.remlit.blueb.aster.event.application.ApplicationBeginStartEvent
+import site.remlit.blueb.aster.event.application.ApplicationFinishShutdownEvent
+import site.remlit.blueb.aster.event.application.ApplicationFinishStartEvent
 import site.remlit.blueb.aster.model.ApiError
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
@@ -43,12 +47,15 @@ fun main(args: Array<String>) {
 
 	val server = embeddedServer(Netty, Configuration.port, Configuration.host, module = Application::module)
 
+	ApplicationBeginStartEvent().call()
+
 	Runtime.getRuntime().addShutdownHook(Thread {
 		Thread.currentThread().name = "ShutdownMain"
 		runBlocking {
 			server.stop(1, 10, TimeUnit.SECONDS)
 			Database.dataSource.close()
 		}
+		ApplicationFinishShutdownEvent().call()
 	})
 
 	server.start(wait = true)
@@ -59,6 +66,7 @@ fun Application.module() {
 	Runtime.getRuntime().addShutdownHook(Thread {
 		Thread.currentThread().name = "ShutdownApplication"
 		this.log.info("Shutting down...")
+		ApplicationBeginShutdownEvent().call()
 		PluginRegistry.disableAll()
 		EventRegistry.clearListeners()
 	})
@@ -81,7 +89,7 @@ fun Application.module() {
 			val status = call.response.status()?.value
 			val uri = call.request.uri
 
-			"$status $method - $uri"
+			"$status $method    $uri"
 		}
 	}
 
@@ -157,4 +165,6 @@ fun Application.module() {
 
 	configureAuthentication()
 	configureRouting()
+
+	ApplicationFinishStartEvent().call()
 }

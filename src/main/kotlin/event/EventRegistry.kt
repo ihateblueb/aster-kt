@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 object EventRegistry {
-	private val logger = LoggerFactory.getLogger(EventRegistry::class.java)
+	private val logger = LoggerFactory.getLogger(this::class.java)
 
 	/**
 	 * Mutable list of event classes and functions to run when they're called
@@ -50,6 +50,7 @@ object EventRegistry {
 	@ApiStatus.Internal
 	fun executeEvent(event: Event) =
 		runBlocking {
+			if (Configuration.debug) logger.debug("Executing event ${event::class.simpleName}")
 			eventScope.launch {
 				for (listener in listeners) {
 					if (!listener.first.isInstance(event)) continue

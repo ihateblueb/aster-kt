@@ -3,9 +3,9 @@ package site.remlit.blueb.aster.service
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.InviteEntity
 import site.remlit.blueb.aster.db.entity.NoteEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.InviteTable
 import site.remlit.blueb.aster.model.Invite
 import site.remlit.blueb.aster.model.Service
@@ -17,7 +17,7 @@ import site.remlit.blueb.aster.model.Service
  * */
 class InviteService : Service() {
 	companion object {
-		suspend fun get(where: Op<Boolean>): Invite? = suspendTransaction {
+		fun get(where: Op<Boolean>): Invite? = transaction {
 			val invite = InviteEntity
 				.find { where }
 				.singleOrNull()
@@ -28,21 +28,21 @@ class InviteService : Service() {
 			else null
 		}
 
-		suspend fun getById(id: String): Invite? = get(InviteTable.id eq id)
-		suspend fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
+		fun getById(id: String): Invite? = get(InviteTable.id eq id)
+		fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
 
-		suspend fun delete(where: Op<Boolean>) = suspendTransaction {
+		fun delete(where: Op<Boolean>) = transaction {
 			InviteEntity
 				.find { where }
 				.singleOrNull()
 				?.delete()
 		}
 
-		suspend fun deleteById(id: String) = delete(InviteTable.id eq id)
-		suspend fun deleteByCode(code: String) = delete(InviteTable.code eq code)
+		fun deleteById(id: String) = delete(InviteTable.id eq id)
+		fun deleteByCode(code: String) = delete(InviteTable.code eq code)
 
-		suspend fun useInvite(code: String, userId: String) {
-			val invite = suspendTransaction {
+		fun useInvite(code: String, userId: String) {
+			val invite = transaction {
 				InviteEntity
 					.find { InviteTable.code eq code }
 					.singleOrNull()
@@ -53,7 +53,7 @@ class InviteService : Service() {
 
 			val user = UserService.getById(userId) ?: throw IllegalArgumentException("User does not exist")
 
-			suspendTransaction {
+			transaction {
 				invite.user = user
 				invite.usedAt = TimeService.now()
 				invite.flush()

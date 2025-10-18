@@ -5,10 +5,10 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.entity.NoteLikeEntity
 import site.remlit.blueb.aster.db.entity.UserEntity
-import site.remlit.blueb.aster.db.suspendTransaction
 import site.remlit.blueb.aster.db.table.NoteLikeTable
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
@@ -31,7 +31,7 @@ import site.remlit.blueb.aster.service.ap.ApIdService
  * */
 class NoteService : Service() {
 	companion object {
-		suspend fun get(where: Op<Boolean>): Note? = suspendTransaction {
+		fun get(where: Op<Boolean>): Note? = transaction {
 			val note = NoteEntity
 				.find { where }
 				.singleOrNull()
@@ -42,10 +42,10 @@ class NoteService : Service() {
 			else null
 		}
 
-		suspend fun getById(id: String): Note? = get(NoteTable.id eq id)
-		suspend fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
+		fun getById(id: String): Note? = get(NoteTable.id eq id)
+		fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
 
-		suspend fun getMany(where: Op<Boolean>, take: Int? = null): List<Note> = suspendTransaction {
+		fun getMany(where: Op<Boolean>, take: Int? = null): List<Note> = transaction {
 			val notes = NoteEntity
 				.find { where }
 				.sortedByDescending { it.createdAt }
@@ -57,7 +57,7 @@ class NoteService : Service() {
 			else listOf()
 		}
 
-		suspend fun count(where: Op<Boolean>): Long = suspendTransaction {
+		fun count(where: Op<Boolean>): Long = transaction {
 			NoteTable
 				.leftJoin(UserTable)
 				.select(where)
@@ -77,7 +77,7 @@ class NoteService : Service() {
 		 *
 		 * @return Created note
 		 * */
-		suspend fun create(
+		fun create(
 			id: String = IdentifierService.generate(),
 			user: UserEntity,
 			cw: String?,
@@ -86,7 +86,7 @@ class NoteService : Service() {
 			to: List<String> = listOf(),
 			tags: List<String> = listOf()
 		): Note {
-			suspendTransaction {
+			transaction {
 				NoteEntity.new(id) {
 					apId = ApIdService.renderNoteApId(id)
 					this.user = user
@@ -112,16 +112,17 @@ class NoteService : Service() {
 		 *
 		 * @since 2025.9.1.1-SNAPSHOT
 		 * */
-		suspend fun like(
+		fun like(
 			user: User,
 			noteId: String,
 		) {
-			val note = getById(noteId) ?: throw TargetNotFoundException("Note not found")
+			val note = getById(noteId)
+				?: throw TargetNotFoundException("Note not found")
 
 			if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
 				throw TargetNotFoundException("Note not found")
 
-			val existing = suspendTransaction {
+			val existing = transaction {
 				NoteLikeEntity
 					.find {
 						NoteLikeTable.note eq note.id and
@@ -131,12 +132,12 @@ class NoteService : Service() {
 			}
 
 			if (existing != null) {
-				suspendTransaction { existing.delete() }
+				transaction { existing.delete() }
 				NoteUnlikeEvent(note, user).call()
 				return
 			}
 
-			suspendTransaction {
+			transaction {
 				NoteLikeEntity.new(IdentifierService.generate()) {
 					this.user = UserEntity[user.id]
 					this.note = NoteEntity[note.id]
@@ -151,11 +152,11 @@ class NoteService : Service() {
 		 *
 		 * @param where Query to find note
 		 * */
-		suspend fun delete(where: Op<Boolean>) = suspendTransaction {
+		fun delete(where: Op<Boolean>) = transaction {
 			val entity = NoteEntity
 				.find { where }
 				.singleOrNull()
-			if (entity == null) return@suspendTransaction
+			if (entity == null) return@transaction
 
 			NoteDeleteEvent(Note.fromEntity(entity)).call()
 			entity.delete()
@@ -166,13 +167,13 @@ class NoteService : Service() {
 		 *
 		 * @param id ID of note
 		 * */
-		suspend fun deleteById(id: String) = delete(NoteTable.id eq id)
+		fun deleteById(id: String) = delete(NoteTable.id eq id)
 
 		/**
 		 * Delete a note by ActivityPub ID.
 		 *
 		 * @param apId ActivityPub ID of note
 		 * */
-		suspend fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
+		fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 	}
 }
