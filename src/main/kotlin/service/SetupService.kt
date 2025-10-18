@@ -6,13 +6,13 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.aster.common.model.RoleType
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.KeyType
-import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.service.ap.ApIdService
 

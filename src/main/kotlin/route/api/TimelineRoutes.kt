@@ -8,11 +8,11 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.less
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
-import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.route.RouteRegistry
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.TimelineService

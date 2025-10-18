@@ -1,7 +1,7 @@
 package site.remlit.blueb.aster.service.ap
 
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.model.Service
-import site.remlit.blueb.aster.model.Visibility
 
 /**
  * Service for understanding visibility in ActivityPub terms.

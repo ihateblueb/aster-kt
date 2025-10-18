@@ -4,7 +4,7 @@ import org.jetbrains.exposed.v1.core.ReferenceOption
 import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.datetime.CurrentDateTime
 import org.jetbrains.exposed.v1.datetime.datetime
-import site.remlit.blueb.aster.model.RelationshipType
+import site.remlit.blueb.aster.common.model.RelationshipType
 
 object RelationshipTable : IdTable<String>("relationship") {
 	override val id = varchar("id", length = 125).uniqueIndex("unique_relationship_id").entityId()

@@ -17,13 +17,13 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
+import site.remlit.blueb.aster.common.model.ApiError
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.event.EventRegistry
 import site.remlit.blueb.aster.event.application.ApplicationBeginShutdownEvent
 import site.remlit.blueb.aster.event.application.ApplicationBeginStartEvent
 import site.remlit.blueb.aster.event.application.ApplicationFinishShutdownEvent
 import site.remlit.blueb.aster.event.application.ApplicationFinishStartEvent
-import site.remlit.blueb.aster.model.ApiError
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.ap.ApValidationException

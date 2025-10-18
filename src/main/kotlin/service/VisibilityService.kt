@@ -1,8 +1,9 @@
 package site.remlit.blueb.aster.service
 
+import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.model.Service
-import site.remlit.blueb.aster.model.User
-import site.remlit.blueb.aster.model.Visibility
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for handling visibility in non-ActivityPub contexts.
@@ -16,7 +17,7 @@ class VisibilityService : Service() {
 		 *
 		 * @param visibility Visibility of the entity
 		 * @param author Author of the entity
-		 * @param to List of user ids, other users who can see this entity (for [Visibility.Direct]). Not applicable to all entities.
+		 * @param to List of user ids, other users who can see this entity (for [site.remlit.blueb.aster.model.Visibility.Direct]). Not applicable to all entities.
 		 * @param user User who is trying to view the entity
 		 * @param ignoreBlock Whether to take block relationships into account
 		 *

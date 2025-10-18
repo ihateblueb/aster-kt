@@ -3,7 +3,7 @@ package site.remlit.blueb.aster.db.table
 import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.datetime.CurrentDateTime
 import org.jetbrains.exposed.v1.datetime.datetime
-import site.remlit.blueb.aster.model.RoleType
+import site.remlit.blueb.aster.common.model.RoleType
 
 object RoleTable : IdTable<String>("role") {
 	override val id = varchar("id", length = 125).uniqueIndex("unique_role_id").entityId()

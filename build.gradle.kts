@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "site.remlit.blueb"
-version = "2025.10.2.0-SNAPSHOT"
+version = gradle.extra.get("rootVersion") as String
 
 repositories {
 	mavenCentral()
@@ -89,6 +89,8 @@ dependencies {
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 	testImplementation(kotlin("test"))
+
+	implementation(project(":common"))
 }
 
 kotlin {

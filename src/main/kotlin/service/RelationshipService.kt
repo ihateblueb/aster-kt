@@ -5,11 +5,12 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.Relationship
+import site.remlit.blueb.aster.common.model.RelationshipType
 import site.remlit.blueb.aster.db.entity.RelationshipEntity
 import site.remlit.blueb.aster.db.table.RelationshipTable
-import site.remlit.blueb.aster.model.Relationship
-import site.remlit.blueb.aster.model.RelationshipType
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for managing user relationships.
@@ -57,7 +58,7 @@ class RelationshipService : Service() {
 		 * @param to Relationship target
 		 * @param from Relationship owner
 		 *
-		 * @return [Pair] of [Relationship], where first is to and second is from
+		 * @return [Pair] of [site.remlit.blueb.aster.model.Relationship], where first is to and second is from
 		 * */
 		fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
 			return Pair(
@@ -78,7 +79,7 @@ class RelationshipService : Service() {
 		}
 
 		/**
-		 * Determine if there is a [RelationshipType.Block] in either direction
+		 * Determine if there is a [site.remlit.blueb.aster.model.RelationshipType.Block] in either direction
 		 *
 		 * @param to First user
 		 * @param from Second user
@@ -98,7 +99,7 @@ class RelationshipService : Service() {
 		}
 
 		/**
-		 * Determine if there is a [RelationshipType.Mute] in one direction
+		 * Determine if there is a [site.remlit.blueb.aster.model.RelationshipType.Mute] in one direction
 		 *
 		 * @param to Relationship target
 		 * @param from Relationship owner
