@@ -36,18 +36,5 @@ enum class PolicyType {
 	 * Force all incoming Follow activities to require approval.
 	 * */
 	@SerialName("forceFollowRequest")
-	ForceFollowRequest;
-
-	companion object {
-		fun fromString(value: String): PolicyType {
-			return when (value) {
-				"block" -> Block
-				"silence" -> Silence
-				"forceContentWarning" -> ForceContentWarning
-				"forceSensitive" -> ForceSensitive
-				"forceFollowRequest" -> ForceFollowRequest
-				else -> Block
-			}
-		}
-	}
+	ForceFollowRequest
 }

@@ -1,6 +1,7 @@
 package site.remlit.blueb.aster.util.model
 
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.common.model.Note
 import site.remlit.blueb.aster.common.model.SmallUser
@@ -10,7 +11,7 @@ import site.remlit.blueb.aster.db.entity.NoteLikeEntity
 import site.remlit.blueb.aster.db.table.NoteLikeTable
 
 
-fun Note.fromEntity(entity: NoteEntity): Note {
+fun Note.Companion.fromEntity(entity: NoteEntity): Note {
 	return Note(
 		id = entity.id.toString(),
 		apId = entity.apId,
@@ -29,7 +30,7 @@ fun Note.fromEntity(entity: NoteEntity): Note {
 	)
 }
 
-fun Note.findLikes(id: String): List<SmallUser> {
+fun Note.Companion.findLikes(id: String): List<SmallUser> {
 	val likes = transaction {
 		NoteLikeEntity
 			.find { NoteLikeTable.note eq id }
@@ -48,5 +49,5 @@ fun Note.findLikes(id: String): List<SmallUser> {
 	return users.toList()
 }
 
-fun Note.fromEntities(entities: List<NoteEntity>): List<Note> =
+fun Note.Companion.fromEntities(entities: List<NoteEntity>): List<Note> =
 	entities.map { fromEntity(it) }

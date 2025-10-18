@@ -2,7 +2,6 @@ package site.remlit.blueb.aster.common.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.aster.db.entity.InviteEntity
 
 @Serializable
 data class Invite(
@@ -15,17 +14,4 @@ data class Invite(
 
 	val createdAt: LocalDateTime,
 	val usedAt: LocalDateTime? = null,
-) {
-	companion object {
-		fun fromEntity(entity: InviteEntity): Invite = Invite(
-			id = entity.id.toString(),
-			code = entity.code,
-			user = if (entity.user != null) User.fromEntity(entity.user!!) else null,
-			creator = User.fromEntity(entity.creator),
-			createdAt = entity.createdAt,
-			usedAt = entity.usedAt
-		)
-
-		fun fromEntities(entities: List<InviteEntity>): List<Invite> = entities.map { fromEntity(it) }
-	}
-}
+)
