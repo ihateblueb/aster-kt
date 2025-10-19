@@ -4,7 +4,6 @@ import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.jetbrains.exposed.v1.json.contains
 import site.remlit.blueb.aster.common.model.RoleType
 import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.db.entity.RoleEntity
@@ -12,6 +11,7 @@ import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.util.model.fromEntity
+import site.remlit.blueb.aster.util.sql.arrayContains
 
 /**
  * Service for managing user roles.
@@ -116,7 +116,7 @@ class RoleService : Service() {
 			val usersOfType = mutableListOf<User>()
 
 			for (role in rolesOfType) {
-				UserService.getMany(UserTable.roles.contains(role.id)).forEach { userEntity ->
+				UserService.getMany(UserTable.roles arrayContains listOf(role.id)).forEach { userEntity ->
 					val user = User.fromEntity(userEntity)
 
 					if (!usersOfType.contains(user))

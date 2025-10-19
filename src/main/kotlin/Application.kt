@@ -85,10 +85,10 @@ fun Application.module() {
 
 	install(CallLogging) {
 		filter { call ->
-			!call.request.uri.startsWith("/assets")
-			!call.request.uri.startsWith("/favicon")
-			!call.request.uri.startsWith("/installHook.js")
-			!call.request.uri.startsWith("/manifest.json")
+			!call.request.uri.startsWith("/assets") &&
+					!call.request.uri.startsWith("/favicon") &&
+					!call.request.uri.startsWith("/installHook.js") &&
+					!call.request.uri.startsWith("/manifest.json")
 		}
 		format { call ->
 			val method = call.request.httpMethod.value

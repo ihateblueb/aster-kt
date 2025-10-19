@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Common from "aster-common";
 import './Note.scss'
 import Container from "./Container.tsx";
 import Avatar from "./Avatar.tsx";
@@ -12,11 +13,11 @@ import likeNote from "../api/note/like.ts";
 
 function Note(
     {data}:
-    { data: any }
+    { data: Common.Note }
 ) {
     let [note, setNote] = React.useState(data)
 
-    let self = localstore.getParsed("self")
+    let self = localstore.getSelf()
     let isOwnPost = note?.user?.id === self?.id
 
     let [cwOpen, setCwOpen] = React.useState(false)

@@ -50,27 +50,30 @@ class PluginService : Service() {
 							return@use
 						}
 
-						fun getInputStream(entry: ZipEntry): InputStream = zip.getInputStream(entry)
+						try {
+							fun getInputStream(entry: ZipEntry): InputStream = zip.getInputStream(entry)
 
-						getInputStream(pluginManifest).use { manifestStream ->
-							val manifest = Json.decodeFromStream<PluginManifest>(manifestStream)
+							getInputStream(pluginManifest).use { manifestStream ->
+								val manifest = Json.decodeFromStream<PluginManifest>(manifestStream)
 
-							val classLoader = URLClassLoader(
-								arrayOf(URI("file://${jar.absolutePathString()}").toURL()),
-								this::class.java.classLoader
-							)
+								val classLoader = URLClassLoader(
+									arrayOf(URI("file://${jar.absolutePathString()}").toURL()),
+									this::class.java.classLoader
+								)
 
-							if (Configuration.debug) logger.debug("Current URLClassLoader URLS: {}", classLoader.urLs)
+								if (Configuration.debug) logger.debug(
+									"Current URLClassLoader URLS: {}",
+									classLoader.urLs
+								)
 
-							try {
 								val mainClass = classLoader.loadClass(manifest.mainClass)
 								PluginRegistry.enablePlugin(
 									manifest,
 									mainClass.getDeclaredConstructor().newInstance() as AsterPlugin
 								)
-							} catch (e: Exception) {
-								logger.error("Failed to load plugin ${manifest.name}! ${e.message}", e)
 							}
+						} catch (e: Throwable) {
+							logger.error("Failed to load plugin ${jar.name}!", e)
 						}
 					}
 				}

@@ -5,7 +5,7 @@ import Button from "../Button.tsx";
 import './Account.scss'
 
 function AccountWidget() {
-    let account = localstore.getParsed("self")
+    let account = localstore.getSelf()
 
     if (account === undefined)
         return (

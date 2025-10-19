@@ -13,7 +13,7 @@ function Compose() {
         "Hows your day going?"
     ]
 
-    let account = localstore.getParsed("self")
+    let account = localstore.getSelf()
 
     if (account === undefined) return <></>
 

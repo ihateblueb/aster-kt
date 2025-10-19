@@ -1,3 +1,5 @@
+import * as Common from "aster-common"
+
 let defaults = {
     debug: {
         type: 'boolean',
@@ -5,7 +7,7 @@ let defaults = {
     },
 
     self: {
-        type: 'json',
+        type: 'user',
         value: undefined
     },
     token: {
@@ -54,6 +56,7 @@ class localstore {
                 if (defaultObj.type === 'boolean') return Boolean(toReturn);
                 if (defaultObj.type === 'number') return Number(toReturn);
                 if (defaultObj.type === 'json') return JSON.parse(toReturn);
+                if (defaultObj.type === 'user') return JSON.parse(toReturn) as Common.User;
             } else {
                 return defaultObj.value;
             }
@@ -61,6 +64,10 @@ class localstore {
             console.error('failed getParsed of ' + key, e);
             return undefined;
         }
+    }
+
+    public getSelf(): Common.User | undefined {
+        return this.getParsed("self") as Common.User | undefined
     }
 
     public set(key: string, val: string) {

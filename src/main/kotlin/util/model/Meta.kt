@@ -9,7 +9,6 @@ import site.remlit.blueb.aster.common.model.MetaStatCount
 import site.remlit.blueb.aster.common.model.MetaStats
 import site.remlit.blueb.aster.common.model.MetaVersion
 import site.remlit.blueb.aster.common.model.RoleType
-import site.remlit.blueb.aster.common.model.SmallUser
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.PackageInformation
@@ -19,15 +18,15 @@ import site.remlit.blueb.aster.service.RoleService
 import site.remlit.blueb.aster.service.UserService
 
 fun Meta.Companion.getMeta(): Meta {
-    val mods = RoleService.getUsersOfType(RoleType.Mod)
-        .toMutableList()
+	val mods = RoleService.getUsersOfType(RoleType.Mod)
+		.toMutableList()
 
-    val admins = RoleService.getUsersOfType(RoleType.Admin)
-        .toMutableList()
-        .filter { !mods.contains(it) }
+	val admins = RoleService.getUsersOfType(RoleType.Admin)
+		.toMutableList()
+		.filter { !mods.contains(it) }
 
-    val plugins = mutableMapOf<String, String>()
-    PluginRegistry.plugins.forEach { plugins[it.first.name] = it.first.version }
+	val plugins = mutableMapOf<String, String>()
+	PluginRegistry.plugins.forEach { plugins[it.first.name] = it.first.version }
 
 	return Meta(
 		name = Configuration.name,
@@ -37,7 +36,7 @@ fun Meta.Companion.getMeta(): Meta {
 			kotlin = KotlinVersion.CURRENT.toString(),
 			system = "${System.getProperty("os.name") ?: "Unknown name"} ${System.getProperty("os.version") ?: "Unknown version"}",
 		),
-        plugins = plugins,
+		plugins = plugins,
 		registrations = Configuration.registrations,
 		stats = MetaStats(
 			users = MetaStatCount(
@@ -50,8 +49,8 @@ fun Meta.Companion.getMeta(): Meta {
 			),
 		),
 		staff = MetaStaff(
-            admins.toSmall(),
-            mods.toSmall(),
+			admins.toSmall(),
+			mods.toSmall(),
 		)
 	)
 }
