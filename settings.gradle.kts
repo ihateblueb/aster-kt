@@ -1,5 +1,5 @@
 rootProject.name = "aster"
-gradle.extra.set("rootVersion", "2025.10.2.0-SNAPSHOT")
+gradle.extra.set("rootVersion", "2025.10.3.0-SNAPSHOT")
 
 pluginManagement {
 	plugins {
