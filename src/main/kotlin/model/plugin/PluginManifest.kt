@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class PluginManifest(
 	val name: String,
 	val mainClass: String,
+    val version: String,
 	val authors: List<String>,
 )

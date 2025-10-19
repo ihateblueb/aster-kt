@@ -6,6 +6,6 @@ import kotlin.js.JsExport
 @JsExport
 @Serializable
 data class MetaStaff(
-	val admin: List<User?> = listOf(),
-	val mod: List<User?> = listOf()
+	val admin: List<SmallUser?> = listOf(),
+	val mod: List<SmallUser?> = listOf()
 )

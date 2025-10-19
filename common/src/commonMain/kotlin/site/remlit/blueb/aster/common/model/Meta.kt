@@ -8,7 +8,7 @@ import kotlin.js.JsExport
 data class Meta(
 	val name: String,
 	val version: MetaVersion,
-	val plugins: List<String> = listOf(),
+	val plugins: Map<String, String> = mapOf(),
 	val registrations: InstanceRegistrationsType,
 	val stats: MetaStats,
 	val staff: MetaStaff

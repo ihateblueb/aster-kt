@@ -1,7 +1,9 @@
 package site.remlit.blueb.aster.util.model
 
+import site.remlit.blueb.aster.common.model.SmallUser
 import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.db.entity.UserEntity
+import kotlin.collections.map
 
 
 fun User.Companion.fromEntity(entity: UserEntity) = User(
@@ -39,4 +41,15 @@ fun User.Companion.fromEntity(entity: UserEntity) = User(
 	publicKey = entity.publicKey
 )
 
-fun User.Companion.fromEntities(entities: List<UserEntity>): List<User> = entities.map { fromEntity(it) }
+fun User.Companion.fromEntities(entities: List<UserEntity>): List<User> =
+    entities.map { fromEntity(it) }
+
+/**
+ * Convert a user to a small user.
+ * */
+fun User.toSmall(): SmallUser = SmallUser.fromUser(this)
+
+/**
+ * Convert a list of users to a list of small users.
+ * */
+fun List<User>.toSmall(): List<SmallUser> = this.map { it.toSmall() }
