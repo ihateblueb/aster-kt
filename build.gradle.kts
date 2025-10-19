@@ -4,12 +4,12 @@ plugins {
 	application
 	`maven-publish`
 
-	kotlin("jvm") version "2.2.20"
-	kotlin("plugin.serialization") version "2.2.20"
+	kotlin("jvm")
+	kotlin("plugin.serialization")
 
-	id("io.ktor.plugin") version "3.3.1"
-	id("com.gradleup.shadow") version "8.3.0"
-	id("org.jetbrains.dokka") version "2.0.0"
+	id("io.ktor.plugin")
+	id("com.gradleup.shadow")
+	id("org.jetbrains.dokka")
 }
 
 group = "site.remlit.blueb"
@@ -116,6 +116,7 @@ val sourcesJar by tasks.registering(Jar::class) {
 	archiveBaseName = project.name
 	archiveClassifier = "sources"
 	from(sourceSets.main.get().allSource)
+	mustRunAfter("copyFrontend")
 }
 
 val dokkaJavadocZip by tasks.registering(Zip::class) {
@@ -149,10 +150,19 @@ tasks.clean {
 }
 
 tasks.register<Exec>("compileFrontend") {
+	dependsOn(":common:build")
 	executable("./scripts/build-frontend.sh")
 }
 
+tasks.register<Copy>("copyFrontend") {
+	dependsOn("compileFrontend")
+	from("frontend/packages/app/dist")
+	into("src/main/resources/frontend")
+}
+
 tasks.processResources {
+	dependsOn("copyFrontend")
+	
 	val name = project.provider { project.name }.get()
 	val group = project.provider { project.group.toString() }.get()
 	val version = project.provider { project.version.toString() }.get()

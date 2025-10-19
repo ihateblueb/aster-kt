@@ -41,3 +41,9 @@ configuration.yaml
 .kotlin/
 .env
 plugins/
+kotlin-js-store
+frontend/packages/common
+dist
+node_modules
+.vite
+src/main/resources/frontend

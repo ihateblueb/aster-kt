@@ -1,6 +1,10 @@
+@file:OptIn(ExperimentalDistributionDsl::class)
+
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalDistributionDsl
+
 plugins {
-	kotlin("jvm") version "2.2.20"
-	kotlin("plugin.serialization") version "2.2.20"
+	kotlin("multiplatform")
+	kotlin("plugin.serialization")
 }
 
 group = "site.remlit.blueb.aster"
@@ -10,12 +14,26 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
-	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
-	compileOnly("org.jetbrains:annotations:26.0.2-1")
-}
-
 kotlin {
-	jvmToolchain(21)
+	jvm()
+
+	js {
+		nodejs()
+		useEsModules()
+		generateTypeScriptDefinitions()
+		binaries.library()
+		outputModuleName.set("aster-common")
+	}
+
+	sourceSets {
+		commonMain.dependencies {
+			implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+			implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+		}
+	}
+
+	compilerOptions {
+		freeCompilerArgs.add("-Xes-long-as-bigint")
+		freeCompilerArgs.add("-opt-in=kotlin.js.ExperimentalJsExport")
+	}
 }

@@ -8,12 +8,15 @@ object FrontendRoutes {
 	fun register() {
 		RouteRegistry.registerRoute {
 			singlePageApplication {
-				val resource = javaClass.classLoader.getResource("frontend")
+				val resource = try {
+					javaClass.classLoader.getResource("frontend")?.path
+				} catch (_: Exception) {
+					null
+				}
 
 				if (resource == null)
 					application.log.warn("Frontend resource not found, disabling.")
-				else
-					react(resource.toURI().path)
+				else react(resource)
 			}
 		}
 	}
