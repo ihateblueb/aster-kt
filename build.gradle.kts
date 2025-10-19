@@ -90,7 +90,7 @@ dependencies {
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 	testImplementation(kotlin("test"))
 
-	implementation(project(":common"))
+	api(project(":common"))
 }
 
 kotlin {
@@ -115,7 +115,6 @@ ktor {
 val sourcesJar by tasks.registering(Jar::class) {
 	archiveBaseName = project.name
 	archiveClassifier = "sources"
-	from(sourceSets.main.get().allSource)
 	mustRunAfter("copyFrontend")
 }
 
@@ -162,7 +161,7 @@ tasks.register<Copy>("copyFrontend") {
 
 tasks.processResources {
 	dependsOn("copyFrontend")
-	
+
 	val name = project.provider { project.name }.get()
 	val group = project.provider { project.group.toString() }.get()
 	val version = project.provider { project.version.toString() }.get()
@@ -187,6 +186,7 @@ tasks.build {
 // publishing
 
 tasks.publish {
+	dependsOn(":common:publish")
 	dependsOn("sourcesJar")
 	dependsOn("dokkaHtml")
 	dependsOn("javadoc")
