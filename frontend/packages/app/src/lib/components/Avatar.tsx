@@ -8,7 +8,7 @@ function Avatar(
     React.useEffect(() => {
     })
 
-    let fallback = "/img/avatar.png"
+    let fallback = "/assets/img/avatar.png"
 
     return (
         <div className={`avatarCtn`}>

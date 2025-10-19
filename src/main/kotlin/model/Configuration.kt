@@ -25,7 +25,7 @@ object Configuration {
 	val host: String get() = config?.propertyOrNull("host")?.getString() ?: "0.0.0.0"
 
 	val debug: Boolean get() = config?.propertyOrNull("debug")?.getString()?.toBoolean() ?: false
-
+	val builtinFrontend: Boolean get() = config?.propertyOrNull("builtinFrontend")?.getString()?.toBoolean() ?: true
 	val hideRemoteContent: Boolean get() = config?.propertyOrNull("hideRemoteContent")?.getString()?.toBoolean() ?: true
 
 	val registrations: InstanceRegistrationsType

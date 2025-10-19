@@ -166,10 +166,12 @@ tasks.processResources {
 	val group = project.provider { project.group.toString() }.get()
 	val version = project.provider { project.version.toString() }.get()
 
-	filter { line ->
-		line.replace("%artifactId%", name)
-			.replace("%version%", version)
-			.replace("%groupId%", group)
+	filesMatching("application.yaml") {
+		filter { line ->
+			line.replace("%artifactId%", name)
+				.replace("%version%", version)
+				.replace("%groupId%", group)
+		}
 	}
 }
 

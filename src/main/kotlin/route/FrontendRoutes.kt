@@ -1,23 +1,16 @@
 package site.remlit.blueb.aster.route
 
-import io.ktor.server.application.*
 import io.ktor.server.http.content.*
-import io.ktor.server.routing.*
+import site.remlit.blueb.aster.model.Configuration
 
 object FrontendRoutes {
 	fun register() {
 		RouteRegistry.registerRoute {
-			singlePageApplication {
-				val resource = try {
-					javaClass.classLoader.getResource("frontend")?.path
-				} catch (_: Exception) {
-					null
+			if (Configuration.builtinFrontend)
+				singlePageApplication {
+					useResources = true
+					filesPath = "frontend"
 				}
-
-				if (resource == null)
-					application.log.warn("Frontend resource not found, disabling.")
-				else react(resource)
-			}
 		}
 	}
 }
