@@ -11,6 +11,7 @@ import site.remlit.blueb.aster.common.model.MetaVersion
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.PackageInformation
+import site.remlit.blueb.aster.plugin.PluginRegistry
 import site.remlit.blueb.aster.service.NoteService
 import site.remlit.blueb.aster.service.UserService
 
@@ -23,6 +24,7 @@ fun Meta.Companion.getMeta(): Meta {
 			kotlin = KotlinVersion.CURRENT.toString(),
 			system = "${System.getProperty("os.name")} ${System.getProperty("os.version")}",
 		),
+        plugins = PluginRegistry.plugins.map { it.first.name },
 		registrations = Configuration.registrations,
 		stats = MetaStats(
 			users = MetaStatCount(

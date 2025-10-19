@@ -11,7 +11,7 @@ object PluginRegistry {
 	/**
 	 * List of currently enabled plugins
 	 * */
-	val plugins: MutableList<Pair<String, AsterPlugin>> = emptyList<Pair<String, AsterPlugin>>().toMutableList()
+	val plugins: MutableList<Pair<PluginManifest, AsterPlugin>> = emptyList<Pair<PluginManifest, AsterPlugin>>().toMutableList()
 
 	/**
 	 * Adds plugin to registry and runs it's enable hook.
@@ -20,11 +20,11 @@ object PluginRegistry {
 	 * */
 	fun enablePlugin(manifest: PluginManifest, plugin: AsterPlugin) {
 		if (
-			plugins.find { it.first == manifest.name } != null ||
+			plugins.find { it.first == manifest } != null ||
 			plugins.find { it.second == plugin } != null
 		) throw IllegalStateException("Attempted to register duplicate plugin")
 
-		plugins.add(manifest.name to plugin)
+		plugins.add(manifest to plugin)
 		plugin.enable()
 
 		logger.info("Enabled plugin ${manifest.name} by ${manifest.authors.joinToString(", ")}")
