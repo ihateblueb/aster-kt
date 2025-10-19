@@ -1,8 +1,8 @@
 package site.remlit.blueb.aster.model.ap
 
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.aster.model.Note
-import site.remlit.blueb.aster.model.Visibility
+import site.remlit.blueb.aster.common.model.Note
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.service.FormatService
 import site.remlit.blueb.aster.service.ap.ApVisibilityService
 

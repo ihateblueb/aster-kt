@@ -6,6 +6,9 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.Note
+import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.entity.NoteLikeEntity
 import site.remlit.blueb.aster.db.entity.UserEntity
@@ -18,11 +21,10 @@ import site.remlit.blueb.aster.event.note.NoteLikeEvent
 import site.remlit.blueb.aster.event.note.NoteUnlikeEvent
 import site.remlit.blueb.aster.exception.InsertFailureException
 import site.remlit.blueb.aster.exception.TargetNotFoundException
-import site.remlit.blueb.aster.model.Note
 import site.remlit.blueb.aster.model.Service
-import site.remlit.blueb.aster.model.User
-import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.service.ap.ApIdService
+import site.remlit.blueb.aster.util.model.fromEntities
+import site.remlit.blueb.aster.util.model.fromEntity
 
 /**
  * Service for managing notes.

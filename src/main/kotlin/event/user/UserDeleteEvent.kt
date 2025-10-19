@@ -1,6 +1,6 @@
 package site.remlit.blueb.aster.event.user
 
-import site.remlit.blueb.aster.model.User
+import site.remlit.blueb.aster.common.model.User
 
 /**
  * Event for when a user is deleted

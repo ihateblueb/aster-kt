@@ -1,6 +1,3 @@
-cd frontend || exit
-
 echo "Removing old built frontend"
-rm -R dist
-
-cd - || exit
+rm -R frontend/packages/app/dist || true
+rm -R src/main/resources/frontend || true

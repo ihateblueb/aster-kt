@@ -8,15 +8,15 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.ApiError
+import site.remlit.blueb.aster.common.model.AuthResponse
+import site.remlit.blueb.aster.common.model.InstanceRegistrationsType
+import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
-import site.remlit.blueb.aster.model.ApiError
 import site.remlit.blueb.aster.model.ApiException
-import site.remlit.blueb.aster.model.AuthResponse
 import site.remlit.blueb.aster.model.Configuration
-import site.remlit.blueb.aster.model.InstanceRegistrationsType
 import site.remlit.blueb.aster.model.KeyType
-import site.remlit.blueb.aster.model.User
 import site.remlit.blueb.aster.route.RouteRegistry
 import site.remlit.blueb.aster.service.AuthService
 import site.remlit.blueb.aster.service.FormatService
@@ -26,6 +26,7 @@ import site.remlit.blueb.aster.service.KeypairService
 import site.remlit.blueb.aster.service.UserService
 import site.remlit.blueb.aster.service.ValidationService
 import site.remlit.blueb.aster.service.ap.ApIdService
+import site.remlit.blueb.aster.util.model.fromEntity
 
 object RegisterRoutes {
 	@Serializable

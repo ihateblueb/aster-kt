@@ -7,8 +7,8 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.blueb.aster.common.model.PolicyType
 import site.remlit.blueb.aster.model.Configuration
-import site.remlit.blueb.aster.model.PolicyType
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.ap.ApValidationException
 import site.remlit.blueb.aster.model.ap.ApValidationExceptionType

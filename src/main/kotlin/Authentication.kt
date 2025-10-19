@@ -5,9 +5,9 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.util.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.RoleType
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.model.ApiException
-import site.remlit.blueb.aster.model.RoleType
 import site.remlit.blueb.aster.service.AuthService
 import site.remlit.blueb.aster.service.RoleService
 import site.remlit.blueb.aster.service.UserService

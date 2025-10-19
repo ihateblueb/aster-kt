@@ -4,8 +4,8 @@ import io.ktor.http.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
+import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.model.ApiException
-import site.remlit.blueb.aster.model.Visibility
 import site.remlit.blueb.aster.model.ap.ApNote
 import site.remlit.blueb.aster.model.ap.activity.ApCreateActivity
 import site.remlit.blueb.aster.route.RouteRegistry

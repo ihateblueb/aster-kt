@@ -2,6 +2,7 @@ package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*
+import site.remlit.blueb.aster.common.model.InstanceRegistrationsType
 import site.remlit.blueb.aster.util.capitalize
 import java.io.File
 import kotlin.concurrent.thread
