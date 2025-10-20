@@ -4,7 +4,7 @@ import org.jetbrains.exposed.v1.core.ReferenceOption
 import org.jetbrains.exposed.v1.core.dao.id.IdTable
 import org.jetbrains.exposed.v1.datetime.CurrentDateTime
 import org.jetbrains.exposed.v1.datetime.datetime
-import site.remlit.blueb.aster.common.model.NotificationType
+import site.remlit.blueb.aster.common.model.type.NotificationType
 
 object NotificationTable : IdTable<String>("notification") {
 	override val id = varchar("id", length = 125).uniqueIndex("unique_notification_id").entityId()

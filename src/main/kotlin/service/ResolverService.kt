@@ -13,7 +13,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.aster.common.model.PolicyType
+import site.remlit.blueb.aster.common.model.type.PolicyType
 import site.remlit.blueb.aster.exception.ResolverException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.PackageInformation

@@ -3,7 +3,7 @@ package site.remlit.blueb.aster.util
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.util.*
-import site.remlit.blueb.aster.common.model.RoleType
+import site.remlit.blueb.aster.common.model.type.RoleType
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.service.AuthService

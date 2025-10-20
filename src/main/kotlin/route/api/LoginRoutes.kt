@@ -8,8 +8,8 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
-import site.remlit.blueb.aster.common.model.AuthResponse
 import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.response.AuthResponse
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.route.RouteRegistry

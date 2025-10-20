@@ -2,6 +2,7 @@ package site.remlit.blueb.aster.common.model
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import site.remlit.blueb.aster.common.model.type.RelationshipType
 import kotlin.js.JsExport
 
 @JsExport

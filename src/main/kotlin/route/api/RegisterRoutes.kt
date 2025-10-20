@@ -9,9 +9,9 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.common.model.ApiError
-import site.remlit.blueb.aster.common.model.AuthResponse
-import site.remlit.blueb.aster.common.model.InstanceRegistrationsType
 import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.response.AuthResponse
+import site.remlit.blueb.aster.common.model.type.InstanceRegistrationsType
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.entity.UserPrivateEntity
 import site.remlit.blueb.aster.model.ApiException

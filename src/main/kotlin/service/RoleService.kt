@@ -4,8 +4,8 @@ import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import site.remlit.blueb.aster.common.model.RoleType
 import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.type.RoleType
 import site.remlit.blueb.aster.db.entity.RoleEntity
 import site.remlit.blueb.aster.db.table.RoleTable
 import site.remlit.blueb.aster.db.table.UserTable

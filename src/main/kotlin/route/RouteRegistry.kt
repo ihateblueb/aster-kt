@@ -84,5 +84,6 @@ object RouteRegistry {
 		UserRoutes.register()
 
 		FrontendRoutes.register()
+		UploadRoutes.register()
 	}
 }

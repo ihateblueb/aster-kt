@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.common.model.Policy
-import site.remlit.blueb.aster.common.model.PolicyType
+import site.remlit.blueb.aster.common.model.type.PolicyType
 import site.remlit.blueb.aster.db.entity.PolicyEntity
 import site.remlit.blueb.aster.db.table.PolicyTable
 import site.remlit.blueb.aster.model.ApiException

@@ -3,7 +3,7 @@ package site.remlit.blueb.aster.service
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import site.remlit.blueb.aster.common.model.PolicyType
+import site.remlit.blueb.aster.common.model.type.PolicyType
 import site.remlit.blueb.aster.db.entity.PolicyEntity
 import site.remlit.blueb.aster.db.table.PolicyTable
 import site.remlit.blueb.aster.model.Service

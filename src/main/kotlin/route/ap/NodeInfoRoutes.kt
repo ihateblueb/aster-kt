@@ -7,7 +7,7 @@ import io.ktor.server.util.*
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.neq
-import site.remlit.blueb.aster.common.model.InstanceRegistrationsType
+import site.remlit.blueb.aster.common.model.type.InstanceRegistrationsType
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration

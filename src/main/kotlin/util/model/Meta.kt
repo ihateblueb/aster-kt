@@ -8,7 +8,7 @@ import site.remlit.blueb.aster.common.model.MetaStaff
 import site.remlit.blueb.aster.common.model.MetaStatCount
 import site.remlit.blueb.aster.common.model.MetaStats
 import site.remlit.blueb.aster.common.model.MetaVersion
-import site.remlit.blueb.aster.common.model.RoleType
+import site.remlit.blueb.aster.common.model.type.RoleType
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.PackageInformation

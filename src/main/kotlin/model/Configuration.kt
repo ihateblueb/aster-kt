@@ -2,13 +2,15 @@ package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*
-import site.remlit.blueb.aster.common.model.FileStorageType
-import site.remlit.blueb.aster.common.model.InstanceRegistrationsType
+import site.remlit.blueb.aster.common.model.type.FileStorageType
+import site.remlit.blueb.aster.common.model.type.InstanceRegistrationsType
 import site.remlit.blueb.aster.util.capitalize
 import java.io.File
 import java.nio.file.Path
 import kotlin.concurrent.thread
 import kotlin.io.path.Path
+import kotlin.io.path.exists
+import kotlin.io.path.isDirectory
 
 var workingDir = File(".").absolutePath.toString().removeSuffix(".")
 var configPath = workingDir + "configuration.yaml"
@@ -62,8 +64,19 @@ class ConfigurationFileStorage {
 			config?.propertyOrNull("fileStorage.type")?.getString()?.capitalize() ?: "Local"
 		)
 	val localPath: Path
-		get() =
-			Path(config?.propertyOrNull("fileStorage.localPath")?.getString() ?: "/var/lib/aster/files")
+		get() {
+			val path = Path(config?.propertyOrNull("fileStorage.localPath")?.getString() ?: "/var/lib/aster/files")
+
+			if (!path.exists())
+				throw Exception("File storage path doesn't exist")
+			if (!path.isDirectory())
+				throw Exception("File storage path is a file, not a directory")
+			if (!path.toFile().canWrite())
+				throw Exception("File storage path is not writeable")
+
+			return path
+		}
+
 	val maxUploadSize: Int
 		get() = config?.propertyOrNull("fileStorage.maxUploadSize")?.getString()?.toInt() ?: 25
 }

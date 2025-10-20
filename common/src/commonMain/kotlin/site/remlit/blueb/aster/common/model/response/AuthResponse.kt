@@ -1,6 +1,7 @@
-package site.remlit.blueb.aster.common.model
+package site.remlit.blueb.aster.common.model.response
 
 import kotlinx.serialization.Serializable
+import site.remlit.blueb.aster.common.model.User
 import kotlin.js.JsExport
 
 @JsExport

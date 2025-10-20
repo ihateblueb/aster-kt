@@ -7,9 +7,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
-import site.remlit.blueb.aster.common.model.RoleType
 import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.common.model.Visibility
+import site.remlit.blueb.aster.common.model.type.RoleType
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.route.RouteRegistry

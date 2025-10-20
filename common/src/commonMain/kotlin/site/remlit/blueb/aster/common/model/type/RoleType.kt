@@ -1,4 +1,4 @@
-package site.remlit.blueb.aster.common.model
+package site.remlit.blueb.aster.common.model.type
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

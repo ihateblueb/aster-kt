@@ -1,6 +1,7 @@
 package site.remlit.blueb.aster.common.model
 
 import kotlinx.serialization.Serializable
+import site.remlit.blueb.aster.common.model.type.InstanceRegistrationsType
 import kotlin.js.JsExport
 
 @JsExport
