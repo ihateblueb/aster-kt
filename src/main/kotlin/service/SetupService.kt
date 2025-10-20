@@ -23,7 +23,7 @@ import site.remlit.blueb.aster.service.ap.ApIdService
  * */
 class SetupService : Service() {
 	companion object {
-		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+		private val logger: Logger = LoggerFactory.getLogger(SetupService::class.java)
 
 		/**
 		 * Setup instance

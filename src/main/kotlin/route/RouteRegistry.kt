@@ -28,7 +28,7 @@ import site.remlit.blueb.aster.route.api.mod.PolicyRoutes
  * @since 2025.10.1.0-SNAPSHOT
  */
 object RouteRegistry {
-	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(RouteRegistry::class.java)
 
 	/**
 	 * List of registered extension functions for routes.

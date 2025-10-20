@@ -3,6 +3,7 @@ package site.remlit.blueb.aster.route
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.auth.*
+import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,6 +12,8 @@ import io.ktor.utils.io.*
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
+import site.remlit.blueb.aster.service.DriveService
+import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.util.authenticatedUserKey
 import java.nio.file.Files
 import kotlin.io.path.Path
@@ -18,9 +21,12 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 
 object UploadRoutes {
-	private val logger = LoggerFactory.getLogger(this::class.java)
+	private val logger = LoggerFactory.getLogger(UploadRoutes::class.java)
 
 	fun register() = RouteRegistry.registerRoute {
+		staticFiles("/uploads", Configuration.fileStorage.localPath.toFile()) {
+			enableAutoHeadResponse()
+		}
 		authenticate("authRequired") {
 			post("/upload") {
 				val authenticatedUser = call.attributes[authenticatedUserKey]
@@ -42,7 +48,9 @@ object UploadRoutes {
 
 						val path =
 							Path("${Configuration.fileStorage.localPath.absolutePathString()}/${authenticatedUser.id}/$name").let {
-								if (it.exists()) Path("${Configuration.fileStorage.localPath.absolutePathString()}/${authenticatedUser.id}/duplicate-$name") else it
+								if (it.exists())
+									Path("${Configuration.fileStorage.localPath.absolutePathString()}/${authenticatedUser.id}/${IdentifierService.generate()}-$name")
+								else it
 							}
 
 						if (!path.exists()) Files.createDirectories(path.parent)
@@ -56,6 +64,12 @@ object UploadRoutes {
 						)
 
 						part.provider().copyAndClose(path.toFile().writeChannel())
+
+						DriveService.create(
+							authenticatedUser,
+							contentType,
+							path
+						)
 					}
 					part.dispose()
 				}

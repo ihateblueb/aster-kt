@@ -36,7 +36,7 @@ import kotlin.io.path.writer
 @OptIn(ExperimentalDatabaseMigrationApi::class)
 class MigrationService : Service() {
 	companion object {
-		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+		private val logger: Logger = LoggerFactory.getLogger(MigrationService::class.java)
 
 		val migrationsDir = Path("src/main/resources/migrations")
 		val manifestPath = Path("$migrationsDir/_manifest.txt")

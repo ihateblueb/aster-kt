@@ -27,7 +27,7 @@ import site.remlit.blueb.aster.util.jsonConfig
  * */
 class ResolverService : Service() {
 	companion object {
-		private val logger = LoggerFactory.getLogger(this::class.java)
+		private val logger = LoggerFactory.getLogger(ResolverService::class.java)
 
 		/**
 		 * Creates an HTTP client with default request headers and content negotiation rules for ActivityPub and more.

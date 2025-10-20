@@ -19,7 +19,7 @@ import site.remlit.blueb.aster.service.UserService
  * */
 class ApActorService : Service() {
 	companion object {
-		private val logger = LoggerFactory.getLogger(this::class.java)
+		private val logger = LoggerFactory.getLogger(ApActorService::class.java)
 
 		/**
 		 * Resolve an actor by their ID

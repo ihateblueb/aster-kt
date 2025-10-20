@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 object EventRegistry {
-	private val logger = LoggerFactory.getLogger(this::class.java)
+	private val logger = LoggerFactory.getLogger(EventRegistry::class.java)
 
 	/**
 	 * Mutable list of event classes and functions to run when they're called

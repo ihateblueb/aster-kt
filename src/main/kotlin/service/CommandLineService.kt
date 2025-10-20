@@ -1,12 +1,19 @@
 package site.remlit.blueb.aster.service
 
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.neq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.db.entity.InviteEntity
+import site.remlit.blueb.aster.db.table.DriveFileTable
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.PackageInformation
 import site.remlit.blueb.aster.model.Service
 import java.util.*
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
 
 /**
  * Service for managing Aster via the command line.
@@ -15,12 +22,13 @@ import java.util.*
  * */
 class CommandLineService : Service() {
 	companion object {
-		private val logger = LoggerFactory.getLogger(this::class.java)
+		private val logger = LoggerFactory.getLogger(CommandLineService::class.java)
 
 		fun help() {
 			logger.info("${PackageInformation.name} ${PackageInformation.version}")
 			logger.info("Run without arguments to start server")
 			logger.info("help					Show this page")
+			logger.info("clean:files					Clean up drive files that are no longer in the file storage")
 			logger.info("migration:generate			Generate migrations (for developer use)")
 			logger.info("migration:execute			Execute migrations")
 			logger.info("role:list				List all roles")
@@ -59,6 +67,35 @@ class CommandLineService : Service() {
 					"prompt" -> {
 						prompt()
 						return
+					}
+
+					"clean:files" -> {
+						val files = DriveService.getMany(DriveFileTable.id neq "")
+
+						logger.info("${files.size} drive files found")
+
+						for (file in files) {
+							val supposedPath = Path(
+								file.src.replace(
+									"${Configuration.url.protocol.name}://${Configuration.url.host}/uploads",
+									Configuration.fileStorage.localPath.absolutePathString()
+								)
+							)
+
+							if (supposedPath.exists()) {
+								if (Configuration.debug) logger.debug(
+									"File {} ({}) found at {}",
+									file.src,
+									file.id,
+									supposedPath
+								)
+							} else {
+								logger.info(
+									"File ${file.src} (${file.id}) missing, deleting"
+								)
+								DriveService.delete(DriveFileTable.id eq file.id)
+							}
+						}
 					}
 
 					"migration:generate" -> {

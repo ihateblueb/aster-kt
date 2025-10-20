@@ -23,7 +23,7 @@ import kotlin.time.Duration.Companion.seconds
  * */
 class QueueService : Service() {
 	companion object {
-		private val logger = LoggerFactory.getLogger(this::class.java)
+		private val logger = LoggerFactory.getLogger(QueueService::class.java)
 
 		val inboxScope = CoroutineScope(Dispatchers.Default)
 		val deliverScope = CoroutineScope(Dispatchers.Default)

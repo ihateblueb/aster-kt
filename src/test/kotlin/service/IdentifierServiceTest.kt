@@ -1,4 +1,4 @@
-package site.remlit.blueb.aster.test.basic
+package site.remlit.blueb.aster.test.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -9,8 +9,7 @@ import kotlin.test.Test
 import kotlin.time.measureTimedValue
 
 class IdentifierServiceTest {
-
-	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(IdentifierServiceTest::class.java)
 
 	private fun noDuplicatesGenerate(type: IdentifierType, repeat: Int): List<Pair<Long, String>> {
 		/**
@@ -72,12 +71,5 @@ class IdentifierServiceTest {
 	}
 
 	@Test
-	fun noDuplicates10() = noDuplicates(10)
-
-	@Test
-	fun noDuplicates100() = noDuplicates(100)
-
-	@Test
 	fun noDuplicates10000() = noDuplicates(10000)
-
 }

@@ -29,7 +29,7 @@ import kotlin.io.encoding.Base64
  * */
 class ApValidationService : Service() {
 	companion object {
-		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+		private val logger: Logger = LoggerFactory.getLogger(ApValidationService::class.java)
 
 		suspend fun validate(request: RoutingRequest, body: ByteArray) {
 			val validationRequestId = IdentifierService.generate()

@@ -6,12 +6,13 @@ import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.model.plugin.PluginManifest
 
 object PluginRegistry {
-	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(PluginRegistry::class.java)
 
 	/**
 	 * List of currently enabled plugins
 	 * */
-	val plugins: MutableList<Pair<PluginManifest, AsterPlugin>> = emptyList<Pair<PluginManifest, AsterPlugin>>().toMutableList()
+	val plugins: MutableList<Pair<PluginManifest, AsterPlugin>> =
+		emptyList<Pair<PluginManifest, AsterPlugin>>().toMutableList()
 
 	/**
 	 * Adds plugin to registry and runs it's enable hook.
@@ -27,7 +28,7 @@ object PluginRegistry {
 		plugins.add(manifest to plugin)
 		plugin.enable()
 
-		logger.info("Enabled plugin ${manifest.name} by ${manifest.authors.joinToString(", ")}")
+		logger.info("Enabled plugin ${manifest.name} (${manifest.version}) by ${manifest.authors.joinToString(", ")}")
 	}
 
 	/**
@@ -42,7 +43,7 @@ object PluginRegistry {
 		plugin.disable()
 		plugins.remove(pair)
 
-		logger.info("Disabled plugin ${pair.first}")
+		logger.info("Disabled plugin ${pair.first.name} (${pair.first.version})")
 	}
 
 	/**

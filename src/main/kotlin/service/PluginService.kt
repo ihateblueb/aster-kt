@@ -29,7 +29,7 @@ import kotlin.io.path.name
  * */
 class PluginService : Service() {
 	companion object {
-		private val logger: Logger = LoggerFactory.getLogger(this::class.java)
+		private val logger: Logger = LoggerFactory.getLogger(PluginService::class.java)
 
 		private val pluginDir = Path("plugins")
 
