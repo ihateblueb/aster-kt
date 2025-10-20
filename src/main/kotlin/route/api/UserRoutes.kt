@@ -2,12 +2,14 @@ package site.remlit.blueb.aster.route.api
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.common.model.User
+import site.remlit.blueb.aster.common.model.generated.PartialUser
 import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
@@ -60,6 +62,8 @@ object UserRoutes {
 
 					if (user == null || !user.activated || user.suspended)
 						throw ApiException(HttpStatusCode.NotFound)
+
+					val partial = call.receive<PartialUser>()
 
 					throw ApiException(HttpStatusCode.NotImplemented)
 				}
