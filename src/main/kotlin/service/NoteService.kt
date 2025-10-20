@@ -5,6 +5,7 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.common.model.Note
 import site.remlit.blueb.aster.common.model.User
@@ -48,8 +49,10 @@ class NoteService : Service() {
 		fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
 
 		fun getMany(where: Op<Boolean>, take: Int? = null): List<Note> = transaction {
-			val notes = NoteEntity
-				.find { where }
+			val notes = (NoteTable innerJoin UserTable)
+				.selectAll()
+				.where { where }
+				.let { NoteEntity.wrapRows(it) }
 				.sortedByDescending { it.createdAt }
 				.take(take ?: 15)
 				.toList()

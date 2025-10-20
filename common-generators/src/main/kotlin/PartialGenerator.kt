@@ -60,6 +60,6 @@ class PartialGenerator {
 			.addTypes(generated)
 			.build()
 
-		SourceWriter.write(SourceWriter.commonMainSource, "Partials", partialFile.toString())
+		SourceWriter.write(SourceWriter.commonMainSource, "Partials", partialFile.toString(), 3)
 	}
 }
