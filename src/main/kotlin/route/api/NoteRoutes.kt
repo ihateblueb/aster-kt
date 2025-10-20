@@ -125,6 +125,10 @@ object NoteRoutes {
 					throw ApiException(HttpStatusCode.NotImplemented)
 				}
 
+				post("/api/note/{id}/bite") {
+					throw ApiException(HttpStatusCode.NotImplemented)
+				}
+
 				/* Hide post and all replies to it, use conversation to determine replies */
 				post("/api/note/{id}/hide") {
 					throw ApiException(HttpStatusCode.NotImplemented)

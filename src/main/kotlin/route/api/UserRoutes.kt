@@ -68,6 +68,33 @@ object UserRoutes {
 					throw ApiException(HttpStatusCode.NotImplemented)
 				}
 
+				post("/api/user/{id}/bite") {
+					val user = UserService.getById(call.parameters.getOrFail("id"))
+
+					if (user == null || !user.activated || user.suspended)
+						throw ApiException(HttpStatusCode.NotFound)
+
+					throw ApiException(HttpStatusCode.NotImplemented)
+				}
+
+				post("/api/user/{id}/follow") {
+					val user = UserService.getById(call.parameters.getOrFail("id"))
+
+					if (user == null || !user.activated || user.suspended)
+						throw ApiException(HttpStatusCode.NotFound)
+
+					throw ApiException(HttpStatusCode.NotImplemented)
+				}
+
+				post("/api/user/{id}/report") {
+					val user = UserService.getById(call.parameters.getOrFail("id"))
+
+					if (user == null || !user.activated || user.suspended)
+						throw ApiException(HttpStatusCode.NotFound)
+
+					throw ApiException(HttpStatusCode.NotImplemented)
+				}
+
 				post("/api/user/{id}/mute") {
 					val user = UserService.getById(call.parameters.getOrFail("id"))
 

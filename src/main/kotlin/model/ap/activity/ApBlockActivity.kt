@@ -1,7 +1,7 @@
 package site.remlit.blueb.aster.model.ap.activity
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonPrimitive
 import site.remlit.blueb.aster.model.ap.ApObjectWithContext
 import site.remlit.blueb.aster.model.ap.ApType
 
@@ -11,5 +11,5 @@ data class ApBlockActivity(
 	val type: ApType.Activity = ApType.Activity.Block,
 
 	val actor: String? = null,
-	@Contextual val `object`: Any,
+	val `object`: JsonPrimitive,
 ) : ApObjectWithContext()
