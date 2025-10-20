@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.Database
 import site.remlit.blueb.aster.db.table.AuthTable
 import site.remlit.blueb.aster.db.table.DeliverQueueTable
+import site.remlit.blueb.aster.db.table.DriveFileTable
 import site.remlit.blueb.aster.db.table.InboxQueueTable
 import site.remlit.blueb.aster.db.table.InviteTable
 import site.remlit.blueb.aster.db.table.NoteLikeTable
@@ -79,6 +80,7 @@ class MigrationService : Service() {
 				val tables = listOf(
 					AuthTable,
 					DeliverQueueTable,
+					DriveFileTable,
 					InboxQueueTable,
 					InviteTable,
 					NoteTable,

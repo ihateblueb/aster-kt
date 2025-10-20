@@ -85,9 +85,22 @@ timeline:
   public:
     authRequired: false
 
+## File storage ##
+# How to store files uploaded by users.
+#   type:
+#     local   - Store in local filesystem
+#   localPath: Path to store files at
+#   maxUploadSize: In MB, maximum file size
+##
+fileStorage:
+  type: local
+  localPath: '/var/lib/aster/files'
+  maxUploadSize: 25
+
 ## Hide remote content ##
 # This prevents potentially bad things to be hosted to the
 # public on your instance. Only authenticated uses will be
 # able to see remote content. Recommended to keep on, unless
 # you're a very active moderator.
+##
 hideRemoteContent: true

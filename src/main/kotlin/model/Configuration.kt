@@ -2,10 +2,13 @@ package site.remlit.blueb.aster.model
 
 import io.ktor.http.*
 import io.ktor.server.config.yaml.*
+import site.remlit.blueb.aster.common.model.FileStorageType
 import site.remlit.blueb.aster.common.model.InstanceRegistrationsType
 import site.remlit.blueb.aster.util.capitalize
 import java.io.File
+import java.nio.file.Path
 import kotlin.concurrent.thread
+import kotlin.io.path.Path
 
 var workingDir = File(".").absolutePath.toString().removeSuffix(".")
 var configPath = workingDir + "configuration.yaml"
@@ -26,7 +29,6 @@ object Configuration {
 
 	val debug: Boolean get() = config?.propertyOrNull("debug")?.getString()?.toBoolean() ?: false
 	val builtinFrontend: Boolean get() = config?.propertyOrNull("builtinFrontend")?.getString()?.toBoolean() ?: true
-	val hideRemoteContent: Boolean get() = config?.propertyOrNull("hideRemoteContent")?.getString()?.toBoolean() ?: true
 
 	val registrations: InstanceRegistrationsType
 		get() =
@@ -37,9 +39,12 @@ object Configuration {
 		get() =
 			IdentifierType.valueOf(config?.propertyOrNull("identifiers")?.getString()?.capitalize() ?: "Aidx")
 
-	val database: ConfigurationDatabase get() = ConfigurationDatabase()
-	val queue: ConfigurationQueue get() = ConfigurationQueue()
-	val timeline: ConfigurationTimeline get() = ConfigurationTimeline()
+	val database: ConfigurationDatabase = ConfigurationDatabase()
+	val queue: ConfigurationQueue = ConfigurationQueue()
+	val timeline: ConfigurationTimeline = ConfigurationTimeline()
+	val fileStorage: ConfigurationFileStorage = ConfigurationFileStorage()
+
+	val hideRemoteContent: Boolean get() = config?.propertyOrNull("hideRemoteContent")?.getString()?.toBoolean() ?: true
 
 	init {
 		thread(name = "Configuration Refresher") {
@@ -51,97 +56,70 @@ object Configuration {
 	}
 }
 
+class ConfigurationFileStorage {
+	val type: FileStorageType
+		get() = FileStorageType.valueOf(
+			config?.propertyOrNull("fileStorage.type")?.getString()?.capitalize() ?: "Local"
+		)
+	val localPath: Path
+		get() =
+			Path(config?.propertyOrNull("fileStorage.localPath")?.getString() ?: "/var/lib/aster/files")
+	val maxUploadSize: Int
+		get() = config?.propertyOrNull("fileStorage.maxUploadSize")?.getString()?.toInt() ?: 25
+}
+
 class ConfigurationDatabase {
-	val host: String
-	val port: String
+	val host: String get() = config?.propertyOrNull("database.host")?.getString() ?: "127.0.0.1"
+	val port: String get() = config?.propertyOrNull("database.port")?.getString() ?: "5432"
 	val db: String
+		get() = config?.propertyOrNull("database.db")?.getString()
+			?: throw Exception("Configuration is missing 'database.db' attribute.")
 	val user: String
+		get() = config?.propertyOrNull("database.user")?.getString()
+			?: throw Exception("Configuration is missing 'database.user' attribute.")
 	val password: String
-
-	init {
-		var databaseHostProp = config?.propertyOrNull("database.host")?.getString()
-		host = databaseHostProp ?: "127.0.0.1"
-
-		var databasePortProp = config?.propertyOrNull("database.port")?.getString()
-		port = databasePortProp ?: "5432"
-
-		var databaseDbProp = config?.propertyOrNull("database.db")?.getString()
-		db = if (databaseDbProp != null) {
-			databaseDbProp
-		} else {
-			throw Exception("Configuration is missing 'database.db' attribute.")
-		}
-
-		var databaseUserProp = config?.propertyOrNull("database.user")?.getString()
-		user = if (databaseUserProp != null) {
-			databaseUserProp
-		} else {
-			throw Exception("Configuration is missing 'database.user' attribute.")
-		}
-
-		var databasePasswordProp = config?.propertyOrNull("database.password")?.getString()
-		password = if (databasePasswordProp != null) {
-			databasePasswordProp
-		} else {
-			throw Exception("Configuration is missing 'database.password' attribute.")
-		}
-	}
+		get() = config?.propertyOrNull("database.password")?.getString()
+			?: throw Exception("Configuration is missing 'database.password' attribute.")
 }
 
 class ConfigurationQueue {
 	val inbox: ConfigurationSpecificQueue
-	val deliver: ConfigurationSpecificQueue
-	val system: ConfigurationSpecificQueue
-
-	init {
-		inbox = ConfigurationSpecificQueue(
-			threads = ((config?.propertyOrNull("queue.inbox.threads")?.getString()?.toInt()) ?: 8),
-			concurrency = ((config?.propertyOrNull("queue.inbox.concurrency")?.getString()?.toInt()) ?: 8)
+		get() = ConfigurationSpecificQueue(
+			(config?.propertyOrNull("queue.inbox.concurrency")?.getString()?.toInt() ?: 8)
 		)
-		deliver = ConfigurationSpecificQueue(
-			threads = ((config?.propertyOrNull("queue.deliver.threads")?.getString()?.toInt()) ?: 6),
+	val deliver: ConfigurationSpecificQueue
+		get() = ConfigurationSpecificQueue(
 			concurrency = ((config?.propertyOrNull("queue.deliver.concurrency")?.getString()?.toInt()) ?: 6)
 		)
-		system = ConfigurationSpecificQueue(
-			threads = ((config?.propertyOrNull("queue.system.threads")?.getString()?.toInt()) ?: 4),
+	val system: ConfigurationSpecificQueue
+		get() = ConfigurationSpecificQueue(
 			concurrency = ((config?.propertyOrNull("queue.system.concurrency")?.getString()?.toInt()) ?: 4)
 		)
-	}
 }
 
 data class ConfigurationSpecificQueue(
-	val threads: Int,
 	val concurrency: Int
 )
 
 class ConfigurationTimeline {
-	val defaultObjects: Int
-	val maxObjects: Int
+	val defaultObjects: Int get() = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull() ?: 20
+	val maxObjects: Int get() = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull() ?: 20
 
 	val local: ConfigurationSpecificTimeline
-	val bubble: ConfigurationSpecificTimeline
-	val public: ConfigurationSpecificTimeline
-
-	init {
-		var defaultObjectsProp = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull()
-		defaultObjects = defaultObjectsProp ?: 20
-
-		var maxObjectsProp = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull()
-		maxObjects = maxObjectsProp ?: 20
-
-		local = ConfigurationSpecificTimeline(
+		get() = ConfigurationSpecificTimeline(
 			authRequired = (config?.propertyOrNull("timeline.local.authRequired")?.getString()?.toBooleanStrictOrNull()
 				?: false)
 		)
-		bubble = ConfigurationSpecificTimeline(
+	val bubble: ConfigurationSpecificTimeline
+		get() = ConfigurationSpecificTimeline(
 			authRequired = (config?.propertyOrNull("timeline.bubble.authRequired")?.getString()?.toBooleanStrictOrNull()
 				?: false)
 		)
-		public = ConfigurationSpecificTimeline(
+	val public: ConfigurationSpecificTimeline
+		get() = ConfigurationSpecificTimeline(
 			authRequired = (config?.propertyOrNull("timeline.public.authRequired")?.getString()?.toBooleanStrictOrNull()
 				?: false)
 		)
-	}
 }
 
 data class ConfigurationSpecificTimeline(
