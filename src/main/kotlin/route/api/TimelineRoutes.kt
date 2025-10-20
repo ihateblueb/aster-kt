@@ -8,6 +8,7 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.core.less
+import org.jetbrains.exposed.v1.core.or
 import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.UserTable
@@ -57,7 +58,21 @@ object TimelineRoutes {
 					val since = TimelineService.normalizeSince(call.parameters["since"])
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
-					throw ApiException(HttpStatusCode.NotImplemented)
+					val hosts = Configuration.timeline.bubble.hosts
+
+					val notes = NoteService.getMany(
+						where = NoteTable.visibility inList listOf(Visibility.Public, Visibility.Unlisted)
+								and (UserTable.host inList hosts or (UserTable.host eq null))
+								and (NoteTable.createdAt less since),
+						take = take
+					)
+
+					if (notes.isEmpty()) {
+						call.respond(HttpStatusCode.NoContent)
+						return@get
+					}
+					
+					call.respond(notes)
 				}
 			}
 

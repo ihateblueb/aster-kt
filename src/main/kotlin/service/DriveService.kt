@@ -70,7 +70,7 @@ class DriveService : Service() {
 			val driveFiles = DriveFileEntity
 				.find { where }
 				.sortedByDescending { it.createdAt }
-				.take(take ?: 15)
+				.take(take ?: Configuration.timeline.defaultObjects)
 				.toList()
 
 			if (!driveFiles.isEmpty())

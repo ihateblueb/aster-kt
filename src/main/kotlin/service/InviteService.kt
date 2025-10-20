@@ -32,6 +32,8 @@ class InviteService : Service() {
 		fun getById(id: String): Invite? = get(InviteTable.id eq id)
 		fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
 
+		// todo: get many
+
 		fun delete(where: Op<Boolean>) = transaction {
 			InviteEntity
 				.find { where }

@@ -6,6 +6,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.common.model.type.PolicyType
 import site.remlit.blueb.aster.db.entity.PolicyEntity
 import site.remlit.blueb.aster.db.table.PolicyTable
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 
 /**
@@ -48,7 +49,7 @@ class PolicyService : Service() {
 			PolicyEntity
 				.find { where }
 				.sortedByDescending { it.createdAt }
-				.take(take ?: 15)
+				.take(take ?: Configuration.timeline.defaultObjects)
 				.toList()
 		}
 

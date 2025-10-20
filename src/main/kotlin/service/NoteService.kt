@@ -22,6 +22,7 @@ import site.remlit.blueb.aster.event.note.NoteLikeEvent
 import site.remlit.blueb.aster.event.note.NoteUnlikeEvent
 import site.remlit.blueb.aster.exception.InsertFailureException
 import site.remlit.blueb.aster.exception.TargetNotFoundException
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.service.ap.ApIdService
 import site.remlit.blueb.aster.util.model.fromEntities
@@ -54,7 +55,7 @@ class NoteService : Service() {
 				.where { where }
 				.let { NoteEntity.wrapRows(it) }
 				.sortedByDescending { it.createdAt }
-				.take(take ?: 15)
+				.take(take ?: Configuration.timeline.defaultObjects)
 				.toList()
 
 			if (!notes.isEmpty())

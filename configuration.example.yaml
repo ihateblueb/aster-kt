@@ -75,13 +75,14 @@ queue:
 #   people outside your instance.
 ##
 timeline:
-  defaultObjects: 20
-  maxObjects: 45
+  defaultObjects: 15
+  maxObjects: 35
 
   local:
     authRequired: false
   bubble:
     authRequired: false
+    hosts: [ ]
   public:
     authRequired: false
 

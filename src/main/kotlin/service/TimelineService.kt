@@ -1,6 +1,7 @@
 package site.remlit.blueb.aster.service
 
 import kotlinx.datetime.LocalDateTime
+import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 
 /**
@@ -19,14 +20,14 @@ class TimelineService : Service() {
 		 * */
 		fun normalizeTake(take: Int?): Int {
 			if (take != null) {
-				if (take > 45) {
-					return 45
+				if (take > Configuration.timeline.maxObjects) {
+					return Configuration.timeline.maxObjects
 				} else if (take < 1) {
 					return 1
 				}
 				return take
 			} else {
-				return 15
+				return Configuration.timeline.defaultObjects
 			}
 		}
 

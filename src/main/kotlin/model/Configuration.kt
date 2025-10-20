@@ -115,18 +115,20 @@ data class ConfigurationSpecificQueue(
 )
 
 class ConfigurationTimeline {
-	val defaultObjects: Int get() = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull() ?: 20
-	val maxObjects: Int get() = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull() ?: 20
+	val defaultObjects: Int get() = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull() ?: 15
+	val maxObjects: Int get() = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull() ?: 35
 
 	val local: ConfigurationSpecificTimeline
 		get() = ConfigurationSpecificTimeline(
 			authRequired = (config?.propertyOrNull("timeline.local.authRequired")?.getString()?.toBooleanStrictOrNull()
 				?: false)
 		)
-	val bubble: ConfigurationSpecificTimeline
-		get() = ConfigurationSpecificTimeline(
+	val bubble: ConfigurationBubbleTimeline
+		get() = ConfigurationBubbleTimeline(
 			authRequired = (config?.propertyOrNull("timeline.bubble.authRequired")?.getString()?.toBooleanStrictOrNull()
-				?: false)
+				?: false),
+			hosts = (config?.propertyOrNull("timeline.bubble.hosts")?.getList()
+				?: emptyList())
 		)
 	val public: ConfigurationSpecificTimeline
 		get() = ConfigurationSpecificTimeline(
@@ -137,4 +139,9 @@ class ConfigurationTimeline {
 
 data class ConfigurationSpecificTimeline(
 	val authRequired: Boolean,
+)
+
+data class ConfigurationBubbleTimeline(
+	val authRequired: Boolean,
+	val hosts: List<String>,
 )
