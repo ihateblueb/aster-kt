@@ -9,6 +9,7 @@ import site.remlit.blueb.aster.common.model.DriveFile
 import site.remlit.blueb.aster.db.entity.DriveFileEntity
 import site.remlit.blueb.aster.db.table.DriveFileTable
 import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.event.drive.DriveFileDeleteEvent
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.util.model.fromEntities
 import site.remlit.blueb.aster.util.model.fromEntity
@@ -84,6 +85,8 @@ class DriveService : Service() {
 				.count()
 		}
 
+		// todo: create method
+
 		/**
 		 * Delete a drive file.
 		 *
@@ -95,7 +98,7 @@ class DriveService : Service() {
 				.singleOrNull()
 			if (entity == null) return@transaction
 
-			// todo: DriveFileDeleteEvent
+			DriveFileDeleteEvent(DriveFile.fromEntity(entity)).call()
 			entity.delete()
 		}
 
