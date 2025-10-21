@@ -8,10 +8,10 @@ import site.remlit.blueb.aster.db.table.InboxQueueTable
 class InboxQueueEntity(id: EntityID<String>) : Entity<String>(id = id) {
 	companion object : EntityClass<String, InboxQueueEntity>(InboxQueueTable)
 
-	val status by InboxQueueTable.status
+	var status by InboxQueueTable.status
 
-	val content by InboxQueueTable.content
-	val sender by InboxQueueTable.sender
+	var content by InboxQueueTable.content
+	var sender by UserEntity optionalReferencedOn InboxQueueTable.sender
 
 	val createdAt by InboxQueueTable.createdAt
 	var retries by InboxQueueTable.retries

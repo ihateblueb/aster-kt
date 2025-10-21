@@ -4,16 +4,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.statements.api.ExposedBlob
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.entity.DeliverQueueEntity
 import site.remlit.blueb.aster.db.entity.InboxQueueEntity
+import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.table.DeliverQueueTable
 import site.remlit.blueb.aster.db.table.InboxQueueTable
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.QueueStatus
 import site.remlit.blueb.aster.model.Service
+import site.remlit.blueb.aster.model.ap.ApTypedObject
+import site.remlit.blueb.aster.model.ap.activity.ApBiteActivity
+import site.remlit.blueb.aster.service.ap.ApActorService
+import site.remlit.blueb.aster.util.jsonConfig
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -81,11 +88,88 @@ class QueueService : Service() {
 		// queue consumers
 
 		private fun consumeInboxJob(job: InboxQueueEntity) {
+			val typedObject = jsonConfig.decodeFromString<ApTypedObject>(String(job.content.bytes))
 
+			logger.debug(
+				"Consuming object of type {} from {} on attempt {}",
+				typedObject.type,
+				transaction { job.sender?.apId ?: "unknown" },
+				job.retries + 1
+			)
+
+			runBlocking {
+				try {
+					when (typedObject.type) {
+						"Bite" -> {
+							val bite = jsonConfig.decodeFromString<ApBiteActivity>(String(job.content.bytes))
+
+							if (bite.actor == null) return@runBlocking
+							val sender = ApActorService.resolve(bite.actor)
+								?: throw Exception("Sender could not be resolved")
+
+							val targetNote = NoteService.getByApId(bite.target)
+							val targetUser = UserService.getByApId(bite.target)
+
+							val realTargetUser = UserService.getById(targetNote?.user?.id ?: targetUser?.id.toString())
+								?: return@runBlocking
+
+							if (realTargetUser.host != null || !realTargetUser.activated || realTargetUser.suspended)
+								return@runBlocking
+
+							if (RelationshipService.eitherBlocking(
+									sender.id.toString(),
+									realTargetUser.id.toString(),
+								)
+							) return@runBlocking
+
+							NotificationService.bite(
+								realTargetUser,
+								sender,
+								targetNote
+							)
+						}
+
+						else -> {}
+					}
+
+					completeInboxJob(job)
+				} catch (e: Exception) {
+					errorInboxJob(job)
+				}
+			}
 		}
 
 		private fun consumeDeliverJob(job: DeliverQueueEntity) {
 
 		}
+
+		// send jobs
+
+		fun insertInboxJob(data: ByteArray, sender: UserEntity?) {
+			transaction {
+				InboxQueueEntity.new(IdentifierService.generate()) {
+					this.status = QueueStatus.PENDING
+					this.content = ExposedBlob(data)
+					this.sender = sender
+				}
+			}
+		}
+
+		// complete job
+
+		fun completeInboxJob(job: InboxQueueEntity) =
+			transaction {
+				job.status = QueueStatus.COMPLETED
+				job.flush()
+			}
+
+		// error job
+
+		fun errorInboxJob(job: InboxQueueEntity) =
+			transaction {
+				job.status = QueueStatus.COMPLETED
+				job.retries = job.retries++
+				job.flush()
+			}
 	}
 }

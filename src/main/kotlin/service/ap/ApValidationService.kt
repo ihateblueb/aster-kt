@@ -8,6 +8,7 @@ import kotlinx.datetime.toKotlinLocalDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.common.model.type.PolicyType
+import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.model.ap.ApValidationException
@@ -31,10 +32,8 @@ class ApValidationService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(ApValidationService::class.java)
 
-		suspend fun validate(request: RoutingRequest, body: ByteArray) {
+		suspend fun validate(request: RoutingRequest, body: ByteArray): UserEntity? {
 			val validationRequestId = IdentifierService.generate()
-
-			request.httpMethod == HttpMethod.Get
 
 			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
 			PolicyService.reducePoliciesInListToHost(blockPolicies)
@@ -100,9 +99,8 @@ class ApValidationService : Service() {
 				)
 			}
 
-			val parsedSignatureHeader = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
-
-			val actorApId = parsedSignatureHeader.keyId.substringBefore("#")
+			val httpSignature = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
+			val actorApId = httpSignature.keyId.substringBefore("#")
 
 			val actor = ApActorService.resolve(actorApId)
 			if (actor == null) {
@@ -113,19 +111,34 @@ class ApValidationService : Service() {
 				)
 			}
 
-			logger.debug("[{}] httpSigLib:alg {}", validationRequestId, parsedSignatureHeader.algorithm)
-			logger.debug(
-				"[{}] httpSigLib:sigv.1 {} {}",
-				validationRequestId,
-				Base64.decode(parsedSignatureHeader.signature.value).size,
-				Base64.decode(parsedSignatureHeader.signature.value)
+			val signatureHeaderValues = mutableListOf<String>()
+			for (header in httpSignature.headers.filter { it != "(request-target)" }) {
+				signatureHeaderValues.add(
+					request.headers[header] ?: throw ApValidationException(
+						ApValidationExceptionType.Unauthorized,
+						"Headers specified in signature not included in request"
+					)
+				)
+			}
+
+			val signingString = httpSignature.createSigningString(
+				when (request.httpMethod) {
+					HttpMethod.Get -> site.remlit.blueb.httpSignatures.HttpMethod.GET
+					HttpMethod.Post -> site.remlit.blueb.httpSignatures.HttpMethod.POST
+					else -> throw ApValidationException(
+						ApValidationExceptionType.Unauthorized,
+						"Unsupported HTTP method"
+					)
+				},
+				request.path(),
+				signatureHeaderValues
 			)
 
 			val isSignatureValid = try {
-				parsedSignatureHeader.signature.verify(
+				httpSignature.verify(
+					signingString,
 					KeypairService.pemToPublicKey(actor.publicKey),
-					parseHttpDate(request.headers["Date"]!!),
-					body
+					parseHttpDate(request.headers["Date"]!!)
 				)
 			} catch (e: Exception) {
 				logger.debug("[{}] Signature invalid. {}", validationRequestId, e.message)
@@ -144,6 +157,8 @@ class ApValidationService : Service() {
 					"Signature invalid."
 				)
 			}
+
+			return actor
 		}
 
 		fun isDigestValid(digest: String, data: ByteArray): Boolean {
