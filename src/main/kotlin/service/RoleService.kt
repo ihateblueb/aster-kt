@@ -126,5 +126,8 @@ class RoleService : Service() {
 
 			return usersOfType.toList()
 		}
+
+		fun isModOrAdmin(userId: String) =
+			listOf(RoleType.Mod, RoleType.Admin).contains(getUserHighestRole(userId))
 	}
 }

@@ -9,4 +9,5 @@ val jsonConfig = Json {
 	encodeDefaults = true
 	prettyPrint = true
 	isLenient = true
+	explicitNulls = false
 }

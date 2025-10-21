@@ -1,6 +1,7 @@
 plugins {
 	application
 	kotlin("jvm")
+	kotlin("plugin.serialization")
 	id("com.gradleup.shadow")
 }
 
@@ -14,6 +15,8 @@ repositories {
 dependencies {
 	implementation(kotlin("reflect"))
 	implementation("com.squareup:kotlinpoet:2.2.0")
+	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 	implementation(project(":common"))
 }
 

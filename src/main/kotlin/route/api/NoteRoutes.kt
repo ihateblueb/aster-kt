@@ -9,7 +9,6 @@ import io.ktor.server.util.*
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.common.model.Visibility
-import site.remlit.blueb.aster.common.model.type.RoleType
 import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
@@ -66,10 +65,8 @@ object NoteRoutes {
 					)
 
 					if (
-						note.user.id != authenticatedUser.id.toString() && (!RoleService.userHasRoleOfType(
-							authenticatedUser.id.toString(),
-							RoleType.Admin
-						) || !RoleService.userHasRoleOfType(authenticatedUser.id.toString(), RoleType.Mod))
+						note.user.id != authenticatedUser.id.toString() &&
+						!RoleService.isModOrAdmin(authenticatedUser.id.toString())
 					)
 						throw ApiException(HttpStatusCode.Forbidden, "You don't have permission to delete this.")
 

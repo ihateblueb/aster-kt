@@ -11,14 +11,18 @@ import org.jetbrains.exposed.v1.core.eq
 import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.common.model.generated.PartialUser
 import site.remlit.blueb.aster.db.table.UserTable
+import site.remlit.blueb.aster.event.user.UserEditEvent
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.route.RouteRegistry
 import site.remlit.blueb.aster.service.NotificationService
 import site.remlit.blueb.aster.service.RelationshipService
+import site.remlit.blueb.aster.service.RoleService
+import site.remlit.blueb.aster.service.TimeService
 import site.remlit.blueb.aster.service.UserService
 import site.remlit.blueb.aster.util.authenticatedUserKey
 import site.remlit.blueb.aster.util.model.fromEntity
+import site.remlit.blueb.aster.util.sanitizeOrNull
 
 object UserRoutes {
 	fun register() =
@@ -58,15 +62,52 @@ object UserRoutes {
 			}
 
 			authenticate("authRequired") {
-				patch("/api/user/{id}") {
+				post("/api/user/{id}") {
+					val authenticatedUser = call.attributes[authenticatedUserKey]
 					val user = UserService.getById(call.parameters.getOrFail("id"))
 
 					if (user == null || !user.activated || user.suspended)
 						throw ApiException(HttpStatusCode.NotFound)
 
+					if (user.id != authenticatedUser.id && !RoleService.isModOrAdmin(authenticatedUser.id.toString()))
+						throw ApiException(HttpStatusCode.BadRequest, "You don't have permission to edit this users")
+
+					val originalHashCode = user.hashCode()
 					val partial = call.receive<PartialUser>()
 
-					throw ApiException(HttpStatusCode.NotImplemented)
+					// todo: these need to be in transaction
+					user.displayName = sanitizeOrNull { partial.displayName }
+					user.bio = sanitizeOrNull { partial.bio }
+					user.location = sanitizeOrNull { partial.location }
+					user.birthday = sanitizeOrNull { partial.birthday }
+
+					user.avatar = sanitizeOrNull { partial.avatar }
+					user.avatarAlt = sanitizeOrNull { partial.avatarAlt }
+					user.banner = sanitizeOrNull { partial.banner }
+					user.bannerAlt = sanitizeOrNull { partial.bannerAlt }
+
+					user.locked = partial.locked ?: false
+					user.automated = partial.automated ?: false
+					user.discoverable = partial.discoverable ?: false
+					user.indexable = partial.indexable ?: false
+					user.sensitive = partial.sensitive ?: false
+
+					user.isCat = partial.isCat ?: false
+					user.speakAsCat = partial.speakAsCat ?: false
+
+					if (user.hashCode() == originalHashCode)
+						return@post call.respond(HttpStatusCode.OK, user)
+
+					user.updatedAt = TimeService.now()
+
+					// todo: overkill?
+					user.flush()
+					user.refresh()
+
+					val model = User.fromEntity(user)
+					UserEditEvent(model).call()
+
+					return@post call.respond(HttpStatusCode.OK, model)
 				}
 
 				post("/api/user/{id}/bite") {

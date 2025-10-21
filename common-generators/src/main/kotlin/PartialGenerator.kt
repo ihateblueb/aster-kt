@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
+import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.common.model.DriveFile
 import site.remlit.blueb.aster.common.model.Note
 import site.remlit.blueb.aster.common.model.Policy
@@ -29,6 +30,7 @@ class PartialGenerator {
 		for (klass in classesToPartialize) {
 			val partial = TypeSpec.classBuilder("Partial${klass.simpleName}")
 				.addModifiers(KModifier.DATA)
+				.addAnnotation(Serializable::class)
 				.primaryConstructor(
 					FunSpec.constructorBuilder().apply {
 						for (prop in klass.declaredMemberProperties) {
