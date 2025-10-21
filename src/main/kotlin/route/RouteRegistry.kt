@@ -16,6 +16,7 @@ import site.remlit.blueb.aster.route.ap.WebfingerRoutes
 import site.remlit.blueb.aster.route.api.LoginRoutes
 import site.remlit.blueb.aster.route.api.MetaRoutes
 import site.remlit.blueb.aster.route.api.NoteRoutes
+import site.remlit.blueb.aster.route.api.NotificationRoutes
 import site.remlit.blueb.aster.route.api.RegisterRoutes
 import site.remlit.blueb.aster.route.api.TimelineRoutes
 import site.remlit.blueb.aster.route.api.UserRoutes
@@ -79,6 +80,7 @@ object RouteRegistry {
 		LoginRoutes.register()
 		MetaRoutes.register()
 		NoteRoutes.register()
+		NotificationRoutes.register()
 		RegisterRoutes.register()
 		TimelineRoutes.register()
 		UserRoutes.register()
