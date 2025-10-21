@@ -10,12 +10,15 @@ import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.common.model.User
 import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.common.model.type.RoleType
+import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.route.RouteRegistry
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.NoteService
+import site.remlit.blueb.aster.service.NotificationService
 import site.remlit.blueb.aster.service.RoleService
+import site.remlit.blueb.aster.service.VisibilityService
 import site.remlit.blueb.aster.util.authenticatedUserKey
 import site.remlit.blueb.aster.util.model.fromEntity
 
@@ -126,7 +129,28 @@ object NoteRoutes {
 				}
 
 				post("/api/note/{id}/bite") {
-					throw ApiException(HttpStatusCode.NotImplemented)
+					val authenticatedUser = call.attributes[authenticatedUserKey]
+					val note = NoteService.getById(call.parameters.getOrFail("id"))
+
+					if (
+						note == null ||
+						!note.user.activated ||
+						note.user.suspended ||
+						VisibilityService.canISee(
+							note.visibility,
+							note.user.id,
+							note.to,
+							authenticatedUser.id.toString()
+						)
+					)
+						throw ApiException(HttpStatusCode.NotFound, "Note not found.")
+
+					if (note.user.id == authenticatedUser.id.toString())
+						throw ApiException(HttpStatusCode.BadRequest, "You can't bite your own note")
+
+					NotificationService.bite(UserEntity[note.user.id], authenticatedUser, note)
+
+					throw ApiException(HttpStatusCode.OK)
 				}
 
 				/* Hide post and all replies to it, use conversation to determine replies */
