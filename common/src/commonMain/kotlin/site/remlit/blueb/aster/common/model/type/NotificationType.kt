@@ -31,6 +31,9 @@ enum class NotificationType {
 	@SerialName("brokenRelationship")
 	BrokenRelationship,
 
+	@SerialName("bite")
+	Bite,
+
 	// admin
 	@SerialName("registration")
 	Registration,

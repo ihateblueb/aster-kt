@@ -14,8 +14,8 @@ object NotificationTable : IdTable<String>("notification") {
 	val to = reference("to", UserTable.id, onDelete = ReferenceOption.CASCADE)
 	val from = reference("from", UserTable.id, onDelete = ReferenceOption.CASCADE)
 
-	val note = reference("note", NoteTable.id, onDelete = ReferenceOption.CASCADE)
-	val relationship = reference("relationship", RelationshipTable.id, onDelete = ReferenceOption.CASCADE)
+	val note = optReference("note", NoteTable.id, onDelete = ReferenceOption.CASCADE)
+	val relationship = optReference("relationship", RelationshipTable.id, onDelete = ReferenceOption.CASCADE)
 
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 

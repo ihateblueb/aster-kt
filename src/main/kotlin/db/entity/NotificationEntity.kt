@@ -13,8 +13,8 @@ class NotificationEntity(id: EntityID<String>) : Entity<String>(id) {
 	var to by UserEntity referencedOn NotificationTable.to
 	var from by UserEntity referencedOn NotificationTable.from
 
-	var note by NoteEntity referencedOn NotificationTable.note
-	var relationship by RelationshipEntity referencedOn NotificationTable.relationship
+	var note by NoteEntity optionalReferencedOn NotificationTable.note
+	var relationship by RelationshipEntity optionalReferencedOn NotificationTable.relationship
 
 	var createdAt by NotificationTable.createdAt
 }

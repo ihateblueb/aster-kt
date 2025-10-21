@@ -7,8 +7,14 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.blueb.aster.common.model.Note
 import site.remlit.blueb.aster.common.model.Notification
+import site.remlit.blueb.aster.common.model.Relationship
+import site.remlit.blueb.aster.common.model.type.NotificationType
+import site.remlit.blueb.aster.db.entity.NoteEntity
 import site.remlit.blueb.aster.db.entity.NotificationEntity
+import site.remlit.blueb.aster.db.entity.RelationshipEntity
+import site.remlit.blueb.aster.db.entity.UserEntity
 import site.remlit.blueb.aster.db.table.NoteTable
 import site.remlit.blueb.aster.db.table.NotificationTable
 import site.remlit.blueb.aster.db.table.RelationshipTable
@@ -58,5 +64,99 @@ class NotificationService : Service() {
 				Notification.fromEntities(entities)
 			else listOf()
 		}
+
+		fun create(
+			type: NotificationType,
+			to: UserEntity,
+			from: UserEntity,
+			note: NoteEntity?,
+			relationship: RelationshipEntity?
+		) {
+			val id = IdentifierService.generate()
+			transaction {
+				NotificationEntity.new(id) {
+					this.type = type
+					this.to = to
+					this.from = from
+					if (note != null)
+						this.note = note
+					if (relationship != null)
+						this.relationship = relationship
+				}
+			}
+		}
+
+		fun create(
+			type: NotificationType,
+			to: UserEntity,
+			from: UserEntity,
+			note: Note?,
+			relationship: RelationshipEntity?
+		) = create(
+			type,
+			to,
+			from,
+			if (note != null) NoteEntity[note.id] else null,
+			relationship
+		)
+
+		fun create(
+			type: NotificationType,
+			to: UserEntity,
+			from: UserEntity,
+			note: NoteEntity?,
+			relationship: Relationship?
+		) = create(
+			type,
+			to,
+			from,
+			note,
+			if (relationship != null) RelationshipEntity[relationship.id] else null
+		)
+
+		fun create(
+			type: NotificationType,
+			to: UserEntity,
+			from: UserEntity,
+			note: Note?,
+			relationship: Relationship?
+		) = create(
+			type,
+			to,
+			from,
+			if (note != null) NoteEntity[note.id] else null,
+			if (relationship != null) RelationshipEntity[relationship.id] else null
+		)
+
+		fun create(
+			type: NotificationType,
+			to: UserEntity,
+			from: UserEntity,
+			note: Note?,
+		) = create(
+			type,
+			to,
+			from,
+			if (note != null) NoteEntity[note.id] else null,
+			null as RelationshipEntity?
+		)
+
+		fun create(
+			type: NotificationType,
+			to: UserEntity,
+			from: UserEntity
+		) = create(
+			type,
+			to,
+			from,
+			null as NoteEntity?,
+			null as RelationshipEntity?
+		)
+
+		fun bite(
+			to: UserEntity,
+			from: UserEntity,
+			note: Note? = null,
+		) = create(NotificationType.Bite, to, from, note)
 	}
 }

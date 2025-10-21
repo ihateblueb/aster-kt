@@ -11,8 +11,8 @@ fun Notification.Companion.fromEntity(entity: NotificationEntity): Notification 
 	type = entity.type,
 	to = User.fromEntity(entity.to),
 	from = User.fromEntity(entity.from),
-	note = Note.fromEntity(entity.note),
-	relationship = Relationship.fromEntity(entity.relationship),
+	note = if (entity.note != null) Note.fromEntity(entity.note!!) else null,
+	relationship = if (entity.relationship != null) Relationship.fromEntity(entity.relationship!!) else null,
 	createdAt = entity.createdAt,
 )
 

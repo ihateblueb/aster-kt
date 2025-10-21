@@ -14,6 +14,7 @@ import site.remlit.blueb.aster.db.table.UserTable
 import site.remlit.blueb.aster.model.ApiException
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.route.RouteRegistry
+import site.remlit.blueb.aster.service.NotificationService
 import site.remlit.blueb.aster.service.RelationshipService
 import site.remlit.blueb.aster.service.UserService
 import site.remlit.blueb.aster.util.authenticatedUserKey
@@ -69,12 +70,21 @@ object UserRoutes {
 				}
 
 				post("/api/user/{id}/bite") {
+					val authenticatedUser = call.attributes[authenticatedUserKey]
 					val user = UserService.getById(call.parameters.getOrFail("id"))
 
 					if (user == null || !user.activated || user.suspended)
 						throw ApiException(HttpStatusCode.NotFound)
 
-					throw ApiException(HttpStatusCode.NotImplemented)
+					if (user.id == authenticatedUser.id)
+						throw ApiException(HttpStatusCode.BadRequest, "You can't bite yourself")
+
+					if (RelationshipService.eitherBlocking(user.id.toString(), authenticatedUser.id.toString()))
+						throw ApiException(HttpStatusCode.Forbidden)
+
+					NotificationService.bite(user, authenticatedUser)
+
+					throw ApiException(HttpStatusCode.OK)
 				}
 
 				post("/api/user/{id}/follow") {
