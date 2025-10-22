@@ -23,7 +23,7 @@ object InboxHandlerRegistry {
 
 		if (Configuration.debug)
 			logger.debug(
-				"Consuming object of type {} from {} on attempt {}",
+				"[${job.id}] Consuming object of type {} from {} on attempt {}",
 				typedObject.type,
 				transaction { job.sender?.apId ?: "unknown" },
 				job.retries + 1
@@ -37,7 +37,7 @@ object InboxHandlerRegistry {
 				}
 				QueueService.completeInboxJob(job)
 			} catch (e: Exception) {
-				logger.error("Failed handling activity of type ${typedObject.type}", e)
+				logger.error("Job ${job.id} failed: ${e.message?.replace("\n", "")}")
 				QueueService.errorInboxJob(job)
 			}
 		}

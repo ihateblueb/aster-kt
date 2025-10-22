@@ -6,6 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.route.admin.AdminIndexRoutes
+import site.remlit.blueb.aster.route.admin.AdminQueueRoutes
 import site.remlit.blueb.aster.route.ap.ApNoteRoutes
 import site.remlit.blueb.aster.route.ap.ApUserRoutes
 import site.remlit.blueb.aster.route.ap.HostMetaRoutes
@@ -65,6 +66,7 @@ object RouteRegistry {
 	@ApiStatus.Internal
 	fun registerBuiltinRoutes() {
 		AdminIndexRoutes.register()
+		AdminQueueRoutes.register()
 
 		ApNoteRoutes.register()
 		ApUserRoutes.register()

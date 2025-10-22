@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.service
 
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,6 +18,7 @@ import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.QueueStatus
 import site.remlit.blueb.aster.model.Service
 import site.remlit.blueb.aster.registry.InboxHandlerRegistry
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -28,8 +30,11 @@ class QueueService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(QueueService::class.java)
 
-		val inboxScope = CoroutineScope(Dispatchers.Default)
-		val deliverScope = CoroutineScope(Dispatchers.Default)
+		val inboxScope = CoroutineScope(Dispatchers.Default + CoroutineName("InboxDispatcher"))
+		val deliverScope = CoroutineScope(Dispatchers.Default + CoroutineName("DeliverDispatcher"))
+
+		val activeInboxWorkers: AtomicInteger = AtomicInteger(0)
+		val activeDeliverWorkers: AtomicInteger = AtomicInteger(0)
 
 		/**
 		 * Initialize queue managers. These check frequently for new items in the queue, and then launch a consumer.
@@ -60,9 +65,14 @@ class QueueService : Service() {
 					.take(Configuration.queue.inbox.concurrency)
 					.toList()
 					.forEach {
+						if (activeInboxWorkers.get() >= Configuration.queue.inbox.concurrency)
+							return@forEach
+
+						activeInboxWorkers.incrementAndGet()
 						inboxScope.launch {
 							consumeInboxJob(it)
 						}
+						activeInboxWorkers.decrementAndGet()
 					}
 			}
 		}
@@ -74,9 +84,14 @@ class QueueService : Service() {
 					.take(Configuration.queue.deliver.concurrency)
 					.toList()
 					.forEach {
+						if (activeDeliverWorkers.get() >= Configuration.queue.deliver.concurrency)
+							return@forEach
+
+						activeDeliverWorkers.incrementAndGet()
 						deliverScope.launch {
 							consumeDeliverJob(it)
 						}
+						activeDeliverWorkers.decrementAndGet()
 					}
 			}
 		}

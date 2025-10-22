@@ -102,11 +102,11 @@ class ConfigurationQueue {
 		)
 	val deliver: ConfigurationSpecificQueue
 		get() = ConfigurationSpecificQueue(
-			concurrency = ((config?.propertyOrNull("queue.deliver.concurrency")?.getString()?.toInt()) ?: 6)
+			((config?.propertyOrNull("queue.deliver.concurrency")?.getString()?.toInt()) ?: 6)
 		)
 	val system: ConfigurationSpecificQueue
 		get() = ConfigurationSpecificQueue(
-			concurrency = ((config?.propertyOrNull("queue.system.concurrency")?.getString()?.toInt()) ?: 4)
+			((config?.propertyOrNull("queue.system.concurrency")?.getString()?.toInt()) ?: 4)
 		)
 }
 

@@ -2,6 +2,7 @@ package site.remlit.blueb.aster.route.admin
 
 import io.ktor.http.*
 import io.ktor.server.html.*
+import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import kotlinx.html.body
 import kotlinx.html.h1
@@ -12,6 +13,8 @@ import site.remlit.blueb.aster.route.RouteRegistry
 object AdminIndexRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
+			staticResources("/admin/assets", "admin")
+
 			get("/admin") {
 				call.response.headers.append("Content-Type", "application/jrd+json")
 
