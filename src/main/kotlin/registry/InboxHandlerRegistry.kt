@@ -13,38 +13,38 @@ import site.remlit.blueb.aster.service.ap.inbox.ApBiteHandler
 import site.remlit.blueb.aster.util.jsonConfig
 
 object InboxHandlerRegistry {
-    private val logger = LoggerFactory.getLogger(InboxHandlerRegistry::class.java)
+	private val logger = LoggerFactory.getLogger(InboxHandlerRegistry::class.java)
 
-    val inboxHandlers = listOf<Pair<String, ApInboxHandler>>()
+	val inboxHandlers = mutableListOf<Pair<String, ApInboxHandler>>()
 
-    fun register(type: String, handler: ApInboxHandler) {
-        inboxHandlers.toMutableList().add(Pair(handler.javaClass.name, handler))
-    }
+	fun register(type: String, handler: ApInboxHandler) {
+		inboxHandlers.add(Pair(type, handler))
+	}
 
-    fun handle(job: InboxQueueEntity) {
-        val typedObject = jsonConfig.decodeFromString<ApTypedObject>(String(job.content.bytes))
+	fun handle(job: InboxQueueEntity) {
+		val typedObject = jsonConfig.decodeFromString<ApTypedObject>(String(job.content.bytes))
 
-        if (Configuration.debug) logger.debug(
-            "Consuming object of type {} from {} on attempt {}",
-            typedObject.type,
-            transaction { job.sender?.apId ?: "unknown" },
-            job.retries + 1
-        )
+		if (Configuration.debug) logger.debug(
+			"Consuming object of type {} from {} on attempt {}",
+			typedObject.type,
+			transaction { job.sender?.apId ?: "unknown" },
+			job.retries + 1
+		)
 
-        runBlocking {
-            try {
-                for (handler in inboxHandlers.filter { it.first == typedObject.type }) {
-                    handler.second.handle(job)
-                }
-                QueueService.Companion.completeInboxJob(job)
-            } catch (e: Exception) {
-                QueueService.Companion.errorInboxJob(job)
-            }
-        }
-    }
+		runBlocking {
+			try {
+				for (handler in inboxHandlers.filter { it.first == typedObject.type }) {
+					handler.second.handle(job)
+				}
+				QueueService.completeInboxJob(job)
+			} catch (_: Exception) {
+				QueueService.errorInboxJob(job)
+			}
+		}
+	}
 
-    @ApiStatus.Internal
-    fun registerDefault() {
-        register("Bite", ApBiteHandler())
-    }
+	@ApiStatus.Internal
+	fun registerDefault() {
+		register("Bite", ApBiteHandler())
+	}
 }

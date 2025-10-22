@@ -35,6 +35,8 @@ class QueueService : Service() {
 		 * Initialize queue managers. These check frequently for new items in the queue, and then launch a consumer.
 		 * */
 		fun init() {
+			InboxHandlerRegistry.registerDefault()
+
 			inboxScope.launch {
 				while (true) {
 					delay(2.seconds)
@@ -84,7 +86,7 @@ class QueueService : Service() {
 		// queue consumers
 
 		private fun consumeInboxJob(job: InboxQueueEntity) =
-            InboxHandlerRegistry.handle(job)
+			InboxHandlerRegistry.handle(job)
 
 		private fun consumeDeliverJob(job: DeliverQueueEntity) {}
 
