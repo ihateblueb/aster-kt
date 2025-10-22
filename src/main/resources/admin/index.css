@@ -49,4 +49,8 @@ body {
 .ctn {
     display: flex;
     gap: 8px;
+
+    .column {
+        flex-direction: column;
+    }
 }

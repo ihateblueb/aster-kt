@@ -20,8 +20,6 @@ object WebfingerRoutes {
 			get("/.well-known/webfinger") {
 				val resource = call.queryParameters.getOrFail("resource")
 
-				call.response.headers.append("Content-Type", "application/activity+json")
-
 				if (!resource.startsWith("acct:") || resource == "acct:")
 					throw ApiException(HttpStatusCode.BadRequest, "Only 'acct' resource type supported")
 
@@ -39,18 +37,25 @@ object WebfingerRoutes {
 				if (user == null || user.suspended || !user.activated)
 					throw ApiException(HttpStatusCode.NotFound)
 
+				call.response.headers.append("Content-Type", "application/jrd+json")
+
 				call.respond(
 					status = HttpStatusCode.OK,
 					message = WellKnown(
-						subject = "$resource@${Configuration.url.host}",
+						subject = "${user.username}@${Configuration.url.host}",
 						aliases = listOf(
 							user.apId,
-							Configuration.url.toString() + "users/" + user.username,
+							Configuration.url.toString() + "@" + user.username,
 						),
 						links = listOf(
 							WellKnownLink(
 								rel = "self",
 								type = "application/activity+json",
+								href = user.apId,
+							),
+							WellKnownLink(
+								rel = "self",
+								type = "application/ld+json; profile\"https://www.w3.org/ns/activitystreams\"",
 								href = user.apId,
 							),
 							WellKnownLink(

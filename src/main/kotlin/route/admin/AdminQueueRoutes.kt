@@ -7,10 +7,13 @@ import kotlinx.html.body
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.h1
+import kotlinx.html.h2
 import kotlinx.html.head
+import kotlinx.html.li
 import kotlinx.html.span
 import kotlinx.html.styleLink
 import kotlinx.html.title
+import kotlinx.html.ul
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.blueb.aster.db.entity.InboxQueueEntity
@@ -26,6 +29,10 @@ object AdminQueueRoutes {
 				var completedCount: Long = 0
 				var failedCount: Long = 0
 
+				val pendingHosts: MutableList<String> = mutableListOf()
+				val completedHosts: MutableList<String> = mutableListOf()
+				val failedHosts: MutableList<String> = mutableListOf()
+
 				transaction {
 					pendingCount = InboxQueueEntity
 						.find { InboxQueueTable.status eq QueueStatus.PENDING }
@@ -36,6 +43,22 @@ object AdminQueueRoutes {
 					failedCount = InboxQueueEntity
 						.find { InboxQueueTable.status eq QueueStatus.FAILED }
 						.count()
+
+					InboxQueueEntity
+						.find { InboxQueueTable.status eq QueueStatus.PENDING }
+						.forEach { e ->
+							pendingHosts.add(e.sender?.host ?: return@forEach)
+						}
+					InboxQueueEntity
+						.find { InboxQueueTable.status eq QueueStatus.COMPLETED }
+						.forEach { e ->
+							completedHosts.add(e.sender?.host ?: return@forEach)
+						}
+					InboxQueueEntity
+						.find { InboxQueueTable.status eq QueueStatus.FAILED }
+						.forEach { e ->
+							failedHosts.add(e.sender?.host ?: return@forEach)
+						}
 				}
 
 				call.respondHtml(HttpStatusCode.OK) {
@@ -46,16 +69,47 @@ object AdminQueueRoutes {
 					}
 					body {
 						h1 { +"Queues" }
+						h2 { +"Inbox" }
 						div {
 							this.classes = setOf("ctn")
-							span {
-								+"$pendingCount jobs pending"
+							div {
+								this.classes = setOf("ctn", "column")
+								span {
+									+"$pendingCount jobs pending"
+								}
+								ul {
+									for (host in pendingHosts) {
+										li {
+											+host
+										}
+									}
+								}
 							}
-							span {
-								+"$completedCount jobs completed"
+							div {
+								this.classes = setOf("ctn", "column")
+								span {
+									+"$completedCount jobs completed"
+								}
+								ul {
+									for (host in completedHosts) {
+										li {
+											+host
+										}
+									}
+								}
 							}
-							span {
-								+"$failedCount jobs failed"
+							div {
+								this.classes = setOf("ctn", "column")
+								span {
+									+"$failedCount jobs failed"
+								}
+								ul {
+									for (host in failedHosts) {
+										li {
+											+host
+										}
+									}
+								}
 							}
 						}
 					}
