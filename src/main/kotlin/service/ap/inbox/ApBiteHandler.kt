@@ -11,32 +11,32 @@ import site.remlit.blueb.aster.service.ap.ApActorService
 import site.remlit.blueb.aster.util.jsonConfig
 
 class ApBiteHandler : ApInboxHandler() {
-    override suspend fun handle(job: InboxQueueEntity) {
-        val bite = jsonConfig.decodeFromString<ApBiteActivity>(String(job.content.bytes))
+	override suspend fun handle(job: InboxQueueEntity) {
+		val bite = jsonConfig.decodeFromString<ApBiteActivity>(String(job.content.bytes))
 
-        if (bite.actor == null) return
-        val sender = ApActorService.resolve(bite.actor)
-            ?: throw Exception("Sender could not be resolved")
+		if (bite.actor == null) return
+		val sender = ApActorService.resolve(bite.actor)
+			?: throw Exception("Sender could not be resolved")
 
-        val targetNote = NoteService.getByApId(bite.target)
-        val targetUser = UserService.getByApId(bite.target)
+		val targetNote = NoteService.getByApId(bite.target)
+		val targetUser = UserService.getByApId(bite.target)
 
-        val realTargetUser = UserService.getById(targetNote?.user?.id ?: targetUser?.id.toString())
-            ?: return
+		val realTargetUser = UserService.getById(targetNote?.user?.id ?: targetUser?.id.toString())
+			?: return
 
-        if (realTargetUser.host != null || !realTargetUser.activated || realTargetUser.suspended)
-            return
+		if (realTargetUser.host != null || !realTargetUser.activated || realTargetUser.suspended)
+			return
 
-        if (RelationshipService.eitherBlocking(
-                sender.id.toString(),
-                realTargetUser.id.toString(),
-            )
-        ) return
+		if (RelationshipService.eitherBlocking(
+				sender.id.toString(),
+				realTargetUser.id.toString(),
+			)
+		) return
 
-        NotificationService.bite(
-            realTargetUser,
-            sender,
-            targetNote
-        )
-    }
+		NotificationService.bite(
+			realTargetUser,
+			sender,
+			targetNote
+		)
+	}
 }

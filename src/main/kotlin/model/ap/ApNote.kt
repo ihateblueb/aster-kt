@@ -1,5 +1,6 @@
 package site.remlit.blueb.aster.model.ap
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import site.remlit.blueb.aster.common.model.Note
 import site.remlit.blueb.aster.common.model.Visibility
@@ -15,10 +16,12 @@ data class ApNote(
 	val attributedTo: String = actor,
 
 	val summary: String? = null,
-	val _misskey_summary: String? = null,
+	@SerialName("_misskey_summary")
+	val misskeySummary: String? = null,
 
 	val content: String? = null,
-	val _misskey_content: String? = null,
+	@SerialName("_misskey_content")
+	val misskeyContent: String? = null,
 
 	val sensitive: Boolean = summary.isNullOrBlank(),
 
@@ -31,7 +34,7 @@ data class ApNote(
 	val to: List<String>,
 	val cc: List<String>
 
-) : ApObjectWithContext() {
+) : ApObject {
 	companion object {
 		fun fromEntity(note: Note): ApNote {
 			val toCc = ApVisibilityService.visibilityToCc(
@@ -44,7 +47,7 @@ data class ApNote(
 				id = note.apId,
 				actor = note.user.apId,
 				content = note.content,
-				_misskey_content = note.content,
+				misskeyContent = note.content,
 				published = FormatService.formatToStandardDateTime(note.createdAt),
 				visibility = note.visibility,
 				to = toCc["to"]!!,

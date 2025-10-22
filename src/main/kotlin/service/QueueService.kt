@@ -35,8 +35,6 @@ class QueueService : Service() {
 		 * Initialize queue managers. These check frequently for new items in the queue, and then launch a consumer.
 		 * */
 		fun init() {
-			InboxHandlerRegistry.registerDefault()
-
 			inboxScope.launch {
 				while (true) {
 					delay(2.seconds)
@@ -115,7 +113,7 @@ class QueueService : Service() {
 		fun errorInboxJob(job: InboxQueueEntity) =
 			transaction {
 				job.status = QueueStatus.COMPLETED
-				job.retries = job.retries++
+				job.retries += 1
 				job.flush()
 			}
 	}

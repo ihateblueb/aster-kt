@@ -3,6 +3,6 @@ package site.remlit.blueb.aster.model.ap
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApTypedObject(
+open class ApTypedObject(
 	val type: String,
-) : ApObject
+) : ApObjectWithContext(), ApObject
