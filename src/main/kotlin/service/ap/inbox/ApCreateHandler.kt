@@ -1,7 +1,9 @@
 package site.remlit.blueb.aster.service.ap.inbox
 
+import kotlinx.serialization.json.decodeFromJsonElement
 import org.slf4j.LoggerFactory
 import site.remlit.blueb.aster.db.entity.InboxQueueEntity
+import site.remlit.blueb.aster.model.ap.ApIdOrObject
 import site.remlit.blueb.aster.model.ap.ApInboxHandler
 import site.remlit.blueb.aster.model.ap.ApNote
 import site.remlit.blueb.aster.model.ap.ApTypedObject
@@ -13,13 +15,15 @@ class ApCreateHandler : ApInboxHandler() {
 
 	override suspend fun handle(job: InboxQueueEntity) {
 		val create = jsonConfig.decodeFromString<ApCreateActivity>(String(job.content.bytes))
-		val createCopy = create.copy()
+		val copy = create.copy()
 
-		logger.debug("{}", createCopy.`object`)
-		val obj = if (createCopy.`object` is String) return else createCopy.`object` as ApTypedObject
+		val obj = when (copy.`object`) {
+			is ApIdOrObject.Id -> TODO()
+			is ApIdOrObject.Object -> jsonConfig.decodeFromJsonElement<ApTypedObject>(copy.`object`.value)
+		}
 
 		when (obj.type) {
-			"Note" -> handleNote(job, create.`object` as ApNote)
+			"Note" -> handleNote(job, jsonConfig.decodeFromJsonElement<ApNote>(copy.`object`.value))
 			else -> throw NotImplementedError("No Create handler for ${obj.type}")
 		}
 	}

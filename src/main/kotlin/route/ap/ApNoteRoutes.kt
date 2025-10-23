@@ -6,6 +6,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import site.remlit.blueb.aster.common.model.Visibility
 import site.remlit.blueb.aster.model.ApiException
+import site.remlit.blueb.aster.model.ap.ApIdOrObject
 import site.remlit.blueb.aster.model.ap.ApNote
 import site.remlit.blueb.aster.model.ap.activity.ApCreateActivity
 import site.remlit.blueb.aster.route.RouteRegistry
@@ -55,7 +56,9 @@ object ApNoteRoutes {
 					ApCreateActivity(
 						id = note.apId,
 						actor = note.user.apId,
-						`object` = ApNote.fromEntity(note),
+						`object` = ApIdOrObject.createObject {
+							ApNote.fromEntity(note)
+						},
 						to = toCc["to"] ?: emptyList(),
 						cc = toCc["cc"] ?: emptyList()
 					)

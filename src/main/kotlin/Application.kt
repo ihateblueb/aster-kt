@@ -29,12 +29,14 @@ import site.remlit.blueb.aster.model.Configuration
 import site.remlit.blueb.aster.model.ap.ApValidationException
 import site.remlit.blueb.aster.model.ap.ApValidationExceptionType
 import site.remlit.blueb.aster.plugin.PluginRegistry
+import site.remlit.blueb.aster.registry.ApObjectTypeRegistry
 import site.remlit.blueb.aster.service.CommandLineService
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.MigrationService
 import site.remlit.blueb.aster.service.PluginService
 import site.remlit.blueb.aster.service.SetupService
 import site.remlit.blueb.aster.util.jsonConfig
+import site.remlit.blueb.aster.util.setJsonConfig
 import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
@@ -71,7 +73,11 @@ fun Application.module() {
 		EventRegistry.clearListeners()
 	})
 
+	ApObjectTypeRegistry.registerInternal()
+	
 	PluginService.initialize()
+
+	setJsonConfig()
 
 	// access connection before using it
 	Database.connection

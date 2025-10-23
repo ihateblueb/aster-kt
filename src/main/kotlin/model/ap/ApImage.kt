@@ -9,4 +9,4 @@ data class ApImage(
 	val sensitive: Boolean = false,
 	val name: String? = null,
 	val alt: String? = null,
-)
+) : ApObject
