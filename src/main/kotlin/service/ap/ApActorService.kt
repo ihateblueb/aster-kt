@@ -1,6 +1,7 @@
 package site.remlit.blueb.aster.service.ap
 
 import io.ktor.http.*
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -10,7 +11,9 @@ import site.remlit.blueb.aster.service.FormatService
 import site.remlit.blueb.aster.service.IdentifierService
 import site.remlit.blueb.aster.service.ResolverService
 import site.remlit.blueb.aster.service.SanitizerService
+import site.remlit.blueb.aster.service.TimeService
 import site.remlit.blueb.aster.service.UserService
+import site.remlit.blueb.aster.util.ifFails
 
 /**
  * Service to handle ActivityPub actors.
@@ -38,9 +41,8 @@ class ApActorService : Service() {
 
 			val resolveResponse = ResolverService.resolve(apId)
 
-			if (resolveResponse != null) {
+			if (resolveResponse != null)
 				return register(resolveResponse)
-			}
 
 			return null
 		}
@@ -103,7 +105,14 @@ class ApActorService : Service() {
 				return null
 			}
 
-			// todo: following/followers urls
+			val followers = ApUtilityService.extractString(json["followers"])
+			val following = ApUtilityService.extractString(json["following"])
+
+			val published = ApUtilityService.extractString(json["published"]).let {
+				if (it != null) ifFails({ LocalDateTime.parse(it) }) {
+					TimeService.now()
+				} else TimeService.now()
+			}
 
 			try {
 				transaction {
@@ -135,15 +144,10 @@ class ApActorService : Service() {
 
 						// TODO: birthday, location
 
-						/*	TODO: this
-						  createdAt =
-							try {
-								ApUtilityService.extractString(json["published"])?.let {
-									LocalDateTime.parse(it)
-								} ?: timeService.now()
-							} catch (e: DateTimeParseException) {
-								timeService.now()
-							}*/
+						followersUrl = followers
+						followingUrl = following
+
+						createdAt = published
 
 						publicKey = SanitizerService.sanitize(extractedPublicKey, true)
 					}

@@ -8,6 +8,7 @@ import site.remlit.blueb.aster.model.ap.ApInboxHandler
 import site.remlit.blueb.aster.model.ap.ApNote
 import site.remlit.blueb.aster.model.ap.ApTypedObject
 import site.remlit.blueb.aster.model.ap.activity.ApCreateActivity
+import site.remlit.blueb.aster.service.ap.ApNoteService
 import site.remlit.blueb.aster.util.jsonConfig
 
 class ApCreateHandler : ApInboxHandler() {
@@ -28,7 +29,8 @@ class ApCreateHandler : ApInboxHandler() {
 		}
 	}
 
-	fun handleNote(job: InboxQueueEntity, note: ApNote) {
-		println(note)
+	suspend fun handleNote(job: InboxQueueEntity, note: ApNote) {
+		ApNoteService.resolve(note.id)
+			?: throw Exception("Note ${note.id} not found")
 	}
 }

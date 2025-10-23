@@ -11,6 +11,8 @@ import site.remlit.blueb.aster.model.Service
 class ApVisibilityService : Service() {
 	companion object {
 
+		const val AS_PUBLIC = "https://www.w3.org/ns/activitystreams#Public"
+
 		/**
 		 * Convert a visibility to the `to` and `cc` fields of an ActivityPub object.
 		 *
@@ -25,13 +27,13 @@ class ApVisibilityService : Service() {
 		): Map<String, List<String>> {
 			return when (visibility) {
 				Visibility.Public -> mapOf(
-					"to" to listOf("https://www.w3.org/ns/activitystreams#Public"),
+					"to" to listOf(AS_PUBLIC),
 					"cc" to emptyList()
 				)
 
 				Visibility.Unlisted -> mapOf(
 					"to" to if (followersUrl != null) listOf(followersUrl) else listOf(),
-					"cc" to listOf("https://www.w3.org/ns/activitystreams#Public")
+					"cc" to listOf(AS_PUBLIC)
 				)
 
 				Visibility.Followers -> mapOf(
@@ -44,6 +46,31 @@ class ApVisibilityService : Service() {
 					"cc" to emptyList()
 				)
 			}
+		}
+
+		fun determineVisibility(
+			to: List<String>,
+			cc: List<String>,
+			followersUrl: String?,
+			visibility: String? = null,
+		): Visibility {
+			when (visibility) {
+				"public" -> return Visibility.Public
+				"unlisted" -> return Visibility.Unlisted
+				"followers" -> return Visibility.Followers
+				"direct" -> return Visibility.Direct
+			}
+
+			if (to.contains(AS_PUBLIC) && cc.isEmpty())
+				return Visibility.Public
+
+			if (to.contains(followersUrl) && cc.contains(AS_PUBLIC))
+				return Visibility.Unlisted
+
+			if (to.contains(followersUrl) && cc.isEmpty())
+				return Visibility.Followers
+
+			return Visibility.Direct
 		}
 	}
 }
