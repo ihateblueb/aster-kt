@@ -1,12 +1,14 @@
 ktor:
-    application:
-        modules:
-            - site.remlit.blueb.aster.ApplicationKt.module
-    deployment:
-        port: 9978
-        host: 0.0.0.0
+  application:
+    modules:
+      - site.remlit.blueb.aster.ApplicationKt.module
+  deployment:
+    port: 9978
+    host: 0.0.0.0
 
 # This is just for making the package details accessible
 name: %artifactId%
 version: %version%
 groupId: %groupId%
+repo: %repo%
+bugTracker: %bugTracker%

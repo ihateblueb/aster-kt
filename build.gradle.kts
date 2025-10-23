@@ -166,11 +166,16 @@ tasks.processResources {
 	val group = project.provider { project.group.toString() }.get()
 	val version = project.provider { project.version.toString() }.get()
 
+	val repo = "https://github.com/ihateblueb/aster-kt"
+	val bugTracker = "$repo/issues"
+
 	filesMatching("application.yaml") {
 		filter { line ->
 			line.replace("%artifactId%", name)
 				.replace("%version%", version)
 				.replace("%groupId%", group)
+				.replace("%repo%", repo)
+				.replace("%bugTracker%", bugTracker)
 		}
 	}
 }
