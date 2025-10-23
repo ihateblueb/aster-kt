@@ -12,8 +12,7 @@ data class ApNote(
 	val id: String,
 	val type: ApType.Object = ApType.Object.Note,
 
-	val actor: String,
-	val attributedTo: String = actor,
+	val attributedTo: String,
 
 	val summary: String? = null,
 	@SerialName("_misskey_summary")
@@ -29,7 +28,7 @@ data class ApNote(
 	//val tag: List<ApTag>? = null
 
 	val published: String,
-	val visibility: Visibility,
+	val visibility: Visibility? = null,
 
 	val to: List<String>,
 	val cc: List<String>
@@ -45,7 +44,7 @@ data class ApNote(
 
 			return ApNote(
 				id = note.apId,
-				actor = note.user.apId,
+				attributedTo = note.user.apId,
 				content = note.content,
 				misskeyContent = note.content,
 				published = FormatService.formatToStandardDateTime(note.createdAt),
