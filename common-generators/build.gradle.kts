@@ -5,7 +5,7 @@ plugins {
 	id("com.gradleup.shadow")
 }
 
-group = "site.remlit.blueb.common"
+group = "site.remlit.common"
 version = gradle.extra.get("rootVersion") as String
 
 repositories {
@@ -21,7 +21,7 @@ dependencies {
 }
 
 application {
-	mainClass = "site.remlit.blueb.aster.common.generator.GeneratorKt"
+	mainClass = "site.remlit.aster.common.generator.GeneratorKt"
 }
 
 kotlin {

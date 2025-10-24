@@ -7,7 +7,7 @@ plugins {
 	id("org.jetbrains.dokka")
 }
 
-group = "site.remlit.blueb.aster"
+group = "site.remlit.aster"
 version = gradle.extra.get("rootVersion") as String
 
 repositories {
@@ -87,7 +87,7 @@ publishing {
 	}
 	publications {
 		create<MavenPublication>("maven") {
-			groupId = "site.remlit.blueb.aster"
+			groupId = "site.remlit.aster"
 			artifactId = "common"
 			version = project.version.toString()
 

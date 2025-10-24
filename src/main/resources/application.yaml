@@ -1,7 +1,7 @@
 ktor:
   application:
     modules:
-      - site.remlit.blueb.aster.ApplicationKt.module
+      - site.remlit.aster.ApplicationKt.module
   deployment:
     port: 9978
     host: 0.0.0.0

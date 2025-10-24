@@ -1,10 +1,10 @@
-package site.remlit.blueb.aster.test.service
+package site.remlit.aster.test.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import site.remlit.blueb.aster.model.IdentifierType
-import site.remlit.blueb.aster.service.IdentifierService
-import site.remlit.blueb.aster.util.median
+import site.remlit.aster.model.IdentifierType
+import site.remlit.aster.service.IdentifierService
+import site.remlit.aster.util.median
 import kotlin.test.Test
 import kotlin.time.measureTimedValue
 

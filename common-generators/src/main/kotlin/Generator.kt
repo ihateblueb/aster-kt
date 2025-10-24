@@ -1,4 +1,4 @@
-package site.remlit.blueb.aster.common.generator
+package site.remlit.aster.common.generator
 
 fun main() {
 	println()

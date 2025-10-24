@@ -12,7 +12,7 @@ plugins {
 	id("org.jetbrains.dokka")
 }
 
-group = "site.remlit.blueb"
+group = "site.remlit"
 version = gradle.extra.get("rootVersion") as String
 
 repositories {
@@ -26,8 +26,6 @@ repositories {
 }
 
 dependencies {
-	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
-
 	implementation("ch.qos.logback:logback-classic:1.5.19")
 	implementation("org.slf4j:slf4j-api:2.0.17")
 
@@ -82,8 +80,9 @@ dependencies {
 
 	// misc
 	implementation("at.favre.lib:bcrypt:0.10.2")
-	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 	implementation("org.apache.commons:commons-text:1.14.0")
+	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
+	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
 
 	implementation("site.remlit.blueb:http-signature-utility:2025.10.7-SNAPSHOT")
 
@@ -98,7 +97,12 @@ kotlin {
 }
 
 application {
-	mainClass = "site.remlit.blueb.aster.ApplicationKt"
+	mainClass = "site.remlit.aster.ApplicationKt"
+	applicationDefaultJvmArgs = listOf(
+		"-XX:+UseZGC",
+		"-XX:+UseDynamicNumberOfGCThreads",
+		"-Dsite.remlit.aster=true"
+	)
 }
 
 ktor {
@@ -215,7 +219,7 @@ publishing {
 	}
 	publications {
 		create<MavenPublication>("maven") {
-			groupId = "site.remlit.blueb"
+			groupId = "site.remlit"
 			artifactId = "aster"
 			version = project.version.toString()
 

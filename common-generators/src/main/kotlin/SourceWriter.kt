@@ -1,4 +1,4 @@
-package site.remlit.blueb.aster.common.generator
+package site.remlit.aster.common.generator
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -10,7 +10,7 @@ import kotlin.io.path.writeText
 
 object SourceWriter {
 	val commonMainSource =
-		Path("../common/src/commonMain/kotlin/site/remlit/blueb/aster/common/model/generated").absolute()
+		Path("../common/src/commonMain/kotlin/site/remlit/aster/common/model/generated").absolute()
 
 	fun write(path: Path, fileName: String, code: String, ignoredStartLines: Int) {
 		val filePath = Path("$path/$fileName.kt")
