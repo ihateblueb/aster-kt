@@ -16,7 +16,7 @@ import site.remlit.aster.model.ap.ApValidationExceptionType
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.KeypairService
 import site.remlit.aster.service.PolicyService
-import site.remlit.blueb.httpSignatures.HttpSignature
+import site.remlit.httpSignatures.HttpSignature
 import java.security.MessageDigest
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -123,8 +123,8 @@ class ApValidationService : Service() {
 
 			val signingString = httpSignature.createSigningString(
 				when (request.httpMethod) {
-					HttpMethod.Get -> site.remlit.blueb.httpSignatures.HttpMethod.GET
-					HttpMethod.Post -> site.remlit.blueb.httpSignatures.HttpMethod.POST
+					HttpMethod.Get -> site.remlit.httpSignatures.HttpMethod.GET
+					HttpMethod.Post -> site.remlit.httpSignatures.HttpMethod.POST
 					else -> throw ApValidationException(
 						ApValidationExceptionType.Unauthorized,
 						"Unsupported HTTP method"

@@ -61,14 +61,14 @@ class ApVisibilityService : Service() {
 				"direct" -> return Visibility.Direct
 			}
 
-			if (to.contains(AS_PUBLIC) && cc.isEmpty())
-				return Visibility.Public
+			if (to.contains(followersUrl) && !to.contains(AS_PUBLIC))
+				return Visibility.Followers
 
 			if (to.contains(followersUrl) && cc.contains(AS_PUBLIC))
 				return Visibility.Unlisted
 
-			if (to.contains(followersUrl) && cc.isEmpty())
-				return Visibility.Followers
+			if (to.contains(AS_PUBLIC))
+				return Visibility.Public
 
 			return Visibility.Direct
 		}

@@ -84,7 +84,7 @@ dependencies {
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
 
-	implementation("site.remlit.blueb:http-signature-utility:2025.10.7-SNAPSHOT")
+	implementation("site.remlit:http-signature-utility:2025.10.7-SNAPSHOT")
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 	testImplementation(kotlin("test"))
