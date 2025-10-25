@@ -49,7 +49,10 @@ function UserPage(
                     <div className={"underHeader"}>
                         <Container align={"left"} gap={"md"}>
                             <span
-                                className={"bio" + ((data?.bio == null) ? " none" : "")}>{data?.bio ?? "This user hasn't written a description yet."}</span>
+                                className={"bio" + ((data?.bio === undefined || data?.bio === "") ? " none" : "")}
+                            >
+                                {(data?.bio === undefined || data?.bio === "") ? "This user hasn't written a description yet." : data?.bio}
+                            </span>
 
                             {data?.birthday != null ? (
                                 <Container align={"horizontal"} gap={"md"}>

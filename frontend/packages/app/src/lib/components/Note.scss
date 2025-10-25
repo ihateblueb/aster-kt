@@ -23,6 +23,7 @@
   .names {
     color: var(--tx-2);
     text-decoration: none;
+    cursor: pointer;
 
     .displayName {
       font-weight: 500;
@@ -153,7 +154,7 @@
         }
       }
 
-      &:hover {
+      &:hover, &.selected {
         color: var(--tx-2);
         background-color: var(--bg-3);
       }

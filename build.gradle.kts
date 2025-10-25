@@ -49,6 +49,8 @@ dependencies {
 	implementation("io.ktor:ktor-server-default-headers-jvm:3.3.1")
 	implementation("io.ktor:ktor-server-forwarded-header:3.3.1")
 	implementation("io.ktor:ktor-server-forwarded-header-jvm:3.3.1")
+	implementation("io.ktor:ktor-server-metrics-micrometer:3.3.1")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.15.5")
 
 	// templating
 	implementation("io.ktor:ktor-server-html-builder:3.3.1")
@@ -85,6 +87,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
 
 	implementation("site.remlit:http-signature-utility:2025.10.7-SNAPSHOT")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.6.13")
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 	testImplementation(kotlin("test"))

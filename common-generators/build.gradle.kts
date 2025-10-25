@@ -5,7 +5,7 @@ plugins {
 	id("com.gradleup.shadow")
 }
 
-group = "site.remlit.common"
+group = "site.remlit.aster.common"
 version = gradle.extra.get("rootVersion") as String
 
 repositories {

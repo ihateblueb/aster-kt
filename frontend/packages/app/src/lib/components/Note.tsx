@@ -1,20 +1,37 @@
 import * as React from "react";
+import {type RefObject, useState} from "react";
 import * as Common from "aster-common";
 import './Note.scss'
 import Container from "./Container.tsx";
 import Avatar from "./Avatar.tsx";
-import {IconAlertTriangle, IconArrowBackUp, IconDots, IconPlus, IconRepeat, IconStar} from "@tabler/icons-react";
+import {
+    IconAlertTriangle,
+    IconArrowBackUp,
+    IconBookmark,
+    IconDots,
+    IconExternalLink,
+    IconFlag,
+    IconLink,
+    IconMaximize,
+    IconPencil,
+    IconPlus,
+    IconRepeat,
+    IconStar,
+    IconTrash
+} from "@tabler/icons-react";
 import DateTime from "./DateTime.tsx";
 import Visibility from "./Visibility.tsx";
 import Button from "./Button.tsx";
-import {Link} from "@tanstack/react-router";
+import {Link, useNavigate} from "@tanstack/react-router";
 import localstore from "../utils/localstore.ts";
 import likeNote from "../api/note/like.ts";
+import Dropdown, {DropdownDivider, DropdownItem, type DropdownNode} from "./dropdown/Dropdown.tsx";
 
 function Note(
-    {data}:
-    { data: Common.Note }
+    {data, detailed = false}:
+    { data: Common.Note, detailed: boolean }
 ) {
+    const navigate = useNavigate();
     let [note, setNote] = React.useState(data)
 
     let self = localstore.getSelf()
@@ -71,7 +88,7 @@ function Note(
         if (!note?.cw) {
             return (
                 <Container>
-                    <p>{note?.content}</p>
+                    <div dangerouslySetInnerHTML={{__html: note?.content}}></div>
                 </Container>
             )
         } else {
@@ -80,7 +97,7 @@ function Note(
                     {!cwOpen ? renderContentWarning() : (
                         <>
                             {renderContentWarning()}
-                            <p>{note?.content}</p>
+                            <div dangerouslySetInnerHTML={{__html: note?.content}}></div>
                         </>
                     )}
                 </Container>
@@ -109,6 +126,95 @@ function Note(
         )
     }
 
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+    let dropdownRef: RefObject<HTMLButtonElement | null> = React.createRef()
+
+    let dropdownItems: DropdownNode[] = []
+
+    if (!detailed) dropdownItems.push(
+        new DropdownItem(
+            undefined,
+            <IconMaximize size={18}/>,
+            'Expand note',
+            `/note/${data.id}`
+        ),
+        new DropdownDivider()
+    )
+
+    dropdownItems.push(
+        new DropdownItem(
+            undefined,
+            <IconLink size={18}/>,
+            'Copy link',
+            undefined,
+            () => {
+            }
+        )
+    )
+
+    if (data.user.host)
+        dropdownItems.push(
+            new DropdownItem(
+                undefined,
+                <IconLink size={18}/>,
+                'Copy remote link',
+                undefined,
+                () => {
+                }
+            ),
+            new DropdownItem(
+                undefined,
+                <IconExternalLink size={18}/>,
+                'View on remote',
+                undefined,
+                () => {
+                }
+            )
+        )
+
+    if (self)
+        dropdownItems.push(
+            new DropdownDivider(),
+            new DropdownItem(
+                undefined,
+                <IconBookmark size={18}/>,
+                'Bookmark note',
+                undefined,
+                () => {
+                }
+            ),
+            new DropdownItem(
+                "danger",
+                <IconFlag size={18}/>,
+                'Report note',
+                undefined,
+                () => {
+                }
+            ),
+        )
+
+    // or is admin
+    if (isOwnPost)
+        dropdownItems.push(
+            new DropdownDivider(),
+            new DropdownItem(
+                undefined,
+                <IconPencil size={18}/>,
+                'Edit note',
+                undefined,
+                () => {
+                }
+            ),
+            new DropdownItem(
+                "danger",
+                <IconTrash size={18}/>,
+                'Delete note',
+                undefined,
+                () => {
+                }
+            )
+        )
+
     return (
         <article className={"note highlightable"} tabIndex={0}
                  aria-label={`Note by ${renderAt()}${note?.content ? ", " + note?.content : ""}`}>
@@ -117,14 +223,16 @@ function Note(
                     <Avatar user={note?.user}/>
                 </Container>
                 <Container align={"left"}>
-                    <a className={"names"}
-                       href={`/${renderAt()}`}>
+                    <span
+                        className={"names"}
+                        onClick={() => navigate({to: `/${renderAt()}`})}
+                    >
                         <p className={"displayName"}>{note?.user?.displayName ?? note?.user?.username}</p>
                         <p className={"handle"}>{renderHandle()}</p>
-                    </a>
+                    </span>
                 </Container>
                 <Container align={"right"}>
-                    <Container gap={"sm"}>
+                    <Container gap={"sm"} onClick={() => navigate({to: `/note/${data.id}`})}>
                         <DateTime date={note?.createdAt} short={true}/>
                         <Visibility visibility={note?.visibility}/>
                     </Container>
@@ -156,10 +264,14 @@ function Note(
                 <button className={"highlightable"} title={"React"}>
                     <IconPlus aria-hidden={true} size={20}/>
                 </button>
-                <button className={"highlightable"} title={"More"}>
+                <button className={`highlightable${dropdownOpen ? " selected" : ""}`} title={"More"}
+                        ref={dropdownRef}
+                        onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <IconDots aria-hidden={true} size={20}/>
                 </button>
             </footer>
+
+            <Dropdown items={dropdownItems} parent={dropdownRef} open={dropdownOpen} setOpen={setDropdownOpen}/>
         </article>
     )
 }
