@@ -1,9 +1,10 @@
 package site.remlit.aster.service.ap
 
-import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -16,12 +17,16 @@ import site.remlit.aster.model.ap.ApValidationExceptionType
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.KeypairService
 import site.remlit.aster.service.PolicyService
-import site.remlit.httpSignatures.HttpSignature
+import site.remlit.httpSignatures.SignatureException
 import java.security.MessageDigest
+import java.security.PublicKey
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.io.encoding.Base64
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 /**
  * Service for validating ActivityPub activities.
@@ -99,8 +104,44 @@ class ApValidationService : Service() {
 				)
 			}
 
-			val httpSignature = HttpSignature.parseHeaderString(request.headers["Signature"]!!)
-			val actorApId = httpSignature.keyId.substringBefore("#")
+			val signatureHeader = request.headers["Signature"]!!
+
+			val keyIdRegex = buildHeaderRegex("keyId")
+			val algorithmRegex = buildHeaderRegex("algorithm")
+			val headersRegex = buildHeaderRegex("headers")
+			val signatureRegex = buildHeaderRegex("signature")
+
+			val sigKeyId = keyIdRegex.find(signatureHeader)?.groups?.get(1)?.value
+				?: throw ApValidationException(
+					ApValidationExceptionType.Unauthorized,
+					"Could not extract keyId from Signature header"
+				)
+			val sigAlgorithm = algorithmRegex.find(signatureHeader)?.groups?.get(1)?.value
+				?: throw ApValidationException(
+					ApValidationExceptionType.Unauthorized,
+					"Could not extract algorithm from Signature header"
+				)
+			val sigHeaders = headersRegex.find(signatureHeader)?.groups?.get(1)?.value?.split(" ")
+				?: throw ApValidationException(
+					ApValidationExceptionType.Unauthorized,
+					"Could not extract headers from Signature header"
+				)
+			val sigSignature = signatureRegex.find(signatureHeader)?.groups?.get(1)?.value
+				?: throw ApValidationException(
+					ApValidationExceptionType.Unauthorized,
+					"Could not extract signature from Signature header"
+				)
+
+			val signingString = ApSignatureService.createSigningString(
+				request.httpMethod,
+				request.path(),
+				sigHeaders,
+				ApSignatureService.headersToMap(request.headers)
+			)
+
+			println("Sig = $signatureHeader")
+
+			val actorApId = sigKeyId.substringBefore("#")
 
 			val actor = ApActorService.resolve(actorApId)
 			if (actor == null) {
@@ -111,31 +152,9 @@ class ApValidationService : Service() {
 				)
 			}
 
-			val signatureHeaderValues = mutableListOf<String>()
-			for (header in httpSignature.headers.filter { it != "(request-target)" }) {
-				signatureHeaderValues.add(
-					request.headers[header] ?: throw ApValidationException(
-						ApValidationExceptionType.Unauthorized,
-						"Headers specified in signature not included in request"
-					)
-				)
-			}
-
-			val signingString = httpSignature.createSigningString(
-				when (request.httpMethod) {
-					HttpMethod.Get -> site.remlit.httpSignatures.HttpMethod.GET
-					HttpMethod.Post -> site.remlit.httpSignatures.HttpMethod.POST
-					else -> throw ApValidationException(
-						ApValidationExceptionType.Unauthorized,
-						"Unsupported HTTP method"
-					)
-				},
-				request.path(),
-				signatureHeaderValues
-			)
-
 			val isSignatureValid = try {
-				httpSignature.verify(
+				isSignatureValid(
+					sigSignature,
 					signingString,
 					KeypairService.pemToPublicKey(actor.publicKey),
 					parseHttpDate(request.headers["Date"]!!)
@@ -168,6 +187,35 @@ class ApValidationService : Service() {
 			return digest == Base64.encode(ourDigest)
 		}
 
+		@OptIn(ExperimentalTime::class)
+		fun isSignatureValid(
+			signature: String,
+			signingString: String,
+			publicKey: PublicKey,
+			date: LocalDateTime
+		): Boolean {
+			// 150s is 2.5m, total of 5m window.
+			// Iceshrimp.NET also does 5m.
+			val maxTimeMargin = 150
+
+			val nowPlusMargin = Clock.System.now().plus(maxTimeMargin.seconds)
+			val nowMinusMargin = Clock.System.now().minus(maxTimeMargin.seconds)
+
+			val dateInstant = date.toInstant(TimeZone.currentSystemDefault())
+
+			if (dateInstant > nowPlusMargin)
+				throw SignatureException("Date is more than $maxTimeMargin seconds past now.")
+
+			if (dateInstant < nowMinusMargin)
+				throw SignatureException("Date is more than $maxTimeMargin seconds from now.")
+
+			val javaSignature = java.security.Signature.getInstance("SHA256withRSA")
+			javaSignature.initVerify(publicKey)
+			javaSignature.update(signingString.toByteArray())
+
+			return javaSignature.verify(Base64.decode(signature))
+		}
+
 		fun parseHttpDate(date: String): LocalDateTime {
 			return ZonedDateTime
 				.parse(date, DateTimeFormatter.RFC_1123_DATE_TIME)
@@ -175,6 +223,11 @@ class ApValidationService : Service() {
 				.toLocalDateTime()
 				.toKotlinLocalDateTime()
 		}
+
+		/**
+		 * Creates a regex pattern to get the value of a `key="value"` pattern.
+		 * */
+		fun buildHeaderRegex(key: String) = Regex("$key=\"(.*?)\"")
 	}
 }
 

@@ -10,15 +10,19 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.http.*
 import kotlinx.serialization.json.JsonObject
-import org.jetbrains.annotations.ApiStatus
 import org.slf4j.LoggerFactory
 import site.remlit.aster.common.model.type.PolicyType
 import site.remlit.aster.exception.ResolverException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.PackageInformation
 import site.remlit.aster.model.Service
+import site.remlit.aster.service.ap.ApSignatureService
 import site.remlit.aster.util.jsonConfig
+import java.time.LocalDateTime
+import java.time.ZoneId
+import kotlin.time.ExperimentalTime
 
 /**
  * Service for resolving URLs and ActivityPub objects.
@@ -92,6 +96,7 @@ class ResolverService : Service() {
 				val body: JsonObject? = response.body()
 				return body
 			} catch (e: Exception) {
+				logger.info("Request failed: ${e.message}")
 				return null
 			}
 		}
@@ -101,12 +106,64 @@ class ResolverService : Service() {
 		 *
 		 * @param url URL to resolve as a String
 		 * @param accept Accept header's content, defaults to application/activity+json
+		 * @param user User to sign the request as
 		 *
 		 * @return [JsonObject] or null
 		 * */
-		@ApiStatus.Experimental
-		suspend fun resolveSigned(url: String, accept: String = "application/activity+json"): JsonObject? {
-			return null
+		@OptIn(ExperimentalTime::class)
+		suspend fun resolveSigned(
+			url: String,
+			accept: String = "application/activity+json",
+			user: String? = null
+		): JsonObject? {
+			val url = Url(url)
+
+			val date = LocalDateTime.now(ZoneId.of("GMT"))
+				.toHttpDateString()
+
+			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
+			val blockedHosts = PolicyService.reducePoliciesInListToHost(blockPolicies)
+
+			if (blockedHosts.contains(url.host))
+				return null
+
+			val actor = (if (user != null) UserService.getByUsername(user) else null)
+				?: UserService.getInstanceActor()
+
+			val actorPrivate = UserService.getPrivateById(actor.id.toString())!!
+
+			try {
+				val client = createClient()
+				val response = client.get(url) {
+					headers.append("Host", url.host)
+					headers.append("Date", date)
+					headers.append("Accept", accept)
+
+					val sig = ApSignatureService.createSignature(
+						url.encodedPath,
+						HttpMethod.Get,
+						KeypairService.pemToPrivateKey(actorPrivate.privateKey),
+						actor.apId + "#main-key",
+						mapOf(
+							"Host" to url.host,
+							"Date" to date
+						)
+					)
+
+					headers.append("Signature", sig.first)
+				}
+				client.close()
+
+				if (response.status != HttpStatusCode.OK)
+					throw ResolverException(response.status, response.status.description)
+				else logger.info("${response.status} ${response.request.method} - ${response.request.url}")
+
+				val body: JsonObject? = response.body()
+				return body
+			} catch (e: Exception) {
+				logger.info("Request failed: ${e.message}")
+				return null
+			}
 		}
 	}
 }

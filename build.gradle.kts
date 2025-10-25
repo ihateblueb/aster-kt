@@ -86,7 +86,6 @@ dependencies {
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
 
-	implementation("site.remlit:http-signature-utility:2025.10.7-SNAPSHOT")
 	implementation("io.micrometer:micrometer-registry-prometheus:1.6.13")
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")

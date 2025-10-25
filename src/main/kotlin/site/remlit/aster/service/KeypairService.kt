@@ -5,7 +5,9 @@ import site.remlit.aster.model.Service
 import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import java.security.PrivateKey
 import java.security.PublicKey
+import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
@@ -43,6 +45,16 @@ class KeypairService : Service() {
 			val byteArray = Base64.getDecoder().decode(editedString)
 
 			return KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(byteArray))
+		}
+
+		fun pemToPrivateKey(pem: String): PrivateKey {
+			val start = "-----BEGIN PRIVATE KEY-----\n"
+			val end = "\n-----END PRIVATE KEY-----\n"
+
+			val editedString = pem.replace(start, "").replace(end, "").replace("\n", "")
+			val byteArray = Base64.getDecoder().decode(editedString)
+
+			return KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(byteArray))
 		}
 	}
 }

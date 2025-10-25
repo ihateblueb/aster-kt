@@ -91,10 +91,12 @@ fun Application.module() {
 
 	install(CallLogging) {
 		filter { call ->
-			!call.request.uri.startsWith("/assets") &&
+			!call.request.uri.startsWith("/metrics") &&
+					!call.request.uri.startsWith("/assets") &&
 					!call.request.uri.startsWith("/admin/assets") &&
 					!call.request.uri.startsWith("/favicon") &&
 					!call.request.uri.startsWith("/installHook.js") &&
+					!call.request.uri.startsWith("/admin/installHook.js") &&
 					!call.request.uri.startsWith("/manifest.json")
 		}
 		format { call ->

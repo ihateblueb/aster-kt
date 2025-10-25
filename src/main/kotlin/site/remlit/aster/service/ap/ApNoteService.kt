@@ -35,7 +35,7 @@ class ApNoteService : Service() {
 				return existingNote
 			}
 
-			val resolveResponse = ResolverService.resolve(apId)
+			val resolveResponse = ResolverService.resolveSigned(apId)
 
 			if (resolveResponse != null)
 				return register(resolveResponse)
