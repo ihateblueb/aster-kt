@@ -8,6 +8,7 @@ import getNotifications from "../lib/api/notifications/notifications.ts";
 import Loading from "../lib/components/Loading.tsx";
 import Error from "../lib/components/Error.tsx";
 import Timeline from "../lib/components/Timeline.tsx";
+import Notification from "../lib/components/Notification.tsx";
 
 export const Route = createFileRoute('/notifications')({
     component: RouteComponent,
@@ -42,7 +43,7 @@ function RouteComponent() {
             </Tab>
                 */}
             </PageHeader>
-            <PageWrapper padding={"full"} center={false}>
+            <PageWrapper padding={"timeline"} center={false}>
                 {isPending || isFetching ? (
                     <Loading fill/>
                 ) : error ? (

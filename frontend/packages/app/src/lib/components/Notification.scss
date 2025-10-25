@@ -1,0 +1,28 @@
+.notification {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  position: relative;
+
+  box-sizing: border-box;
+  border-radius: var(--br-md);
+
+  padding: 14px;
+
+  transition: .1s background-color;
+
+  &:hover {
+    background-color: var(--bg-3-50);
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: var(--tx-2);
+    text-decoration: none;
+    font-weight: 600;
+  }
+}

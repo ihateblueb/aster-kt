@@ -1,5 +1,18 @@
 import * as Common from 'aster-common'
 import './Notification.scss'
+import Container from "./Container.tsx";
+import {
+    IconAlertCircle,
+    IconAlertTriangle,
+    IconAt,
+    IconDental,
+    IconHeartBroken,
+    IconPlus,
+    IconStar,
+    IconUser,
+    IconUserCheck,
+    IconUserPlus
+} from "@tabler/icons-react";
 
 function Notification(
     {data}:
@@ -7,52 +20,82 @@ function Notification(
         data: Common.Notification,
     }
 ) {
-
     function renderName() {
-        return <b>{data.from.displayName ?? data.from.username}</b>
+        return <a href={"/@" + data.from.username + ((data.from.host) ? "@" + data.from.host : "")}>
+            {data.from.displayName ?? data.from.username}
+        </a>
+    }
+
+    function renderIcon() {
+        // @ts-ignore this isn't actually an enum
+        switch (data.type as string) {
+            case "like":
+                return <IconStar size={18} color={"var(--like)"}/>
+            case "react":
+                return <IconPlus size={18} color={"var(--ac-1)"}/>
+            case "follow":
+                return <IconUserPlus size={18} color={"var(--ac-1)"}/>
+            case "acceptedFollow":
+                return <IconUserCheck size={18} color={"var(--ac-1)"}/>
+            case "mention":
+                return <IconAt size={18} color={"var(--ac-1)"}/>
+            case "announcement":
+                return <IconAlertCircle size={18} color={"var(--ac-1)"}/>
+            case "brokenRelationship":
+                return <IconHeartBroken size={18} color={"var(--ac-1)"}/>
+            case "bite":
+                return <IconDental size={18} color={"var(--ac-1)"}/>
+            case "registration":
+                return <IconUser size={18} color={"var(--like)"}/>
+            case "report":
+                return <IconAlertTriangle size={18} color={"var(--warn)"}/>
+            default:
+                return null
+        }
     }
 
     function renderTitle() {
-        switch (data.type) {
-            case Common.NotificationType.Like:
+        // @ts-ignore this isn't actually an enum
+        switch (data.type as string) {
+            case "like":
                 return <>
-                    <span>{renderName()} liked your post</span>
+                    <p>{renderName()} liked your post</p>
                 </>
-            case Common.NotificationType.React:
+            case "react":
                 return <>
-                    <span>{renderName()} reacted to your post</span>
+                    <p>{renderName()} reacted to your post</p>
                 </>
-            case Common.NotificationType.Follow:
+            case "follow":
                 return <>
-                    <span>{renderName()} followed you</span>
+                    <p>{renderName()} followed you</p>
                 </>
-            case Common.NotificationType.AcceptedFollow:
+            case "acceptedFollow":
                 return <>
-                    <span>{renderName()} accepted your follow request</span>
+                    <p>{renderName()} accepted your follow request</p>
                 </>
-            case Common.NotificationType.Mention:
+            case "mention":
                 return <>
-                    <span>{renderName()} mentioned you</span>
+                    <p>{renderName()} mentioned you</p>
                 </>
-            case Common.NotificationType.Announcement:
+            case "announcement":
                 return <>
-                    <span>{/* announcement title */}</span>
+                    <p>{/* announcement title */}</p>
                 </>
-            case Common.NotificationType.BrokenRelationship:
+            case "brokenRelationship":
                 return <>
-                    <span>One or more relationship broke.</span>
+                    <p>One or more relationship broke.</p>
                 </>
-            case Common.NotificationType.Bite:
+            case "bite":
                 return <>
-                    <span>{renderName()} bit you</span>
+                    <p>{renderName()} bit you</p>
                 </>
-            case Common.NotificationType.Registration:
+            case "registration":
                 return <>
-                    <span>{renderName()} registered</span>
+                    <p>{renderName()} registered</p>
                 </>
-            case Common.NotificationType.Report:
+            case "report":
                 return <>
-                    <span>{renderName()} submitted a report</span>
+                    <p>{renderName()} submitted a report</p>
                 </>
             default:
                 return null
@@ -60,22 +103,23 @@ function Notification(
     }
 
     function renderBody() {
-        switch (data.type) {
-            case Common.NotificationType.Like:
+        // @ts-ignore this isn't actually an enum
+        switch (data.type as string) {
+            case "like":
                 return <>
-                    <span>TODO: Small note</span>
+                    <p>TODO: Small note</p>
                 </>
-            case Common.NotificationType.React:
+            case "react":
                 return <>
-                    <span>TODO: Small note</span>
+                    <p>TODO: Small note</p>
                 </>
-            case Common.NotificationType.Mention:
+            case "mention":
                 return <>
-                    <span>TODO: Small note</span>
+                    <p>TODO: Small note</p>
                 </>
-            case Common.NotificationType.Bite:
+            case "bite":
                 return data.note ? <>
-                    <span>TODO: Small note</span>
+                    <p>TODO: Small note</p>
                 </> : null
             default:
                 return null
@@ -84,7 +128,10 @@ function Notification(
 
     return (
         <div className={`notification`}>
-            {renderTitle()}
+            <Container align={"horizontal"} gap={"lg"}>
+                {renderIcon()}
+                {renderTitle()}
+            </Container>
             {renderBody()}
         </div>
     )

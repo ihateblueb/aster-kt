@@ -7,7 +7,7 @@ import io.ktor.server.routing.*
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.less
-import site.remlit.aster.db.table.NoteTable
+import site.remlit.aster.db.table.NotificationTable
 import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.route.RouteRegistry
 import site.remlit.aster.service.NotificationService
@@ -25,7 +25,7 @@ object NotificationRoutes {
 
 					val notifications = NotificationService.getMany(
 						where = NotificationService.userToAlias[UserTable.id] eq authenticatedUser.id.toString()
-								and (NoteTable.createdAt less since),
+								and (NotificationTable.createdAt less since),
 						take = take
 					)
 
