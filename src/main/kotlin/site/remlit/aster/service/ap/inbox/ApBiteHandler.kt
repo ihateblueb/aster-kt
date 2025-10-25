@@ -32,7 +32,7 @@ class ApBiteHandler : ApInboxHandler() {
 				realTargetUser.id.toString(),
 			)
 		) return
-
+		
 		NotificationService.bite(
 			realTargetUser,
 			sender,

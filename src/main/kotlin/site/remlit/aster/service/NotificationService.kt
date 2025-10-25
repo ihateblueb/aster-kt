@@ -44,13 +44,22 @@ class NotificationService : Service() {
 
 		fun getById(id: String): Notification? = get(NotificationTable.id eq id)
 
-		fun getMany(where: Op<Boolean>, take: Int? = null): List<Notification> = transaction {
-			val toAlias = UserTable.alias("to")
-			val fromAlias = UserTable.alias("from")
+		/**
+		 * Reference the "to" user on a notification.
+		 * For usage in queries.
+		 * */
+		val userToAlias = UserTable.alias("to")
 
+		/**
+		 * Reference the "from" user on a notification.
+		 * For usage in queries.
+		 * */
+		val userFromAlias = UserTable.alias("from")
+
+		fun getMany(where: Op<Boolean>, take: Int? = null): List<Notification> = transaction {
 			val entities = NotificationTable
-				.join(toAlias, JoinType.INNER, NotificationTable.to, toAlias[UserTable.id])
-				.join(fromAlias, JoinType.INNER, NotificationTable.from, fromAlias[UserTable.id])
+				.join(userToAlias, JoinType.INNER, NotificationTable.to, userToAlias[UserTable.id])
+				.join(userFromAlias, JoinType.INNER, NotificationTable.from, userFromAlias[UserTable.id])
 				.join(NoteTable, JoinType.LEFT, NotificationTable.note, NoteTable.id)
 				.join(RelationshipTable, JoinType.LEFT, NotificationTable.relationship, RelationshipTable.id)
 				.selectAll()

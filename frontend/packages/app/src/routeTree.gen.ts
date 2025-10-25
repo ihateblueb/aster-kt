@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StyletestRouteImport } from './routes/styletest'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AboutRouteImport } from './routes/about'
@@ -26,6 +27,11 @@ const StyletestRoute = StyletestRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LogoutRoute = LogoutRouteImport.update({
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/notifications': typeof NotificationsRoute
   '/register': typeof RegisterRoute
   '/styletest': typeof StyletestRoute
   '/note/$noteId': typeof NoteNoteIdRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/notifications': typeof NotificationsRoute
   '/register': typeof RegisterRoute
   '/styletest': typeof StyletestRoute
   '/note/$noteId': typeof NoteNoteIdRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/notifications': typeof NotificationsRoute
   '/register': typeof RegisterRoute
   '/styletest': typeof StyletestRoute
   '/note/$noteId': typeof NoteNoteIdRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/logout'
+    | '/notifications'
     | '/register'
     | '/styletest'
     | '/note/$noteId'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/logout'
+    | '/notifications'
     | '/register'
     | '/styletest'
     | '/note/$noteId'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/login'
     | '/logout'
+    | '/notifications'
     | '/register'
     | '/styletest'
     | '/note/$noteId'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
+  NotificationsRoute: typeof NotificationsRoute
   RegisterRoute: typeof RegisterRoute
   StyletestRoute: typeof StyletestRoute
   NoteNoteIdRoute: typeof NoteNoteIdRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/logout': {
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
+  NotificationsRoute: NotificationsRoute,
   RegisterRoute: RegisterRoute,
   StyletestRoute: StyletestRoute,
   NoteNoteIdRoute: NoteNoteIdRoute,

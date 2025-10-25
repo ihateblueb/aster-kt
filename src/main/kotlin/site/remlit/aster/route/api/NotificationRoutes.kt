@@ -8,7 +8,7 @@ import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.less
 import site.remlit.aster.db.table.NoteTable
-import site.remlit.aster.db.table.NotificationTable
+import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.route.RouteRegistry
 import site.remlit.aster.service.NotificationService
 import site.remlit.aster.service.TimelineService
@@ -24,7 +24,7 @@ object NotificationRoutes {
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 					val notifications = NotificationService.getMany(
-						where = NotificationTable.to eq authenticatedUser.id.toString()
+						where = NotificationService.userToAlias[UserTable.id] eq authenticatedUser.id.toString()
 								and (NoteTable.createdAt less since),
 						take = take
 					)
