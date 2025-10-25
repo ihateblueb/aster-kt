@@ -51,7 +51,9 @@ function UserPage(
                             <span
                                 className={"bio" + ((data?.bio === undefined || data?.bio === "") ? " none" : "")}
                             >
-                                {(data?.bio === undefined || data?.bio === "") ? "This user hasn't written a description yet." : data?.bio}
+                                {(data?.bio === undefined || data?.bio === "") ? "This user hasn't written a description yet." : (
+                                    <div dangerouslySetInnerHTML={{__html: data.bio}}></div>
+                                )}
                             </span>
 
                             {data?.birthday != null ? (

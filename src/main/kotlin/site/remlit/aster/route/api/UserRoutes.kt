@@ -20,6 +20,7 @@ import site.remlit.aster.service.RelationshipService
 import site.remlit.aster.service.RoleService
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
+import site.remlit.aster.service.ap.ApActorService
 import site.remlit.aster.util.authenticatedUserKey
 import site.remlit.aster.util.model.fromEntity
 import site.remlit.aster.util.sanitizeOrNull
@@ -173,7 +174,12 @@ object UserRoutes {
 					if (user.host == null)
 						throw ApiException(HttpStatusCode.BadRequest, "Local users can't be refetched")
 
-					throw ApiException(HttpStatusCode.NotImplemented)
+					ApActorService.resolve(user.apId, true)
+
+					val freshUser = UserService.getById(user.id.toString())
+						?: throw ApiException(HttpStatusCode.NotFound)
+
+					return@post call.respond(HttpStatusCode.OK, User.fromEntity(freshUser))
 				}
 
 				get("/api/user/{id}/relationship") {

@@ -28,10 +28,11 @@ class ApActorService : Service() {
 		 * Resolve an actor by their ID
 		 *
 		 * @param apId ActivityPub ID of an actor
+		 * @param refetch Force a refetch
 		 *
 		 * @return UserEntity or null
 		 * */
-		suspend fun resolve(apId: String): UserEntity? {
+		suspend fun resolve(apId: String, refetch: Boolean = false): UserEntity? {
 			val existingUser = UserService.getByApId(apId)
 
 			if (existingUser != null) {

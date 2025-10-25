@@ -17,7 +17,6 @@ import site.remlit.aster.model.ap.ApValidationExceptionType
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.KeypairService
 import site.remlit.aster.service.PolicyService
-import site.remlit.httpSignatures.SignatureException
 import java.security.MessageDigest
 import java.security.PublicKey
 import java.time.ZoneId
@@ -204,10 +203,16 @@ class ApValidationService : Service() {
 			val dateInstant = date.toInstant(TimeZone.currentSystemDefault())
 
 			if (dateInstant > nowPlusMargin)
-				throw SignatureException("Date is more than $maxTimeMargin seconds past now.")
+				throw ApValidationException(
+					ApValidationExceptionType.Forbidden,
+					"Date is more than $maxTimeMargin seconds past now."
+				)
 
 			if (dateInstant < nowMinusMargin)
-				throw SignatureException("Date is more than $maxTimeMargin seconds from now.")
+				throw ApValidationException(
+					ApValidationExceptionType.Forbidden,
+					"Date is more than $maxTimeMargin seconds from now."
+				)
 
 			val javaSignature = java.security.Signature.getInstance("SHA256withRSA")
 			javaSignature.initVerify(publicKey)
