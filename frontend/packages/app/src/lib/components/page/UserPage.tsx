@@ -10,6 +10,7 @@ import Avatar from "../Avatar.tsx";
 import {useState} from "react";
 import Container from "../Container.tsx";
 import Button from "../Button.tsx";
+import Mfm from "../Mfm.tsx";
 
 function UserPage(
     {handle}: { handle: string }
@@ -52,7 +53,7 @@ function UserPage(
                                 className={"bio" + ((data?.bio === undefined || data?.bio === "") ? " none" : "")}
                             >
                                 {(data?.bio === undefined || data?.bio === "") ? "This user hasn't written a description yet." : (
-                                    <div dangerouslySetInnerHTML={{__html: data.bio}}></div>
+                                    <Mfm text={data.bio}></Mfm>
                                 )}
                             </span>
 

@@ -23,7 +23,8 @@ object InboxHandlerRegistry {
 
 		if (Configuration.debug)
 			logger.debug(
-				"[${job.id}] Consuming object of type {} from {} on attempt {}",
+				"[{}] Consuming object of type {} from {} on attempt {}",
+				job.id,
 				typedObject.type,
 				transaction { job.sender?.apId ?: "unknown" },
 				job.retries + 1

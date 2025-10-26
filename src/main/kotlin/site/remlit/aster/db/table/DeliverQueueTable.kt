@@ -16,6 +16,7 @@ object DeliverQueueTable : IdTable<String>("deliver_queue") {
 	val inbox = varchar("inbox", length = 5000)
 
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
+	val retryAt = datetime("retryAt").nullable()
 	val retries = integer("retries")
 
 	override val primaryKey = PrimaryKey(id)

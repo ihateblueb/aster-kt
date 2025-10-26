@@ -5,7 +5,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.lessEq
+import org.jetbrains.exposed.v1.core.or
 import org.jetbrains.exposed.v1.core.statements.api.ExposedBlob
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
@@ -19,7 +24,10 @@ import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.model.Service
 import site.remlit.aster.registry.InboxHandlerRegistry
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 /**
  * Service for managing persistent queues.
@@ -58,10 +66,14 @@ class QueueService : Service() {
 
 		// queue checkers
 
+		@OptIn(ExperimentalTime::class)
 		private fun summonInboxConsumersIfNeeded() {
 			transaction {
 				InboxQueueEntity
-					.find { InboxQueueTable.status eq QueueStatus.PENDING }
+					.find {
+						(InboxQueueTable.status eq QueueStatus.PENDING) or
+								(InboxQueueTable.status eq QueueStatus.FAILED and (InboxQueueTable.retryAt lessEq TimeService.now()))
+					}
 					.take(Configuration.queue.inbox.concurrency)
 					.toList()
 					.forEach {
@@ -80,7 +92,10 @@ class QueueService : Service() {
 		private fun summonDeliverConsumersIfNeeded() {
 			transaction {
 				DeliverQueueEntity
-					.find { DeliverQueueTable.status eq QueueStatus.PENDING }
+					.find {
+						(DeliverQueueTable.status eq QueueStatus.PENDING) or
+								(DeliverQueueTable.status eq QueueStatus.FAILED and (DeliverQueueTable.retryAt lessEq TimeService.now()))
+					}
 					.take(Configuration.queue.deliver.concurrency)
 					.toList()
 					.forEach {
@@ -125,9 +140,12 @@ class QueueService : Service() {
 
 		// error job
 
+		@OptIn(ExperimentalTime::class)
 		fun errorInboxJob(job: InboxQueueEntity) =
 			transaction {
-				job.status = QueueStatus.COMPLETED
+				job.status = QueueStatus.FAILED
+				job.retryAt = Clock.System.now().plus((job.retries * 15).minutes)
+					.toLocalDateTime(TimeZone.currentSystemDefault())
 				job.retries += 1
 				job.flush()
 			}

@@ -15,6 +15,7 @@ object InboxQueueTable : IdTable<String>("inbox_queue") {
 	val sender = optReference("sender", UserTable.id, ReferenceOption.CASCADE)
 
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
+	val retryAt = datetime("retryAt").nullable()
 	val retries = integer("retries").default(0)
 
 	override val primaryKey = PrimaryKey(id)

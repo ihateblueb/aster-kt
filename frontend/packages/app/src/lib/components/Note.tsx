@@ -26,6 +26,7 @@ import {Link, useNavigate} from "@tanstack/react-router";
 import localstore from "../utils/localstore.ts";
 import likeNote from "../api/note/like.ts";
 import Dropdown, {DropdownDivider, DropdownItem, type DropdownNode} from "./dropdown/Dropdown.tsx";
+import Mfm from "./Mfm.tsx";
 
 function Note(
     {data, detailed = false}:
@@ -88,7 +89,7 @@ function Note(
         if (!note?.cw) {
             return (
                 <Container>
-                    <div dangerouslySetInnerHTML={{__html: note?.content}}></div>
+                    <Mfm text={note?.content}/>
                 </Container>
             )
         } else {
@@ -97,7 +98,7 @@ function Note(
                     {!cwOpen ? renderContentWarning() : (
                         <>
                             {renderContentWarning()}
-                            <div dangerouslySetInnerHTML={{__html: note?.content}}></div>
+                            <Mfm text={note?.content}/>
                         </>
                     )}
                 </Container>

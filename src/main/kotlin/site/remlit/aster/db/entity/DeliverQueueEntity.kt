@@ -15,5 +15,6 @@ class DeliverQueueEntity(id: EntityID<String>) : Entity<String>(id = id) {
 	val inbox by DeliverQueueTable.inbox
 
 	val createdAt by DeliverQueueTable.createdAt
+	var retryAt by DeliverQueueTable.retryAt
 	var retries by DeliverQueueTable.retries
 }

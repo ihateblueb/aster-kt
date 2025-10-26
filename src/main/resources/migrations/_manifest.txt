@@ -37,3 +37,5 @@
 1760969270797_Migration_drive_file.sql
 1760978852842_Migration_drive_file.sql
 1761009842566_Migration_notification.sql
+1761437186093_Migration_inbox_queue.sql
+1761486846640_Migration_deliver_queue.sql

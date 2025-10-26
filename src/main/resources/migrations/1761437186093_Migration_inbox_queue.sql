@@ -1,0 +1,2 @@
+ALTER TABLE inbox_queue ADD "retryAt" TIMESTAMP NULL;
+ALTER TABLE inbox_queue ALTER COLUMN retries TYPE INT, ALTER COLUMN retries SET DEFAULT 0;

@@ -14,5 +14,6 @@ class InboxQueueEntity(id: EntityID<String>) : Entity<String>(id = id) {
 	var sender by UserEntity optionalReferencedOn InboxQueueTable.sender
 
 	val createdAt by InboxQueueTable.createdAt
+	var retryAt by InboxQueueTable.retryAt
 	var retries by InboxQueueTable.retries
 }
