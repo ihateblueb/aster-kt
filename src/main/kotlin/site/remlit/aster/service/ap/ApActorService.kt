@@ -5,6 +5,8 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.JsonObject
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
+import site.remlit.aster.common.model.User
+import site.remlit.aster.common.model.generated.PartialUser
 import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.model.Service
 import site.remlit.aster.service.FormatService
@@ -14,6 +16,7 @@ import site.remlit.aster.service.SanitizerService
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
 import site.remlit.aster.util.ifFails
+import site.remlit.aster.util.model.fromEntity
 
 /**
  * Service to handle ActivityPub actors.
@@ -35,29 +38,25 @@ class ApActorService : Service() {
 		suspend fun resolve(apId: String, refetch: Boolean = false): UserEntity? {
 			val existingUser = UserService.getByApId(apId)
 
-			if (existingUser != null) {
-				// TODO: update
+			if ((existingUser != null) && !refetch) {
 				return existingUser
 			}
 
 			val resolveResponse = ResolverService.resolveSigned(apId)
 
-			if (resolveResponse != null)
-				return register(resolveResponse)
+			if (resolveResponse != null && existingUser == null)
+				return register(toUser(resolveResponse) ?: return null)
+
+			if (resolveResponse != null && existingUser != null)
+				return update(toUser(resolveResponse, User.fromEntity(existingUser)) ?: return null)
 
 			return null
 		}
 
-		/**
-		 * Register a new actor
-		 *
-		 * @param json JSON representation of an actor
-		 *
-		 * @return UserEntity or null
-		 * */
-		fun register(json: JsonObject): UserEntity? {
-			val id = IdentifierService.generate()
-
+		// partials used here since a regular user has the expectation of being real,
+		// may in future have calculated fields like likes on note, where creating them
+		// would waste a query and potentially error
+		fun toUser(json: JsonObject, existing: User? = null): PartialUser? {
 			val extractedId = ApUtilityService.extractString(json["id"])
 
 			if (extractedId.isNullOrBlank()) {
@@ -115,46 +114,155 @@ class ApActorService : Service() {
 				} else TimeService.now()
 			}
 
+			return PartialUser(
+				id = existing?.id ?: IdentifierService.generate(),
+				apId = existing?.apId ?: extractedId,
+
+				username = SanitizerService.sanitize(extractedPreferredUsername, true),
+				displayName = ApUtilityService.extractString(json["name"]),
+
+				host = existing?.host ?: FormatService.toASCII(Url(extractedId).host),
+
+				bio = if (summary != null) SanitizerService.sanitize(summary) else null,
+				birthday = null,
+				location = null,
+
+				avatar = null,
+				avatarAlt = null,
+				banner = null,
+				bannerAlt = null,
+
+				inbox = inbox,
+				outbox = ApUtilityService.extractString(json["outbox"]),
+
+				activated = true,
+				automated = extractedType != "Person",
+				suspended = existing?.suspended ?: false,
+				sensitive = ApUtilityService.extractBoolean(json["sensitive"]) ?: false,
+				discoverable = ApUtilityService.extractBoolean(json["discoverable"]) ?: false,
+				locked = ApUtilityService.extractBoolean(json["manuallyApprovesFollowers"]) ?: false,
+				indexable = ApUtilityService.extractBoolean(json["noindex"])?.let { !it } ?: true,
+				isCat = ApUtilityService.extractBoolean(json["isCat"]) ?: false,
+				speakAsCat = ApUtilityService.extractBoolean(json["speakAsCat"]) ?: false,
+
+				followersUrl = followers,
+				followingUrl = following,
+
+				createdAt = published,
+				updatedAt = if (existing != null) TimeService.now() else null,
+
+				publicKey = existing?.publicKey ?: SanitizerService.sanitize(extractedPublicKey, true),
+			)
+		}
+
+		/**
+		 * Update an existing actor
+		 *
+		 * @param user Converted actor to partial user
+		 *
+		 * @return UserEntity or null
+		 * */
+		fun update(user: PartialUser): UserEntity? {
 			try {
 				transaction {
-					UserEntity.new(id) {
-						apId = extractedId
-						this.inbox = inbox
-						outbox = ApUtilityService.extractString(json["outbox"])
+					UserEntity.findByIdAndUpdate(user.id!!) {
+						it.apId = user.apId!!
 
-						username = SanitizerService.sanitize(extractedPreferredUsername, true)
+						it.username = user.username!!
+						it.displayName = user.displayName
 
-						val extractedName = ApUtilityService.extractString(json["name"])
-						displayName =
-							if (!extractedName.isNullOrBlank()) SanitizerService.sanitize(extractedName, true) else null
+						it.host = user.host
 
-						host = FormatService.toASCII(Url(extractedId).host)
+						it.bio = user.bio
+						it.birthday = user.birthday
+						it.location = user.location
 
-						// todo: icon, image
+						it.avatar = user.avatar
+						it.avatarAlt = user.avatarAlt
+						it.banner = user.banner
+						it.bannerAlt = user.bannerAlt
 
-						bio = if (summary != null) SanitizerService.sanitize(summary) else null
+						it.inbox = user.inbox!!
+						it.outbox = user.outbox
 
-						sensitive = ApUtilityService.extractBoolean(json["sensitive"]) ?: false
-						discoverable = ApUtilityService.extractBoolean(json["discoverable"]) ?: false
-						locked = ApUtilityService.extractBoolean(json["manuallyApprovesFollowers"]) ?: false
-						indexable = ApUtilityService.extractBoolean(json["noindex"])?.let { !it } ?: true
-						isCat = ApUtilityService.extractBoolean(json["isCat"]) ?: false
-						speakAsCat = ApUtilityService.extractBoolean(json["speakAsCat"]) ?: false
+						it.activated = user.activated ?: true
+						it.automated = user.automated ?: false
+						it.suspended = user.suspended ?: false
+						it.sensitive = user.sensitive ?: false
+						it.discoverable = user.discoverable ?: false
+						it.locked = user.locked ?: false
+						it.indexable = user.indexable ?: false
+						it.isCat = user.isCat ?: false
+						it.speakAsCat = user.speakAsCat ?: false
 
-						activated = true
+						it.followersUrl = user.followersUrl
+						it.followingUrl = user.followingUrl
 
-						// TODO: birthday, location
+						it.createdAt = user.createdAt ?: TimeService.now()
+						it.updatedAt = user.updatedAt
 
-						followersUrl = followers
-						followingUrl = following
-
-						createdAt = published
-
-						publicKey = SanitizerService.sanitize(extractedPublicKey, true)
+						it.publicKey = user.publicKey!!
 					}
 				}
 
-				return UserService.getById(id)
+				return UserService.getById(user.id!!)
+			} catch (e: Exception) {
+				logger.error(e.message, e)
+				return null
+			}
+		}
+
+		/**
+		 * Register a new actor
+		 *
+		 * @param user Converted actor to partial user
+		 *
+		 * @return UserEntity or null
+		 * */
+		fun register(user: PartialUser): UserEntity? {
+			try {
+				transaction {
+					UserEntity.new(user.id) {
+						this.apId = user.apId!!
+
+						this.username = user.username!!
+						this.displayName = user.displayName
+
+						this.host = user.host
+
+						this.bio = user.bio
+						this.birthday = user.birthday
+						this.location = user.location
+
+						this.avatar = user.avatar
+						this.avatarAlt = user.avatarAlt
+						this.banner = user.banner
+						this.bannerAlt = user.bannerAlt
+
+						this.inbox = user.inbox!!
+						this.outbox = user.outbox
+
+						this.activated = user.activated ?: true
+						this.automated = user.automated ?: false
+						this.suspended = user.suspended ?: false
+						this.sensitive = user.sensitive ?: false
+						this.discoverable = user.discoverable ?: false
+						this.locked = user.locked ?: false
+						this.indexable = user.indexable ?: false
+						this.isCat = user.isCat ?: false
+						this.speakAsCat = user.speakAsCat ?: false
+
+						this.followersUrl = user.followersUrl
+						this.followingUrl = user.followingUrl
+
+						this.createdAt = user.createdAt ?: TimeService.now()
+						this.updatedAt = user.updatedAt
+
+						this.publicKey = user.publicKey!!
+					}
+				}
+
+				return UserService.getById(user.id!!)
 			} catch (e: Exception) {
 				logger.error(e.message, e)
 				return null

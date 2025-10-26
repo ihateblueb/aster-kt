@@ -36,6 +36,9 @@ data class User(
 	val isCat: Boolean = false,
 	val speakAsCat: Boolean = false,
 
+	val followersUrl: String? = null,
+	val followingUrl: String? = null,
+
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null,
 
