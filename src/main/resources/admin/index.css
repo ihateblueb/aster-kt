@@ -1,3 +1,5 @@
+@import "font.css";
+
 :root {
     --font: 'Inter', 'Arial', sans-serif;
     --font-features: 'cv05', 'cv08';
@@ -91,7 +93,8 @@ header {
 
         span {
             font-weight: bold;
-            margin-right: 8px;
+            font-size: var(--fs-md);
+            margin-right: auto;
         }
 
         a {
@@ -99,16 +102,30 @@ header {
             align-items: center;
             gap: 4px;
 
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-radius: var(--br-md);
 
             color: var(--tx-2);
             text-decoration: none;
+            font-size: var(--fs-md);
 
-            &:hover, &.selected {
+            &:hover {
                 color: var(--tx-2);
                 background-color: var(--bg-2);
             }
+
+            &.selected {
+                color: var(--ac-1);
+                background-color: var(--ac-1-25);
+            }
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            overflow-x: auto;
         }
     }
 }
@@ -117,6 +134,8 @@ main {
     display: flex;
     justify-content: center;
     width: 100vw;
+
+    overflow-y: auto;
 
     .inner {
         max-width: 725px;
@@ -136,11 +155,26 @@ table {
     border-collapse: collapse;
     width: 100%;
 
+    &._50 {
+        th, td {
+            width: 50%;
+        }
+    }
+
+    tr.header {
+        th, td {
+            border: none;
+        }
+    }
+
     th, td {
-        width: 50%;
         text-align: left;
         border: 1px solid var(--bg-3);
         padding: 6px;
+
+        &._75 {
+            width: 75%;
+        }
     }
 
     tr:nth-child(2n) {

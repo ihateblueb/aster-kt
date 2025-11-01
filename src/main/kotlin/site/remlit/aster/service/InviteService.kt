@@ -3,11 +3,14 @@ package site.remlit.aster.service
 import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
+import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.Invite
 import site.remlit.aster.db.entity.InviteEntity
 import site.remlit.aster.db.entity.NoteEntity
 import site.remlit.aster.db.table.InviteTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 import site.remlit.aster.util.model.fromEntity
 
@@ -32,7 +35,21 @@ class InviteService : Service() {
 		fun getById(id: String): Invite? = get(InviteTable.id eq id)
 		fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
 
-		// todo: get many
+		fun getMany(where: Op<Boolean>, take: Int? = null): List<InviteEntity> = transaction {
+			InviteTable
+				.selectAll()
+				.where { where }
+				.let { InviteEntity.wrapRows(it) }
+				.sortedByDescending { it.createdAt }
+				.take(take ?: Configuration.timeline.defaultObjects)
+				.toList()
+		}
+
+		fun count(where: Op<Boolean>): Long = transaction {
+			InviteTable
+				.select(where)
+				.count()
+		}
 
 		fun delete(where: Op<Boolean>) = transaction {
 			InviteEntity

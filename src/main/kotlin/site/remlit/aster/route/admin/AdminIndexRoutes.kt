@@ -5,6 +5,7 @@ import io.ktor.server.html.*
 import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import kotlinx.html.body
+import kotlinx.html.classes
 import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.styleLink
@@ -47,6 +48,7 @@ object AdminIndexRoutes {
 							val meta = Meta.getMeta()
 							h2 { +"Software" }
 							table {
+								classes = setOf("_50")
 								tr {
 									th { +"Version" }
 									td { +meta.version.aster }

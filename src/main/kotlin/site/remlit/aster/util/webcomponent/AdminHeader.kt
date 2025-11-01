@@ -6,6 +6,8 @@ import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.header
 import kotlinx.html.span
+import site.remlit.aster.common.model.type.InstanceRegistrationsType
+import site.remlit.aster.model.Configuration
 
 fun FlowContent.adminHeader(currentPage: String) {
 	fun FlowContent.adminHeaderButton(page: String, to: String) {
@@ -20,11 +22,16 @@ fun FlowContent.adminHeader(currentPage: String) {
 		div {
 			classes = setOf("inner")
 			span { +"Admin Panel" }
-			adminHeaderButton("Overview", "/admin")
-			adminHeaderButton("Users", "/admin/users")
-			adminHeaderButton("Instances", "/admin/instances")
-			adminHeaderButton("Queues", "/admin/queues")
-			adminHeaderButton("Plugins", "/admin/plugins")
+			div {
+				classes = setOf("buttons")
+				adminHeaderButton("Overview", "/admin")
+				adminHeaderButton("Users", "/admin/users")
+				adminHeaderButton("Instances", "/admin/instances")
+				if (Configuration.registrations == InstanceRegistrationsType.Invite)
+					adminHeaderButton("Invites", "/admin/invites")
+				adminHeaderButton("Queues", "/admin/queues")
+				adminHeaderButton("Plugins", "/admin/plugins")
+			}
 		}
 	}
 }
