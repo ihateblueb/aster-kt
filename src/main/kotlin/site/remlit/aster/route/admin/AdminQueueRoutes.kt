@@ -20,6 +20,7 @@ import site.remlit.aster.db.table.InboxQueueTable
 import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.route.RouteRegistry
 import site.remlit.aster.util.webcomponent.adminHeader
+import site.remlit.aster.util.webcomponent.adminMain
 
 object AdminQueueRoutes {
 	fun register() =
@@ -69,44 +70,46 @@ object AdminQueueRoutes {
 					}
 					body {
 						adminHeader("Queues")
-						h2 { +"Inbox" }
-						div {
-							this.classes = setOf("ctn")
+						adminMain {
+							h2 { +"Inbox" }
 							div {
-								this.classes = setOf("ctn", "column")
-								span {
-									+"$pendingCount jobs pending"
-								}
-								ul {
-									for (host in pendingHosts) {
-										li {
-											+host
+								this.classes = setOf("ctn")
+								div {
+									this.classes = setOf("ctn", "column")
+									span {
+										+"$pendingCount jobs pending"
+									}
+									ul {
+										for (host in pendingHosts) {
+											li {
+												+host
+											}
 										}
 									}
 								}
-							}
-							div {
-								this.classes = setOf("ctn", "column")
-								span {
-									+"$completedCount jobs completed"
-								}
-								ul {
-									for (host in completedHosts) {
-										li {
-											+host
+								div {
+									this.classes = setOf("ctn", "column")
+									span {
+										+"$completedCount jobs completed"
+									}
+									ul {
+										for (host in completedHosts) {
+											li {
+												+host
+											}
 										}
 									}
 								}
-							}
-							div {
-								this.classes = setOf("ctn", "column")
-								span {
-									+"$failedCount jobs failed"
-								}
-								ul {
-									for (host in failedHosts) {
-										li {
-											+host
+								div {
+									this.classes = setOf("ctn", "column")
+									span {
+										+"$failedCount jobs failed"
+									}
+									ul {
+										for (host in failedHosts) {
+											li {
+												+host
+											}
 										}
 									}
 								}

@@ -23,6 +23,7 @@ import kotlinx.html.ul
 import site.remlit.aster.plugin.PluginRegistry
 import site.remlit.aster.route.RouteRegistry
 import site.remlit.aster.util.webcomponent.adminHeader
+import site.remlit.aster.util.webcomponent.adminMain
 
 object AdminPluginRoutes {
 	fun register() =
@@ -40,27 +41,29 @@ object AdminPluginRoutes {
 					}
 					body {
 						adminHeader("Plugins")
-						form {
-							input {
-								type = InputType.text
-								id = "action"
-								value = "reload"
-								hidden = true
+						adminMain {
+							form {
+								input {
+									type = InputType.text
+									id = "action"
+									value = "reload"
+									hidden = true
+								}
+								input {
+									type = InputType.submit
+									value = "Reload"
+								}
 							}
-							input {
-								type = InputType.submit
-								value = "Reload"
-							}
-						}
-						div {
-							this.classes = setOf("ctn")
 							div {
-								this.classes = setOf("ctn", "column")
-								ul {
-									for (plugin in PluginRegistry.plugins) {
-										li {
-											b { +"${plugin.first.name} ${plugin.first.version}" }
-											p { +plugin.first.mainClass }
+								this.classes = setOf("ctn")
+								div {
+									this.classes = setOf("ctn", "column")
+									ul {
+										for (plugin in PluginRegistry.plugins) {
+											li {
+												b { +"${plugin.first.name} ${plugin.first.version}" }
+												p { +plugin.first.mainClass }
+											}
 										}
 									}
 								}
