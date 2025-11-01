@@ -104,6 +104,7 @@ class ApValidationService : Service() {
 			}
 
 			val signatureHeader = request.headers["Signature"]!!
+			println(signatureHeader)
 
 			val keyIdRegex = buildHeaderRegex("keyId")
 			val algorithmRegex = buildHeaderRegex("algorithm")
@@ -213,6 +214,8 @@ class ApValidationService : Service() {
 					ApValidationExceptionType.Forbidden,
 					"Date is more than $maxTimeMargin seconds from now."
 				)
+
+			println(signingString)
 
 			val javaSignature = java.security.Signature.getInstance("SHA256withRSA")
 			javaSignature.initVerify(publicKey)

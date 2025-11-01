@@ -60,7 +60,7 @@ object EventRegistry {
 		}
 
 	/**
-	 * Clears the registered listeners to prevent any events blocking shutdown.
+	 * Clears the registered listeners to prevent any events blocking shutdown or not completing correctly.
 	 * */
 	@ApiStatus.Internal
 	fun clearListeners() = listeners.clear()

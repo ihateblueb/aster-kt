@@ -5,10 +5,12 @@ import io.ktor.server.html.*
 import io.ktor.server.http.content.*
 import io.ktor.server.routing.*
 import kotlinx.html.body
-import kotlinx.html.h1
 import kotlinx.html.head
+import kotlinx.html.main
+import kotlinx.html.styleLink
 import kotlinx.html.title
 import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.util.webcomponent.adminHeader
 
 object AdminIndexRoutes {
 	fun register() =
@@ -16,14 +18,17 @@ object AdminIndexRoutes {
 			staticResources("/admin/assets", "admin")
 
 			get("/admin") {
-				call.response.headers.append("Content-Type", "application/jrd+json")
-
 				call.respondHtml(HttpStatusCode.OK) {
 					head {
-						title { +"Admin" }
+						title { +"Admin Panel" }
+						styleLink("/admin/assets/index.css")
+						// some autoreload script
 					}
 					body {
-						h1 { +"Admin" }
+						adminHeader("Overview")
+						main {
+
+						}
 					}
 				}
 			}

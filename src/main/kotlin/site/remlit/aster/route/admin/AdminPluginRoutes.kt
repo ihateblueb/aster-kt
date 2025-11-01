@@ -11,7 +11,6 @@ import kotlinx.html.body
 import kotlinx.html.classes
 import kotlinx.html.div
 import kotlinx.html.form
-import kotlinx.html.h1
 import kotlinx.html.head
 import kotlinx.html.hidden
 import kotlinx.html.id
@@ -23,6 +22,7 @@ import kotlinx.html.title
 import kotlinx.html.ul
 import site.remlit.aster.plugin.PluginRegistry
 import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.util.webcomponent.adminHeader
 
 object AdminPluginRoutes {
 	fun register() =
@@ -39,7 +39,7 @@ object AdminPluginRoutes {
 						styleLink("/admin/assets/index.css")
 					}
 					body {
-						h1 { +"Plugins" }
+						adminHeader("Plugins")
 						form {
 							input {
 								type = InputType.text

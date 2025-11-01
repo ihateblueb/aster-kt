@@ -6,7 +6,6 @@ import io.ktor.server.routing.*
 import kotlinx.html.body
 import kotlinx.html.classes
 import kotlinx.html.div
-import kotlinx.html.h1
 import kotlinx.html.h2
 import kotlinx.html.head
 import kotlinx.html.li
@@ -20,6 +19,7 @@ import site.remlit.aster.db.entity.InboxQueueEntity
 import site.remlit.aster.db.table.InboxQueueTable
 import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.util.webcomponent.adminHeader
 
 object AdminQueueRoutes {
 	fun register() =
@@ -68,7 +68,7 @@ object AdminQueueRoutes {
 						// some autoreload script
 					}
 					body {
-						h1 { +"Queues" }
+						adminHeader("Queues")
 						h2 { +"Inbox" }
 						div {
 							this.classes = setOf("ctn")
