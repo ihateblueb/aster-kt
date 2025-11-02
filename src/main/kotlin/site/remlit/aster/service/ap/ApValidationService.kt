@@ -36,7 +36,7 @@ class ApValidationService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(ApValidationService::class.java)
 
-		suspend fun validate(request: RoutingRequest, body: ByteArray): UserEntity? {
+		suspend fun validate(request: RoutingRequest, body: ByteArray): UserEntity {
 			val validationRequestId = IdentifierService.generate()
 
 			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)

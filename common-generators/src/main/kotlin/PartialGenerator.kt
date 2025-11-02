@@ -8,6 +8,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import kotlinx.serialization.Serializable
 import site.remlit.aster.common.model.DriveFile
+import site.remlit.aster.common.model.Instance
 import site.remlit.aster.common.model.Note
 import site.remlit.aster.common.model.Policy
 import site.remlit.aster.common.model.User
@@ -23,7 +24,8 @@ class PartialGenerator {
 		DriveFile::class,
 		Note::class,
 		Policy::class,
-		User::class
+		User::class,
+		Instance::class
 	)
 
 	fun generate() {

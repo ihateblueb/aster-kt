@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS "user" DROP CONSTRAINT IF EXISTS unique_user_inbox;

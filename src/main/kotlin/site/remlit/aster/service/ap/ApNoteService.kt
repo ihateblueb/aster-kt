@@ -1,5 +1,6 @@
 package site.remlit.aster.service.ap
 
+import io.ktor.http.*
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -12,6 +13,7 @@ import site.remlit.aster.common.model.generated.PartialNote
 import site.remlit.aster.db.entity.NoteEntity
 import site.remlit.aster.model.Service
 import site.remlit.aster.service.IdentifierService
+import site.remlit.aster.service.InstanceService
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.ResolverService
 import site.remlit.aster.service.TimeService
@@ -37,6 +39,7 @@ class ApNoteService : Service() {
 		 * @return Note or null
 		 * */
 		suspend fun resolve(apId: String, refetch: Boolean = false): Note? {
+			InstanceService.resolve(Url(apId).host)
 			val existingNote = NoteService.getByApId(apId)
 
 			if ((existingNote != null) && !refetch) {

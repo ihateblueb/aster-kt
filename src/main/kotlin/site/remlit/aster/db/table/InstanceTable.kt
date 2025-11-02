@@ -14,6 +14,10 @@ object InstanceTable : IdTable<String>("instance") {
 	val color = varchar("color", length = 6).default("000000")
 	val icon = varchar("icon", length = 1000).nullable()
 
+	val software = varchar("software", length = 1000).nullable()
+	val version = varchar("version", length = 1000).nullable()
+	val contact = varchar("contact", length = 1000).nullable()
+
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 

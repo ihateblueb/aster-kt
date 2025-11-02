@@ -11,6 +11,7 @@ import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.model.Service
 import site.remlit.aster.service.FormatService
 import site.remlit.aster.service.IdentifierService
+import site.remlit.aster.service.InstanceService
 import site.remlit.aster.service.ResolverService
 import site.remlit.aster.service.SanitizerService
 import site.remlit.aster.service.TimeService
@@ -36,19 +37,18 @@ class ApActorService : Service() {
 		 * @return UserEntity or null
 		 * */
 		suspend fun resolve(apId: String, refetch: Boolean = false): UserEntity? {
-			val existingUser = UserService.getByApId(apId)
+			InstanceService.resolve(Url(apId).host)
+			val existing = UserService.getByApId(apId)
 
-			if ((existingUser != null) && !refetch) {
-				return existingUser
-			}
+			if ((existing != null) && !refetch) return existing
 
 			val resolveResponse = ResolverService.resolveSigned(apId)
 
-			if (resolveResponse != null && existingUser == null)
+			if (resolveResponse != null && existing == null)
 				return register(toUser(resolveResponse) ?: return null)
 
-			if (resolveResponse != null && existingUser != null)
-				return update(toUser(resolveResponse, User.fromEntity(existingUser)) ?: return null)
+			if (resolveResponse != null && existing != null)
+				return update(toUser(resolveResponse, User.fromEntity(existing)) ?: return null)
 
 			return null
 		}

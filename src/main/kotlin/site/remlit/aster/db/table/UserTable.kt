@@ -10,7 +10,7 @@ object UserTable : IdTable<String>("user") {
 	override val id: Column<EntityID<String>> = varchar("id", length = 125).uniqueIndex("unique_user_id").entityId()
 
 	val apId = varchar("apId", length = 1025).uniqueIndex("unique_user_apId")
-	val inbox = varchar("inbox", length = 1025).uniqueIndex("unique_user_inbox")
+	val inbox = varchar("inbox", length = 1025)
 	val outbox = varchar("outbox", length = 1025).nullable()
 
 	val username = varchar("username", length = 250)

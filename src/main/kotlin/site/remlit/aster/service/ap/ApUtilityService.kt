@@ -31,6 +31,7 @@ class ApUtilityService : Service() {
 			else -> null
 		}
 
+		fun extractArray(item: JsonElement?): JsonArray? = item as? JsonArray
 		fun extractObject(item: JsonElement?): JsonObject? = item?.jsonObject
 
 		fun byteArrayToObject(byteArray: ByteArray): JsonObject? = try {
