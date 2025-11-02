@@ -10,6 +10,7 @@ import site.remlit.aster.db.table.AuthTable
 import site.remlit.aster.db.table.DeliverQueueTable
 import site.remlit.aster.db.table.DriveFileTable
 import site.remlit.aster.db.table.InboxQueueTable
+import site.remlit.aster.db.table.InstanceTable
 import site.remlit.aster.db.table.InviteTable
 import site.remlit.aster.db.table.NoteLikeTable
 import site.remlit.aster.db.table.NoteTable
@@ -82,6 +83,7 @@ class MigrationService : Service() {
 					DeliverQueueTable,
 					DriveFileTable,
 					InboxQueueTable,
+					InstanceTable,
 					InviteTable,
 					NoteTable,
 					NoteLikeTable,

@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.config.yaml.*
 import site.remlit.aster.common.model.type.FileStorageType
 import site.remlit.aster.common.model.type.InstanceRegistrationsType
+import site.remlit.aster.service.TimeService
 import site.remlit.aster.util.capitalize
 import java.io.File
 import java.nio.file.Path
@@ -16,7 +17,11 @@ var workingDir = File(".").absolutePath.toString().removeSuffix(".")
 var configPath = workingDir + "configuration.yaml"
 var config = YamlConfig(configPath)
 
-object Configuration {
+var lastConfigReloadAt = TimeService.now()
+
+interface ConfigurationObject
+
+object Configuration : ConfigurationObject {
 	val name: String get() = config?.propertyOrNull("name")?.getString() ?: "Aster"
 
 	val url: Url
@@ -53,12 +58,13 @@ object Configuration {
 			while (true) {
 				Thread.sleep(30 * 1000L)
 				config = YamlConfig(configPath)
+				lastConfigReloadAt = TimeService.now()
 			}
 		}
 	}
 }
 
-class ConfigurationFileStorage {
+class ConfigurationFileStorage : ConfigurationObject {
 	val type: FileStorageType
 		get() = FileStorageType.valueOf(
 			config?.propertyOrNull("fileStorage.type")?.getString()?.capitalize() ?: "Local"
@@ -81,7 +87,7 @@ class ConfigurationFileStorage {
 		get() = config?.propertyOrNull("fileStorage.maxUploadSize")?.getString()?.toInt() ?: 25
 }
 
-class ConfigurationDatabase {
+class ConfigurationDatabase : ConfigurationObject {
 	val host: String get() = config?.propertyOrNull("database.host")?.getString() ?: "127.0.0.1"
 	val port: String get() = config?.propertyOrNull("database.port")?.getString() ?: "5432"
 	val db: String
@@ -95,7 +101,7 @@ class ConfigurationDatabase {
 			?: throw Exception("Configuration is missing 'database.password' attribute.")
 }
 
-class ConfigurationQueue {
+class ConfigurationQueue : ConfigurationObject {
 	val inbox: ConfigurationSpecificQueue
 		get() = ConfigurationSpecificQueue(
 			(config?.propertyOrNull("queue.inbox.concurrency")?.getString()?.toInt() ?: 8)
@@ -112,9 +118,9 @@ class ConfigurationQueue {
 
 data class ConfigurationSpecificQueue(
 	val concurrency: Int
-)
+) : ConfigurationObject
 
-class ConfigurationTimeline {
+class ConfigurationTimeline : ConfigurationObject {
 	val defaultObjects: Int get() = config?.propertyOrNull("timeline.defaultObjects")?.getString()?.toIntOrNull() ?: 15
 	val maxObjects: Int get() = config?.propertyOrNull("timeline.maxObjects")?.getString()?.toIntOrNull() ?: 35
 
@@ -139,9 +145,9 @@ class ConfigurationTimeline {
 
 data class ConfigurationSpecificTimeline(
 	val authRequired: Boolean,
-)
+) : ConfigurationObject
 
 data class ConfigurationBubbleTimeline(
 	val authRequired: Boolean,
 	val hosts: List<String>,
-)
+) : ConfigurationObject

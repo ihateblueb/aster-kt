@@ -41,6 +41,7 @@ configuration.yaml
 .kotlin/
 .env
 plugins/
+logs/
 kotlin-js-store
 frontend/packages/common
 dist

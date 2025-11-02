@@ -39,3 +39,4 @@
 1761009842566_Migration_notification.sql
 1761437186093_Migration_inbox_queue.sql
 1761486846640_Migration_deliver_queue.sql
+1762093783626_Migration_instance.sql
