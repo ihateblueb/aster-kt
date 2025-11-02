@@ -135,11 +135,11 @@ main {
     justify-content: center;
     width: 100vw;
 
-    overflow-y: auto;
-
     .inner {
         max-width: 725px;
         padding: 12px 16px;
+
+        overflow-y: auto;
 
         width: 100%;
         height: calc(100vh - 50px);
@@ -179,5 +179,31 @@ table {
 
     tr:nth-child(2n) {
         background-color: var(--bg-3-50);
+    }
+}
+
+.navBtns {
+    display: flex;
+    gap: 8px;
+
+    button, a {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        border-radius: var(--br-md);
+        background-color: var(--bg-3);
+
+        font-family: var(--font);
+        font-feature-settings: var(--font-features);
+        font-size: var(--fs-md);
+
+        color: var(--tx-2);
+        text-decoration: none;
+        box-sizing: border-box;
+
+        border: none;
+        padding: 8px 10px;
+        cursor: pointer;
     }
 }
