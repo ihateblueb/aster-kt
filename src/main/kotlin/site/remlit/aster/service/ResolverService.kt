@@ -76,7 +76,7 @@ class ResolverService : Service() {
 			val id = IdentifierService.generate()
 
 			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
-			val blockedHosts = PolicyService.reducePoliciesInListToHost(blockPolicies)
+			val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
 
 			if (blockedHosts.contains(Url(url).host))
 				return null
@@ -122,7 +122,7 @@ class ResolverService : Service() {
 				.toHttpDateString()
 
 			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
-			val blockedHosts = PolicyService.reducePoliciesInListToHost(blockPolicies)
+			val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
 
 			if (blockedHosts.contains(url.host))
 				return null
@@ -145,8 +145,8 @@ class ResolverService : Service() {
 						KeypairService.pemToPrivateKey(actorPrivate.privateKey),
 						actor.apId + "#main-key",
 						mapOf(
-							"Host" to url.host,
-							"Date" to date
+							"Host" to listOf(url.host),
+							"Date" to listOf(date)
 						)
 					)
 

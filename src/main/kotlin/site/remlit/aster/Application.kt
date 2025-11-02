@@ -177,7 +177,6 @@ fun Application.module() {
 		}
 	}
 
-	configureMetrics()
 	configureAuthentication()
 	configureRouting()
 

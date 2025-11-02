@@ -18,14 +18,8 @@ Run the build script `./gradlew build`, and then grab the JAR from `target/aster
 
 ## Running
 
-To run Aster, you'll need:
-
-- Java runtime
-- PostgreSQL database
-- libvips
-
-Copy `configuration.example.yaml` to `configuration.yaml` and fill out the connection information. You can edit this
-while the server is running, the config is frequently refreshed.
+To run Aster, you'll need at least Java 21 and a PostgreSQL database.
+Copy `configuration.example.yaml` to `configuration.yaml` and fill out the database connection information.
 After that, run `java -jar aster.jar migration:execute` and your database will be set up and your instance is ready to
 go!
 

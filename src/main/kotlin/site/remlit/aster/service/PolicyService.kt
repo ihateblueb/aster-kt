@@ -74,7 +74,7 @@ class PolicyService : Service() {
 		 *
 		 * @return List of hosts
 		 * */
-		fun reducePoliciesInListToHost(policies: List<PolicyEntity>): List<String> {
+		fun reducePoliciesToHost(policies: List<PolicyEntity>): List<String> {
 			val reducedHosts: MutableList<String> = mutableListOf()
 
 			for (policy in policies) {

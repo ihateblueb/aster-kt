@@ -14,7 +14,7 @@ class ApSignatureService : Service() {
 			method: HttpMethod,
 			target: String,
 			signatureHeaders: List<String>,
-			requestHeaders: Map<String, String>
+			requestHeaders: Map<String, List<String>>
 		): String {
 			var output = ""
 			val headers = signatureHeaders.filter {
@@ -25,6 +25,8 @@ class ApSignatureService : Service() {
 
 			headers.forEach {
 				val value = requestHeaders[it.capitalize()]
+					?.first { w -> w.isNotBlank() }
+
 				output += "$it: $value"
 
 				if (headers.indexOf(it) != headers.lastIndex)
@@ -46,7 +48,7 @@ class ApSignatureService : Service() {
 			method: HttpMethod,
 			privateKey: PrivateKey,
 			keyId: String,
-			headers: Map<String, String>,
+			headers: Map<String, List<String>>,
 			body: ByteArray? = null,
 		): Pair<String, String?> {
 			val headerKeys = mutableListOf<String>()
@@ -81,14 +83,6 @@ class ApSignatureService : Service() {
 					"signature=\"${Base64.encode(javaSignature.sign())}\""
 
 			return Pair(signatureHeader, digest)
-		}
-
-		fun headersToMap(headers: Headers): Map<String, String> {
-			val map = mutableMapOf<String, String>()
-			headers.forEach { t, u ->
-				map[t] = u.first()
-			}
-			return map.toMap()
 		}
 	}
 }

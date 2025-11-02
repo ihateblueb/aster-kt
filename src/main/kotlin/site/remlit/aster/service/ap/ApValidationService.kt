@@ -2,6 +2,7 @@ package site.remlit.aster.service.ap
 
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
+import io.ktor.util.*
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -40,7 +41,7 @@ class ApValidationService : Service() {
 			val validationRequestId = IdentifierService.generate()
 
 			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
-			PolicyService.reducePoliciesInListToHost(blockPolicies)
+			PolicyService.reducePoliciesToHost(blockPolicies)
 
 			if (
 				request.headers["Host"].isNullOrEmpty() ||
@@ -136,10 +137,8 @@ class ApValidationService : Service() {
 				request.httpMethod,
 				request.path(),
 				sigHeaders,
-				ApSignatureService.headersToMap(request.headers)
+				request.headers.toMap()
 			)
-
-			println("Sig = $signatureHeader")
 
 			val actorApId = sigKeyId.substringBefore("#")
 

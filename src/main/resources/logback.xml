@@ -8,21 +8,8 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/log-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- two weeks of history -->
-            <maxHistory>14</maxHistory>
-        </rollingPolicy>
-
-        <encoder>
-            <pattern>%white(%d{HH:mm:ss}) %boldMagenta([%-12.12(%thread])) %hlt(%-5level) %white(%-35logger{16}) %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
     </root>
 
     <logger name="com.zaxxer.hikari.pool" level="INFO"/>
