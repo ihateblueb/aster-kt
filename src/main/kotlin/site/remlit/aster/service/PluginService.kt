@@ -3,6 +3,7 @@ package site.remlit.aster.service
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.aster.model.Configuration
@@ -36,6 +37,7 @@ class PluginService : Service() {
 		/**
 		 * Find and enable plugins in plugins directory.
 		 * */
+		@ApiStatus.Internal
 		@OptIn(ExperimentalSerializationApi::class)
 		fun initialize() {
 			if (!pluginDir.exists()) pluginDir.createDirectories()

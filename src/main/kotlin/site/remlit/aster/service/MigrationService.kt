@@ -39,7 +39,14 @@ class MigrationService : Service() {
 	companion object {
 		private val logger: Logger = LoggerFactory.getLogger(MigrationService::class.java)
 
+		/**
+		 * Directory where migrations are in source
+		 * */
 		val migrationsDir = Path("src/main/resources/migrations")
+
+		/**
+		 * Directory where migration manifest is in source
+		 * */
 		val manifestPath = Path("$migrationsDir/_manifest.txt")
 
 		private val database = Database.connection

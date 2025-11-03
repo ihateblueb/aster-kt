@@ -7,6 +7,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.annotations.ApiStatus
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.lessEq
@@ -38,16 +39,31 @@ class QueueService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(QueueService::class.java)
 
+		/**
+		 * Inbox queue coroutine scope
+		 * */
 		val inboxScope = CoroutineScope(Dispatchers.Default + CoroutineName("InboxDispatcher"))
+
+		/**
+		 * Deliver queue coroutine scope
+		 * */
 		val deliverScope = CoroutineScope(Dispatchers.Default + CoroutineName("DeliverDispatcher"))
 
+		/**
+		 * Current count of active inbox queue workers
+		 * */
 		val activeInboxWorkers: AtomicInteger = AtomicInteger(0)
+
+		/**
+		 * Current count of active deliver queue workers
+		 * */
 		val activeDeliverWorkers: AtomicInteger = AtomicInteger(0)
 
 		/**
 		 * Initialize queue managers. These check frequently for new items in the queue, and then launch a consumer.
 		 * */
-		fun init() {
+		@ApiStatus.Internal
+		fun initialize() {
 			inboxScope.launch {
 				while (true) {
 					delay(2.seconds)
@@ -120,7 +136,18 @@ class QueueService : Service() {
 
 		// send jobs
 
-		fun insertInboxJob(data: ByteArray, sender: UserEntity?) {
+		/**
+		 * Creates an inbox job to be processed when the next queue worker
+		 * is available.
+		 *
+		 * @param data Byte array of inbox data
+		 * @param sender Sender of inbox data
+		 * */
+		@ApiStatus.Internal
+		fun insertInboxJob(
+			data: ByteArray,
+			sender: UserEntity?
+		) {
 			transaction {
 				InboxQueueEntity.new(IdentifierService.generate()) {
 					this.status = QueueStatus.PENDING
@@ -132,6 +159,12 @@ class QueueService : Service() {
 
 		// complete job
 
+		/**
+		 * Marks an inbox job as complete.
+		 *
+		 * @param job Inbox queue job
+		 * */
+		@ApiStatus.Internal
 		fun completeInboxJob(job: InboxQueueEntity) =
 			transaction {
 				job.status = QueueStatus.COMPLETED
@@ -140,6 +173,12 @@ class QueueService : Service() {
 
 		// error job
 
+		/**
+		 * Marks an inbox job as errored, and schedules it to be retried.
+		 *
+		 * @param job Inbox queue job
+		 * */
+		@ApiStatus.Internal
 		@OptIn(ExperimentalTime::class)
 		fun errorInboxJob(job: InboxQueueEntity) =
 			transaction {

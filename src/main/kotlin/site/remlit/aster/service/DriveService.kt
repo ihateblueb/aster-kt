@@ -21,6 +21,11 @@ import site.remlit.aster.util.model.fromEntity
 import java.nio.file.Path
 import kotlin.io.path.name
 
+/**
+ * Service for managing drive files and other drive related tasks.
+ *
+ * @since 2025.10.5.0-SNAPSHOT
+ * */
 class DriveService : Service() {
 	companion object {
 		/**

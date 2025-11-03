@@ -9,6 +9,7 @@ import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.RoleEntity
 import site.remlit.aster.db.table.RoleTable
 import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 import site.remlit.aster.util.model.fromEntity
 import site.remlit.aster.util.sql.arrayContains
@@ -37,12 +38,21 @@ class RoleService : Service() {
 		 * Get a list of roles.
 		 *
 		 * @param where Query to find roles
+		 * @param take Number of roles to take
+		 * @param offset Offset for query
 		 *
 		 * @return List of found roles
 		 * */
-		fun getMany(where: Op<Boolean>): List<RoleEntity> = transaction {
+		fun getMany(
+			where: Op<Boolean>,
+			take: Int = Configuration.timeline.defaultObjects,
+			offset: Long = 0
+		): List<RoleEntity> = transaction {
 			RoleEntity
 				.find { where }
+				.offset(offset)
+				.sortedByDescending { it.createdAt }
+				.take(take)
 				.toList()
 		}
 
@@ -127,6 +137,13 @@ class RoleService : Service() {
 			return usersOfType.toList()
 		}
 
+		/**
+		 * Determine if user is a mod or an admin
+		 *
+		 * @param userId User's id
+		 *
+		 * @return If they're a mod or an admin
+		 * */
 		fun isModOrAdmin(userId: String) =
 			listOf(RoleType.Mod, RoleType.Admin).contains(getUserHighestRole(userId))
 	}

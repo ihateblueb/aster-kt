@@ -35,6 +35,13 @@ import site.remlit.aster.util.model.fromEntity
  * */
 class NoteService : Service() {
 	companion object {
+		/**
+		 * Get a note
+		 *
+		 * @param where Query to find note
+		 *
+		 * @return Note, if exists
+		 * */
 		fun get(where: Op<Boolean>): Note? = transaction {
 			val note = NoteEntity
 				.find { where }
@@ -46,16 +53,45 @@ class NoteService : Service() {
 			else null
 		}
 
+		/**
+		 * Get a note by ID
+		 *
+		 * @param id ID of note
+		 *
+		 * @return Note, if exists
+		 * */
 		fun getById(id: String): Note? = get(NoteTable.id eq id)
+
+		/**
+		 * Get a note by ActivityPub ID
+		 *
+		 * @param apId ActivityPub ID of note
+		 *
+		 * @return Note, if exists
+		 * */
 		fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
 
-		fun getMany(where: Op<Boolean>, take: Int? = null): List<Note> = transaction {
+		/**
+		 * Get many notes
+		 *
+		 * @param where Query to find notes
+		 * @param take Number of notes to take
+		 * @param offset Offset for query
+		 *
+		 * @return Notes, if exist
+		 * */
+		fun getMany(
+			where: Op<Boolean>,
+			take: Int = Configuration.timeline.defaultObjects,
+			offset: Long = 0
+		): List<Note> = transaction {
 			val notes = (NoteTable innerJoin UserTable)
 				.selectAll()
 				.where { where }
+				.offset(offset)
 				.let { NoteEntity.wrapRows(it) }
 				.sortedByDescending { it.createdAt }
-				.take(take ?: Configuration.timeline.defaultObjects)
+				.take(take)
 				.toList()
 
 			if (!notes.isEmpty())
@@ -63,6 +99,13 @@ class NoteService : Service() {
 			else listOf()
 		}
 
+		/**
+		 * Count notes
+		 *
+		 * @param where Query to find notes
+		 *
+		 * @return Count of notes
+		 * */
 		fun count(where: Op<Boolean>): Long = transaction {
 			NoteTable
 				.leftJoin(UserTable)
@@ -111,7 +154,7 @@ class NoteService : Service() {
 		}
 
 		/**
-		 * Like a note as a user, or removes a like if it's already there.
+		 * Like a note as a user, or removes a like if it's already there
 		 *
 		 * @param user User liking the note
 		 * @param noteId ID of the target note
@@ -154,7 +197,7 @@ class NoteService : Service() {
 		}
 
 		/**
-		 * Delete a note.
+		 * Delete a note
 		 *
 		 * @param where Query to find note
 		 * */
@@ -169,14 +212,14 @@ class NoteService : Service() {
 		}
 
 		/**
-		 * Delete a note by ID.
+		 * Delete a note by ID
 		 *
 		 * @param id ID of note
 		 * */
 		fun deleteById(id: String) = delete(NoteTable.id eq id)
 
 		/**
-		 * Delete a note by ActivityPub ID.
+		 * Delete a note by ActivityPub ID
 		 *
 		 * @param apId ActivityPub ID of note
 		 * */

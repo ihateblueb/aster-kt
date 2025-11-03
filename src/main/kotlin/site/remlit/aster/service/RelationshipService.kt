@@ -1,15 +1,21 @@
 package site.remlit.aster.service
 
+import org.jetbrains.exposed.v1.core.JoinType
 import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.alias
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.Relationship
 import site.remlit.aster.common.model.type.RelationshipType
 import site.remlit.aster.db.entity.RelationshipEntity
 import site.remlit.aster.db.table.RelationshipTable
+import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
+import site.remlit.aster.util.model.fromEntities
 import site.remlit.aster.util.model.fromEntity
 
 /**
@@ -19,6 +25,18 @@ import site.remlit.aster.util.model.fromEntity
  * */
 class RelationshipService : Service() {
 	companion object {
+		/**
+		 * Reference the "to" user on a relationship.
+		 * For usage in queries.
+		 * */
+		val userToAlias = UserTable.alias("to")
+
+		/**
+		 * Reference the "from" user on a relationship.
+		 * For usage in queries.
+		 * */
+		val userFromAlias = UserTable.alias("from")
+
 		/**
 		 * Get a relationship.
 		 *
@@ -36,6 +54,36 @@ class RelationshipService : Service() {
 			if (relationship != null)
 				Relationship.fromEntity(relationship)
 			else null
+		}
+
+		/**
+		 * Get many relationships
+		 *
+		 * @param where Query to find relationships
+		 * @param take Number of relationships to take
+		 * @param offset Offset for query
+		 *
+		 * @return Relationships, if any
+		 * */
+		fun getMany(
+			where: Op<Boolean>,
+			take: Int = Configuration.timeline.defaultObjects,
+			offset: Long = 0
+		): List<Relationship> = transaction {
+			val entities = RelationshipTable
+				.join(userToAlias, JoinType.INNER, RelationshipTable.to, userToAlias[UserTable.id])
+				.join(userFromAlias, JoinType.INNER, RelationshipTable.from, userFromAlias[UserTable.id])
+				.selectAll()
+				.where { where }
+				.offset(offset)
+				.let { RelationshipEntity.wrapRows(it) }
+				.sortedByDescending { it.createdAt }
+				.take(take)
+				.toList()
+
+			if (!entities.isEmpty())
+				Relationship.fromEntities(entities)
+			else listOf()
 		}
 
 		/**
@@ -58,7 +106,7 @@ class RelationshipService : Service() {
 		 * @param to Relationship target
 		 * @param from Relationship owner
 		 *
-		 * @return [Pair] of [site.remlit.aster.model.Relationship], where first is to and second is from
+		 * @return Pair of Relationship, where first is to and second is from
 		 * */
 		fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
 			return Pair(
@@ -79,7 +127,7 @@ class RelationshipService : Service() {
 		}
 
 		/**
-		 * Determine if there is a [site.remlit.aster.model.RelationshipType.Block] in either direction
+		 * Determine if there is a block relationship in either direction
 		 *
 		 * @param to First user
 		 * @param from Second user
@@ -99,7 +147,7 @@ class RelationshipService : Service() {
 		}
 
 		/**
-		 * Determine if there is a [site.remlit.aster.model.RelationshipType.Mute] in one direction
+		 * Determine if there is a mute relationship in one direction
 		 *
 		 * @param to Relationship target
 		 * @param from Relationship owner

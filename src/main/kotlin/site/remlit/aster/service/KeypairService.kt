@@ -18,12 +18,25 @@ import java.util.*
  * */
 class KeypairService : Service() {
 	companion object {
+		/**
+		 * Generates a keypair for a new user.
+		 *
+		 * @return Keypair
+		 * */
 		fun generate(): KeyPair {
 			val generator = KeyPairGenerator.getInstance("RSA")
 			generator.initialize(2048)
 			return generator.generateKeyPair()
 		}
 
+		/**
+		 * Converts a key to pem string.
+		 *
+		 * @param type Type of key
+		 * @param key Keypair
+		 *
+		 * @return Pem version of key
+		 * */
 		fun keyToPem(type: KeyType, key: KeyPair): String {
 			val base64Key =
 				Base64.getEncoder()
@@ -37,6 +50,13 @@ class KeypairService : Service() {
 					end
 		}
 
+		/**
+		 * Converts a pem string to a public key.
+		 *
+		 * @param pem Pem string
+		 *
+		 * @return Public key
+		 * */
 		fun pemToPublicKey(pem: String): PublicKey {
 			val start = "-----BEGIN PUBLIC KEY-----\n"
 			val end = "\n-----END PUBLIC KEY-----\n"
@@ -47,6 +67,13 @@ class KeypairService : Service() {
 			return KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(byteArray))
 		}
 
+		/**
+		 * Converts a pem string to a private key.
+		 *
+		 * @param pem Pem string
+		 *
+		 * @return Private key
+		 * */
 		fun pemToPrivateKey(pem: String): PrivateKey {
 			val start = "-----BEGIN PRIVATE KEY-----\n"
 			val end = "\n-----END PRIVATE KEY-----\n"

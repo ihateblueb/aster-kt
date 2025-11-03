@@ -7,6 +7,7 @@ import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.db.entity.UserPrivateEntity
 import site.remlit.aster.db.table.UserPrivateTable
 import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 
 /**
@@ -17,7 +18,7 @@ import site.remlit.aster.model.Service
 class UserService() : Service() {
 	companion object {
 		/**
-		 * Get a user.
+		 * Get a user
 		 *
 		 * @param where Query to find user
 		 *
@@ -27,19 +28,6 @@ class UserService() : Service() {
 			UserEntity
 				.find { where }
 				.singleOrNull()
-		}
-
-		/**
-		 * Get a user.
-		 *
-		 * @param where Query to find user
-		 *
-		 * @return Found user, if any
-		 * */
-		fun getMany(where: Op<Boolean>): List<UserEntity> = transaction {
-			UserEntity
-				.find { where }
-				.toList()
 		}
 
 		/**
@@ -101,6 +89,28 @@ class UserService() : Service() {
 		 * @return Found user private, if any
 		 * */
 		fun getPrivateById(id: String): UserPrivateEntity? = getPrivate(UserPrivateTable.id eq id)
+
+		/**
+		 * Get users
+		 *
+		 * @param where Query to find users
+		 * @param take Number of users to take
+		 * @param offset Offset for query
+		 *
+		 * @return Found users, if any
+		 * */
+		fun getMany(
+			where: Op<Boolean>,
+			take: Int = Configuration.timeline.defaultObjects,
+			offset: Long = 0
+		): List<UserEntity> = transaction {
+			UserEntity
+				.find { where }
+				.offset(offset)
+				.sortedByDescending { it.createdAt }
+				.take(take)
+				.toList()
+		}
 
 		/**
 		 * Count users

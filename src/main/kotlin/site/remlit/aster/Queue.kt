@@ -6,5 +6,5 @@ import site.remlit.aster.service.QueueService
 
 fun Application.configureQueue() {
 	InboxHandlerRegistry.registerDefaults()
-	QueueService.init()
+	QueueService.initialize()
 }

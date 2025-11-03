@@ -17,7 +17,7 @@ class VisibilityService : Service() {
 		 *
 		 * @param visibility Visibility of the entity
 		 * @param author Author of the entity
-		 * @param to List of user ids, other users who can see this entity (for [site.remlit.aster.model.Visibility.Direct]). Not applicable to all entities.
+		 * @param to List of user ids, other users who can see this entity (for direct visibility). Not applicable to all entities.
 		 * @param user User who is trying to view the entity
 		 * @param ignoreBlock Whether to take block relationships into account
 		 *
@@ -28,13 +28,16 @@ class VisibilityService : Service() {
 			author: String,
 			to: List<String>? = null,
 			user: String,
-			ignoreBlock: Boolean? = false
+			ignoreBlock: Boolean = false
 		): Boolean {
 			val author = User.fromEntity(UserService.getById(author) ?: throw Exception("Author not found"))
 			val user = User.fromEntity(UserService.getById(user) ?: throw Exception("User not found"))
 
-			if (RelationshipService.eitherBlocking(user.id, author.id))
+			if (!ignoreBlock && RelationshipService.eitherBlocking(user.id, author.id))
 				return false
+
+			if (to != null && to.contains(user.id))
+				return true
 
 			when (visibility) {
 				Visibility.Public -> {

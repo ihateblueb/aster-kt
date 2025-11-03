@@ -42,14 +42,21 @@ class PolicyService : Service() {
 		 * Get many policies.
 		 *
 		 * @param where Query to find policies
+		 * @param take Number of policies to take
+		 * @param offset Offset for query
 		 *
-		 * @return Found policies, if any
+		 * @return Policies, if any
 		 * */
-		fun getMany(where: Op<Boolean>, take: Int? = null): List<PolicyEntity> = transaction {
+		fun getMany(
+			where: Op<Boolean>,
+			take: Int = Configuration.timeline.defaultObjects,
+			offset: Long = 0
+		): List<PolicyEntity> = transaction {
 			PolicyEntity
 				.find { where }
+				.offset(offset)
 				.sortedByDescending { it.createdAt }
-				.take(take ?: Configuration.timeline.defaultObjects)
+				.take(take)
 				.toList()
 		}
 

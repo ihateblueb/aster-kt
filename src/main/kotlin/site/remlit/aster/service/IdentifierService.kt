@@ -1,5 +1,6 @@
 package site.remlit.aster.service
 
+import org.jetbrains.annotations.ApiStatus
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.IdentifierType
 import site.remlit.aster.model.Service
@@ -60,15 +61,15 @@ class IdentifierService : Service() {
 		 * */
 		fun generate(): String {
 			if (Configuration.identifiers == IdentifierType.Aid)
-				return this.generateAid()
+				return generateAid()
 
 			if (Configuration.identifiers == IdentifierType.Aidx)
-				return this.generateAidx()
+				return generateAidx()
 
 			if (Configuration.identifiers == IdentifierType.Uuid)
-				return this.generateUuid()
+				return generateUuid()
 
-			return this.generateAidx()
+			return generateAidx()
 		}
 
 		/**
@@ -76,6 +77,7 @@ class IdentifierService : Service() {
 		 *
 		 * @return Generated ID
 		 * */
+		@ApiStatus.Internal
 		fun generateAid(): String {
 			var id = ""
 
@@ -99,6 +101,7 @@ class IdentifierService : Service() {
 		 *
 		 * @return Generated ID
 		 * */
+		@ApiStatus.Internal
 		fun generateAidx(): String {
 			var id = ""
 
@@ -126,6 +129,7 @@ class IdentifierService : Service() {
 		 *
 		 * @return Generated ID
 		 * */
+		@ApiStatus.Internal
 		fun generateUuid(): String = UUID.randomUUID().toString()
 	}
 }

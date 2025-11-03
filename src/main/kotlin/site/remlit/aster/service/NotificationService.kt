@@ -26,6 +26,13 @@ import site.remlit.aster.util.model.fromEntity
 
 class NotificationService : Service() {
 	companion object {
+		/**
+		 * Get a notification
+		 *
+		 * @param where Query to find notification
+		 *
+		 * @return Notification, if any
+		 * */
 		fun get(where: Op<Boolean>): Notification? = transaction {
 			val entity = NotificationEntity
 				.find { where }
@@ -42,6 +49,13 @@ class NotificationService : Service() {
 			else null
 		}
 
+		/**
+		 * Get a notification by ID
+		 *
+		 * @param id ID of notification
+		 *
+		 * @return Notification, if any
+		 * */
 		fun getById(id: String): Notification? = get(NotificationTable.id eq id)
 
 		/**
@@ -56,7 +70,20 @@ class NotificationService : Service() {
 		 * */
 		val userFromAlias = UserTable.alias("from")
 
-		fun getMany(where: Op<Boolean>, take: Int? = null): List<Notification> = transaction {
+		/**
+		 * Get many notifications
+		 *
+		 * @param where Query to find notifications
+		 * @param take Number of notifications to take
+		 * @param offset Offset for query
+		 *
+		 * @return Notifications, if any
+		 * */
+		fun getMany(
+			where: Op<Boolean>,
+			take: Int = Configuration.timeline.defaultObjects,
+			offset: Long = 0
+		): List<Notification> = transaction {
 			val entities = NotificationTable
 				.join(userToAlias, JoinType.INNER, NotificationTable.to, userToAlias[UserTable.id])
 				.join(userFromAlias, JoinType.INNER, NotificationTable.from, userFromAlias[UserTable.id])
@@ -64,9 +91,10 @@ class NotificationService : Service() {
 				.join(RelationshipTable, JoinType.LEFT, NotificationTable.relationship, RelationshipTable.id)
 				.selectAll()
 				.where { where }
+				.offset(offset)
 				.let { NotificationEntity.wrapRows(it) }
 				.sortedByDescending { it.createdAt }
-				.take(take ?: Configuration.timeline.defaultObjects)
+				.take(take)
 				.toList()
 
 			if (!entities.isEmpty())
@@ -74,13 +102,24 @@ class NotificationService : Service() {
 			else listOf()
 		}
 
+		/**
+		 * Create a notification.
+		 *
+		 * @param type Type of notification
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 * @param note Note related to notification
+		 * @param relationship Relationship related to notification
+		 *
+		 * @return Created notification
+		 * */
 		fun create(
 			type: NotificationType,
 			to: UserEntity,
 			from: UserEntity,
 			note: NoteEntity?,
 			relationship: RelationshipEntity?
-		) {
+		): Notification? {
 			val id = IdentifierService.generate()
 			transaction {
 				NotificationEntity.new(id) {
@@ -93,8 +132,20 @@ class NotificationService : Service() {
 						this.relationship = relationship
 				}
 			}
+			return getById(id)
 		}
 
+		/**
+		 * Create a notification.
+		 *
+		 * @param type Type of notification
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 * @param note Note related to notification
+		 * @param relationship Relationship related to notification
+		 *
+		 * @return Created notification
+		 * */
 		fun create(
 			type: NotificationType,
 			to: UserEntity,
@@ -109,6 +160,17 @@ class NotificationService : Service() {
 			relationship
 		)
 
+		/**
+		 * Create a notification.
+		 *
+		 * @param type Type of notification
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 * @param note Note related to notification
+		 * @param relationship Relationship related to notification
+		 *
+		 * @return Created notification
+		 * */
 		fun create(
 			type: NotificationType,
 			to: UserEntity,
@@ -123,6 +185,17 @@ class NotificationService : Service() {
 			if (relationship != null) RelationshipEntity[relationship.id] else null
 		)
 
+		/**
+		 * Create a notification.
+		 *
+		 * @param type Type of notification
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 * @param note Note related to notification
+		 * @param relationship Relationship related to notification
+		 *
+		 * @return Created notification
+		 * */
 		fun create(
 			type: NotificationType,
 			to: UserEntity,
@@ -137,6 +210,16 @@ class NotificationService : Service() {
 			if (relationship != null) RelationshipEntity[relationship.id] else null
 		)
 
+		/**
+		 * Create a notification.
+		 *
+		 * @param type Type of notification
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 * @param note Note related to notification
+		 *
+		 * @return Created notification
+		 * */
 		fun create(
 			type: NotificationType,
 			to: UserEntity,
@@ -150,6 +233,15 @@ class NotificationService : Service() {
 			null as RelationshipEntity?
 		)
 
+		/**
+		 * Create a notification.
+		 *
+		 * @param type Type of notification
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 *
+		 * @return Created notification
+		 * */
 		fun create(
 			type: NotificationType,
 			to: UserEntity,
@@ -162,6 +254,14 @@ class NotificationService : Service() {
 			null as RelationshipEntity?
 		)
 
+		/**
+		 * Create a bite notification.
+		 *
+		 * @param to Recipient of notification
+		 * @param from Sender of notification
+		 *
+		 * @return Created bite notification
+		 * */
 		fun bite(
 			to: UserEntity,
 			from: UserEntity,

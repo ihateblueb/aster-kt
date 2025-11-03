@@ -11,22 +11,64 @@ import site.remlit.aster.db.table.InstanceTable
 import site.remlit.aster.model.Service
 import site.remlit.aster.service.ap.ApUtilityService
 
+/**
+ * Service for managing remote instances and resolving nodeinfo.
+ *
+ * @since 2025.11.1.0-SNAPSHOT
+ * */
 class InstanceService : Service() {
 	companion object {
 		private val logger = LoggerFactory.getLogger(InstanceService::class.java)
 
+		/**
+		 * Reference for NodeInfo 2.0
+		 * */
 		const val NODEINFO_2_0: String = "http://nodeinfo.diaspora.software/ns/schema/2.0"
+
+		/**
+		 * Reference for NodeInfo 2.1
+		 * */
 		const val NODEINFO_2_1: String = "http://nodeinfo.diaspora.software/ns/schema/2.1"
 
+		/**
+		 * Get an instance entity
+		 *
+		 * @param where Query for finding instance
+		 *
+		 * @return Instance entity, if it exists
+		 * */
 		fun get(where: Op<Boolean>): InstanceEntity? = transaction {
 			InstanceEntity
 				.find { where }
 				.singleOrNull()
 		}
 
+		/**
+		 * Get an instance entity by ID
+		 *
+		 * @param id ID of instance
+		 *
+		 * @return Instance entity, if it exists
+		 * */
 		fun getById(id: String): InstanceEntity? = get(InstanceTable.id eq id)
+
+		/**
+		 * Get an instance entity by host
+		 *
+		 * @param host Host of instance
+		 *
+		 * @return Instance entity, if it exists
+		 * */
 		fun getByHost(host: String): InstanceEntity? = get(InstanceTable.host eq host)
 
+		/**
+		 * Resolve an instance's nodeinfo and other identifying information
+		 *
+		 * @param host Host of instance
+		 * @param refetch Whether to force a refetch
+		 *
+		 * @return Instance entity, if it exists or can be resolved
+		 * */
 		suspend fun resolve(host: String, refetch: Boolean = false): InstanceEntity? {
 			val existing = get(InstanceTable.host eq host)
 
@@ -59,6 +101,15 @@ class InstanceService : Service() {
 			return null
 		}
 
+		/**
+		 * Convert a resolved nodeinfo JsonObject into a PartialInstance
+		 *
+		 * @param host Host of the instance
+		 * @param nodeinfo JsonObject of nodeinfo response
+		 * @param existing Existing instance entity, if any
+		 *
+		 * @return Partial instance from provided information
+		 * */
 		fun toInstance(host: String, nodeinfo: JsonObject, existing: InstanceEntity? = null): PartialInstance {
 			val id = existing?.id?.toString() ?: IdentifierService.generate()
 
@@ -94,6 +145,13 @@ class InstanceService : Service() {
 			)
 		}
 
+		/**
+		 * Updates an existing instance entity by a PartialInstance
+		 *
+		 * @param instance Partial instance
+		 *
+		 * @return Updated instance
+		 * */
 		fun update(instance: PartialInstance): InstanceEntity? {
 			try {
 				transaction {
@@ -120,6 +178,13 @@ class InstanceService : Service() {
 			}
 		}
 
+		/**
+		 * Registers a new instance entity by a PartialInstance
+		 *
+		 * @param instance Partial instance
+		 *
+		 * @return Created instance
+		 * */
 		fun register(instance: PartialInstance): InstanceEntity? {
 			try {
 				transaction {

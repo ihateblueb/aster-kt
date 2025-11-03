@@ -28,7 +28,7 @@ class SetupService : Service() {
 		/**
 		 * Setup instance
 		 * */
-		suspend fun setup() {
+		fun setup() {
 			setupRoles()
 			setupInstanceActor()
 		}
