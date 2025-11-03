@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import site.remlit.aster.common.model.generated.PartialInstance
 import site.remlit.aster.db.entity.InstanceEntity
 import site.remlit.aster.db.table.InstanceTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 import site.remlit.aster.util.extractArray
 import site.remlit.aster.util.extractObject
@@ -61,6 +62,40 @@ object InstanceService : Service {
 	 * @return Instance entity, if it exists
 	 * */
 	fun getByHost(host: String): InstanceEntity? = get(InstanceTable.host eq host)
+
+	/**
+	 * Get an instance entities
+	 *
+	 * @param where Query for finding instances
+	 * @param take Number of instances to take
+	 * @param offset Offset for query
+	 *
+	 * @return Instance entities, if it exists
+	 * */
+	fun getMany(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<InstanceEntity> = transaction {
+		InstanceEntity
+			.find { where }
+			.offset(offset)
+			.take(take)
+			.toList()
+	}
+
+	/**
+	 * Count instance entities
+	 *
+	 * @param where Query to find instances
+	 *
+	 * @return Count of instances where query applies
+	 * */
+	fun count(where: Op<Boolean>): Long = transaction {
+		InstanceEntity
+			.find { where }
+			.count()
+	}
 
 	/**
 	 * Resolve an instance's nodeinfo and other identifying information
