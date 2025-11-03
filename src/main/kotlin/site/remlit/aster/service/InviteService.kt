@@ -60,16 +60,23 @@ object InviteService : Service {
 	 * Get many invitations
 	 *
 	 * @param where Query to find invites
+	 * @param take Number of users to take
+	 * @param offset Offset for query
 	 *
 	 * @return Found invites, if any
 	 * */
-	fun getMany(where: Op<Boolean>, take: Int? = null): List<InviteEntity> = transaction {
+	fun getMany(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<InviteEntity> = transaction {
 		InviteTable
 			.selectAll()
 			.where { where }
+			.offset(offset)
 			.let { InviteEntity.wrapRows(it) }
 			.sortedByDescending { it.createdAt }
-			.take(take ?: Configuration.timeline.defaultObjects)
+			.take(take)
 			.toList()
 	}
 

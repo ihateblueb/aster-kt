@@ -15,15 +15,13 @@ import kotlinx.html.td
 import kotlinx.html.th
 import kotlinx.html.title
 import kotlinx.html.tr
-import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.core.neq
 import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.route.RouteRegistry
 import site.remlit.aster.service.RoleService
-import site.remlit.aster.service.TimelineService
 import site.remlit.aster.service.UserService
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminListNav
@@ -33,12 +31,14 @@ object AdminUserRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/admin/users") {
-				val since = TimelineService.normalizeSince(call.parameters["since"])
+				val take = Configuration.timeline.defaultObjects
+				val offset = call.parameters["offset"]?.toLong() ?: 0
 				val isLocal = true
 
 				val users = UserService.getMany(
-					(if (isLocal) UserTable.host eq null else UserTable.id neq null)
-							and (UserTable.createdAt less since)
+					(if (isLocal) UserTable.host eq null else UserTable.id neq null),
+					take,
+					offset
 				)
 
 				val totalUsers = UserService.count(
@@ -94,7 +94,7 @@ object AdminUserRoutes {
 							p {
 								+"${users.size}${if (isLocal) " local" else ""} users shown, $totalUsers total."
 							}
-							adminListNav(users.last().createdAt.toString())
+							adminListNav(offset, take)
 						}
 					}
 				}

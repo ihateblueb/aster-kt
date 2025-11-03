@@ -15,13 +15,11 @@ import kotlinx.html.td
 import kotlinx.html.th
 import kotlinx.html.title
 import kotlinx.html.tr
-import org.jetbrains.exposed.v1.core.and
-import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.core.neq
 import site.remlit.aster.db.table.InviteTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.route.RouteRegistry
 import site.remlit.aster.service.InviteService
-import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminListNav
 import site.remlit.aster.util.webcomponent.adminMain
@@ -30,11 +28,13 @@ object AdminInviteRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/admin/invites") {
-				val since = TimelineService.normalizeSince(call.parameters["since"])
+				val take = Configuration.timeline.defaultObjects
+				val offset = call.parameters["offset"]?.toLong() ?: 0
 
 				val invites = InviteService.getMany(
-					InviteTable.id neq ""
-							and (InviteTable.createdAt less since)
+					InviteTable.id neq "",
+					take,
+					offset
 				)
 				val totalInvites = InviteService.count(
 					InviteTable.id neq ""
@@ -72,7 +72,7 @@ object AdminInviteRoutes {
 							p {
 								+"${invites.size} invites shown, $totalInvites total."
 							}
-							adminListNav(invites.last().createdAt.toString())
+							adminListNav(offset, take)
 						}
 					}
 				}
