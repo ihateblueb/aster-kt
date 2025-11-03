@@ -8,7 +8,7 @@ object PackageInformation {
 	val name: String = appConfig.propertyOrNull("name")?.getString() ?: "aster"
 	val version: String = appConfig.propertyOrNull("version")?.getString() ?: "0.0.0"
 	val groupId: String = appConfig.propertyOrNull("groupId")?.getString() ?: "site.remlit"
-	val repo: String = appConfig.propertyOrNull("repo")?.getString() ?: "https://github.com/ihateblueb/aster-kt"
+	val repo: String = appConfig.propertyOrNull("repo")?.getString() ?: "https://github.com/aster-soc/aster"
 	val bugTracker: String =
-		appConfig.propertyOrNull("bugTracker")?.getString() ?: "https://github.com/ihateblueb/aster-kt/issues"
+		appConfig.propertyOrNull("bugTracker")?.getString() ?: "https://github.com/aster-soc/aster/issues"
 }

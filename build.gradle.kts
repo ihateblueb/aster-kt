@@ -172,7 +172,7 @@ tasks.processResources {
 	val group = project.provider { project.group.toString() }.get()
 	val version = project.provider { project.version.toString() }.get()
 
-	val repo = "https://github.com/ihateblueb/aster-kt"
+	val repo = "https://github.com/aster-soc/aster"
 	val bugTracker = "$repo/issues"
 
 	filesMatching("application.yaml") {
@@ -233,7 +233,7 @@ publishing {
 
 			pom {
 				name = "aster"
-				url = "https://github.com/ihateblueb/aster-kt"
+				url = "https://github.com/aster-soc/aster"
 
 				licenses {
 					license {
@@ -251,9 +251,9 @@ publishing {
 				}
 
 				scm {
-					connection = "scm:git:git://github.com/ihateblueb/aster-kt.git"
-					developerConnection = "scm:git:ssh://github.com/ihateblueb/aster-kt.git"
-					url = "https://github.com/ihateblueb/aster-kt"
+					connection = "scm:git:git://github.com/aster-soc/aster.git"
+					developerConnection = "scm:git:ssh://github.com/aster-soc/aster.git"
+					url = "https://github.com/aster-soc/aster"
 				}
 			}
 		}

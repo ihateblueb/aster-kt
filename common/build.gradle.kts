@@ -96,7 +96,7 @@ publishing {
 
 			pom {
 				name = "common"
-				url = "https://github.com/ihateblueb/aster-kt"
+				url = "https://github.com/aster-soc/aster"
 
 				licenses {
 					license {
@@ -114,9 +114,9 @@ publishing {
 				}
 
 				scm {
-					connection = "scm:git:git://github.com/ihateblueb/aster-kt.git"
-					developerConnection = "scm:git:ssh://github.com/ihateblueb/aster-kt.git"
-					url = "https://github.com/ihateblueb/aster-kt"
+					connection = "scm:git:git://github.com/aster-soc/aster.git"
+					developerConnection = "scm:git:ssh://github.com/aster-soc/aster.git"
+					url = "https://github.com/aster-soc/aster"
 				}
 			}
 		}
