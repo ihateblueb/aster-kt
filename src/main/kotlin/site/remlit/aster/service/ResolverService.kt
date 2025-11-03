@@ -29,141 +29,139 @@ import kotlin.time.ExperimentalTime
  *
  * @since 2025.5.1.0-SNAPSHOT
  * */
-class ResolverService : Service() {
-	companion object {
-		private val logger = LoggerFactory.getLogger(ResolverService::class.java)
+object ResolverService : Service {
+	private val logger = LoggerFactory.getLogger(ResolverService::class.java)
 
-		/**
-		 * Creates an HTTP client with default request headers and content negotiation rules for ActivityPub and more.
-		 * */
-		fun createClient(): HttpClient {
-			return HttpClient(CIO) {
-				defaultRequest {
-					headers.append(
-						"User-Agent",
-						"${PackageInformation.name}/${PackageInformation.version} (+${Configuration.url})"
-					)
-				}
+	/**
+	 * Creates an HTTP client with default request headers and content negotiation rules for ActivityPub and more.
+	 * */
+	fun createClient(): HttpClient {
+		return HttpClient(CIO) {
+			defaultRequest {
+				headers.append(
+					"User-Agent",
+					"${PackageInformation.name}/${PackageInformation.version} (+${Configuration.url})"
+				)
+			}
 
-				install(ContentNegotiation) {
-					json(jsonConfig)
+			install(ContentNegotiation) {
+				json(jsonConfig)
 
-					register(
-						ContentType.parse("application/ld+json"),
-						KotlinxSerializationConverter(jsonConfig)
-					)
-					register(
-						ContentType.parse("application/activity+json"),
-						KotlinxSerializationConverter(jsonConfig)
-					)
-					register(
-						ContentType.parse("application/jrd+json"),
-						KotlinxSerializationConverter(jsonConfig)
-					)
-				}
+				register(
+					ContentType.parse("application/ld+json"),
+					KotlinxSerializationConverter(jsonConfig)
+				)
+				register(
+					ContentType.parse("application/activity+json"),
+					KotlinxSerializationConverter(jsonConfig)
+				)
+				register(
+					ContentType.parse("application/jrd+json"),
+					KotlinxSerializationConverter(jsonConfig)
+				)
 			}
 		}
+	}
 
-		/**
-		 * Resolve a URL
-		 *
-		 * @param url URL to resolve as a String
-		 * @param accept Accept header's content, defaults to application/activity+json
-		 *
-		 * @return [JsonObject] or null
-		 * */
-		suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject? {
-			val id = IdentifierService.generate()
+	/**
+	 * Resolve a URL
+	 *
+	 * @param url URL to resolve as a String
+	 * @param accept Accept header's content, defaults to application/activity+json
+	 *
+	 * @return [JsonObject] or null
+	 * */
+	suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject? {
+		val id = IdentifierService.generate()
 
-			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
-			val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
+		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
+		val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
 
-			if (blockedHosts.contains(Url(url).host))
-				return null
+		if (blockedHosts.contains(Url(url).host))
+			return null
 
-			try {
-				val client = createClient()
-				val response = client.get(url) {
-					headers.append("Accept", accept)
-				}
-				client.close()
-
-				logger.info("${response.status} ${response.request.method} - ${response.request.url}")
-
-				if (response.status != HttpStatusCode.OK)
-					throw ResolverException(response.status, response.status.description)
-
-				val body: JsonObject? = response.body()
-				return body
-			} catch (e: Exception) {
-				logger.info("Request failed: ${e.message}")
-				return null
+		try {
+			val client = createClient()
+			val response = client.get(url) {
+				headers.append("Accept", accept)
 			}
+			client.close()
+
+			logger.info("${response.status} ${response.request.method} - ${response.request.url}")
+
+			if (response.status != HttpStatusCode.OK)
+				throw ResolverException(response.status, response.status.description)
+
+			val body: JsonObject? = response.body()
+			return body
+		} catch (e: Exception) {
+			logger.info("Request failed: ${e.message}")
+			return null
 		}
+	}
 
-		/**
-		 * Resolve a URL, signed
-		 *
-		 * @param url URL to resolve as a String
-		 * @param accept Accept header's content, defaults to application/activity+json
-		 * @param user User to sign the request as
-		 *
-		 * @return [JsonObject] or null
-		 * */
-		@OptIn(ExperimentalTime::class)
-		suspend fun resolveSigned(
-			url: String,
-			accept: String = "application/activity+json",
-			user: String? = null
-		): JsonObject? {
-			val url = Url(url)
+	/**
+	 * Resolve a URL, signed
+	 *
+	 * @param url URL to resolve as a String
+	 * @param accept Accept header's content, defaults to application/activity+json
+	 * @param user User to sign the request as
+	 *
+	 * @return [JsonObject] or null
+	 * */
+	@OptIn(ExperimentalTime::class)
+	suspend fun resolveSigned(
+		url: String,
+		accept: String = "application/activity+json",
+		user: String? = null
+	): JsonObject? {
+		val url = Url(url)
 
-			val date = LocalDateTime.now(ZoneId.of("GMT"))
-				.toHttpDateString()
+		val date = LocalDateTime.now(ZoneId.of("GMT"))
+			.toHttpDateString()
 
-			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
-			val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
+		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
+		val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
 
-			if (blockedHosts.contains(url.host))
-				return null
+		if (blockedHosts.contains(url.host))
+			return null
 
-			val actor = (if (user != null) UserService.getByUsername(user) else null)
-				?: UserService.getInstanceActor()
+		val actor = (if (user != null) UserService.getByUsername(user) else null)
+			?: UserService.getInstanceActor()
 
-			val actorPrivate = UserService.getPrivateById(actor.id.toString())!!
+		val actorPrivate = UserService.getPrivateById(actor.id.toString())!!
 
-			try {
-				val client = createClient()
-				val response = client.get(url) {
-					headers.append("Host", url.host)
-					headers.append("Date", date)
-					headers.append("Accept", accept)
+		try {
+			val client = createClient()
+			val response = client.get(url) {
+				headers.append("Host", url.host)
+				headers.append("Date", date)
+				headers.append("Accept", accept)
 
-					val sig = ApSignatureService.createSignature(
-						url.encodedPath,
-						HttpMethod.Get,
-						KeypairService.pemToPrivateKey(actorPrivate.privateKey),
-						actor.apId + "#main-key",
-						mapOf(
-							"Host" to listOf(url.host),
-							"Date" to listOf(date)
-						)
+				val sig = ApSignatureService.createSignature(
+					url.encodedPath,
+					HttpMethod.Get,
+					KeypairService.pemToPrivateKey(actorPrivate.privateKey),
+					actor.apId + "#main-key",
+					mapOf(
+						"Host" to listOf(url.host),
+						"Date" to listOf(date)
 					)
+				)
 
-					headers.append("Signature", sig.first)
-				}
-				client.close()
-
-				if (response.status != HttpStatusCode.OK)
-					throw ResolverException(response.status, response.status.description)
-				else logger.info("${response.status} ${response.request.method} - ${response.request.url}")
-
-				val body: JsonObject? = response.body()
-				return body
-			} catch (e: Exception) {
-				logger.info("Request failed: ${e.message}")
-				return null
+				headers.append("Signature", sig.first)
 			}
+			client.close()
+
+			if (response.status != HttpStatusCode.OK)
+				throw ResolverException(response.status, response.status.description)
+			else logger.info("${response.status} ${response.request.method} - ${response.request.url}")
+
+			val body: JsonObject? = response.body()
+			return body
+		} catch (e: Exception) {
+			logger.info("Request failed: ${e.message}")
+			return null
 		}
 	}
 }

@@ -13,51 +13,49 @@ import site.remlit.aster.model.Service
  *
  * @since 2025.5.1.0-SNAPSHOT
  * */
-class AuthService : Service() {
-	companion object {
-		/**
-		 * Get auth entity.
-		 *
-		 * @param where Query to find auth entity
-		 *
-		 * @return Auth entity, if it exists
-		 * */
-		fun get(where: Op<Boolean>): AuthEntity? = transaction {
-			AuthEntity
-				.find { where }
-				.singleOrNull()
-		}
+object AuthService : Service {
+	/**
+	 * Get auth entity.
+	 *
+	 * @param where Query to find auth entity
+	 *
+	 * @return Auth entity, if it exists
+	 * */
+	fun get(where: Op<Boolean>): AuthEntity? = transaction {
+		AuthEntity
+			.find { where }
+			.singleOrNull()
+	}
 
-		/**
-		 * Get auth entity by token.
-		 *
-		 * @param token Token to use to find an auth entity
-		 *
-		 * @return Auth entity, if it exists
-		 * */
-		fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
+	/**
+	 * Get auth entity by token.
+	 *
+	 * @param token Token to use to find an auth entity
+	 *
+	 * @return Auth entity, if it exists
+	 * */
+	fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
-		/**
-		 * Creates a new auth token for a user
-		 *
-		 * @param user ID of a user
-		 *
-		 * @return Newly created auth token
-		 * */
-		fun registerToken(user: String): String {
-			val id = IdentifierService.generate()
-			val generatedToken = RandomService.generateString()
+	/**
+	 * Creates a new auth token for a user
+	 *
+	 * @param user ID of a user
+	 *
+	 * @return Newly created auth token
+	 * */
+	fun registerToken(user: String): String {
+		val id = IdentifierService.generate()
+		val generatedToken = RandomService.generateString()
 
-			val user = UserService.get(UserTable.id eq user)!!
+		val user = UserService.get(UserTable.id eq user)!!
 
-			transaction {
-				AuthEntity.new(id) {
-					token = generatedToken
-					this.user = user
-				}
+		transaction {
+			AuthEntity.new(id) {
+				token = generatedToken
+				this.user = user
 			}
-
-			return generatedToken
 		}
+
+		return generatedToken
 	}
 }

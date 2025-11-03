@@ -9,24 +9,22 @@ import java.security.SecureRandom
  *
  * @since 2025.5.1.0-SNAPSHOT
  * */
-class RandomService : Service() {
-	companion object {
-		/**
-		 * Securely generate a random string
-		 *
-		 * @param size Size in bytes
-		 *
-		 * @return Secure random string
-		 * */
-		fun generateString(size: Int = 16): String {
-			val random = SecureRandom()
+object RandomService : Service {
+	/**
+	 * Securely generate a random string
+	 *
+	 * @param size Size in bytes
+	 *
+	 * @return Secure random string
+	 * */
+	fun generateString(size: Int = 16): String {
+		val random = SecureRandom()
 
-			val bytes = ByteArray(size)
-			random.nextBytes(bytes)
+		val bytes = ByteArray(size)
+		random.nextBytes(bytes)
 
-			return BigInteger(1, bytes)
-				.toString(32)
-				.padStart(size, '0')
-		}
+		return BigInteger(1, bytes)
+			.toString(32)
+			.padStart(size, '0')
 	}
 }

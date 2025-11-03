@@ -69,7 +69,7 @@ object AdminUserRoutes {
 										td {
 											val status = mutableListOf<String>()
 
-											if (user.activated) status += "Activated" else status += "Unactivated"
+											status += if (user.activated) "Activated" else "Unactivated"
 
 											val highestRole = RoleService.getUserHighestRole(user.id.toString())
 											if (highestRole == RoleType.Admin) status += "Admin"

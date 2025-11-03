@@ -17,6 +17,7 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.annotations.ApiStatus
 import site.remlit.aster.common.model.ApiError
 import site.remlit.aster.db.Database
 import site.remlit.aster.event.EventRegistry
@@ -39,6 +40,7 @@ import site.remlit.aster.util.jsonConfig
 import site.remlit.aster.util.setJsonConfig
 import java.util.concurrent.TimeUnit
 
+@ApiStatus.Internal
 fun main(args: Array<String>) {
 	if (args.isNotEmpty() && !args[0].startsWith("-")) {
 		runBlocking {
@@ -63,6 +65,7 @@ fun main(args: Array<String>) {
 	server.start(wait = true)
 }
 
+@ApiStatus.Internal
 fun Application.module() {
 	// this hook completes first, always
 	Runtime.getRuntime().addShutdownHook(Thread {

@@ -33,196 +33,194 @@ import site.remlit.aster.util.model.fromEntity
  *
  * @since 2025.5.1.0-SNAPSHOT
  * */
-class NoteService : Service() {
-	companion object {
-		/**
-		 * Get a note
-		 *
-		 * @param where Query to find note
-		 *
-		 * @return Note, if exists
-		 * */
-		fun get(where: Op<Boolean>): Note? = transaction {
-			val note = NoteEntity
-				.find { where }
-				.singleOrNull()
-				?.load(NoteEntity::user)
+object NoteService : Service {
+	/**
+	 * Get a note
+	 *
+	 * @param where Query to find note
+	 *
+	 * @return Note, if exists
+	 * */
+	fun get(where: Op<Boolean>): Note? = transaction {
+		val note = NoteEntity
+			.find { where }
+			.singleOrNull()
+			?.load(NoteEntity::user)
 
-			if (note != null)
-				Note.fromEntity(note)
-			else null
-		}
-
-		/**
-		 * Get a note by ID
-		 *
-		 * @param id ID of note
-		 *
-		 * @return Note, if exists
-		 * */
-		fun getById(id: String): Note? = get(NoteTable.id eq id)
-
-		/**
-		 * Get a note by ActivityPub ID
-		 *
-		 * @param apId ActivityPub ID of note
-		 *
-		 * @return Note, if exists
-		 * */
-		fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
-
-		/**
-		 * Get many notes
-		 *
-		 * @param where Query to find notes
-		 * @param take Number of notes to take
-		 * @param offset Offset for query
-		 *
-		 * @return Notes, if exist
-		 * */
-		fun getMany(
-			where: Op<Boolean>,
-			take: Int = Configuration.timeline.defaultObjects,
-			offset: Long = 0
-		): List<Note> = transaction {
-			val notes = (NoteTable innerJoin UserTable)
-				.selectAll()
-				.where { where }
-				.offset(offset)
-				.let { NoteEntity.wrapRows(it) }
-				.sortedByDescending { it.createdAt }
-				.take(take)
-				.toList()
-
-			if (!notes.isEmpty())
-				Note.fromEntities(notes)
-			else listOf()
-		}
-
-		/**
-		 * Count notes
-		 *
-		 * @param where Query to find notes
-		 *
-		 * @return Count of notes
-		 * */
-		fun count(where: Op<Boolean>): Long = transaction {
-			NoteTable
-				.leftJoin(UserTable)
-				.select(where)
-				.count()
-		}
-
-		/**
-		 * Create a note
-		 *
-		 * @param id ID of the note
-		 * @param user User authoring the post
-		 * @param cw Content warning of the note
-		 * @param content Content of the note
-		 * @param visibility Visibility of the note
-		 * @param to List of users mentioned
-		 * @param tags List of extracted hashtags
-		 *
-		 * @return Created note
-		 * */
-		fun create(
-			id: String = IdentifierService.generate(),
-			user: UserEntity,
-			cw: String?,
-			content: String,
-			visibility: Visibility,
-			to: List<String> = listOf(),
-			tags: List<String> = listOf()
-		): Note {
-			transaction {
-				NoteEntity.new(id) {
-					apId = ApIdService.renderNoteApId(id)
-					this.user = user
-					this.cw = if (cw != null) SanitizerService.sanitize(cw, true) else null
-					this.content = SanitizerService.sanitize(content, true)
-					this.visibility = visibility
-					this.to = to
-					this.tags = tags
-				}
-			}
-
-			val note = getById(id) ?: throw InsertFailureException("Failed to create note")
-			NoteCreateEvent(note).call()
-
-			return note
-		}
-
-		/**
-		 * Like a note as a user, or removes a like if it's already there
-		 *
-		 * @param user User liking the note
-		 * @param noteId ID of the target note
-		 *
-		 * @since 2025.9.1.1-SNAPSHOT
-		 * */
-		fun like(
-			user: User,
-			noteId: String,
-		) {
-			val note = getById(noteId)
-				?: throw TargetNotFoundException("Note not found")
-
-			if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
-				throw TargetNotFoundException("Note not found")
-
-			val existing = transaction {
-				NoteLikeEntity
-					.find {
-						NoteLikeTable.note eq note.id and
-								(NoteLikeTable.user eq user.id)
-					}
-					.singleOrNull()
-			}
-
-			if (existing != null) {
-				transaction { existing.delete() }
-				NoteUnlikeEvent(note, user).call()
-				return
-			}
-
-			transaction {
-				NoteLikeEntity.new(IdentifierService.generate()) {
-					this.user = UserEntity[user.id]
-					this.note = NoteEntity[note.id]
-				}
-			}
-
-			NoteLikeEvent(note, user).call()
-		}
-
-		/**
-		 * Delete a note
-		 *
-		 * @param where Query to find note
-		 * */
-		fun delete(where: Op<Boolean>) = transaction {
-			val entity = NoteEntity
-				.find { where }
-				.singleOrNull()
-			if (entity == null) return@transaction
-
-			NoteDeleteEvent(Note.fromEntity(entity)).call()
-			entity.delete()
-		}
-
-		/**
-		 * Delete a note by ID
-		 *
-		 * @param id ID of note
-		 * */
-		fun deleteById(id: String) = delete(NoteTable.id eq id)
-
-		/**
-		 * Delete a note by ActivityPub ID
-		 *
-		 * @param apId ActivityPub ID of note
-		 * */
-		fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
+		if (note != null)
+			Note.fromEntity(note)
+		else null
 	}
+
+	/**
+	 * Get a note by ID
+	 *
+	 * @param id ID of note
+	 *
+	 * @return Note, if exists
+	 * */
+	fun getById(id: String): Note? = get(NoteTable.id eq id)
+
+	/**
+	 * Get a note by ActivityPub ID
+	 *
+	 * @param apId ActivityPub ID of note
+	 *
+	 * @return Note, if exists
+	 * */
+	fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
+
+	/**
+	 * Get many notes
+	 *
+	 * @param where Query to find notes
+	 * @param take Number of notes to take
+	 * @param offset Offset for query
+	 *
+	 * @return Notes, if exist
+	 * */
+	fun getMany(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<Note> = transaction {
+		val notes = (NoteTable innerJoin UserTable)
+			.selectAll()
+			.where { where }
+			.offset(offset)
+			.let { NoteEntity.wrapRows(it) }
+			.sortedByDescending { it.createdAt }
+			.take(take)
+			.toList()
+
+		if (!notes.isEmpty())
+			Note.fromEntities(notes)
+		else listOf()
+	}
+
+	/**
+	 * Count notes
+	 *
+	 * @param where Query to find notes
+	 *
+	 * @return Count of notes
+	 * */
+	fun count(where: Op<Boolean>): Long = transaction {
+		NoteTable
+			.leftJoin(UserTable)
+			.select(where)
+			.count()
+	}
+
+	/**
+	 * Create a note
+	 *
+	 * @param id ID of the note
+	 * @param user User authoring the post
+	 * @param cw Content warning of the note
+	 * @param content Content of the note
+	 * @param visibility Visibility of the note
+	 * @param to List of users mentioned
+	 * @param tags List of extracted hashtags
+	 *
+	 * @return Created note
+	 * */
+	fun create(
+		id: String = IdentifierService.generate(),
+		user: UserEntity,
+		cw: String?,
+		content: String,
+		visibility: Visibility,
+		to: List<String> = listOf(),
+		tags: List<String> = listOf()
+	): Note {
+		transaction {
+			NoteEntity.new(id) {
+				apId = ApIdService.renderNoteApId(id)
+				this.user = user
+				this.cw = if (cw != null) SanitizerService.sanitize(cw, true) else null
+				this.content = SanitizerService.sanitize(content, true)
+				this.visibility = visibility
+				this.to = to
+				this.tags = tags
+			}
+		}
+
+		val note = getById(id) ?: throw InsertFailureException("Failed to create note")
+		NoteCreateEvent(note).call()
+
+		return note
+	}
+
+	/**
+	 * Like a note as a user, or removes a like if it's already there
+	 *
+	 * @param user User liking the note
+	 * @param noteId ID of the target note
+	 *
+	 * @since 2025.9.1.1-SNAPSHOT
+	 * */
+	fun like(
+		user: User,
+		noteId: String,
+	) {
+		val note = getById(noteId)
+			?: throw TargetNotFoundException("Note not found")
+
+		if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
+			throw TargetNotFoundException("Note not found")
+
+		val existing = transaction {
+			NoteLikeEntity
+				.find {
+					NoteLikeTable.note eq note.id and
+							(NoteLikeTable.user eq user.id)
+				}
+				.singleOrNull()
+		}
+
+		if (existing != null) {
+			transaction { existing.delete() }
+			NoteUnlikeEvent(note, user).call()
+			return
+		}
+
+		transaction {
+			NoteLikeEntity.new(IdentifierService.generate()) {
+				this.user = UserEntity[user.id]
+				this.note = NoteEntity[note.id]
+			}
+		}
+
+		NoteLikeEvent(note, user).call()
+	}
+
+	/**
+	 * Delete a note
+	 *
+	 * @param where Query to find note
+	 * */
+	fun delete(where: Op<Boolean>) = transaction {
+		val entity = NoteEntity
+			.find { where }
+			.singleOrNull()
+		if (entity == null) return@transaction
+
+		NoteDeleteEvent(Note.fromEntity(entity)).call()
+		entity.delete()
+	}
+
+	/**
+	 * Delete a note by ID
+	 *
+	 * @param id ID of note
+	 * */
+	fun deleteById(id: String) = delete(NoteTable.id eq id)
+
+	/**
+	 * Delete a note by ActivityPub ID
+	 *
+	 * @param apId ActivityPub ID of note
+	 * */
+	fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 }

@@ -23,7 +23,8 @@ data class ApActor(
 	val image: ApImage? = null,
 
 	val summary: String? = null,
-	val _misskey_summary: String? = null,
+	@SerialName("_misskey_summary")
+	val misskeySummary: String? = null,
 
 	val sensitive: Boolean = false,
 	val discoverable: Boolean = false,
@@ -70,7 +71,7 @@ data class ApActor(
 				) else null,
 
 				summary = user.bio,
-				_misskey_summary = user.bio,
+				misskeySummary = user.bio,
 
 				sensitive = user.sensitive,
 				discoverable = user.discoverable,

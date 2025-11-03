@@ -14,81 +14,79 @@ import site.remlit.aster.model.Service
  *
  * @since 2025.5.1.0-SNAPSHOT
  * */
-class PolicyService : Service() {
-	companion object {
-		/**
-		 * Get a policy.
-		 *
-		 * @param where Query to find policy
-		 *
-		 * @return Found policy, if any
-		 * */
-		fun get(where: Op<Boolean>): PolicyEntity? = transaction {
-			PolicyEntity
-				.find { where }
-				.singleOrNull()
+object PolicyService : Service {
+	/**
+	 * Get a policy.
+	 *
+	 * @param where Query to find policy
+	 *
+	 * @return Found policy, if any
+	 * */
+	fun get(where: Op<Boolean>): PolicyEntity? = transaction {
+		PolicyEntity
+			.find { where }
+			.singleOrNull()
+	}
+
+	/**
+	 * Get a policy by ID.
+	 *
+	 * @param id ID of policy
+	 *
+	 * @return Found policy, if any
+	 * */
+	fun getById(id: String): PolicyEntity? = get(PolicyTable.id eq id)
+
+	/**
+	 * Get many policies.
+	 *
+	 * @param where Query to find policies
+	 * @param take Number of policies to take
+	 * @param offset Offset for query
+	 *
+	 * @return Policies, if any
+	 * */
+	fun getMany(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<PolicyEntity> = transaction {
+		PolicyEntity
+			.find { where }
+			.offset(offset)
+			.sortedByDescending { it.createdAt }
+			.take(take)
+			.toList()
+	}
+
+	/**
+	 * Get many policies by type.
+	 *
+	 * @param type Type of policy to find
+	 *
+	 * @return Found policies, if any
+	 * */
+	fun getAllByType(type: PolicyType): List<PolicyEntity> = transaction {
+		PolicyEntity
+			.find { PolicyTable.type eq type }
+			.sortedByDescending { it.createdAt }
+			.toList()
+	}
+
+	/**
+	 * Reduce a list of policies to their hosts
+	 *
+	 * @param policies List of policies to reduce
+	 *
+	 * @return List of hosts
+	 * */
+	fun reducePoliciesToHost(policies: List<PolicyEntity>): List<String> {
+		val reducedHosts: MutableList<String> = mutableListOf()
+
+		for (policy in policies) {
+			reducedHosts.add(policy.host)
 		}
 
-		/**
-		 * Get a policy by ID.
-		 *
-		 * @param id ID of policy
-		 *
-		 * @return Found policy, if any
-		 * */
-		fun getById(id: String): PolicyEntity? = get(PolicyTable.id eq id)
-
-		/**
-		 * Get many policies.
-		 *
-		 * @param where Query to find policies
-		 * @param take Number of policies to take
-		 * @param offset Offset for query
-		 *
-		 * @return Policies, if any
-		 * */
-		fun getMany(
-			where: Op<Boolean>,
-			take: Int = Configuration.timeline.defaultObjects,
-			offset: Long = 0
-		): List<PolicyEntity> = transaction {
-			PolicyEntity
-				.find { where }
-				.offset(offset)
-				.sortedByDescending { it.createdAt }
-				.take(take)
-				.toList()
-		}
-
-		/**
-		 * Get many policies by type.
-		 *
-		 * @param type Type of policy to find
-		 *
-		 * @return Found policies, if any
-		 * */
-		fun getAllByType(type: PolicyType): List<PolicyEntity> = transaction {
-			PolicyEntity
-				.find { PolicyTable.type eq type }
-				.sortedByDescending { it.createdAt }
-				.toList()
-		}
-
-		/**
-		 * Reduce a list of policies to their hosts
-		 *
-		 * @param policies List of policies to reduce
-		 *
-		 * @return List of hosts
-		 * */
-		fun reducePoliciesToHost(policies: List<PolicyEntity>): List<String> {
-			val reducedHosts: MutableList<String> = mutableListOf()
-
-			for (policy in policies) {
-				reducedHosts.add(policy.host)
-			}
-
-			return reducedHosts
-		}
+		return reducedHosts
 	}
 }

@@ -23,141 +23,139 @@ import site.remlit.aster.util.model.fromEntity
  *
  * @since 2025.5.1.0-SNAPSHOT
  * */
-class RelationshipService : Service() {
-	companion object {
-		/**
-		 * Reference the "to" user on a relationship.
-		 * For usage in queries.
-		 * */
-		val userToAlias = UserTable.alias("to")
+object RelationshipService : Service {
+	/**
+	 * Reference the "to" user on a relationship.
+	 * For usage in queries.
+	 * */
+	val userToAlias = UserTable.alias("to")
 
-		/**
-		 * Reference the "from" user on a relationship.
-		 * For usage in queries.
-		 * */
-		val userFromAlias = UserTable.alias("from")
+	/**
+	 * Reference the "from" user on a relationship.
+	 * For usage in queries.
+	 * */
+	val userFromAlias = UserTable.alias("from")
 
-		/**
-		 * Get a relationship.
-		 *
-		 * @param where Query to find relationship
-		 *
-		 * @return Found relationship, if any
-		 * */
-		fun get(where: Op<Boolean>): Relationship? = transaction {
-			val relationship = RelationshipEntity
-				.find { where }
-				.singleOrNull()
-				?.load(RelationshipEntity::to, RelationshipEntity::from)
+	/**
+	 * Get a relationship.
+	 *
+	 * @param where Query to find relationship
+	 *
+	 * @return Found relationship, if any
+	 * */
+	fun get(where: Op<Boolean>): Relationship? = transaction {
+		val relationship = RelationshipEntity
+			.find { where }
+			.singleOrNull()
+			?.load(RelationshipEntity::to, RelationshipEntity::from)
 
 
-			if (relationship != null)
-				Relationship.fromEntity(relationship)
-			else null
-		}
+		if (relationship != null)
+			Relationship.fromEntity(relationship)
+		else null
+	}
 
-		/**
-		 * Get many relationships
-		 *
-		 * @param where Query to find relationships
-		 * @param take Number of relationships to take
-		 * @param offset Offset for query
-		 *
-		 * @return Relationships, if any
-		 * */
-		fun getMany(
-			where: Op<Boolean>,
-			take: Int = Configuration.timeline.defaultObjects,
-			offset: Long = 0
-		): List<Relationship> = transaction {
-			val entities = RelationshipTable
-				.join(userToAlias, JoinType.INNER, RelationshipTable.to, userToAlias[UserTable.id])
-				.join(userFromAlias, JoinType.INNER, RelationshipTable.from, userFromAlias[UserTable.id])
-				.selectAll()
-				.where { where }
-				.offset(offset)
-				.let { RelationshipEntity.wrapRows(it) }
-				.sortedByDescending { it.createdAt }
-				.take(take)
-				.toList()
+	/**
+	 * Get many relationships
+	 *
+	 * @param where Query to find relationships
+	 * @param take Number of relationships to take
+	 * @param offset Offset for query
+	 *
+	 * @return Relationships, if any
+	 * */
+	fun getMany(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<Relationship> = transaction {
+		val entities = RelationshipTable
+			.join(userToAlias, JoinType.INNER, RelationshipTable.to, userToAlias[UserTable.id])
+			.join(userFromAlias, JoinType.INNER, RelationshipTable.from, userFromAlias[UserTable.id])
+			.selectAll()
+			.where { where }
+			.offset(offset)
+			.let { RelationshipEntity.wrapRows(it) }
+			.sortedByDescending { it.createdAt }
+			.take(take)
+			.toList()
 
-			if (!entities.isEmpty())
-				Relationship.fromEntities(entities)
-			else listOf()
-		}
+		if (!entities.isEmpty())
+			Relationship.fromEntities(entities)
+		else listOf()
+	}
 
-		/**
-		 * Gets ID of activity used to create a relationship
-		 *
-		 * @param relationshipId ID of the relationship
-		 *
-		 * @return ActivityPub ID of the activity used to create the relationship
-		 * */
-		fun getActivityId(relationshipId: String): String? = transaction {
-			RelationshipEntity
-				.find { RelationshipTable.id eq relationshipId }
-				.singleOrNull()
-				?.activityId
-		}
+	/**
+	 * Gets ID of activity used to create a relationship
+	 *
+	 * @param relationshipId ID of the relationship
+	 *
+	 * @return ActivityPub ID of the activity used to create the relationship
+	 * */
+	fun getActivityId(relationshipId: String): String? = transaction {
+		RelationshipEntity
+			.find { RelationshipTable.id eq relationshipId }
+			.singleOrNull()
+			?.activityId
+	}
 
-		/**
-		 * Get relationships in both directions for two users
-		 *
-		 * @param to Relationship target
-		 * @param from Relationship owner
-		 *
-		 * @return Pair of Relationship, where first is to and second is from
-		 * */
-		fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
-			return Pair(
-				this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from)),
-				this.get(RelationshipTable.to eq from and (RelationshipTable.from eq to))
+	/**
+	 * Get relationships in both directions for two users
+	 *
+	 * @param to Relationship target
+	 * @param from Relationship owner
+	 *
+	 * @return Pair of Relationship, where first is to and second is from
+	 * */
+	fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
+		return Pair(
+			this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from)),
+			this.get(RelationshipTable.to eq from and (RelationshipTable.from eq to))
+		)
+	}
+
+	fun mapPair(pair: Pair<Relationship?, Relationship?>): List<Map<String, Relationship?>> {
+		return listOf(
+			mapOf(
+				"to" to pair.first
+			),
+			mapOf(
+				"from" to pair.second
 			)
-		}
+		)
+	}
 
-		fun mapPair(pair: Pair<Relationship?, Relationship?>): List<Map<String, Relationship?>> {
-			return listOf(
-				mapOf(
-					"to" to pair.first
-				),
-				mapOf(
-					"from" to pair.second
-				)
-			)
-		}
+	/**
+	 * Determine if there is a block relationship in either direction
+	 *
+	 * @param to First user
+	 * @param from Second user
+	 *
+	 * @return If either are blocking each other
+	 * */
+	fun eitherBlocking(to: String, from: String): Boolean {
+		val pair = this.getPair(to, from)
 
-		/**
-		 * Determine if there is a block relationship in either direction
-		 *
-		 * @param to First user
-		 * @param from Second user
-		 *
-		 * @return If either are blocking each other
-		 * */
-		fun eitherBlocking(to: String, from: String): Boolean {
-			val pair = this.getPair(to, from)
+		if (pair.first != null && pair.first?.type == RelationshipType.Block)
+			return true
 
-			if (pair.first != null && pair.first?.type == RelationshipType.Block)
-				return true
+		if (pair.second != null && pair.first?.type == RelationshipType.Block)
+			return true
 
-			if (pair.second != null && pair.first?.type == RelationshipType.Block)
-				return true
+		return false
+	}
 
-			return false
-		}
+	/**
+	 * Determine if there is a mute relationship in one direction
+	 *
+	 * @param to Relationship target
+	 * @param from Relationship owner
+	 *
+	 * @return If `from` is muting `to`
+	 * */
+	fun muteExists(to: String, from: String): Boolean {
+		val relationship = this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from))
 
-		/**
-		 * Determine if there is a mute relationship in one direction
-		 *
-		 * @param to Relationship target
-		 * @param from Relationship owner
-		 *
-		 * @return If `from` is muting `to`
-		 * */
-		fun muteExists(to: String, from: String): Boolean {
-			val relationship = this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from))
-
-			return relationship != null && relationship.type == RelationshipType.Mute
-		}
+		return relationship != null && relationship.type == RelationshipType.Mute
 	}
 }

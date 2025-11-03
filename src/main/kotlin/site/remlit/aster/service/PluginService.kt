@@ -28,57 +28,55 @@ import kotlin.io.path.name
  *
  * @since 2025.9.1.1-SNAPSHOT
  * */
-class PluginService : Service() {
-	companion object {
-		private val logger: Logger = LoggerFactory.getLogger(PluginService::class.java)
+object PluginService : Service {
+	private val logger: Logger = LoggerFactory.getLogger(PluginService::class.java)
 
-		private val pluginDir = Path("plugins")
+	private val pluginDir = Path("plugins")
 
-		/**
-		 * Find and enable plugins in plugins directory.
-		 * */
-		@ApiStatus.Internal
-		@OptIn(ExperimentalSerializationApi::class)
-		fun initialize() {
-			if (!pluginDir.exists()) pluginDir.createDirectories()
+	/**
+	 * Find and enable plugins in plugins directory.
+	 * */
+	@ApiStatus.Internal
+	@OptIn(ExperimentalSerializationApi::class)
+	fun initialize() {
+		if (!pluginDir.exists()) pluginDir.createDirectories()
 
-			pluginDir.listDirectoryEntries()
-				.filter { !it.endsWith(".jar") }
-				.forEach { jar ->
-					ZipFile(jar.toFile()).use { zip ->
-						val pluginManifest = zip.getEntry("plugin.json")
-						if (pluginManifest == null) {
-							logger.warn("Plugin manifest missing for ${jar.name}, skipping")
-							return@use
+		pluginDir.listDirectoryEntries()
+			.filter { !it.endsWith(".jar") }
+			.forEach { jar ->
+				ZipFile(jar.toFile()).use { zip ->
+					val pluginManifest = zip.getEntry("plugin.json")
+					if (pluginManifest == null) {
+						logger.warn("Plugin manifest missing for ${jar.name}, skipping")
+						return@use
+					}
+
+					try {
+						fun getInputStream(entry: ZipEntry): InputStream = zip.getInputStream(entry)
+
+						getInputStream(pluginManifest).use { manifestStream ->
+							val manifest = Json.decodeFromStream<PluginManifest>(manifestStream)
+
+							val classLoader = URLClassLoader(
+								arrayOf(URI("file://${jar.absolutePathString()}").toURL()),
+								this::class.java.classLoader
+							)
+
+							if (Configuration.debug) logger.debug(
+								"Current URLClassLoader URLS: {}",
+								classLoader.urLs
+							)
+
+							val mainClass = classLoader.loadClass(manifest.mainClass)
+							PluginRegistry.enablePlugin(
+								manifest,
+								mainClass.getDeclaredConstructor().newInstance() as AsterPlugin
+							)
 						}
-
-						try {
-							fun getInputStream(entry: ZipEntry): InputStream = zip.getInputStream(entry)
-
-							getInputStream(pluginManifest).use { manifestStream ->
-								val manifest = Json.decodeFromStream<PluginManifest>(manifestStream)
-
-								val classLoader = URLClassLoader(
-									arrayOf(URI("file://${jar.absolutePathString()}").toURL()),
-									this::class.java.classLoader
-								)
-
-								if (Configuration.debug) logger.debug(
-									"Current URLClassLoader URLS: {}",
-									classLoader.urLs
-								)
-
-								val mainClass = classLoader.loadClass(manifest.mainClass)
-								PluginRegistry.enablePlugin(
-									manifest,
-									mainClass.getDeclaredConstructor().newInstance() as AsterPlugin
-								)
-							}
-						} catch (e: Throwable) {
-							logger.error("Failed to load plugin ${jar.name}!", e)
-						}
+					} catch (e: Throwable) {
+						logger.error("Failed to load plugin ${jar.name}!", e)
 					}
 				}
-		}
+			}
 	}
 }

@@ -32,7 +32,7 @@ enum class Visibility {
 	Direct;
 
 	companion object {
-		fun fromString(value: String): site.remlit.aster.common.model.Visibility {
+		fun fromString(value: String): Visibility {
 			return when (value) {
 				"public" -> Public
 				"unlisted" -> Unlisted

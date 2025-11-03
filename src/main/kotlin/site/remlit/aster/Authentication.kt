@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.util.*
+import org.jetbrains.annotations.ApiStatus
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.UserEntity
@@ -12,6 +13,7 @@ import site.remlit.aster.service.AuthService
 import site.remlit.aster.service.RoleService
 import site.remlit.aster.service.UserService
 
+@ApiStatus.Internal
 fun Application.configureAuthentication() {
 	install(Authentication) {
 		bearer("authOptional") {

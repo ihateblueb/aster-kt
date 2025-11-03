@@ -11,8 +11,8 @@ data class Relationship(
 
 	val type: site.remlit.aster.common.model.type.RelationshipType,
 
-	val to: site.remlit.aster.common.model.User,
-	val from: site.remlit.aster.common.model.User,
+	val to: User,
+	val from: User,
 
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null

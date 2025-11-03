@@ -7,9 +7,9 @@ import kotlin.js.JsExport
 @Serializable
 data class Meta(
 	val name: String,
-	val version: site.remlit.aster.common.model.MetaVersion,
+	val version: MetaVersion,
 	val plugins: Map<String, String> = mapOf(),
 	val registrations: site.remlit.aster.common.model.type.InstanceRegistrationsType,
-	val stats: site.remlit.aster.common.model.MetaStats,
-	val staff: site.remlit.aster.common.model.MetaStaff
+	val stats: MetaStats,
+	val staff: MetaStaff
 )

@@ -15,7 +15,7 @@ data class DriveFile(
 
 	val sensitive: Boolean,
 
-	val user: site.remlit.aster.common.model.User,
+	val user: User,
 
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime?,

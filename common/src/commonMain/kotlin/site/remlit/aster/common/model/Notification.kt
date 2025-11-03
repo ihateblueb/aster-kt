@@ -10,11 +10,11 @@ data class Notification(
 	val id: String,
 	val type: site.remlit.aster.common.model.type.NotificationType,
 
-	val to: site.remlit.aster.common.model.User,
-	val from: site.remlit.aster.common.model.User,
+	val to: User,
+	val from: User,
 
-	val note: site.remlit.aster.common.model.Note?,
-	val relationship: site.remlit.aster.common.model.Relationship?,
+	val note: Note?,
+	val relationship: Relationship?,
 
 	val createdAt: LocalDateTime
 )

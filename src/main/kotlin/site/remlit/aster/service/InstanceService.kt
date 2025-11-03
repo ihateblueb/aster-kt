@@ -16,199 +16,197 @@ import site.remlit.aster.service.ap.ApUtilityService
  *
  * @since 2025.11.1.0-SNAPSHOT
  * */
-class InstanceService : Service() {
-	companion object {
-		private val logger = LoggerFactory.getLogger(InstanceService::class.java)
+object InstanceService : Service {
+	private val logger = LoggerFactory.getLogger(InstanceService::class.java)
 
-		/**
-		 * Reference for NodeInfo 2.0
-		 * */
-		const val NODEINFO_2_0: String = "http://nodeinfo.diaspora.software/ns/schema/2.0"
+	/**
+	 * Reference for NodeInfo 2.0
+	 * */
+	const val NODEINFO_2_0: String = "http://nodeinfo.diaspora.software/ns/schema/2.0"
 
-		/**
-		 * Reference for NodeInfo 2.1
-		 * */
-		const val NODEINFO_2_1: String = "http://nodeinfo.diaspora.software/ns/schema/2.1"
+	/**
+	 * Reference for NodeInfo 2.1
+	 * */
+	const val NODEINFO_2_1: String = "http://nodeinfo.diaspora.software/ns/schema/2.1"
 
-		/**
-		 * Get an instance entity
-		 *
-		 * @param where Query for finding instance
-		 *
-		 * @return Instance entity, if it exists
-		 * */
-		fun get(where: Op<Boolean>): InstanceEntity? = transaction {
-			InstanceEntity
-				.find { where }
-				.singleOrNull()
+	/**
+	 * Get an instance entity
+	 *
+	 * @param where Query for finding instance
+	 *
+	 * @return Instance entity, if it exists
+	 * */
+	fun get(where: Op<Boolean>): InstanceEntity? = transaction {
+		InstanceEntity
+			.find { where }
+			.singleOrNull()
+	}
+
+	/**
+	 * Get an instance entity by ID
+	 *
+	 * @param id ID of instance
+	 *
+	 * @return Instance entity, if it exists
+	 * */
+	fun getById(id: String): InstanceEntity? = get(InstanceTable.id eq id)
+
+	/**
+	 * Get an instance entity by host
+	 *
+	 * @param host Host of instance
+	 *
+	 * @return Instance entity, if it exists
+	 * */
+	fun getByHost(host: String): InstanceEntity? = get(InstanceTable.host eq host)
+
+	/**
+	 * Resolve an instance's nodeinfo and other identifying information
+	 *
+	 * @param host Host of instance
+	 * @param refetch Whether to force a refetch
+	 *
+	 * @return Instance entity, if it exists or can be resolved
+	 * */
+	suspend fun resolve(host: String, refetch: Boolean = false): InstanceEntity? {
+		val existing = get(InstanceTable.host eq host)
+
+		if ((existing != null) && !refetch) return existing
+
+		val wellknownNodeinfoResponse = ResolverService.resolveSigned("https://$host/.well-known/nodeinfo")
+			?: return null
+
+		val links = ApUtilityService.extractArray(wellknownNodeinfoResponse["links"]) ?: return null
+		var nodeinfoHref = ""
+
+		for (link in links) {
+			link as JsonObject
+
+			val rel = ApUtilityService.extractString(link["rel"]) ?: continue
+			val href = ApUtilityService.extractString(link["href"]) ?: continue
+
+			if (rel == NODEINFO_2_0 && nodeinfoHref.isBlank() || rel == NODEINFO_2_1)
+				nodeinfoHref = href
 		}
 
-		/**
-		 * Get an instance entity by ID
-		 *
-		 * @param id ID of instance
-		 *
-		 * @return Instance entity, if it exists
-		 * */
-		fun getById(id: String): InstanceEntity? = get(InstanceTable.id eq id)
+		val resolvedNodeinfo = ResolverService.resolveSigned(nodeinfoHref)
 
-		/**
-		 * Get an instance entity by host
-		 *
-		 * @param host Host of instance
-		 *
-		 * @return Instance entity, if it exists
-		 * */
-		fun getByHost(host: String): InstanceEntity? = get(InstanceTable.host eq host)
+		if (resolvedNodeinfo != null && existing == null)
+			return register(toInstance(host, resolvedNodeinfo, existing))
 
-		/**
-		 * Resolve an instance's nodeinfo and other identifying information
-		 *
-		 * @param host Host of instance
-		 * @param refetch Whether to force a refetch
-		 *
-		 * @return Instance entity, if it exists or can be resolved
-		 * */
-		suspend fun resolve(host: String, refetch: Boolean = false): InstanceEntity? {
-			val existing = get(InstanceTable.host eq host)
+		if (resolvedNodeinfo != null && existing != null)
+			return update(toInstance(host, resolvedNodeinfo, existing))
 
-			if ((existing != null) && !refetch) return existing
+		return null
+	}
 
-			val wellknownNodeinfoResponse = ResolverService.resolveSigned("https://$host/.well-known/nodeinfo")
-				?: return null
+	/**
+	 * Convert a resolved nodeinfo JsonObject into a PartialInstance
+	 *
+	 * @param host Host of the instance
+	 * @param nodeinfo JsonObject of nodeinfo response
+	 * @param existing Existing instance entity, if any
+	 *
+	 * @return Partial instance from provided information
+	 * */
+	fun toInstance(host: String, nodeinfo: JsonObject, existing: InstanceEntity? = null): PartialInstance {
+		val id = existing?.id?.toString() ?: IdentifierService.generate()
 
-			val links = ApUtilityService.extractArray(wellknownNodeinfoResponse["links"]) ?: return null
-			var nodeinfoHref = ""
+		val metadata = ApUtilityService.extractObject(nodeinfo["metadata"])
 
-			for (link in links) {
-				link as JsonObject
+		val name = ApUtilityService.extractString(metadata?.get("nodeName"))
+		val description = ApUtilityService.extractString(metadata?.get("nodeDescription"))
+		val color = ApUtilityService.extractString(metadata?.get("themeColor"))
 
-				val rel = ApUtilityService.extractString(link["rel"]) ?: continue
-				val href = ApUtilityService.extractString(link["href"]) ?: continue
+		val maintainer = ApUtilityService.extractObject(metadata?.get("maintainer"))
 
-				if (rel == NODEINFO_2_0 && nodeinfoHref.isBlank() || rel == NODEINFO_2_1)
-					nodeinfoHref = href
+		val contact = ApUtilityService.extractString(maintainer?.get("email"))
+
+		val software = ApUtilityService.extractObject(nodeinfo["software"])
+		val softwareName = ApUtilityService.extractString(software?.get("name"))
+		val version = ApUtilityService.extractString(software?.get("version"))
+
+		return PartialInstance(
+			id = id,
+			host = host,
+
+			name = name,
+			description = description,
+			color = color,
+			icon = null,
+
+			software = softwareName,
+			version = version,
+			contact = contact,
+
+			createdAt = null,
+			updatedAt = if (existing != null) TimeService.now() else null,
+		)
+	}
+
+	/**
+	 * Updates an existing instance entity by a PartialInstance
+	 *
+	 * @param instance Partial instance
+	 *
+	 * @return Updated instance
+	 * */
+	fun update(instance: PartialInstance): InstanceEntity? {
+		try {
+			transaction {
+				InstanceEntity.findByIdAndUpdate(instance.id!!) {
+					it.host = instance.host!!
+
+					it.name = instance.name
+					it.description = instance.description
+					if (instance.color != null)
+						it.color = instance.color!!
+					it.icon = instance.icon
+
+					it.software = instance.software
+					it.version = instance.version
+					it.contact = instance.contact
+
+					it.updatedAt = instance.updatedAt
+				}
 			}
 
-			val resolvedNodeinfo = ResolverService.resolveSigned(nodeinfoHref)
-
-			if (resolvedNodeinfo != null && existing == null)
-				return register(toInstance(host, resolvedNodeinfo, existing))
-
-			if (resolvedNodeinfo != null && existing != null)
-				return update(toInstance(host, resolvedNodeinfo, existing))
-
+			return getById(instance.id!!)
+		} catch (_: Exception) {
 			return null
 		}
+	}
 
-		/**
-		 * Convert a resolved nodeinfo JsonObject into a PartialInstance
-		 *
-		 * @param host Host of the instance
-		 * @param nodeinfo JsonObject of nodeinfo response
-		 * @param existing Existing instance entity, if any
-		 *
-		 * @return Partial instance from provided information
-		 * */
-		fun toInstance(host: String, nodeinfo: JsonObject, existing: InstanceEntity? = null): PartialInstance {
-			val id = existing?.id?.toString() ?: IdentifierService.generate()
+	/**
+	 * Registers a new instance entity by a PartialInstance
+	 *
+	 * @param instance Partial instance
+	 *
+	 * @return Created instance
+	 * */
+	fun register(instance: PartialInstance): InstanceEntity? {
+		try {
+			transaction {
+				InstanceEntity.new(instance.id) {
+					this.host = instance.host!!
 
-			val metadata = ApUtilityService.extractObject(nodeinfo["metadata"])
+					this.name = instance.name
+					this.description = instance.description
+					if (instance.color != null)
+						this.color = instance.color!!
+					this.icon = instance.icon
 
-			val name = ApUtilityService.extractString(metadata?.get("nodeName"))
-			val description = ApUtilityService.extractString(metadata?.get("nodeDescription"))
-			val color = ApUtilityService.extractString(metadata?.get("themeColor"))
+					this.software = instance.software
+					this.version = instance.version
+					this.contact = instance.contact
 
-			val maintainer = ApUtilityService.extractObject(metadata?.get("maintainer"))
-
-			val contact = ApUtilityService.extractString(maintainer?.get("email"))
-
-			val software = ApUtilityService.extractObject(nodeinfo["software"])
-			val softwareName = ApUtilityService.extractString(software?.get("name"))
-			val version = ApUtilityService.extractString(software?.get("version"))
-
-			return PartialInstance(
-				id = id,
-				host = host,
-
-				name = name,
-				description = description,
-				color = color,
-				icon = null,
-
-				software = softwareName,
-				version = version,
-				contact = contact,
-
-				createdAt = null,
-				updatedAt = if (existing != null) TimeService.now() else null,
-			)
-		}
-
-		/**
-		 * Updates an existing instance entity by a PartialInstance
-		 *
-		 * @param instance Partial instance
-		 *
-		 * @return Updated instance
-		 * */
-		fun update(instance: PartialInstance): InstanceEntity? {
-			try {
-				transaction {
-					InstanceEntity.findByIdAndUpdate(instance.id!!) {
-						it.host = instance.host!!
-
-						it.name = instance.name
-						it.description = instance.description
-						if (instance.color != null)
-							it.color = instance.color!!
-						it.icon = instance.icon
-
-						it.software = instance.software
-						it.version = instance.version
-						it.contact = instance.contact
-
-						it.updatedAt = instance.updatedAt
-					}
+					this.updatedAt = instance.updatedAt
 				}
-
-				return getById(instance.id!!)
-			} catch (_: Exception) {
-				return null
 			}
-		}
 
-		/**
-		 * Registers a new instance entity by a PartialInstance
-		 *
-		 * @param instance Partial instance
-		 *
-		 * @return Created instance
-		 * */
-		fun register(instance: PartialInstance): InstanceEntity? {
-			try {
-				transaction {
-					InstanceEntity.new(instance.id) {
-						this.host = instance.host!!
-
-						this.name = instance.name
-						this.description = instance.description
-						if (instance.color != null)
-							this.color = instance.color!!
-						this.icon = instance.icon
-
-						this.software = instance.software
-						this.version = instance.version
-						this.contact = instance.contact
-
-						this.updatedAt = instance.updatedAt
-					}
-				}
-
-				return getById(instance.id!!)
-			} catch (_: Exception) {
-				return null
-			}
+			return getById(instance.id!!)
+		} catch (_: Exception) {
+			return null
 		}
 	}
 }

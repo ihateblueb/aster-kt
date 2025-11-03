@@ -23,13 +23,13 @@ enum class PolicyType {
 	Silence,
 
 	/**
-	 * Append content warnings (`cw`) on incoming [site.remlit.aster.model.Note].
+	 * Append content warnings (`cw`) on incoming note.
 	 * */
 	@SerialName("forceContentWarning")
 	ForceContentWarning,
 
 	/**
-	 * Append sensitive tag on new [site.remlit.aster.model.User].
+	 * Append sensitive tag on new user.
 	 * */
 	@SerialName("forceSensitive")
 	ForceSensitive,

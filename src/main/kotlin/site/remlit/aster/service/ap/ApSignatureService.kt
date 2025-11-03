@@ -8,81 +8,79 @@ import java.security.PrivateKey
 import kotlin.io.encoding.Base64
 import kotlin.time.ExperimentalTime
 
-class ApSignatureService : Service() {
-	companion object {
-		fun createSigningString(
-			method: HttpMethod,
-			target: String,
-			signatureHeaders: List<String>,
-			requestHeaders: Map<String, List<String>>
-		): String {
-			var output = ""
-			val headers = signatureHeaders.filter {
-				it != "(request-target)"
-			}
-
-			output += "(request-target): ${method.toString().lowercase()} $target\n"
-
-			headers.forEach {
-				val value = requestHeaders[it.capitalize()]
-					?.first { w -> w.isNotBlank() }
-
-				output += "$it: $value"
-
-				if (headers.indexOf(it) != headers.lastIndex)
-					output += "\n"
-			}
-
-			println(output)
-			return output
+object ApSignatureService : Service {
+	fun createSigningString(
+		method: HttpMethod,
+		target: String,
+		signatureHeaders: List<String>,
+		requestHeaders: Map<String, List<String>>
+	): String {
+		var output = ""
+		val headers = signatureHeaders.filter {
+			it != "(request-target)"
 		}
 
-		/**
-		 * Creates a signature.
-		 *
-		 * @return Pair, first being the Signature header and the second the digest if a body was specified.
-		 * */
-		@OptIn(ExperimentalTime::class)
-		fun createSignature(
-			target: String,
-			method: HttpMethod,
-			privateKey: PrivateKey,
-			keyId: String,
-			headers: Map<String, List<String>>,
-			body: ByteArray? = null,
-		): Pair<String, String?> {
-			val headerKeys = mutableListOf<String>()
+		output += "(request-target): ${method.toString().lowercase()} $target\n"
 
-			headers.keys.forEach {
-				headerKeys.add(it.lowercase())
-			}
+		headers.forEach {
+			val value = requestHeaders[it.capitalize()]
+				?.first { w -> w.isNotBlank() }
 
-			val signingString = createSigningString(
-				method,
-				target,
-				headerKeys,
-				headers
-			)
+			output += "$it: $value"
 
-			val javaSignature = java.security.Signature.getInstance("SHA256withRSA")
-			javaSignature.initSign(privateKey)
-			javaSignature.update(signingString.toByteArray())
-
-			var digest: String? = null
-			if (body != null) {
-				val md = MessageDigest.getInstance("SHA256withRSA")
-				md.update(body)
-
-				digest = "SHA-256=${Base64.encode(md.digest())}"
-				javaSignature.update("\ndigest: $digest".toByteArray())
-			}
-
-			val signatureHeader = "keyId=\"$keyId\"," +
-					"algorithm=\"rsa-sha256\"," +
-					"headers=\"(request-target) ${headerKeys.joinToString(" ")}\"," +
-					"signature=\"${Base64.encode(javaSignature.sign())}\""
-
-			return Pair(signatureHeader, digest)
+			if (headers.indexOf(it) != headers.lastIndex)
+				output += "\n"
 		}
+
+		println(output)
+		return output
+	}
+
+	/**
+	 * Creates a signature.
+	 *
+	 * @return Pair, first being the Signature header and the second the digest if a body was specified.
+	 * */
+	@OptIn(ExperimentalTime::class)
+	fun createSignature(
+		target: String,
+		method: HttpMethod,
+		privateKey: PrivateKey,
+		keyId: String,
+		headers: Map<String, List<String>>,
+		body: ByteArray? = null,
+	): Pair<String, String?> {
+		val headerKeys = mutableListOf<String>()
+
+		headers.keys.forEach {
+			headerKeys.add(it.lowercase())
+		}
+
+		val signingString = createSigningString(
+			method,
+			target,
+			headerKeys,
+			headers
+		)
+
+		val javaSignature = java.security.Signature.getInstance("SHA256withRSA")
+		javaSignature.initSign(privateKey)
+		javaSignature.update(signingString.toByteArray())
+
+		var digest: String? = null
+		if (body != null) {
+			val md = MessageDigest.getInstance("SHA256withRSA")
+			md.update(body)
+
+			digest = "SHA-256=${Base64.encode(md.digest())}"
+			javaSignature.update("\ndigest: $digest".toByteArray())
+		}
+
+		val signatureHeader = "keyId=\"$keyId\"," +
+				"algorithm=\"rsa-sha256\"," +
+				"headers=\"(request-target) ${headerKeys.joinToString(" ")}\"," +
+				"signature=\"${Base64.encode(javaSignature.sign())}\""
+
+		return Pair(signatureHeader, digest)
 	}
 }

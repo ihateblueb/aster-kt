@@ -22,7 +22,7 @@ object SourceWriter {
 
 		val file = if (filePath.exists()) filePath else Files.createFile(filePath)
 
-		var clippedNew = code.lines().toMutableList()
+		val clippedNew = code.lines().toMutableList()
 
 		repeat(ignoredStartLines) { clippedNew.removeFirst() }
 		repeat(ignoredStartLines) { initialText.removeFirst() }

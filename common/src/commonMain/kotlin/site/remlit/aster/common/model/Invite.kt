@@ -11,8 +11,8 @@ data class Invite(
 
 	val code: String,
 
-	val user: site.remlit.aster.common.model.User? = null,
-	val creator: site.remlit.aster.common.model.User,
+	val user: User? = null,
+	val creator: User,
 
 	val createdAt: LocalDateTime,
 	val usedAt: LocalDateTime? = null,
