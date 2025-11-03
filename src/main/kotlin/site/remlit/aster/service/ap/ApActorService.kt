@@ -16,6 +16,9 @@ import site.remlit.aster.service.ResolverService
 import site.remlit.aster.service.SanitizerService
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
+import site.remlit.aster.util.extractBoolean
+import site.remlit.aster.util.extractObject
+import site.remlit.aster.util.extractString
 import site.remlit.aster.util.ifFails
 import site.remlit.aster.util.model.fromEntity
 
@@ -56,14 +59,14 @@ object ApActorService : Service {
 	// may in future have calculated fields like likes on note, where creating them
 	// would waste a query and potentially error
 	fun toUser(json: JsonObject, existing: User? = null): PartialUser? {
-		val extractedId = ApUtilityService.extractString(json["id"])
+		val extractedId = extractString { json["id"] }
 
 		if (extractedId.isNullOrBlank()) {
 			logger.debug("Actor ID is null or blank")
 			return null
 		}
 
-		val extractedType = ApUtilityService.extractString(json["type"])
+		val extractedType = extractString { json["type"] }
 
 		if (
 			extractedType.isNullOrBlank() ||
@@ -73,15 +76,15 @@ object ApActorService : Service {
 			return null
 		}
 
-		val extractedPreferredUsername = ApUtilityService.extractString(json["preferredUsername"])
+		val extractedPreferredUsername = extractString { json["preferredUsername"] }
 
 		if (extractedPreferredUsername.isNullOrBlank()) {
 			logger.debug("Actor preferredUsername is null or blank")
 			return null
 		}
 
-		val extractedSharedInbox = ApUtilityService.extractString(json["sharedInbox"])
-		val extractedInbox = ApUtilityService.extractString(json["inbox"])
+		val extractedSharedInbox = extractString { json["sharedInbox"] }
+		val extractedInbox = extractString { json["inbox"] }
 
 		val inbox = extractedSharedInbox ?: extractedInbox
 
@@ -90,24 +93,24 @@ object ApActorService : Service {
 			return null
 		}
 
-		val extractedMisskeySummary = ApUtilityService.extractString(json["_misskey_summary"])
-		val extractedSummary = ApUtilityService.extractString(json["summary"])
+		val extractedMisskeySummary = extractString { json["_misskey_summary"] }
+		val extractedSummary = extractString { json["summary"] }
 
 		val summary = extractedMisskeySummary ?: extractedSummary
 
-		val extractedPublicKey = ApUtilityService.extractString(
-			ApUtilityService.extractObject(json["publicKey"])?.get("publicKeyPem")
-		)
+		val extractedPublicKey = extractString {
+			extractObject { json["publicKey"] }?.get("publicKeyPem")
+		}
 
 		if (extractedPublicKey.isNullOrBlank()) {
 			logger.debug("Actor public key is null or blank")
 			return null
 		}
 
-		val followers = ApUtilityService.extractString(json["followers"])
-		val following = ApUtilityService.extractString(json["following"])
+		val followers = extractString { json["followers"] }
+		val following = extractString { json["following"] }
 
-		val published = ApUtilityService.extractString(json["published"]).let {
+		val published = extractString { json["published"] }.let {
 			if (it != null) ifFails({ LocalDateTime.parse(it) }) {
 				TimeService.now()
 			} else TimeService.now()
@@ -118,7 +121,7 @@ object ApActorService : Service {
 			apId = existing?.apId ?: extractedId,
 
 			username = SanitizerService.sanitize(extractedPreferredUsername, true),
-			displayName = ApUtilityService.extractString(json["name"]),
+			displayName = extractString { json["name"] },
 
 			host = existing?.host ?: FormatService.toASCII(Url(extractedId).host),
 
@@ -132,17 +135,17 @@ object ApActorService : Service {
 			bannerAlt = null,
 
 			inbox = inbox,
-			outbox = ApUtilityService.extractString(json["outbox"]),
+			outbox = extractString { json["outbox"] },
 
 			activated = true,
 			automated = extractedType != "Person",
 			suspended = existing?.suspended ?: false,
-			sensitive = ApUtilityService.extractBoolean(json["sensitive"]) ?: false,
-			discoverable = ApUtilityService.extractBoolean(json["discoverable"]) ?: false,
-			locked = ApUtilityService.extractBoolean(json["manuallyApprovesFollowers"]) ?: false,
-			indexable = ApUtilityService.extractBoolean(json["noindex"])?.let { !it } ?: true,
-			isCat = ApUtilityService.extractBoolean(json["isCat"]) ?: false,
-			speakAsCat = ApUtilityService.extractBoolean(json["speakAsCat"]) ?: false,
+			sensitive = extractBoolean { json["sensitive"] } ?: false,
+			discoverable = extractBoolean { json["discoverable"] } ?: false,
+			locked = extractBoolean { json["manuallyApprovesFollowers"] } ?: false,
+			indexable = extractBoolean { json["noindex"] }?.let { !it } ?: true,
+			isCat = extractBoolean { json["isCat"] } ?: false,
+			speakAsCat = extractBoolean { json["speakAsCat"] } ?: false,
 
 			followersUrl = followers,
 			followingUrl = following,

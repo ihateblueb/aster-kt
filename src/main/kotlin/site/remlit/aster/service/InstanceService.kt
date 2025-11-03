@@ -9,7 +9,9 @@ import site.remlit.aster.common.model.generated.PartialInstance
 import site.remlit.aster.db.entity.InstanceEntity
 import site.remlit.aster.db.table.InstanceTable
 import site.remlit.aster.model.Service
-import site.remlit.aster.service.ap.ApUtilityService
+import site.remlit.aster.util.extractArray
+import site.remlit.aster.util.extractObject
+import site.remlit.aster.util.extractString
 
 /**
  * Service for managing remote instances and resolving nodeinfo.
@@ -76,14 +78,14 @@ object InstanceService : Service {
 		val wellknownNodeinfoResponse = ResolverService.resolveSigned("https://$host/.well-known/nodeinfo")
 			?: return null
 
-		val links = ApUtilityService.extractArray(wellknownNodeinfoResponse["links"]) ?: return null
+		val links = extractArray { wellknownNodeinfoResponse["links"] } ?: return null
 		var nodeinfoHref = ""
 
 		for (link in links) {
 			link as JsonObject
 
-			val rel = ApUtilityService.extractString(link["rel"]) ?: continue
-			val href = ApUtilityService.extractString(link["href"]) ?: continue
+			val rel = extractString { link["rel"] } ?: continue
+			val href = extractString { link["href"] } ?: continue
 
 			if (rel == NODEINFO_2_0 && nodeinfoHref.isBlank() || rel == NODEINFO_2_1)
 				nodeinfoHref = href
@@ -112,19 +114,19 @@ object InstanceService : Service {
 	fun toInstance(host: String, nodeinfo: JsonObject, existing: InstanceEntity? = null): PartialInstance {
 		val id = existing?.id?.toString() ?: IdentifierService.generate()
 
-		val metadata = ApUtilityService.extractObject(nodeinfo["metadata"])
+		val metadata = extractObject { nodeinfo["metadata"] }
 
-		val name = ApUtilityService.extractString(metadata?.get("nodeName"))
-		val description = ApUtilityService.extractString(metadata?.get("nodeDescription"))
-		val color = ApUtilityService.extractString(metadata?.get("themeColor"))
+		val name = extractString { metadata?.get("nodeName") }
+		val description = extractString { metadata?.get("nodeDescription") }
+		val color = extractString { metadata?.get("themeColor") }
 
-		val maintainer = ApUtilityService.extractObject(metadata?.get("maintainer"))
+		val maintainer = extractObject { metadata?.get("maintainer") }
 
-		val contact = ApUtilityService.extractString(maintainer?.get("email"))
+		val contact = extractString { maintainer?.get("email") }
 
-		val software = ApUtilityService.extractObject(nodeinfo["software"])
-		val softwareName = ApUtilityService.extractString(software?.get("name"))
-		val version = ApUtilityService.extractString(software?.get("version"))
+		val software = extractObject { nodeinfo["software"] }
+		val softwareName = extractString { software?.get("name") }
+		val version = extractString { nodeinfo["version"] }
 
 		return PartialInstance(
 			id = id,

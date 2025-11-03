@@ -18,6 +18,8 @@ import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.ResolverService
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
+import site.remlit.aster.util.extractBoolean
+import site.remlit.aster.util.extractString
 import site.remlit.aster.util.ifFails
 import site.remlit.aster.util.jsonConfig
 import site.remlit.aster.util.model.fromEntity
@@ -59,13 +61,13 @@ object ApNoteService : Service {
 	// partials used here since a regular note has the expectation of being real,
 	// has calculated fields so creating a regular note where would waste a query and potentially error
 	suspend fun toNote(json: JsonObject, existing: Note? = null): PartialNote? {
-		val apId = ApUtilityService.extractString(json["id"])
+		val apId = extractString { json["id"] }
 		if (apId.isNullOrBlank()) return null
 
-		val type = ApUtilityService.extractString(json["type"])
+		val type = extractString { json["type"] }
 		if (type.isNullOrBlank() || type != "Note") return null
 
-		val attributedTo = ApUtilityService.extractString(json["attributedTo"])
+		val attributedTo = extractString { json["attributedTo"] }
 		if (attributedTo.isNullOrBlank()) return null
 
 		val author = ApActorService.resolve(attributedTo) ?: return null
@@ -74,15 +76,15 @@ object ApNoteService : Service {
 		//val inReplyTo = ApUtilityService.extractString(json["inReplyTo"])
 		//val replyingTo = if (inReplyTo.isNullOrBlank()) null else resolve(inReplyTo)
 
-		val summary = ApUtilityService.extractString(json["summary"])
-		val misskeySummary = ApUtilityService.extractString(json["_misskey_summary"])
+		val summary = extractString { json["summary"] }
+		val misskeySummary = extractString { json["_misskey_summary"] }
 
-		val content = ApUtilityService.extractString(json["content"])
-		val misskeyContent = ApUtilityService.extractString(json["_misskey_content"])
+		val content = extractString { json["content"] }
+		val misskeyContent = extractString { json["_misskey_content"] }
 
-		val sensitive = ApUtilityService.extractBoolean(json["sensitive"]) ?: false
+		val sensitive = extractBoolean { json["sensitive"] } ?: false
 
-		val published = ApUtilityService.extractString(json["published"]).let {
+		val published = extractString { json["published"] }.let {
 			if (it != null) ifFails({ LocalDateTime.parse(it) }) {
 				TimeService.now()
 			} else TimeService.now()
@@ -96,7 +98,7 @@ object ApNoteService : Service {
 				to,
 				cc,
 				author.followersUrl,
-				ApUtilityService.extractString(json["visibility"])
+				extractString { json["visibility"] }
 			)
 
 		val finalSummary = misskeySummary ?: summary
