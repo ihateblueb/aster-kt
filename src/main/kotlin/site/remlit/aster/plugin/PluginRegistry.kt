@@ -1,6 +1,7 @@
 package site.remlit.aster.plugin
 
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.aster.model.plugin.PluginManifest
@@ -19,6 +20,7 @@ object PluginRegistry {
 	 *
 	 * @param plugin Plugin to enable
 	 * */
+	@ApiStatus.Internal
 	fun enablePlugin(manifest: PluginManifest, plugin: AsterPlugin) {
 		if (
 			plugins.find { it.first == manifest } != null ||
@@ -36,6 +38,7 @@ object PluginRegistry {
 	 *
 	 * @param plugin Plugin to disable
 	 * */
+	@ApiStatus.Internal
 	fun disablePlugin(plugin: AsterPlugin) {
 		val pair = plugins.find { it.second == plugin }
 		if (pair == null) return
@@ -49,6 +52,7 @@ object PluginRegistry {
 	/**
 	 * Disables all currently active plugins
 	 * */
+	@ApiStatus.Internal
 	fun disableAll() {
 		runBlocking {
 			try {

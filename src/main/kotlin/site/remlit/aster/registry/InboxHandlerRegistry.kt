@@ -18,6 +18,12 @@ object InboxHandlerRegistry {
 
 	val inboxHandlers = mutableListOf<Pair<String, ApInboxHandler>>()
 
+	/**
+	 * Handle running an inbox job.
+	 *
+	 * @param job Job to run
+	 * */
+	@ApiStatus.Internal
 	fun handle(job: InboxQueueEntity) {
 		val typedObject = jsonConfig.decodeFromString<ApTypedObject>(String(job.content.bytes))
 
@@ -44,10 +50,19 @@ object InboxHandlerRegistry {
 		}
 	}
 
+	/**
+	 * Registers an inbox handler
+	 *
+	 * @param type Activity type to handle
+	 * @param handler Handler for activity
+	 * */
 	fun register(type: String, handler: ApInboxHandler) {
 		inboxHandlers.add(Pair(type, handler))
 	}
 
+	/**
+	 * Registers default inbox handlers
+	 * */
 	@ApiStatus.Internal
 	fun registerDefaults() {
 		register("Bite", ApBiteHandler())

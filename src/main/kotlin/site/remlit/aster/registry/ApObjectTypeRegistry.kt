@@ -14,11 +14,17 @@ object ApObjectTypeRegistry {
 
 	/**
 	 * If you have an ApObject that may be an `object` property on an activity, you need to register it here.
+	 *
+	 * @param klass Class of object type
+	 * @param serializer Serializer of object type
 	 * */
 	fun register(klass: KClass<out ApObject>, serializer: KSerializer<out ApObject>) {
 		apObjectTypes.add(Pair(klass, serializer))
 	}
 
+	/**
+	 * Register internal types.
+	 * */
 	@ApiStatus.Internal
 	fun registerInternal() {
 		register(ApTypedObject::class, ApTypedObject.serializer())
