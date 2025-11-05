@@ -156,6 +156,21 @@ object QueueService : Service {
 		}
 	}
 
+	/**
+	 * Creates a deliver  job to be processed when the next queue worker
+	 * is available.
+	 *
+	 * @param data Byte array of delivery data
+	 * @param sender Sender of delivery data
+	 * @param inbox Recipient inbox for delivery
+	 * */
+	@ApiStatus.Internal
+	fun insertDeliverJob(
+		data: ByteArray,
+		sender: UserEntity?,
+		inbox: String
+	): Nothing = TOOD()
+
 	// complete job
 
 	/**

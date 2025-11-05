@@ -58,8 +58,14 @@ object ApNoteService : Service {
 		return null
 	}
 
-	// partials used here since a regular note has the expectation of being real,
-	// has calculated fields so creating a regular note where would waste a query and potentially error
+	/**
+	 * Converts an ActivityPub note to a PartialNote
+	 *
+	 * @param json JSON object
+	 * @param existing Existing note
+	 *
+	 * @return PartialNote or null
+	 */
 	suspend fun toNote(json: JsonObject, existing: Note? = null): PartialNote? {
 		val apId = extractString { json["id"] }
 		if (apId.isNullOrBlank()) return null
