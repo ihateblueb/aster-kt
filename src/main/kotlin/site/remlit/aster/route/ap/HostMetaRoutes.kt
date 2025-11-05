@@ -6,7 +6,7 @@ import io.ktor.server.routing.*
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.WellKnown
 import site.remlit.aster.model.WellKnownLink
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 
 object HostMetaRoutes {
 	fun register() =

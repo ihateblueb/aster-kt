@@ -9,7 +9,7 @@ import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.ap.ApIdOrObject
 import site.remlit.aster.model.ap.ApNote
 import site.remlit.aster.model.ap.activity.ApCreateActivity
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.ap.ApVisibilityService
 

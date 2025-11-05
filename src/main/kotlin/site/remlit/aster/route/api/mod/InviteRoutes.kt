@@ -8,7 +8,7 @@ import io.ktor.server.util.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.db.entity.InviteEntity
 import site.remlit.aster.model.ApiException
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.InviteService
 import site.remlit.aster.service.RandomService

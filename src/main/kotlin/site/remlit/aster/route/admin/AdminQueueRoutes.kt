@@ -18,7 +18,7 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.db.entity.InboxQueueEntity
 import site.remlit.aster.db.table.InboxQueueTable
 import site.remlit.aster.model.QueueStatus
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 

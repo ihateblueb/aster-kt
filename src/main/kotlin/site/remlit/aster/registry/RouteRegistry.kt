@@ -1,10 +1,12 @@
-package site.remlit.aster.route
+package site.remlit.aster.registry
 
-import io.ktor.server.routing.*
+import io.ktor.server.routing.Routing
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.aster.model.Configuration
+import site.remlit.aster.route.FrontendRoutes
+import site.remlit.aster.route.UploadRoutes
 import site.remlit.aster.route.admin.AdminIndexRoutes
 import site.remlit.aster.route.admin.AdminInstanceRoutes
 import site.remlit.aster.route.admin.AdminInviteRoutes

@@ -17,7 +17,7 @@ import kotlinx.html.tr
 import org.jetbrains.exposed.v1.core.neq
 import site.remlit.aster.db.table.InstanceTable
 import site.remlit.aster.model.Configuration
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.InstanceService
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminListNav

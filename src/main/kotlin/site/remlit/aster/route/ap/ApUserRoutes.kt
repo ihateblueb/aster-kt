@@ -6,7 +6,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.ap.ApActor
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.UserService
 
 object ApUserRoutes {

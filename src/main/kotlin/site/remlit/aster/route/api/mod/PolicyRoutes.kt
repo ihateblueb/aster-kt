@@ -14,7 +14,7 @@ import site.remlit.aster.common.model.type.PolicyType
 import site.remlit.aster.db.entity.PolicyEntity
 import site.remlit.aster.db.table.PolicyTable
 import site.remlit.aster.model.ApiException
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.PolicyService
 import site.remlit.aster.service.TimelineService

@@ -21,7 +21,7 @@ import org.jetbrains.exposed.v1.core.neq
 import site.remlit.aster.common.model.Meta
 import site.remlit.aster.db.table.NoteTable
 import site.remlit.aster.db.table.UserTable
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.DriveService
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.TimeService

@@ -1,9 +1,10 @@
-package site.remlit.aster.plugin
+package site.remlit.aster.registry
 
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import site.remlit.aster.model.plugin.AsterPlugin
 import site.remlit.aster.model.plugin.PluginManifest
 
 object PluginRegistry {

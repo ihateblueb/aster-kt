@@ -14,7 +14,7 @@ import site.remlit.aster.db.table.NoteTable
 import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.Configuration
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey

@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 import site.remlit.aster.model.plugin.PluginManifest
-import site.remlit.aster.plugin.AsterPlugin
-import site.remlit.aster.plugin.PluginRegistry
+import site.remlit.aster.model.plugin.AsterPlugin
+import site.remlit.aster.registry.PluginRegistry
 import java.io.InputStream
 import java.net.URI
 import java.net.URLClassLoader

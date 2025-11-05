@@ -17,7 +17,7 @@ import site.remlit.aster.db.entity.UserPrivateEntity
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.KeyType
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.AuthService
 import site.remlit.aster.service.FormatService
 import site.remlit.aster.service.IdentifierService

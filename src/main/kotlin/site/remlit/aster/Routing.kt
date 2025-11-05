@@ -3,7 +3,7 @@ package site.remlit.aster
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import org.jetbrains.annotations.ApiStatus
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 
 @ApiStatus.Internal
 fun Application.configureRouting() {

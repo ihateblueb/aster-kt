@@ -1,4 +1,4 @@
-package site.remlit.aster.event
+package site.remlit.aster.registry
 
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.LoggerFactory
 import site.remlit.aster.model.Configuration
+import site.remlit.aster.model.Event
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 

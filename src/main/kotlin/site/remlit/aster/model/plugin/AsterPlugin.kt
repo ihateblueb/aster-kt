@@ -1,4 +1,4 @@
-package site.remlit.aster.plugin
+package site.remlit.aster.model.plugin
 
 import org.slf4j.Logger
 

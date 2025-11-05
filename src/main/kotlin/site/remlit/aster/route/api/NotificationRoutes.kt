@@ -9,7 +9,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.less
 import site.remlit.aster.db.table.NotificationTable
 import site.remlit.aster.db.table.UserTable
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NotificationService
 import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey

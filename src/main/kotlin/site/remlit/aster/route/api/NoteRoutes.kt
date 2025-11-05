@@ -12,7 +12,7 @@ import site.remlit.aster.common.model.Visibility
 import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.Configuration
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.NotificationService

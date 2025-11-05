@@ -20,8 +20,8 @@ import kotlinx.html.p
 import kotlinx.html.styleLink
 import kotlinx.html.title
 import kotlinx.html.ul
-import site.remlit.aster.plugin.PluginRegistry
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.PluginRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 

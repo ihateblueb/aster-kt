@@ -12,7 +12,7 @@ import site.remlit.aster.common.model.User
 import site.remlit.aster.common.model.response.AuthResponse
 import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.model.ApiException
-import site.remlit.aster.route.RouteRegistry
+import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.AuthService
 import site.remlit.aster.service.UserService
 import site.remlit.aster.util.model.fromEntity
