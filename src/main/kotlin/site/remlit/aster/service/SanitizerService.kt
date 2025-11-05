@@ -20,11 +20,10 @@ object SanitizerService : Service {
 	 *
 	 * @param string String to sanitize
 	 * @param escape Whether to escape instead of sanitizing
+	 * 
+	 * @return Sanitized string
 	 * */
-	fun sanitize(string: String, escape: Boolean = false): String {
-		if (escape)
-			return StringEscapeUtils.escapeHtml4(string)
-
-		return policy.sanitize(string)
-	}
+	fun sanitize(string: String, escape: Boolean = false): String =
+		if (escape) StringEscapeUtils.escapeHtml4(string)
+		else policy.sanitize(string)
 }

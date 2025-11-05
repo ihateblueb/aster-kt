@@ -33,7 +33,10 @@ object ResolverService : Service {
 	private val logger = LoggerFactory.getLogger(ResolverService::class.java)
 
 	/**
-	 * Creates an HTTP client with default request headers and content negotiation rules for ActivityPub and more.
+	 * Creates an HTTP client with default request headers
+	 * and content negotiation rules for ActivityPub and more.
+	 *
+	 * @return Created HTTP client
 	 * */
 	fun createClient(): HttpClient {
 		return HttpClient(CIO) {
@@ -66,10 +69,12 @@ object ResolverService : Service {
 	/**
 	 * Resolve a URL
 	 *
+	 * In most cases, it's reccomended to use resolveSigned instead
+	 *
 	 * @param url URL to resolve as a String
 	 * @param accept Accept header's content, defaults to application/activity+json
 	 *
-	 * @return [JsonObject] or null
+	 * @return JsonObject or null
 	 * */
 	suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject? {
 		val id = IdentifierService.generate()
@@ -107,7 +112,7 @@ object ResolverService : Service {
 	 * @param accept Accept header's content, defaults to application/activity+json
 	 * @param user User to sign the request as
 	 *
-	 * @return [JsonObject] or null
+	 * @return JsonObject or null
 	 * */
 	@OptIn(ExperimentalTime::class)
 	suspend fun resolveSigned(

@@ -14,6 +14,7 @@ import site.remlit.aster.db.table.RoleTable
 import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.model.KeyType
 import site.remlit.aster.model.Service
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.service.ap.ApIdService
 
 /**
@@ -25,7 +26,7 @@ object SetupService : Service {
 	private val logger: Logger = LoggerFactory.getLogger(SetupService::class.java)
 
 	/**
-	 * Setup instance
+	 * Ensure instance is properly set up
 	 * */
 	fun setup() {
 		setupRoles()
@@ -39,7 +40,7 @@ object SetupService : Service {
 		val existingAdminRole = RoleService.get(RoleTable.type eq RoleType.Admin)
 
 		if (existingAdminRole != null) {
-			logger.info("Admin role already exists.")
+			if (Configuration.debug) logger.debug("Admin role already exists.")
 		} else {
 			logger.warn("Admin role missing, generating...")
 
@@ -58,7 +59,7 @@ object SetupService : Service {
 		val existingModRole = RoleService.get(RoleTable.type eq RoleType.Mod)
 
 		if (existingModRole != null) {
-			logger.info("Mod role already exists.")
+			if (Configuration.debug) logger.debug("Mod role already exists.")
 		} else {
 			logger.warn("Mod role missing, generating...")
 

@@ -120,8 +120,6 @@ object NoteService : Service {
 	 * @param cw Content warning of the note
 	 * @param content Content of the note
 	 * @param visibility Visibility of the note
-	 * @param to List of users mentioned
-	 * @param tags List of extracted hashtags
 	 *
 	 * @return Created note
 	 * */
@@ -131,8 +129,6 @@ object NoteService : Service {
 		cw: String?,
 		content: String,
 		visibility: Visibility,
-		to: List<String> = listOf(),
-		tags: List<String> = listOf()
 	): Note {
 		transaction {
 			NoteEntity.new(id) {
@@ -141,8 +137,7 @@ object NoteService : Service {
 				this.cw = if (cw != null) SanitizerService.sanitize(cw, true) else null
 				this.content = SanitizerService.sanitize(content, true)
 				this.visibility = visibility
-				this.to = to
-				this.tags = tags
+				// todo: determine to, tags
 			}
 		}
 
@@ -151,6 +146,23 @@ object NoteService : Service {
 
 		return note
 	}
+
+	/**
+	 * Update an existing note
+	 *
+	 * @param id ID of the note
+	 * @param user User authoring the post
+	 * @param cw Content warning of the note
+	 * @param content Content of the note
+	 *
+	 * @return Updated note
+	* */
+	fun update(
+		id: String,
+		user: UserEntity,
+		cw: String?,
+		content: String
+	): Nothing = TODO()
 
 	/**
 	 * Like a note as a user, or removes a like if it's already there
@@ -196,6 +208,23 @@ object NoteService : Service {
 	}
 
 	/**
+	 * Repeat or quote a note.
+	 *
+	 * @param user User repeating the note
+	 * @param noteId ID of the target note
+	 * @param content Quote content
+	 *
+	 * @return Created repeat or quote
+	 *
+	 * @since 2025.9.1.1-SNAPSHOT
+	 */
+	fun repeat(
+		user: User,
+		noteId: String,
+		content: String
+	): Nothing = TODO()
+
+	/**
 	 * Delete a note
 	 *
 	 * @param where Query to find note
@@ -209,6 +238,19 @@ object NoteService : Service {
 		NoteDeleteEvent(Note.fromEntity(entity)).call()
 		entity.delete()
 	}
+
+	/**
+	 * Prevent a note from sending notifications to the author
+	 * or other mentioned local users.
+	 *
+	 * @param user User to mute notifications for
+	 * @param noteId ID of note to mute
+	 */
+	// TODO: duration?
+	fun mute(
+		user: User,
+		noteId: String
+	): Nothing = TODO()
 
 	/**
 	 * Delete a note by ID
