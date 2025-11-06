@@ -30,13 +30,11 @@ dependencies {
 	implementation("org.slf4j:slf4j-api:2.0.17")
 
 	// ktor server
+	implementation("io.ktor:ktor-server-core:3.3.1")
 	implementation("io.ktor:ktor-server-core-jvm:3.3.1")
 	implementation("io.ktor:ktor-server-netty-jvm:3.3.1")
-	implementation("io.ktor:ktor-server-auth:3.3.1")
 	implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.1")
-	implementation("io.ktor:ktor-server-core:3.3.1")
-	implementation("io.ktor:ktor-server-openapi:3.3.1")
-	implementation("io.ktor:ktor-server-swagger:3.3.1")
+	implementation("io.ktor:ktor-server-auth:3.3.1")
 	implementation("io.ktor:ktor-server-csrf:3.3.1")
 	implementation("io.ktor:ktor-server-call-logging:3.3.1")
 	implementation("io.ktor:ktor-server-request-validation-jvm:3.3.1")
@@ -49,8 +47,8 @@ dependencies {
 	implementation("io.ktor:ktor-server-default-headers-jvm:3.3.1")
 	implementation("io.ktor:ktor-server-forwarded-header:3.3.1")
 	implementation("io.ktor:ktor-server-forwarded-header-jvm:3.3.1")
-	implementation("io.ktor:ktor-server-metrics-micrometer:3.3.1")
-	implementation("io.micrometer:micrometer-registry-prometheus:1.15.5")
+	implementation("io.ktor:ktor-server-openapi:3.3.1")
+	implementation("io.ktor:ktor-server-swagger:3.3.1")
 
 	// templating
 	implementation("io.ktor:ktor-server-html-builder:3.3.1")
@@ -59,8 +57,6 @@ dependencies {
 	// serialization
 	implementation("io.ktor:ktor-server-content-negotiation-jvm:3.3.1")
 	implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.3.1")
-	implementation("tools.jackson.core:jackson-core:3.0.0")
-	implementation("tools.jackson.core:jackson-databind:3.0.0")
 
 	// ktor client
 	implementation("io.ktor:ktor-client-content-negotiation-jvm:3.3.1")
@@ -72,21 +68,18 @@ dependencies {
 	// database
 	implementation("com.zaxxer:HikariCP:7.0.2")
 	implementation("org.postgresql:postgresql:42.7.8")
-	implementation("org.jetbrains.exposed:exposed-core:1.0.0-rc-1")
-	implementation("org.jetbrains.exposed:exposed-dao:1.0.0-rc-1")
-	implementation("org.jetbrains.exposed:exposed-jdbc:1.0.0-rc-1")
-	implementation("org.jetbrains.exposed:exposed-json:1.0.0-rc-1")
-	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:1.0.0-rc-1")
-	implementation("org.jetbrains.exposed:exposed-migration-core:1.0.0-rc-1")
-	implementation("org.jetbrains.exposed:exposed-migration-jdbc:1.0.0-rc-1")
+	implementation("org.jetbrains.exposed:exposed-core:1.0.0-rc-2")
+	implementation("org.jetbrains.exposed:exposed-dao:1.0.0-rc-2")
+	implementation("org.jetbrains.exposed:exposed-jdbc:1.0.0-rc-2")
+	implementation("org.jetbrains.exposed:exposed-json:1.0.0-rc-2")
+	implementation("org.jetbrains.exposed:exposed-kotlin-datetime:1.0.0-rc-2")
+	implementation("org.jetbrains.exposed:exposed-migration-core:1.0.0-rc-2")
+	implementation("org.jetbrains.exposed:exposed-migration-jdbc:1.0.0-rc-2")
 
 	// misc
 	implementation("at.favre.lib:bcrypt:0.10.2")
-	implementation("org.apache.commons:commons-text:1.14.0")
 	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:2.2.20")
-
-	implementation("io.micrometer:micrometer-registry-prometheus:1.6.13")
 
 	compileOnly("org.jetbrains:annotations:26.0.2-1")
 	testImplementation(kotlin("test"))

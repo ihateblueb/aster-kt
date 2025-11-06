@@ -11,6 +11,8 @@ export default defineConfig({
     resolve: {
         alias: {
             '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
+            'react': 'preact/compat',
+            'react-dom': 'preact/compat',
         }
     },
     server: {

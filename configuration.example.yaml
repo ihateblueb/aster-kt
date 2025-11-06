@@ -17,7 +17,7 @@ port: 9782
 # Only enable if you need detailed information for development.
 # Otherwise, this will needlessly slow down runtime.
 ##
-debug: true
+debug: false
 
 ## Use default frontend ##
 # Whether to use the frontend packaged with the server

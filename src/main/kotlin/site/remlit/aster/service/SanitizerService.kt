@@ -1,6 +1,5 @@
 package site.remlit.aster.service
 
-import org.apache.commons.text.StringEscapeUtils
 import org.owasp.html.PolicyFactory
 import org.owasp.html.Sanitizers
 import site.remlit.aster.model.Service
@@ -20,10 +19,10 @@ object SanitizerService : Service {
 	 *
 	 * @param string String to sanitize
 	 * @param escape Whether to escape instead of sanitizing
-	 * 
+	 *
 	 * @return Sanitized string
 	 * */
+	// todo: escaping
 	fun sanitize(string: String, escape: Boolean = false): String =
-		if (escape) StringEscapeUtils.escapeHtml4(string)
-		else policy.sanitize(string)
+		policy.sanitize(string)
 }

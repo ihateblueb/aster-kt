@@ -18,8 +18,8 @@
     "@tanstack/react-store": "^0.7.0",
     "@tanstack/router-plugin": "^1.132.0",
     "mfm-js": "^0.25.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "preact": "^10.27.2",
+    "@preact/compat": "^18.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.37.0",
@@ -27,7 +27,6 @@
     "@swc/core": "^1.13.5",
     "@tanstack/react-router-devtools": "^1.132.0",
     "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react-swc": "^4.1.0",
     "aster-common": "link:../common/build/dist/js/productionLibrary",
     "eslint": "^9.37.0",

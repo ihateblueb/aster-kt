@@ -1,5 +1,5 @@
 rootProject.name = "aster"
-gradle.extra.set("rootVersion", "2025.11.2.0-SNAPSHOT")
+gradle.extra.set("rootVersion", "2025.11.2-SNAPSHOT")
 
 pluginManagement {
 	plugins {
@@ -13,6 +13,7 @@ pluginManagement {
 		id("io.ktor.plugin") version "3.3.1"
 		id("com.gradleup.shadow") version "8.3.0"
 		id("org.jetbrains.dokka") version "2.0.0"
+		id("com.guardsquare.proguard-gradle") version "7.1.0"
 	}
 }
 

@@ -41,7 +41,7 @@ object RelationshipService : Service {
 	 *
 	 * @param where Query to find relationship
 	 *
-	 * @return Found relationship, if any
+	 * @return Relationship, if any
 	 * */
 	fun get(where: Op<Boolean>): Relationship? = transaction {
 		val relationship = RelationshipEntity
@@ -54,6 +54,19 @@ object RelationshipService : Service {
 			Relationship.fromEntity(relationship)
 		else null
 	}
+
+	/**
+	 * Get a relationship between two users
+	 *
+	 * @param to Relationship target
+	 * @param from Relationship owner
+	 *
+	 * @return Relationship, if any
+	 * */
+	fun getByIds(to: String, from: String) = get(
+		userToAlias[UserTable.id] eq to
+				and (userFromAlias[UserTable.id] eq from)
+	)
 
 	/**
 	 * Get many relationships
@@ -125,6 +138,7 @@ object RelationshipService : Service {
 		)
 	}
 
+	//<editor-fold desc="Checks">
 	/**
 	 * Determine if there is a block relationship in either direction
 	 *
@@ -158,4 +172,51 @@ object RelationshipService : Service {
 
 		return relationship != null && relationship.type == RelationshipType.Mute
 	}
+	//</editor-fold>
+
+	//<editor-fold desc="Creation">
+	/**
+	 * Follow a user as another
+	 *
+	 * @param to Relationship target
+	 * @param from Relationship owner
+	 *
+	 * @return Relationship pair
+	 * */
+	fun follow(to: String, from: String): Pair<Relationship?, Relationship?> {
+		if (eitherBlocking(to, from))
+			throw IllegalArgumentException("You cannot follow this user")
+
+		val existing = getByIds(to, from)
+
+		if (existing != null)
+			throw IllegalArgumentException("You have an existing relationship with this user")
+
+		val to = UserService.getById(to) ?: throw IllegalArgumentException("Target not found")
+		val from = UserService.getById(from) ?: throw IllegalArgumentException("Sender not found")
+
+		if (to.host != null)
+			throw NotImplementedError("Remote follows not implemented")
+
+		val id = IdentifierService.generate()
+
+		transaction {
+			RelationshipEntity.new(id) {
+				this.type = RelationshipType.Follow
+				this.to = to
+				this.from = from
+			}
+		}
+
+		return getPair(to.id.toString(), from.id.toString())
+	}
+
+	/**
+	 * Unfollow a user as another
+	 *
+	 * @param to Relationship target
+	 * @param from Relationship owner
+	 * */
+	fun unfollow(to: String, from: String) {}
+	//</editor-fold>
 }
