@@ -53,6 +53,10 @@ object Configuration : ConfigurationObject {
 
 	val hideRemoteContent: Boolean get() = config?.propertyOrNull("hideRemoteContent")?.getString()?.toBoolean() ?: true
 
+	val reservedUsernames: List<String>
+		get() =
+			config?.propertyOrNull("reservedUsernames")?.getList() ?: emptyList()
+
 	init {
 		thread(name = "Configuration Refresher") {
 			while (true) {

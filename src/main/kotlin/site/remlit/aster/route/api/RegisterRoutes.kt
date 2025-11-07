@@ -80,6 +80,9 @@ object RegisterRoutes {
 				if (ValidationService.containsNonAlphanumeric(username))
 					throw ApiException(HttpStatusCode.BadRequest, "Username contains non-alphanumeric characters")
 
+				if (Configuration.reservedUsernames.contains(username))
+					throw ApiException(HttpStatusCode.BadRequest, "Username reserved")
+
 				// todo: check if username is used
 				// ilike?
 				// 		val existingUser = userService.get(

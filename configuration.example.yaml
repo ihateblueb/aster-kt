@@ -105,3 +105,21 @@ fileStorage:
 # you're a very active moderator.
 ##
 hideRemoteContent: true
+
+## Reserved usernames ##
+# Nobody can register an account with these usernames.
+# Case-insensitive.
+##
+reservedUsernames:
+  - admin
+  - administrator
+  - system
+  - webmaster
+  - noreply
+  - instanceactor
+  - proxy
+  - systemproxy
+  - instanceproxy
+  - aster
+  - mastodon
+  - misskey

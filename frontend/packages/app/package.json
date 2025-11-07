@@ -27,6 +27,7 @@
     "@swc/core": "^1.13.5",
     "@tanstack/react-router-devtools": "^1.132.0",
     "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react-swc": "^4.1.0",
     "aster-common": "link:../common/build/dist/js/productionLibrary",
     "eslint": "^9.37.0",

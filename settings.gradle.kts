@@ -10,10 +10,9 @@ pluginManagement {
 		kotlin("multiplatform") version "2.2.21"
 		kotlin("plugin.serialization") version "2.2.21"
 
-		id("io.ktor.plugin") version "3.3.1"
+		id("io.ktor.plugin") version "3.3.2"
 		id("com.gradleup.shadow") version "8.3.0"
 		id("org.jetbrains.dokka") version "2.0.0"
-		id("com.guardsquare.proguard-gradle") version "7.1.0"
 	}
 }
 

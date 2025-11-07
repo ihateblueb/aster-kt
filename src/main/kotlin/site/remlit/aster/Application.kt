@@ -20,7 +20,6 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.annotations.ApiStatus
 import site.remlit.aster.common.model.ApiError
 import site.remlit.aster.db.Database
-import site.remlit.aster.registry.EventRegistry
 import site.remlit.aster.event.application.ApplicationBeginShutdownEvent
 import site.remlit.aster.event.application.ApplicationBeginStartEvent
 import site.remlit.aster.event.application.ApplicationFinishShutdownEvent
@@ -29,8 +28,9 @@ import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.ap.ApValidationException
 import site.remlit.aster.model.ap.ApValidationExceptionType
-import site.remlit.aster.registry.PluginRegistry
 import site.remlit.aster.registry.ApObjectTypeRegistry
+import site.remlit.aster.registry.EventRegistry
+import site.remlit.aster.registry.PluginRegistry
 import site.remlit.aster.service.CommandLineService
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.MigrationService
@@ -49,9 +49,9 @@ fun main(args: Array<String>) {
 		return
 	}
 
-	val server = embeddedServer(Netty, Configuration.port, Configuration.host, module = Application::module)
-
 	ApplicationBeginStartEvent().call()
+
+	val server = embeddedServer(Netty, Configuration.port, Configuration.host, module = Application::module)
 
 	Runtime.getRuntime().addShutdownHook(Thread {
 		Thread.currentThread().name = "ShutdownMain"
