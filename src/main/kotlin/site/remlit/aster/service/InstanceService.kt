@@ -161,7 +161,7 @@ object InstanceService : Service {
 
 		val software = extractObject { nodeinfo["software"] }
 		val softwareName = extractString { software?.get("name") }
-		val version = extractString { nodeinfo["version"] }
+		val version = extractString { software?.get("version") }
 
 		return PartialInstance(
 			id = id,
