@@ -6,14 +6,11 @@ import kotlin.js.JsExport
 
 @JsExport
 @Serializable
-data class Note(
+data class SmallNote(
 	val id: String,
-
 	val apId: String,
-	val conversation: String? = null,
 
-	val user: User,
-	val replyingTo: Note? = null,
+	val user: SmallUser,
 
 	val cw: String? = null,
 	val content: String? = null,
@@ -22,12 +19,6 @@ data class Note(
 	val to: List<String>? = null,
 	val tags: List<String>? = null,
 
-	val repeat: Note? = null,
-
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null,
-
-	val likes: List<SmallUser> = emptyList(),
-	val reactions: List<SmallUser> = emptyList(),
-	val repeats: List<SmallNote> = emptyList()
 )

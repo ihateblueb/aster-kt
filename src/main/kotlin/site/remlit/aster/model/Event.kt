@@ -8,5 +8,8 @@ import site.remlit.aster.registry.EventRegistry
  * */
 @ApiStatus.OverrideOnly
 interface Event {
+	/**
+	 * Execute event
+	 * */
 	fun call() = EventRegistry.executeEvent(this)
 }

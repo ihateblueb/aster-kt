@@ -1,13 +1,18 @@
 package site.remlit.aster.service
 
+import org.jetbrains.exposed.v1.core.JoinType
 import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.alias
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.select
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import site.remlit.aster.common.model.Note
+import site.remlit.aster.common.model.SmallNote
 import site.remlit.aster.common.model.User
 import site.remlit.aster.common.model.Visibility
 import site.remlit.aster.db.entity.NoteEntity
@@ -19,6 +24,7 @@ import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.event.note.NoteCreateEvent
 import site.remlit.aster.event.note.NoteDeleteEvent
 import site.remlit.aster.event.note.NoteLikeEvent
+import site.remlit.aster.event.note.NoteRepeatEvent
 import site.remlit.aster.event.note.NoteUnlikeEvent
 import site.remlit.aster.exception.InsertFailureException
 import site.remlit.aster.exception.TargetNotFoundException
@@ -27,6 +33,7 @@ import site.remlit.aster.model.Service
 import site.remlit.aster.service.ap.ApIdService
 import site.remlit.aster.util.model.fromEntities
 import site.remlit.aster.util.model.fromEntity
+import site.remlit.aster.util.sanitizeOrNull
 
 /**
  * Service for managing notes.
@@ -34,6 +41,20 @@ import site.remlit.aster.util.model.fromEntity
  * @since 2025.5.1.0-SNAPSHOT
  * */
 object NoteService : Service {
+	private val logger: Logger = LoggerFactory.getLogger(PluginService::class.java)
+
+	/**
+	 * Reference the "replyingTo" note on a note.
+	 * For usage in queries.
+	 * */
+	val replyingToAlias = NoteTable.alias("replyingTo")
+
+	/**
+	 * Reference the "repeat" note on a note.
+	 * For usage in queries.
+	 * */
+	val repeatAlias = NoteTable.alias("repeat")
+
 	/**
 	 * Get a note
 	 *
@@ -45,7 +66,7 @@ object NoteService : Service {
 		val note = NoteEntity
 			.find { where }
 			.singleOrNull()
-			?.load(NoteEntity::user)
+			?.load(NoteEntity::user, NoteEntity::replyingTo, NoteEntity::repeat)
 
 		if (note != null)
 			Note.fromEntity(note)
@@ -85,6 +106,8 @@ object NoteService : Service {
 		offset: Long = 0
 	): List<Note> = transaction {
 		val notes = (NoteTable innerJoin UserTable)
+			.join(replyingToAlias, JoinType.LEFT, NoteTable.replyingTo, replyingToAlias[NoteTable.id])
+			.join(repeatAlias, JoinType.LEFT, NoteTable.repeat, repeatAlias[NoteTable.id])
 			.selectAll()
 			.where { where }
 			.offset(offset)
@@ -95,6 +118,36 @@ object NoteService : Service {
 
 		if (!notes.isEmpty())
 			Note.fromEntities(notes)
+		else listOf()
+	}
+
+	/**
+	 * Get many notes as small notes
+	 *
+	 * @param where Query to find notes
+	 * @param take Number of notes to take
+	 * @param offset Offset for query
+	 *
+	 * @return Notes, if exist
+	 * */
+	fun getManySmall(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<SmallNote> = transaction {
+		val notes = (NoteTable innerJoin UserTable)
+			.join(replyingToAlias, JoinType.LEFT, NoteTable.replyingTo, replyingToAlias[NoteTable.id])
+			.join(repeatAlias, JoinType.LEFT, NoteTable.repeat, repeatAlias[NoteTable.id])
+			.selectAll()
+			.where { where }
+			.offset(offset)
+			.let { NoteEntity.wrapRows(it) }
+			.sortedByDescending { it.createdAt }
+			.take(take)
+			.toList()
+
+		if (!notes.isEmpty())
+			SmallNote.fromEntities(notes)
 		else listOf()
 	}
 
@@ -156,7 +209,7 @@ object NoteService : Service {
 	 * @param content Content of the note
 	 *
 	 * @return Updated note
-	* */
+	 * */
 	fun update(
 		id: String,
 		user: UserEntity,
@@ -215,14 +268,41 @@ object NoteService : Service {
 	 * @param content Quote content
 	 *
 	 * @return Created repeat or quote
-	 *
-	 * @since 2025.9.1.1-SNAPSHOT
 	 */
 	fun repeat(
 		user: User,
 		noteId: String,
-		content: String
-	): Nothing = TODO()
+		cw: String? = null,
+		content: String? = null,
+		visibility: Visibility = Visibility.Direct
+	): Note {
+		val note = getById(noteId)
+			?: throw IllegalArgumentException("Note not found")
+
+		if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
+			throw TargetNotFoundException("Note not found")
+
+		val id = IdentifierService.generate()
+
+		transaction {
+			NoteEntity.new(id) {
+				this.apId = ApIdService.renderNoteApId(id)
+				this.user = UserEntity[user.id]
+				this.cw = sanitizeOrNull { cw }
+				this.content = sanitizeOrNull { content }
+				this.visibility = visibility
+				this.repeat = NoteEntity[note.id]
+				this.to = listOf(note.user.id) // Always allow an author to see repeats of their posts
+			}
+		}
+
+		val repeat = getById(id)
+			?: throw InsertFailureException("Note not found")
+
+		NoteRepeatEvent(repeat, note, user).call()
+
+		return repeat
+	}
 
 	/**
 	 * Delete a note

@@ -99,13 +99,26 @@ object NoteRoutes {
 				}
 
 				post("/api/note/{id}/repeat") {
-					throw ApiException(HttpStatusCode.NotImplemented)
+					val authenticatedUser = call.attributes[authenticatedUserKey]
+					val id = call.parameters.getOrFail("id")
+
+					val body = call.receive<PostNoteBody>()
+
+					val repeat = NoteService.repeat(
+						User.fromEntity(authenticatedUser),
+						id,
+						body.cw,
+						body.content,
+						Visibility.fromString(body.visibility)
+					)
+
+					call.respond(repeat)
 				}
 
 				post("/api/note/{id}/like") {
 					val authenticatedUser = call.attributes[authenticatedUserKey]
-
 					val id = call.parameters.getOrFail("id")
+
 					NoteService.like(
 						User.fromEntity(authenticatedUser),
 						id

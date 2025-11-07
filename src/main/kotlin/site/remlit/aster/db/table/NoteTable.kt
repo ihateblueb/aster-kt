@@ -15,8 +15,8 @@ object NoteTable : IdTable<String>("note") {
 	val user = reference("user", UserTable.id, onDelete = ReferenceOption.CASCADE)
 	val replyingTo = optReference("replyingTo", NoteTable, onDelete = ReferenceOption.CASCADE)
 
-	val cw = varchar("cw", length = 5000).nullable().index("note_cw_index")
-	val content = varchar("content", length = 25000).index("note_content_index")
+	val cw = varchar("cw", length = 5000).index("note_cw_index").nullable()
+	val content = varchar("content", length = 25000).index("note_content_index").nullable()
 
 	val visibility = enumeration("visibility", Visibility::class)
 
@@ -30,4 +30,10 @@ object NoteTable : IdTable<String>("note") {
 	val updatedAt = datetime("updatedAt").nullable()
 
 	override val primaryKey = PrimaryKey(id)
+
+	init {
+		// https://www.postgresql.org/docs/current/gin.html
+		index("note_cw_index", false, cw, indexType = "GIN")
+		index("note_content_index", false, content, indexType = "GIN")
+	}
 }

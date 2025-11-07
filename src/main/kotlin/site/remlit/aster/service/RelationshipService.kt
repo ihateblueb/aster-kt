@@ -49,7 +49,6 @@ object RelationshipService : Service {
 			.singleOrNull()
 			?.load(RelationshipEntity::to, RelationshipEntity::from)
 
-
 		if (relationship != null)
 			Relationship.fromEntity(relationship)
 		else null

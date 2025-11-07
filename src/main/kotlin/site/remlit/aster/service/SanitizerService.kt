@@ -1,7 +1,7 @@
 package site.remlit.aster.service
 
+import org.owasp.html.HtmlPolicyBuilder
 import org.owasp.html.PolicyFactory
-import org.owasp.html.Sanitizers
 import site.remlit.aster.model.Service
 
 /**
@@ -10,9 +10,11 @@ import site.remlit.aster.model.Service
  * @since 2025.5.1.0-SNAPSHOT
  * */
 object SanitizerService : Service {
-	private val policy: PolicyFactory = Sanitizers.FORMATTING
-		.and(Sanitizers.LINKS)
-		.and(Sanitizers.BLOCKS)
+	private val policy: PolicyFactory = HtmlPolicyBuilder()
+		.allowElements("p", "a")
+		.disallowAttributes("class", "id", "onclick", "style")
+		.onElements("p", "a")
+		.toFactory()
 
 	/**
 	 * Sanitizes user input
