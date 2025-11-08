@@ -5,7 +5,7 @@ import * as React from "react";
 
 function Mfm(
     {text, simple = false, emoji = []}:
-    { text: string, simple?: boolean, emoji?: any[] }
+    { text?: string, simple?: boolean, emoji?: any[] }
 ) {
     let result: Array<React.ReactNode> = []
 
@@ -16,6 +16,8 @@ function Mfm(
     render()
 
     function render() {
+        if (text === undefined) return undefined
+
         let mfmTree = simple ? mfm.parseSimple(text) : mfm.parse(text);
         console.debug('[Mfm Tree]', mfmTree)
 

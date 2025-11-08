@@ -14,6 +14,7 @@ object RelationshipTable : IdTable<String>("relationship") {
 	val to = reference("to", UserTable.id, onDelete = ReferenceOption.CASCADE)
 	val from = reference("from", UserTable.id, onDelete = ReferenceOption.CASCADE)
 
+	val pending = bool("pending").default(false)
 	val activityId = varchar("activityId", length = 2750).nullable()
 
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)

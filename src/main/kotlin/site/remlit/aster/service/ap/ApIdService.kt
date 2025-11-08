@@ -67,4 +67,11 @@ object ApIdService : Service {
 	fun renderFollowersApId(id: String): String {
 		return this.renderBaseApId() + "users/" + id + "/followers"
 	}
+
+	/**
+	 * @param id ID of an activity
+	 */
+	fun renderActivityApId(id: String): String {
+		return this.renderBaseApId() + "activities/" + id
+	}
 }

@@ -13,6 +13,8 @@ fun Relationship.Companion.fromEntity(entity: RelationshipEntity) = Relationship
 	to = User.fromEntity(entity.to),
 	from = User.fromEntity(entity.from),
 
+	pending = entity.pending,
+
 	createdAt = entity.createdAt,
 	updatedAt = entity.updatedAt
 )

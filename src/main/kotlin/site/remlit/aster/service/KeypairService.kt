@@ -60,8 +60,12 @@ object KeypairService : Service {
 		val start = "-----BEGIN PUBLIC KEY-----\n"
 		val end = "\n-----END PUBLIC KEY-----\n"
 
-		val editedString = pem.replace(start, "").replace(end, "").replace("\n", "")
-		val byteArray = Base64.getDecoder().decode(editedString)
+		val editedString = pem.replace(start, "")
+			.replace(end, "")
+			.replace("\n", "")
+			.trim()
+
+		val byteArray = Base64.getMimeDecoder().decode(editedString)
 
 		return KeyFactory.getInstance("RSA").generatePublic(X509EncodedKeySpec(byteArray))
 	}
@@ -77,8 +81,12 @@ object KeypairService : Service {
 		val start = "-----BEGIN PRIVATE KEY-----\n"
 		val end = "\n-----END PRIVATE KEY-----\n"
 
-		val editedString = pem.replace(start, "").replace(end, "").replace("\n", "")
-		val byteArray = Base64.getDecoder().decode(editedString)
+		val editedString = pem.replace(start, "")
+			.replace(end, "")
+			.replace("\n", "")
+			.trim()
+		
+		val byteArray = Base64.getMimeDecoder().decode(editedString)
 
 		return KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(byteArray))
 	}

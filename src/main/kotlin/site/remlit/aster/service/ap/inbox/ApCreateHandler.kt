@@ -18,14 +18,20 @@ class ApCreateHandler : ApInboxHandler() {
 		val create = jsonConfig.decodeFromString<ApCreateActivity>(String(job.content.bytes))
 		val copy = create.copy()
 
-		val obj = when (copy.`object`) {
-			is ApIdOrObject.Id -> TODO()
-			is ApIdOrObject.Object -> jsonConfig.decodeFromJsonElement<ApTypedObject>(copy.`object`.value)
-		}
+		when (copy.`object`) {
+			is ApIdOrObject.Id -> {
+				// todo: ApGenericResolver
+				ApNoteService.resolve(copy.`object`.value)
+					?: throw Exception("Note ${copy.`object`.value} not found")
+			}
 
-		when (obj.type) {
-			"Note" -> handleNote(job, jsonConfig.decodeFromJsonElement<ApNote>(copy.`object`.value))
-			else -> throw NotImplementedError("No Create handler for ${obj.type}")
+			is ApIdOrObject.Object -> {
+				val obj = jsonConfig.decodeFromJsonElement<ApTypedObject>(copy.`object`.value)
+				when (obj.type) {
+					"Note" -> handleNote(job, jsonConfig.decodeFromJsonElement<ApNote>(copy.`object`.value))
+					else -> throw NotImplementedError("No Create handler for ${obj.type}")
+				}
+			}
 		}
 	}
 

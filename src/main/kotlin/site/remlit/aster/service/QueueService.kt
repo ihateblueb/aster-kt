@@ -24,6 +24,7 @@ import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.model.Service
 import site.remlit.aster.registry.InboxHandlerRegistry
+import site.remlit.aster.service.ap.ApDeliverService
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
@@ -131,7 +132,8 @@ object QueueService : Service {
 	private fun consumeInboxJob(job: InboxQueueEntity) =
 		InboxHandlerRegistry.handle(job)
 
-	private fun consumeDeliverJob(job: DeliverQueueEntity) {}
+	private fun consumeDeliverJob(job: DeliverQueueEntity) =
+		ApDeliverService.handle(job)
 
 	// send jobs
 
@@ -157,7 +159,7 @@ object QueueService : Service {
 	}
 
 	/**
-	 * Creates a deliver  job to be processed when the next queue worker
+	 * Creates a deliver job to be processed when the next queue worker
 	 * is available.
 	 *
 	 * @param data Byte array of delivery data
@@ -169,7 +171,16 @@ object QueueService : Service {
 		data: ByteArray,
 		sender: UserEntity?,
 		inbox: String
-	): Nothing = TODO()
+	) {
+		transaction {
+			DeliverQueueEntity.new(IdentifierService.generate()) {
+				this.status = QueueStatus.PENDING
+				this.content = ExposedBlob(data)
+				this.sender = sender
+				this.inbox = inbox
+			}
+		}
+	}
 
 	// complete job
 
@@ -185,6 +196,18 @@ object QueueService : Service {
 			job.flush()
 		}
 
+	/**
+	 * Marks a deliver job as complete.
+	 *
+	 * @param job Deliver queue job
+	 * */
+	@ApiStatus.Internal
+	fun completeDeliverJob(job: DeliverQueueEntity) =
+		transaction {
+			job.status = QueueStatus.COMPLETED
+			job.flush()
+		}
+
 	// error job
 
 	/**
@@ -195,6 +218,22 @@ object QueueService : Service {
 	@ApiStatus.Internal
 	@OptIn(ExperimentalTime::class)
 	fun errorInboxJob(job: InboxQueueEntity) =
+		transaction {
+			job.status = QueueStatus.FAILED
+			job.retryAt = Clock.System.now().plus((job.retries * 15).minutes)
+				.toLocalDateTime(TimeZone.currentSystemDefault())
+			job.retries += 1
+			job.flush()
+		}
+
+	/**
+	 * Marks a deliver job as errored, and schedules it to be retried.
+	 *
+	 * @param job Deliver queue job
+	 * */
+	@ApiStatus.Internal
+	@OptIn(ExperimentalTime::class)
+	fun errorDeliverJob(job: DeliverQueueEntity) =
 		transaction {
 			job.status = QueueStatus.FAILED
 			job.retryAt = Clock.System.now().plus((job.retries * 15).minutes)

@@ -83,4 +83,9 @@ object ApSignatureService : Service {
 
 		return Pair(signatureHeader, digest)
 	}
+
+	fun createDigest(data: ByteArray): String =
+		java.util.Base64.getEncoder().encodeToString(
+			MessageDigest.getInstance("SHA-256").digest(data)
+		)
 }

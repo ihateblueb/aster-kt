@@ -9,12 +9,20 @@ import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.Relationship
+import site.remlit.aster.common.model.User
+import site.remlit.aster.common.model.type.NotificationType
 import site.remlit.aster.common.model.type.RelationshipType
 import site.remlit.aster.db.entity.RelationshipEntity
 import site.remlit.aster.db.table.RelationshipTable
 import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.event.user.UserFollowEvent
+import site.remlit.aster.event.user.UserFollowRequestEvent
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
+import site.remlit.aster.model.ap.ApIdOrObject
+import site.remlit.aster.model.ap.activity.ApFollowActivity
+import site.remlit.aster.service.ap.ApDeliverService
+import site.remlit.aster.service.ap.ApIdService
 import site.remlit.aster.util.model.fromEntities
 import site.remlit.aster.util.model.fromEntity
 
@@ -194,8 +202,20 @@ object RelationshipService : Service {
 		val to = UserService.getById(to) ?: throw IllegalArgumentException("Target not found")
 		val from = UserService.getById(from) ?: throw IllegalArgumentException("Sender not found")
 
-		if (to.host != null)
+		val activityId = ApIdService.renderActivityApId(IdentifierService.generate())
+
+		if (to.host != null) {
+			ApDeliverService.deliver(
+				ApFollowActivity(
+					activityId,
+					actor = from.apId,
+					`object` = ApIdOrObject.Id(to.apId)
+				),
+				from,
+				to.inbox
+			)
 			throw NotImplementedError("Remote follows not implemented")
+		}
 
 		val id = IdentifierService.generate()
 
@@ -204,6 +224,25 @@ object RelationshipService : Service {
 				this.type = RelationshipType.Follow
 				this.to = to
 				this.from = from
+				this.pending = to.locked || to.host != null
+			}
+		}
+
+		val relationship = getByIds(to.id.toString(), from.id.toString())
+			?: throw Exception("Relationship not found")
+
+		if (to.host == null) {
+			NotificationService.create(
+				NotificationType.Follow,
+				to,
+				from,
+				relationship
+			)
+
+			if (to.locked) UserFollowRequestEvent(relationship, User.fromEntity(to))
+			else {
+				UserFollowEvent(relationship, User.fromEntity(to))
+				// Accept
 			}
 		}
 

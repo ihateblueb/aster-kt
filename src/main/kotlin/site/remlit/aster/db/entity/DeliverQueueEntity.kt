@@ -4,15 +4,16 @@ import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.dao.Entity
 import org.jetbrains.exposed.v1.dao.EntityClass
 import site.remlit.aster.db.table.DeliverQueueTable
+import site.remlit.aster.db.table.InboxQueueTable
 
 class DeliverQueueEntity(id: EntityID<String>) : Entity<String>(id = id) {
 	companion object : EntityClass<String, DeliverQueueEntity>(DeliverQueueTable)
 
-	val status by DeliverQueueTable.status
+	var status by DeliverQueueTable.status
 
-	val content by DeliverQueueTable.content
-	val sender by DeliverQueueTable.sender
-	val inbox by DeliverQueueTable.inbox
+	var content by DeliverQueueTable.content
+	var sender by UserEntity optionalReferencedOn InboxQueueTable.sender
+	var inbox by DeliverQueueTable.inbox
 
 	val createdAt by DeliverQueueTable.createdAt
 	var retryAt by DeliverQueueTable.retryAt

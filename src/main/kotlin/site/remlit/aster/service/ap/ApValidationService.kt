@@ -18,12 +18,11 @@ import site.remlit.aster.model.ap.ApValidationExceptionType
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.KeypairService
 import site.remlit.aster.service.PolicyService
-import java.security.MessageDigest
 import java.security.PublicKey
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.io.encoding.Base64
+import java.util.*
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -158,6 +157,7 @@ object ApValidationService : Service {
 				parseHttpDate(request.headers["Date"]!!)
 			)
 		} catch (e: Exception) {
+			if (Configuration.debug) e.printStackTrace()
 			logger.debug("[{}] Signature invalid. {}", validationRequestId, e.message)
 			throw ApValidationException(
 				ApValidationExceptionType.Forbidden,
@@ -179,10 +179,7 @@ object ApValidationService : Service {
 	}
 
 	fun isDigestValid(digest: String, data: ByteArray): Boolean {
-		val md = MessageDigest.getInstance("SHA-256")
-		val ourDigest = md.digest(data)
-
-		return digest == Base64.encode(ourDigest)
+		return digest == ApSignatureService.createDigest(data)
 	}
 
 	@OptIn(ExperimentalTime::class)
@@ -219,7 +216,7 @@ object ApValidationService : Service {
 		javaSignature.initVerify(publicKey)
 		javaSignature.update(signingString.toByteArray())
 
-		return javaSignature.verify(Base64.decode(signature))
+		return javaSignature.verify(Base64.getDecoder().decode(signature))
 	}
 
 	fun parseHttpDate(date: String): LocalDateTime {

@@ -39,11 +39,11 @@ object ApActorService : Service {
 	 * @return UserEntity or null
 	 * */
 	suspend fun resolve(apId: String, refetch: Boolean = false): UserEntity? {
-		InstanceService.resolve(Url(apId).host)
 		val existing = UserService.getByApId(apId)
 
 		if ((existing != null) && !refetch) return existing
 
+		InstanceService.resolve(Url(apId).host)
 		val resolveResponse = ResolverService.resolveSigned(apId)
 
 		if (resolveResponse != null && existing == null)
@@ -153,7 +153,7 @@ object ApActorService : Service {
 			createdAt = published,
 			updatedAt = if (existing != null) TimeService.now() else null,
 
-			publicKey = existing?.publicKey ?: SanitizerService.sanitize(extractedPublicKey, true),
+			publicKey = existing?.publicKey ?: extractedPublicKey,
 		)
 	}
 

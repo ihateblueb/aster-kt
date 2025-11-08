@@ -243,6 +243,29 @@ object NotificationService : Service {
 	 * @param type Type of notification
 	 * @param to Recipient of notification
 	 * @param from Sender of notification
+	 * @param relationship Relationship related to notification
+	 *
+	 * @return Created notification
+	 * */
+	fun create(
+		type: NotificationType,
+		to: UserEntity,
+		from: UserEntity,
+		relationship: Relationship?,
+	) = create(
+		type,
+		to,
+		from,
+		null as Note?,
+		relationship
+	)
+
+	/**
+	 * Create a notification.
+	 *
+	 * @param type Type of notification
+	 * @param to Recipient of notification
+	 * @param from Sender of notification
 	 *
 	 * @return Created notification
 	 * */

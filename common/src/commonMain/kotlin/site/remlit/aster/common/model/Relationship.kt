@@ -14,6 +14,8 @@ data class Relationship(
 	val to: User,
 	val from: User,
 
+	val pending: Boolean,
+
 	val createdAt: LocalDateTime,
 	val updatedAt: LocalDateTime? = null
 )

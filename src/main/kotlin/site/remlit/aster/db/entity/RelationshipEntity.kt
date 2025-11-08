@@ -13,8 +13,9 @@ class RelationshipEntity(id: EntityID<String>) : Entity<String>(id) {
 	var to by UserEntity referencedOn RelationshipTable.to
 	var from by UserEntity referencedOn RelationshipTable.from
 
+	var pending by RelationshipTable.pending
 	var activityId by RelationshipTable.activityId
 
-	var createdAt by RelationshipTable.createdAt
+	val createdAt by RelationshipTable.createdAt
 	var updatedAt by RelationshipTable.updatedAt
 }

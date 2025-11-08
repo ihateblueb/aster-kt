@@ -77,8 +77,6 @@ object ResolverService : Service {
 	 * @return JsonObject or null
 	 * */
 	suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject? {
-		val id = IdentifierService.generate()
-
 		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
 		val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
 
