@@ -11,6 +11,7 @@ import site.remlit.aster.model.ap.ApTypedObject
 import site.remlit.aster.service.QueueService
 import site.remlit.aster.service.ap.inbox.ApBiteHandler
 import site.remlit.aster.service.ap.inbox.ApCreateHandler
+import site.remlit.aster.service.ap.inbox.ApFollowHandler
 import site.remlit.aster.util.jsonConfig
 
 object InboxHandlerRegistry {
@@ -67,5 +68,6 @@ object InboxHandlerRegistry {
 	fun registerDefaults() {
 		register("Bite", ApBiteHandler())
 		register("Create", ApCreateHandler())
+		register("Follow", ApFollowHandler())
 	}
 }

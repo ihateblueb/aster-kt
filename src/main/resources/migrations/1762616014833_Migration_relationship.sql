@@ -1,0 +1,1 @@
+ALTER TABLE relationship ADD pending BOOLEAN DEFAULT FALSE NOT NULL;

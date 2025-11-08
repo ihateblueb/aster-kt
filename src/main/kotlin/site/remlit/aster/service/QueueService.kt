@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.annotations.ApiStatus
@@ -25,7 +26,6 @@ import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.model.Service
 import site.remlit.aster.registry.InboxHandlerRegistry
 import site.remlit.aster.service.ap.ApDeliverService
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -52,12 +52,12 @@ object QueueService : Service {
 	/**
 	 * Current count of active inbox queue workers
 	 * */
-	val activeInboxWorkers: AtomicInteger = AtomicInteger(0)
+	var activeInboxWorkers = 0
 
 	/**
 	 * Current count of active deliver queue workers
 	 * */
-	val activeDeliverWorkers: AtomicInteger = AtomicInteger(0)
+	var activeDeliverWorkers = 0
 
 	/**
 	 * Initialize queue managers. These check frequently for new items in the queue, and then launch a consumer.
@@ -67,12 +67,14 @@ object QueueService : Service {
 		inboxScope.launch {
 			while (true) {
 				delay(2.seconds)
+				println(activeInboxWorkers)
 				summonInboxConsumersIfNeeded()
 			}
 		}
 		deliverScope.launch {
 			while (true) {
 				delay(2.seconds)
+				println(activeDeliverWorkers)
 				summonDeliverConsumersIfNeeded()
 			}
 		}
@@ -93,14 +95,14 @@ object QueueService : Service {
 				.take(Configuration.queue.inbox.concurrency)
 				.toList()
 				.forEach {
-					if (activeInboxWorkers.get() >= Configuration.queue.inbox.concurrency)
+					if (activeInboxWorkers >= Configuration.queue.inbox.concurrency)
 						return@forEach
 
-					activeInboxWorkers.incrementAndGet()
 					inboxScope.launch {
+						activeInboxWorkers++
 						consumeInboxJob(it)
+						activeInboxWorkers--
 					}
-					activeInboxWorkers.decrementAndGet()
 				}
 		}
 	}
@@ -115,14 +117,14 @@ object QueueService : Service {
 				.take(Configuration.queue.deliver.concurrency)
 				.toList()
 				.forEach {
-					if (activeDeliverWorkers.get() >= Configuration.queue.deliver.concurrency)
+					if (activeDeliverWorkers >= Configuration.queue.deliver.concurrency)
 						return@forEach
 
-					activeDeliverWorkers.incrementAndGet()
 					deliverScope.launch {
+						activeDeliverWorkers++
 						consumeDeliverJob(it)
+						activeDeliverWorkers--
 					}
-					activeDeliverWorkers.decrementAndGet()
 				}
 		}
 	}
@@ -133,7 +135,7 @@ object QueueService : Service {
 		InboxHandlerRegistry.handle(job)
 
 	private fun consumeDeliverJob(job: DeliverQueueEntity) =
-		ApDeliverService.handle(job)
+		runBlocking { ApDeliverService.handle(job) }
 
 	// send jobs
 
@@ -219,11 +221,13 @@ object QueueService : Service {
 	@OptIn(ExperimentalTime::class)
 	fun errorInboxJob(job: InboxQueueEntity) =
 		transaction {
-			job.status = QueueStatus.FAILED
-			job.retryAt = Clock.System.now().plus((job.retries * 15).minutes)
-				.toLocalDateTime(TimeZone.currentSystemDefault())
-			job.retries += 1
-			job.flush()
+			job.refresh()
+			InboxQueueEntity.findByIdAndUpdate(job.id.toString()) {
+				job.status = QueueStatus.FAILED
+				job.retryAt = Clock.System.now().plus((job.retries * 15).minutes)
+					.toLocalDateTime(TimeZone.currentSystemDefault())
+				job.retries += 1
+			}
 		}
 
 	/**
@@ -235,10 +239,12 @@ object QueueService : Service {
 	@OptIn(ExperimentalTime::class)
 	fun errorDeliverJob(job: DeliverQueueEntity) =
 		transaction {
-			job.status = QueueStatus.FAILED
-			job.retryAt = Clock.System.now().plus((job.retries * 15).minutes)
-				.toLocalDateTime(TimeZone.currentSystemDefault())
-			job.retries += 1
-			job.flush()
+			job.refresh()
+			DeliverQueueEntity.findByIdAndUpdate(job.id.toString()) {
+				it.status = QueueStatus.FAILED
+				it.retryAt = Clock.System.now().plus((job.retries * 15).minutes)
+					.toLocalDateTime(TimeZone.currentSystemDefault())
+				it.retries += 1
+			}
 		}
 }

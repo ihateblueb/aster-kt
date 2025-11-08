@@ -150,6 +150,16 @@ main {
     }
 }
 
+a {
+    color: var(--ac-1);
+    text-decoration: underline;
+    text-decoration-color: var(--ac-1-50);
+
+    &:hover {
+        text-decoration-color: var(--ac-1);
+    }
+}
+
 table {
     border-spacing: 0;
     border-collapse: collapse;

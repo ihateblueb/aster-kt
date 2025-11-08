@@ -3,6 +3,7 @@ package site.remlit.aster.route.admin
 import io.ktor.http.*
 import io.ktor.server.html.*
 import io.ktor.server.routing.*
+import kotlinx.html.a
 import kotlinx.html.body
 import kotlinx.html.classes
 import kotlinx.html.div
@@ -15,7 +16,9 @@ import kotlinx.html.title
 import kotlinx.html.ul
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.aster.db.entity.DeliverQueueEntity
 import site.remlit.aster.db.entity.InboxQueueEntity
+import site.remlit.aster.db.table.DeliverQueueTable
 import site.remlit.aster.db.table.InboxQueueTable
 import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.registry.RouteRegistry
@@ -26,39 +29,45 @@ object AdminQueueRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/admin/queues") {
-				var pendingCount: Long = 0
-				var completedCount: Long = 0
-				var failedCount: Long = 0
+				val inboxPending: MutableList<InboxQueueEntity> = mutableListOf()
+				val inboxCompleted: MutableList<InboxQueueEntity> = mutableListOf()
+				val inboxFailed: MutableList<InboxQueueEntity> = mutableListOf()
 
-				val pendingHosts: MutableList<String> = mutableListOf()
-				val completedHosts: MutableList<String> = mutableListOf()
-				val failedHosts: MutableList<String> = mutableListOf()
+				val deliverPending: MutableList<DeliverQueueEntity> = mutableListOf()
+				val deliverCompleted: MutableList<DeliverQueueEntity> = mutableListOf()
+				val deliverFailed: MutableList<DeliverQueueEntity> = mutableListOf()
 
 				transaction {
-					pendingCount = InboxQueueEntity
+					InboxQueueEntity
 						.find { InboxQueueTable.status eq QueueStatus.PENDING }
-						.count()
-					completedCount = InboxQueueEntity
+						.forEach { e ->
+							inboxPending.add(e)
+						}
+					InboxQueueEntity
 						.find { InboxQueueTable.status eq QueueStatus.COMPLETED }
-						.count()
-					failedCount = InboxQueueEntity
+						.forEach { e ->
+							inboxCompleted.add(e)
+						}
+					InboxQueueEntity
 						.find { InboxQueueTable.status eq QueueStatus.FAILED }
-						.count()
+						.forEach { e ->
+							inboxFailed.add(e)
+						}
 
-					InboxQueueEntity
-						.find { InboxQueueTable.status eq QueueStatus.PENDING }
+					DeliverQueueEntity
+						.find { DeliverQueueTable.status eq QueueStatus.PENDING }
 						.forEach { e ->
-							pendingHosts.add(e.sender?.host ?: return@forEach)
+							deliverPending.add(e)
 						}
-					InboxQueueEntity
-						.find { InboxQueueTable.status eq QueueStatus.COMPLETED }
+					DeliverQueueEntity
+						.find { DeliverQueueTable.status eq QueueStatus.COMPLETED }
 						.forEach { e ->
-							completedHosts.add(e.sender?.host ?: return@forEach)
+							deliverCompleted.add(e)
 						}
-					InboxQueueEntity
-						.find { InboxQueueTable.status eq QueueStatus.FAILED }
+					DeliverQueueEntity
+						.find { DeliverQueueTable.status eq QueueStatus.FAILED }
 						.forEach { e ->
-							failedHosts.add(e.sender?.host ?: return@forEach)
+							deliverFailed.add(e)
 						}
 				}
 
@@ -72,43 +81,106 @@ object AdminQueueRoutes {
 						adminHeader("Queues")
 						adminMain {
 							h2 { +"Inbox" }
-							div {
-								this.classes = setOf("ctn")
+							transaction {
 								div {
-									this.classes = setOf("ctn", "column")
-									span {
-										+"$pendingCount jobs pending"
+									this.classes = setOf("ctn")
+									div {
+										this.classes = setOf("ctn", "column")
+										span {
+											+"${inboxPending.size} jobs pending"
+										}
+										ul {
+											for (job in inboxPending) {
+												li {
+													a {
+														href = "/job/${job.id}"
+														+"${job.id} ${job.sender?.host}"
+													}
+												}
+											}
+										}
 									}
-									ul {
-										for (host in pendingHosts) {
-											li {
-												+host
+									div {
+										this.classes = setOf("ctn", "column")
+										span {
+											+"${inboxCompleted.size} jobs completed"
+										}
+										ul {
+											for (job in inboxCompleted) {
+												li {
+													a {
+														href = "/job/${job.id}"
+														+"${job.id} ${job.sender?.host}"
+													}
+												}
+											}
+										}
+									}
+									div {
+										this.classes = setOf("ctn", "column")
+										span {
+											+"${inboxFailed.size} jobs failed"
+										}
+										ul {
+											for (job in inboxFailed) {
+												li {
+													a {
+														href = "/job/${job.id}"
+														+"${job.id} ${job.sender?.host}"
+													}
+												}
 											}
 										}
 									}
 								}
+								h2 { +"Deliver" }
 								div {
-									this.classes = setOf("ctn", "column")
-									span {
-										+"$completedCount jobs completed"
-									}
-									ul {
-										for (host in completedHosts) {
-											li {
-												+host
+									this.classes = setOf("ctn")
+									div {
+										this.classes = setOf("ctn", "column")
+										span {
+											+"${deliverPending.size} jobs pending"
+										}
+										ul {
+											for (job in deliverPending) {
+												li {
+													a {
+														href = "/job/${job.id}"
+														+"${job.id} ${job.sender?.host}"
+													}
+												}
 											}
 										}
 									}
-								}
-								div {
-									this.classes = setOf("ctn", "column")
-									span {
-										+"$failedCount jobs failed"
+									div {
+										this.classes = setOf("ctn", "column")
+										span {
+											+"${deliverCompleted.size} jobs completed"
+										}
+										ul {
+											for (job in deliverCompleted) {
+												li {
+													a {
+														href = "/job/${job.id}"
+														+"${job.id} ${job.sender?.host}"
+													}
+												}
+											}
+										}
 									}
-									ul {
-										for (host in failedHosts) {
-											li {
-												+host
+									div {
+										this.classes = setOf("ctn", "column")
+										span {
+											+"${deliverFailed.size} jobs failed"
+										}
+										ul {
+											for (job in deliverFailed) {
+												li {
+													a {
+														href = "/admin/queues/job/${job.id}"
+														+"${job.id} ${job.sender?.host}"
+													}
+												}
 											}
 										}
 									}
