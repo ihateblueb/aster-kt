@@ -135,16 +135,17 @@ object InviteService : Service {
 		if (invite == null)
 			throw IllegalArgumentException("Invite does not exist")
 
-		if (invite.user != null)
+		if (transaction { invite.user != null })
 			throw IllegalArgumentException("Invite has already been used")
 
 		val user = UserService.getById(userId)
 			?: throw IllegalArgumentException("User does not exist")
 
 		transaction {
-			invite.user = user
-			invite.usedAt = TimeService.now()
-			invite.flush()
+			InviteEntity.findByIdAndUpdate(invite.id.toString()) {
+				it.user = user
+				it.usedAt = TimeService.now()
+			}
 		}
 	}
 }

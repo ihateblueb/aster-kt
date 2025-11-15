@@ -34,11 +34,17 @@ function Note(
 ) {
     const navigate = useNavigate();
     let [note, setNote] = React.useState(data)
+    let [repeater, setRepeater] = React.useState()
 
     let self = localstore.getSelf()
     let isOwnPost = note?.user?.id === self?.id
 
     let [cwOpen, setCwOpen] = React.useState(false)
+
+    if (note?.repeat !== undefined && note?.content === undefined) {
+        setRepeater(note?.user)
+        setNote(note?.repeat)
+    }
 
     /* Interactions */
 
@@ -69,14 +75,14 @@ function Note(
                     <Container>
                         <IconAlertTriangle size={18}/>
                     </Container>
-                    <Container>
+                    <Container align={"left"}>
                         <span>{note?.cw}</span>
                     </Container>
-                    <Container align={"right"}>
+                    <Container>
                         {!cwOpen ? (
-                            <Button thin onClick={() => setCwOpen(true)}>Open</Button>
+                            <Button thin onClick={() => setCwOpen(true)}>Show</Button>
                         ) : (
-                            <Button thin onClick={() => setCwOpen(false)}>Close</Button>
+                            <Button thin onClick={() => setCwOpen(false)}>Hide</Button>
                         )}
                     </Container>
                 </Container>
@@ -98,7 +104,9 @@ function Note(
                     {!cwOpen ? renderContentWarning() : (
                         <>
                             {renderContentWarning()}
-                            <Mfm text={note?.content}/>
+                            <Container>
+                                <Mfm text={note?.content}/>
+                            </Container>
                         </>
                     )}
                 </Container>
@@ -219,6 +227,14 @@ function Note(
     return (
         <article className={"note highlightable"} tabIndex={0}
                  aria-label={`Note by ${renderAt()}${note?.content ? ", " + note?.content : ""}`}>
+            {repeater != null ? (
+                <Container align={"horizontal"} gap={"md"} clazz={"repeatHeader"}>
+                    <IconRepeat size={18} color={"var(--tx-3)"}/>
+                    <span>
+                        {repeater?.displayName ?? repeater?.username} repeated
+                    </span>
+                </Container>
+            ) : null}
             <Container align={"horizontal"} gap={"lg"}>
                 <Container>
                     <Avatar user={note?.user}/>
