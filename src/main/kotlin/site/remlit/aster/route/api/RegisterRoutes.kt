@@ -14,6 +14,7 @@ import site.remlit.aster.common.model.response.AuthResponse
 import site.remlit.aster.common.model.type.InstanceRegistrationsType
 import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.db.entity.UserPrivateEntity
+import site.remlit.aster.event.user.UserCreateEvent
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.KeyType
@@ -126,6 +127,8 @@ object RegisterRoutes {
 					UserService.getById(id)
 						?: throw ApiException(HttpStatusCode.NotFound)
 				)
+
+				UserCreateEvent(user).call()
 
 				if (Configuration.registrations == InstanceRegistrationsType.Invite)
 					InviteService.useInvite(body.invite!!, user.id)

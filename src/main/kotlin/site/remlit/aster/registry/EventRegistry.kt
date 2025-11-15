@@ -26,6 +26,18 @@ object EventRegistry {
 	/**
 	 * Adds a function to be called when an event fires
 	 *
+	 * @param listener Lambda to run when the event happens
+	 *
+	 * @since 2025.11.3.0-SNAPSHOT
+	 * */
+	@JvmSynthetic
+	@Suppress("UNCHECKED_CAST")
+	inline fun <reified T> addListener(noinline listener: (T) -> Unit) =
+		addListener(T::class, listener as (Event) -> Unit)
+
+	/**
+	 * Adds a function to be called when an event fires
+	 *
 	 * @param event Class of the event to listen to (e.g. `NoteCreateEvent::class`)
 	 * @param listener Lambda to run when the event happens
 	 *

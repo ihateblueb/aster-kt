@@ -23,13 +23,23 @@ object ApObjectTypeRegistry {
 	}
 
 	/**
+	 * If you have an ApObject that may be an `object` property on an activity, you need to register it here.
+	 *
+	 * @param serializer Serializer of object type
+	 * */
+	@JvmSynthetic
+	inline fun <reified T : ApObject> register(
+		serializer: KSerializer<out ApObject>
+	) = register(T::class, serializer)
+
+	/**
 	 * Register internal types.
 	 * */
 	@ApiStatus.Internal
 	fun registerInternal() {
-		register(ApTypedObject::class, ApTypedObject.serializer())
+		register<ApTypedObject>(ApTypedObject.serializer())
 
-		register(ApActor::class, ApActor.serializer())
-		register(ApNote::class, ApNote.serializer())
+		register<ApActor>(ApActor.serializer())
+		register<ApNote>(ApNote.serializer())
 	}
 }

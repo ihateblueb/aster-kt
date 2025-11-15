@@ -13,6 +13,7 @@ import site.remlit.aster.service.ap.inbox.ApBiteHandler
 import site.remlit.aster.service.ap.inbox.ApCreateHandler
 import site.remlit.aster.service.ap.inbox.ApFollowHandler
 import site.remlit.aster.util.jsonConfig
+import kotlin.reflect.full.createInstance
 
 object InboxHandlerRegistry {
 	private val logger = LoggerFactory.getLogger(InboxHandlerRegistry::class.java)
@@ -62,12 +63,21 @@ object InboxHandlerRegistry {
 	}
 
 	/**
+	 * Registers an inbox handler
+	 *
+	 * @param type Activity type to handle
+	 * */
+	@JvmSynthetic
+	inline fun <reified T : ApInboxHandler> register(type: String) =
+		register(type, T::class.createInstance())
+
+	/**
 	 * Registers default inbox handlers
 	 * */
 	@ApiStatus.Internal
 	fun registerDefaults() {
-		register("Bite", ApBiteHandler())
-		register("Create", ApCreateHandler())
-		register("Follow", ApFollowHandler())
+		register<ApBiteHandler>("Bite")
+		register<ApCreateHandler>("Create")
+		register<ApFollowHandler>("Follow")
 	}
 }

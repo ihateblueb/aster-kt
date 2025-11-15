@@ -37,11 +37,12 @@ object ApDeliverService {
 		activity: T,
 		sender: UserEntity?,
 		inbox: String
-	) = QueueService.insertDeliverJob(
-		jsonConfig.encodeToString<T>(activity).encodeToByteArray(),
-		sender,
-		inbox
-	)
+	) =
+		QueueService.insertDeliverJob(
+			jsonConfig.encodeToString<T>(activity).encodeToByteArray(),
+			sender,
+			inbox
+		)
 
 	/**
 	 * Handle a deliver job
@@ -49,51 +50,59 @@ object ApDeliverService {
 	 * @param job Job to handle
 	 * */
 	suspend fun handle(job: DeliverQueueEntity) {
-		val url = Url(job.inbox)
+		try {
+			val url = Url(job.inbox)
 
-		val date = LocalDateTime.now(ZoneId.of("GMT"))
-			.toHttpDateString()
+			val date = LocalDateTime.now(ZoneId.of("GMT"))
+				.toHttpDateString()
 
-		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
-		val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
+			val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
+			val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
 
-		if (blockedHosts.contains(url.host))
-			return
+			if (blockedHosts.contains(url.host))
+				return
 
-		val actor = job.sender ?: UserService.getInstanceActor()
+			val actor = job.sender ?: UserService.getInstanceActor()
 
-		val actorPrivate = UserService.getPrivateById(actor.id.toString())!!
+			val actorPrivate = UserService.getPrivateById(actor.id.toString())!!
 
-		val digest = ApSignatureService.createDigest(job.content.bytes)
+			val digest = ApSignatureService.createDigest(job.content.bytes)
 
-		val client = ResolverService.createClient()
-		val response = client.post(url) {
-			headers.append("Host", url.host)
-			headers.append("Date", date)
-			headers.append("Digest", digest)
-			headers.append("Content-Type", "application/activity+json")
+			val client = ResolverService.createClient()
+			val response = client.post(url) {
+				headers.append("Host", url.host)
+				headers.append("Date", date)
+				headers.append("Digest", digest)
+				headers.append("Content-Type", "application/activity+json")
 
-			setBody(job.content.bytes)
+				setBody(job.content.bytes)
 
-			val sig = ApSignatureService.createSignature(
-				url.encodedPath,
-				HttpMethod.Post,
-				KeypairService.pemToPrivateKey(actorPrivate.privateKey),
-				actor.apId + "#main-key",
-				mapOf(
-					"Host" to listOf(url.host),
-					"Date" to listOf(date),
-					"Digest" to listOf(date),
-					"Content-Type" to listOf("application/activity+json")
+				val sig = ApSignatureService.createSignature(
+					url.encodedPath,
+					HttpMethod.Post,
+					KeypairService.pemToPrivateKey(actorPrivate.privateKey),
+					actor.apId + "#main-key",
+					mapOf(
+						"Host" to listOf(url.host),
+						"Date" to listOf(date),
+						"Digest" to listOf(date),
+						"Content-Type" to listOf("application/activity+json")
+					)
 				)
-			)
 
-			headers.append("Signature", sig.first)
+				headers.append("Signature", sig.first)
+			}
+			client.close()
+
+			if (response.status != HttpStatusCode.OK)
+				throw ResolverException(response.status, response.status.description)
+			else {
+				logger.info("${response.status} ${response.request.method} - ${response.request.url}")
+				QueueService.completeDeliverJob(job)
+			}
+		} catch (e: Exception) {
+			e.printStackTrace()
+			QueueService.errorDeliverJob(job)
 		}
-		client.close()
-
-		if (response.status != HttpStatusCode.OK)
-			throw ResolverException(response.status, response.status.description)
-		else logger.info("${response.status} ${response.request.method} - ${response.request.url}")
 	}
 }

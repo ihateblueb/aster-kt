@@ -67,14 +67,12 @@ object QueueService : Service {
 		inboxScope.launch {
 			while (true) {
 				delay(2.seconds)
-				println(activeInboxWorkers)
 				summonInboxConsumersIfNeeded()
 			}
 		}
 		deliverScope.launch {
 			while (true) {
 				delay(2.seconds)
-				println(activeDeliverWorkers)
 				summonDeliverConsumersIfNeeded()
 			}
 		}
