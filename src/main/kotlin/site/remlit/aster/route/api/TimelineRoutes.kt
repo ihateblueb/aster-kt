@@ -12,7 +12,6 @@ import org.jetbrains.exposed.v1.core.or
 import site.remlit.aster.common.model.Visibility
 import site.remlit.aster.db.table.NoteTable
 import site.remlit.aster.db.table.UserTable
-import site.remlit.aster.model.ApiException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NoteService
@@ -52,8 +51,6 @@ object TimelineRoutes {
 					}
 
 					call.respond(notes)
-
-					throw ApiException(HttpStatusCode.NotImplemented)
 				}
 			}
 

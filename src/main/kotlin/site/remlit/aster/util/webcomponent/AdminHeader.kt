@@ -31,6 +31,7 @@ fun FlowContent.adminHeader(currentPage: String) {
 					adminHeaderButton("Invites", "/admin/invites")
 				adminHeaderButton("Queues", "/admin/queues")
 				adminHeaderButton("Plugins", "/admin/plugins")
+				adminHeaderButton("Debug", "/admin/debug")
 			}
 		}
 	}

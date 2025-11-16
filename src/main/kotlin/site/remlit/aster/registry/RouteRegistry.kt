@@ -1,12 +1,13 @@
 package site.remlit.aster.registry
 
-import io.ktor.server.routing.Routing
+import io.ktor.server.routing.*
 import org.jetbrains.annotations.ApiStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.route.FrontendRoutes
 import site.remlit.aster.route.UploadRoutes
+import site.remlit.aster.route.admin.AdminDebugRoutes
 import site.remlit.aster.route.admin.AdminIndexRoutes
 import site.remlit.aster.route.admin.AdminInstanceRoutes
 import site.remlit.aster.route.admin.AdminInviteRoutes
@@ -20,6 +21,7 @@ import site.remlit.aster.route.ap.InboxRoutes
 import site.remlit.aster.route.ap.NodeInfoRoutes
 import site.remlit.aster.route.ap.OutboxRoutes
 import site.remlit.aster.route.ap.WebfingerRoutes
+import site.remlit.aster.route.api.DriveRoutes
 import site.remlit.aster.route.api.LoginRoutes
 import site.remlit.aster.route.api.MetaRoutes
 import site.remlit.aster.route.api.NoteRoutes
@@ -71,6 +73,7 @@ object RouteRegistry {
 	 * */
 	@ApiStatus.Internal
 	fun registerBuiltinRoutes() {
+		AdminDebugRoutes.register()
 		AdminIndexRoutes.register()
 		AdminInstanceRoutes.register()
 		AdminInviteRoutes.register()
@@ -89,6 +92,7 @@ object RouteRegistry {
 		InviteRoutes.register()
 		PolicyRoutes.register()
 
+		DriveRoutes.register()
 		LoginRoutes.register()
 		MetaRoutes.register()
 		NoteRoutes.register()

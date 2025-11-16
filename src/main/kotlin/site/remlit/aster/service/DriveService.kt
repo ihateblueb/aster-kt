@@ -5,6 +5,7 @@ import org.jetbrains.exposed.v1.core.Op
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.dao.load
 import org.jetbrains.exposed.v1.jdbc.select
+import org.jetbrains.exposed.v1.jdbc.selectAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.DriveFile
 import site.remlit.aster.db.entity.DriveFileEntity
@@ -67,14 +68,23 @@ object DriveService : Service {
 	 * Get many drive files.
 	 *
 	 * @param where Query to find drive files
+	 * @param take Number of drive files to take
+	 * @param offset Offset for query
 	 *
 	 * @return Found drive files, if any
 	 * */
-	fun getMany(where: Op<Boolean>, take: Int? = null): List<DriveFile> = transaction {
-		val driveFiles = DriveFileEntity
-			.find { where }
+	fun getMany(
+		where: Op<Boolean>,
+		take: Int = Configuration.timeline.defaultObjects,
+		offset: Long = 0
+	): List<DriveFile> = transaction {
+		val driveFiles = (DriveFileTable innerJoin UserTable)
+			.selectAll()
+			.where { where }
+			.offset(offset)
+			.let { DriveFileEntity.wrapRows(it) }
 			.sortedByDescending { it.createdAt }
-			.take(take ?: Configuration.timeline.defaultObjects)
+			.take(take)
 			.toList()
 
 		if (!driveFiles.isEmpty())
