@@ -5,13 +5,17 @@ import PageWrapper from "../lib/components/PageWrapper.tsx";
 import {useQuery} from "@tanstack/react-query";
 import localstore from "../lib/utils/localstore.ts";
 import get from "../lib/api/drive/get.ts";
+import DriveFile from "../lib/components/DriveFile.tsx";
+import Container from "../lib/components/Container.tsx";
+import Loading from "../lib/components/Loading.tsx";
+import Error from "../lib/components/Error.tsx";
 
 export const Route = createFileRoute('/drive')({
     component: RouteComponent,
 })
 
 function RouteComponent() {
-    const {data} = useQuery({
+    const {data, error, isPending, isFetching, refetch} = useQuery({
         queryKey: [`drive_${localstore.getSelf()?.id}`],
         queryFn: () => get(),
     });
@@ -23,9 +27,17 @@ function RouteComponent() {
                 title={"Drive"}
             />
             <PageWrapper padding={"full"} center={false}>
-                {data?.map((file) => (
-                    <p>{JSON.stringify(file)}</p>
-                ))}
+                {isPending || isFetching ? (
+                    <Loading fill/>
+                ) : error ? (
+                    <Error error={error} retry={refetch}/>
+                ) : (
+                    <Container gap={"md"} align={"horizontal"}>
+                        {data?.map((file) => (
+                            <DriveFile data={file}/>
+                        ))}
+                    </Container>
+                )}
             </PageWrapper>
         </>
     )

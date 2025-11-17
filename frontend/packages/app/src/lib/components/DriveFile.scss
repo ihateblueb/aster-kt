@@ -1,0 +1,19 @@
+.driveFile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+  gap: 4px;
+  box-sizing: border-box;
+
+  border-radius: var(--br-md);
+
+  img {
+    height: 115px;
+    width: 115px;
+    object-fit: cover;
+
+    border-radius: var(--br-sm);
+  }
+}

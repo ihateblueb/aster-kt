@@ -1,69 +1,58 @@
 package site.remlit.aster.util
 
-import io.ktor.http.*
-import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.routing.*
 import io.ktor.util.*
 import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.UserEntity
-import site.remlit.aster.model.ApiException
-import site.remlit.aster.service.AuthService
-import site.remlit.aster.service.RoleService
 
 val authenticatedUserKey = AttributeKey<UserEntity>("authenticatedUser")
 val authenticatedUserRoleKey = AttributeKey<RoleType>("authenticatedUserRole")
+val authorizedFetchUserKey = AttributeKey<UserEntity>("authorizedFetchUser")
 
-val auth = createRouteScopedPlugin("auth") {
-	onCall { call ->
-		val authHeader = call.request.headers["Authorization"]
-		val authCookie = call.request.cookies["AsAuthorization"]
+/**
+ * Used for authentication of routes.
+ * Simplifies calls to Ktor's Authentication plugin.
+ *
+ * @param required If authentication is required to access routes
+ * @param role Role type required to access routes
+ * @param route Route block
+ *
+ * @return Route block wrapped in authentication
+ * */
+fun Route.authentication(
+	required: Boolean = false,
+	role: RoleType? = null,
+	route: Route.() -> Unit
+): Route {
+	if (required) {
+		if (role != null) {
+			return when (role) {
+				RoleType.Admin ->
+					authenticate("authRequiredAdmin") {
+						route()
+					}
 
-		val unauthenticated = ApiException(
-			HttpStatusCode.Unauthorized,
-			"Authentication failed"
-		)
+				RoleType.Mod ->
+					authenticate("authRequiredAdmin") {
+						route()
+					}
 
-		val authEntity = AuthService.getByToken(
-			authHeader ?: authCookie ?: throw unauthenticated
-		) ?: throw unauthenticated
-
-		val user = authEntity.user
-
-		call.attributes.put(
-			authenticatedUserKey,
-			user
-		)
-
-		call.attributes.put(
-			authenticatedUserRoleKey,
-			RoleService.getUserHighestRole(user.id.toString()) ?: RoleType.Normal
-		)
+				else ->
+					throw IllegalArgumentException("Cannot require this authentication type")
+			}
+		} else {
+			return authenticate("authRequired") {
+				route()
+			}
+		}
+	} else {
+		return authenticate("authOptional") {
+			route()
+		}
 	}
 }
 
-val authOptional = createRouteScopedPlugin("authOptional") {
-	onCall { call ->
-		val authHeader = call.request.headers["Authorization"]
-		val authCookie = call.request.cookies["AsAuthorization"]
-		val token = authHeader ?: authCookie
+fun authorizedFetch(route: Route.() -> Unit) {
 
-		if (token == null) return@onCall
-
-		val authEntity = AuthService.getByToken(
-			token
-		)
-
-		if (authEntity == null) return@onCall
-
-		val user = authEntity.user
-
-		call.attributes.put(
-			authenticatedUserKey,
-			user
-		)
-
-		call.attributes.put(
-			authenticatedUserRoleKey,
-			RoleService.getUserHighestRole(user.id.toString()) ?: RoleType.Normal
-		)
-	}
 }

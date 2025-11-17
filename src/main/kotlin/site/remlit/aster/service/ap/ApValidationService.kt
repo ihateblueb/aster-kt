@@ -35,7 +35,7 @@ import kotlin.time.ExperimentalTime
 object ApValidationService : Service {
 	private val logger: Logger = LoggerFactory.getLogger(ApValidationService::class.java)
 
-	suspend fun validate(request: RoutingRequest, body: ByteArray): UserEntity? {
+	suspend fun validate(request: RoutingRequest, body: ByteArray? = null): UserEntity? {
 		val validationRequestId = IdentifierService.generate()
 
 		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
@@ -93,6 +93,7 @@ object ApValidationService : Service {
 		}
 
 		if (
+			body != null &&
 			isDigestValid(request.headers["Digest"]!!, body)
 		) {
 			logger.debug("[{}] Digest invalid.", validationRequestId)
