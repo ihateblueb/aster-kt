@@ -39,8 +39,6 @@ private fun internalAuth(
 	authorizedFetch: Boolean = false,
 	requiredRole: RoleType? = null,
 ) {
-	println("INTAUTH-O:$optional;AF:$authorizedFetch;RR:$requiredRole;")
-
 	if (authorizedFetch) {
 		val viewer = try {
 			runBlocking { ApValidationService.validate(request as RoutingRequest) }
