@@ -29,6 +29,13 @@
     justify-content: normal;
   }
 
+  &.horizontalCenter {
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+  }
+
   &.gap-sm {
     gap: 4px;
   }

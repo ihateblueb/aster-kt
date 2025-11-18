@@ -8,12 +8,11 @@ function DriveFile({data}: { data: common.DriveFile }) {
     return (
         <div className={"driveFile"}>
             <img src={data.src} alt={data.alt}/>
-            <span>{data.type}</span>
-            <Container gap={"md"} align={"horizontal"}>
-                <Button>
+            <Container gap={"md"} align={"horizontalCenter"}>
+                <Button onClick={() => alert("TODO: Edit")}>
                     <IconPencil size={18}/>
                 </Button>
-                <Button danger>
+                <Button danger onClick={() => alert("TODO: Delete")}>
                     <IconTrash size={18}/>
                 </Button>
             </Container>

@@ -27,12 +27,15 @@ import localstore from "../utils/localstore.ts";
 import likeNote from "../api/note/like.ts";
 import Dropdown, {DropdownDivider, DropdownItem, type DropdownNode} from "./dropdown/Dropdown.tsx";
 import Mfm from "./Mfm.tsx";
+import deleteNote from "../api/note/delete.ts";
+import repeatNote from "../api/note/repeat.ts";
 
 function Note(
     {data, detailed = false}:
     { data: Common.Note, detailed: boolean }
 ) {
     const navigate = useNavigate();
+    let [show, setShow] = React.useState(true)
     let [note, setNote] = React.useState(data)
     let [repeater, setRepeater] = React.useState()
 
@@ -52,6 +55,21 @@ function Note(
         likeNote(note?.id).then((e) => {
             if (e?.id === note?.id) setNote(e)
         })
+    }
+
+    function repeat() {
+        let existingRepeat: Common.SmallNote | undefined =
+            (note?.repeats?.find((e) => e?.user?.id === self?.id))
+
+        console.log("existing repeat", existingRepeat)
+
+        if (existingRepeat) {
+            deleteNote(existingRepeat?.id).then(() => {
+                setShow(false)
+            })
+        } else {
+            repeatNote(note?.id)
+        }
     }
 
     /* Rendering */
@@ -224,7 +242,7 @@ function Note(
             )
         )
 
-    return (
+    return show ? (
         <article className={"note highlightable"} tabIndex={0}
                  aria-label={`Note by ${renderAt()}${note?.content ? ", " + note?.content : ""}`}>
             {repeater != null ? (
@@ -265,8 +283,10 @@ function Note(
                     <IconArrowBackUp aria-hidden={true} size={20}/>
                 </button>
                 <button
-                    className={"highlightable" + ((note?.repeats?.some((e) => e?.id === self?.id)) ? " repeated" : "")}
-                    title={"Repeat"}>
+                    className={"highlightable" + ((note?.repeats?.some((e) => e?.user?.id === self?.id)) ? " repeated" : "")}
+                    title={"Repeat"}
+                    onClick={() => repeat()}
+                >
                     <IconRepeat aria-hidden={true} size={20}/>
                     {(note?.repeats?.length >= 1) ? <span>{note?.repeats?.length}</span> : null}
                 </button>
@@ -290,7 +310,7 @@ function Note(
 
             <Dropdown items={dropdownItems} parent={dropdownRef} open={dropdownOpen} setOpen={setDropdownOpen}/>
         </article>
-    )
+    ) : null
 }
 
 export default Note
