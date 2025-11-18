@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.config.yaml.*
 import site.remlit.aster.common.model.type.FileStorageType
 import site.remlit.aster.common.model.type.InstanceRegistrationsType
+import site.remlit.aster.exception.ConfigurationException
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.util.capitalize
 import java.io.File
@@ -28,7 +29,7 @@ object Configuration : ConfigurationObject {
 		get() =
 			Url(
 				config?.propertyOrNull("url")?.getString()
-					?: throw Exception("Configuration is missing 'url' attribute.")
+					?: throw ConfigurationException("Configuration is missing 'url' attribute.")
 			)
 
 	val port: Int get() = config?.propertyOrNull("port")?.getString()?.toInt() ?: 9782
@@ -78,11 +79,11 @@ class ConfigurationFileStorage : ConfigurationObject {
 			val path = Path(config?.propertyOrNull("fileStorage.localPath")?.getString() ?: "/var/lib/aster/files")
 
 			if (!path.exists())
-				throw Exception("File storage path doesn't exist")
+				throw ConfigurationException("File storage path doesn't exist")
 			if (!path.isDirectory())
-				throw Exception("File storage path is a file, not a directory")
+				throw ConfigurationException("File storage path is a file, not a directory")
 			if (!path.toFile().canWrite())
-				throw Exception("File storage path is not writeable")
+				throw ConfigurationException("File storage path is not writeable")
 
 			return path
 		}
@@ -96,13 +97,13 @@ class ConfigurationDatabase : ConfigurationObject {
 	val port: String get() = config?.propertyOrNull("database.port")?.getString() ?: "5432"
 	val db: String
 		get() = config?.propertyOrNull("database.db")?.getString()
-			?: throw Exception("Configuration is missing 'database.db' attribute.")
+			?: throw ConfigurationException("Configuration is missing 'database.db' attribute.")
 	val user: String
 		get() = config?.propertyOrNull("database.user")?.getString()
-			?: throw Exception("Configuration is missing 'database.user' attribute.")
+			?: throw ConfigurationException("Configuration is missing 'database.user' attribute.")
 	val password: String
 		get() = config?.propertyOrNull("database.password")?.getString()
-			?: throw Exception("Configuration is missing 'database.password' attribute.")
+			?: throw ConfigurationException("Configuration is missing 'database.password' attribute.")
 }
 
 class ConfigurationQueue : ConfigurationObject {

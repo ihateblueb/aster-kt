@@ -126,11 +126,11 @@ object CommandLineService : Service {
 					val roleId = args[2]
 
 					if (userId.isEmpty()) {
-						throw Exception("User ID required as second argument")
+						throw IllegalArgumentException("User ID required as second argument")
 					}
 
 					if (roleId.isEmpty()) {
-						throw Exception("Role ID required as third argument")
+						throw IllegalArgumentException("Role ID required as third argument")
 					}
 
 					val user = UserService.getById(userId)
@@ -163,11 +163,11 @@ object CommandLineService : Service {
 					val roleId = args[2]
 
 					if (userId.isEmpty()) {
-						throw Exception("User ID required as second argument")
+						throw IllegalArgumentException("User ID required as second argument")
 					}
 
 					if (roleId.isEmpty()) {
-						throw Exception("Role ID required as third argument")
+						throw IllegalArgumentException("Role ID required as third argument")
 					}
 
 					val user = UserService.getById(userId)

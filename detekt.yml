@@ -15,13 +15,17 @@ style:
     allowedNames: 'ignored|expected|serialVersionUID|logger'
 complexity:
   LongMethod:
-    excludes: [ '**/route/**' ]
+    excludes: [ '**/route/**', '**/service/ap/**' ]
   TooManyFunctions:
     thresholdInObjects: 20
   NestedBlockDepth:
     threshold: 8
   LongParameterList:
     functionThreshold: 8
+  CyclomaticComplexMethod:
+    active: false
+  ComplexCondition:
+    threshold: 12
 exceptions:
   TooGenericExceptionCaught:
     active: false

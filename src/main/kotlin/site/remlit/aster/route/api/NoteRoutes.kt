@@ -44,8 +44,7 @@ object NoteRoutes {
 						(Configuration.hideRemoteContent && note.user.host != null && call.attributes.getOrNull(
 							authenticatedUserKey
 						) == null)
-					)
-						throw ApiException(HttpStatusCode.NotFound, "Note not found.")
+					) throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
 					call.respond(note)
 				}
@@ -154,8 +153,7 @@ object NoteRoutes {
 							note.to,
 							authenticatedUser.id.toString()
 						)
-					)
-						throw ApiException(HttpStatusCode.NotFound, "Note not found.")
+					) throw ApiException(HttpStatusCode.NotFound, "Note not found.")
 
 					if (note.user.id == authenticatedUser.id.toString())
 						throw ApiException(HttpStatusCode.BadRequest, "You can't bite your own note")

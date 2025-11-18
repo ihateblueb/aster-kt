@@ -29,8 +29,14 @@ object VisibilityService : Service {
 		user: String,
 		ignoreBlock: Boolean = false
 	): Boolean {
-		val author = User.fromEntity(UserService.getById(author) ?: throw Exception("Author not found"))
-		val user = User.fromEntity(UserService.getById(user) ?: throw Exception("User not found"))
+		val author = User.fromEntity(
+			UserService.getById(author)
+				?: throw IllegalArgumentException("Author not found")
+		)
+		val user = User.fromEntity(
+			UserService.getById(user)
+				?: throw IllegalArgumentException("User not found")
+		)
 
 		if (!ignoreBlock && RelationshipService.eitherBlocking(user.id, author.id))
 			return false

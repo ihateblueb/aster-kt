@@ -16,7 +16,7 @@ class ApBiteHandler : ApInboxHandler() {
 
 		if (bite.actor == null) return
 		val sender = ApActorService.resolve(bite.actor)
-			?: throw Exception("Sender could not be resolved")
+			?: throw IllegalArgumentException("Sender could not be resolved")
 
 		val targetNote = NoteService.getByApId(bite.target)
 		val targetUser = UserService.getByApId(bite.target)
@@ -32,7 +32,7 @@ class ApBiteHandler : ApInboxHandler() {
 				realTargetUser.id.toString(),
 			)
 		) return
-		
+
 		NotificationService.bite(
 			realTargetUser,
 			sender,
