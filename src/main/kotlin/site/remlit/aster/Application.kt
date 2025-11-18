@@ -180,7 +180,6 @@ fun Application.module() {
 		}
 	}
 
-	configureAuthentication()
 	configureRouting()
 
 	ApplicationFinishStartEvent().call()

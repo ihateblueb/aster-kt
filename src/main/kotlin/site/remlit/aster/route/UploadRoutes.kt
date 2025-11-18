@@ -2,7 +2,6 @@ package site.remlit.aster.route
 
 import io.ktor.http.*
 import io.ktor.http.content.*
-import io.ktor.server.auth.*
 import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -16,6 +15,7 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.DriveService
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.util.authenticatedUserKey
+import site.remlit.aster.util.authentication
 import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
@@ -28,7 +28,10 @@ object UploadRoutes {
 		staticFiles("/uploads", Configuration.fileStorage.localPath.toFile()) {
 			enableAutoHeadResponse()
 		}
-		authenticate("authRequired") {
+		
+		authentication(
+			required = true,
+		) {
 			post("/upload") {
 				val authenticatedUser = call.attributes[authenticatedUserKey]
 				// mb value * 1mb in bytes = max upload value in bytes

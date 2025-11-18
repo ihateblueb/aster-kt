@@ -19,6 +19,7 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.greaterEq
 import org.jetbrains.exposed.v1.core.neq
 import site.remlit.aster.common.model.Meta
+import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.table.NoteTable
 import site.remlit.aster.db.table.UserTable
 import site.remlit.aster.registry.RouteRegistry
@@ -26,6 +27,7 @@ import site.remlit.aster.service.DriveService
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.getMeta
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
@@ -33,101 +35,106 @@ import site.remlit.aster.util.webcomponent.adminMain
 object AdminIndexRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			staticResources("/admin/assets", "admin")
+			authentication(
+				required = true,
+				role = RoleType.Admin
+			) {
+				staticResources("/admin/assets", "admin")
 
-			get("/admin") {
-				call.respondHtml(HttpStatusCode.OK) {
-					head {
-						title { +"Admin Panel" }
-						styleLink("/admin/assets/index.css")
-						// some autoreload script
-					}
-					body {
-						adminHeader("Overview")
-						adminMain {
-							val meta = Meta.getMeta()
-							h2 { +"Software" }
-							table {
-								classes = setOf("_50")
-								tr {
-									th { +"Version" }
-									td { +meta.version.aster }
+				get("/admin") {
+					call.respondHtml(HttpStatusCode.OK) {
+						head {
+							title { +"Admin Panel" }
+							styleLink("/admin/assets/index.css")
+							// some autoreload script
+						}
+						body {
+							adminHeader("Overview")
+							adminMain {
+								val meta = Meta.getMeta()
+								h2 { +"Software" }
+								table {
+									classes = setOf("_50")
+									tr {
+										th { +"Version" }
+										td { +meta.version.aster }
+									}
+									tr {
+										th { +"Java" }
+										td { +meta.version.java }
+									}
+									tr {
+										th { +"Kotlin" }
+										td { +meta.version.kotlin }
+									}
+									tr {
+										th { +"System" }
+										td { +meta.version.system }
+									}
 								}
-								tr {
-									th { +"Java" }
-									td { +meta.version.java }
-								}
-								tr {
-									th { +"Kotlin" }
-									td { +meta.version.kotlin }
-								}
-								tr {
-									th { +"System" }
-									td { +meta.version.system }
-								}
-							}
-							h2 { +"Statistics" }
-							table {
-								tr {
-									th { +"Known instances" }
-									td { +"0" }
-								}
-								tr {
-									th { +"Active instances" }
-									td { +"0" }
-								}
+								h2 { +"Statistics" }
+								table {
+									tr {
+										th { +"Known instances" }
+										td { +"0" }
+									}
+									tr {
+										th { +"Active instances" }
+										td { +"0" }
+									}
 
-								val totalNotes = NoteService.count(NoteTable.id neq null)
-								val localNotes = NoteService.count(UserTable.host eq null)
+									val totalNotes = NoteService.count(NoteTable.id neq null)
+									val localNotes = NoteService.count(UserTable.host eq null)
 
-								tr {
-									th { +"Total notes" }
-									td { +totalNotes.toString() }
-								}
-								tr {
-									th { +"Local notes" }
-									td { +localNotes.toString() }
-								}
+									tr {
+										th { +"Total notes" }
+										td { +totalNotes.toString() }
+									}
+									tr {
+										th { +"Local notes" }
+										td { +localNotes.toString() }
+									}
 
-								val totalNotes24hr =
-									NoteService.count(NoteTable.createdAt greaterEq (TimeService.daysAgo(1)))
-								val localNotes24hr =
-									NoteService.count(
-										UserTable.host eq null and
-												(NoteTable.createdAt greaterEq (TimeService.daysAgo(1)))
-									)
+									val totalNotes24hr =
+										NoteService.count(NoteTable.createdAt greaterEq (TimeService.daysAgo(1)))
+									val localNotes24hr =
+										NoteService.count(
+											UserTable.host eq null and
+													(NoteTable.createdAt greaterEq (TimeService.daysAgo(1)))
+										)
 
-								tr {
-									th { +"Total notes, past 24hr" }
-									td { +totalNotes24hr.toString() }
-								}
-								tr {
-									th { +"Local notes, past 24hr" }
-									td { +localNotes24hr.toString() }
-								}
+									tr {
+										th { +"Total notes, past 24hr" }
+										td { +totalNotes24hr.toString() }
+									}
+									tr {
+										th { +"Local notes, past 24hr" }
+										td { +localNotes24hr.toString() }
+									}
 
-								val totalUsers = UserService.count(UserTable.id neq null)
-								val localUsers = UserService.count(UserTable.host eq null)
+									val totalUsers = UserService.count(UserTable.id neq null)
+									val localUsers = UserService.count(UserTable.host eq null)
 
-								tr {
-									th { +"Total users" }
-									td { +totalUsers.toString() }
-								}
-								tr {
-									th { +"Local users" }
-									td { +localUsers.toString() }
-								}
+									tr {
+										th { +"Total users" }
+										td { +totalUsers.toString() }
+									}
+									tr {
+										th { +"Local users" }
+										td { +localUsers.toString() }
+									}
 
-								val totalFiles = DriveService.count(UserTable.id neq null)
-								val localFiles = DriveService.count(UserTable.host eq null)
+									val totalFiles = DriveService.count(UserTable.id neq null)
+									val localFiles = DriveService.count(UserTable.host eq null)
 
-								tr {
-									th { +"Total files" }
-									td { +totalFiles.toString() }
-								}
-								tr {
-									th { +"Local files" }
-									td { +localFiles.toString() }
+									tr {
+										th { +"Total files" }
+										td { +totalFiles.toString() }
+									}
+									tr {
+										th { +"Local files" }
+										td { +localFiles.toString() }
+									}
 								}
 							}
 						}
