@@ -1,7 +1,6 @@
 package site.remlit.aster.route.api
 
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.v1.core.and
@@ -17,12 +16,15 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.sql.arrayContains
 
 object TimelineRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			authenticate("authRequired") {
+			authentication(
+				required = true,
+			) {
 				get("/api/timeline/home") {
 					val authenticatedUser = call.attributes[authenticatedUserKey]
 					val since = TimelineService.normalizeSince(call.parameters["since"])
@@ -54,7 +56,9 @@ object TimelineRoutes {
 				}
 			}
 
-			authenticate(if (Configuration.timeline.local.authRequired) "authRequired" else "authOptional") {
+			authentication(
+				required = Configuration.timeline.local.authRequired,
+			) {
 				get("/api/timeline/local") {
 					val since = TimelineService.normalizeSince(call.parameters["since"])
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
@@ -75,7 +79,9 @@ object TimelineRoutes {
 				}
 			}
 
-			authenticate(if (Configuration.timeline.bubble.authRequired) "authRequired" else "authOptional") {
+			authentication(
+				required = Configuration.timeline.bubble.authRequired,
+			) {
 				get("/api/timeline/bubble") {
 					val since = TimelineService.normalizeSince(call.parameters["since"])
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
@@ -98,7 +104,9 @@ object TimelineRoutes {
 				}
 			}
 
-			authenticate(if (Configuration.timeline.public.authRequired) "authRequired" else "authOptional") {
+			authentication(
+				required = Configuration.timeline.public.authRequired,
+			) {
 				get("/api/timeline/public") {
 					val since = TimelineService.normalizeSince(call.parameters["since"])
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())

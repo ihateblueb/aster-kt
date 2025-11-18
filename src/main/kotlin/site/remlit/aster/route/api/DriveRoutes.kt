@@ -19,7 +19,9 @@ import site.remlit.aster.util.authentication
 object DriveRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			authentication {
+			authentication(
+				required = true
+			) {
 				get("/api/drive") {
 					val authenticatedUser = call.attributes[authenticatedUserKey]
 					val since = TimelineService.normalizeSince(call.parameters["since"])

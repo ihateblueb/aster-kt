@@ -23,6 +23,7 @@ import site.remlit.aster.model.Configuration
 import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.RoleService
 import site.remlit.aster.service.UserService
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminListNav
 import site.remlit.aster.util.webcomponent.adminMain
@@ -30,71 +31,76 @@ import site.remlit.aster.util.webcomponent.adminMain
 object AdminUserRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			get("/admin/users") {
-				val take = Configuration.timeline.defaultObjects
-				val offset = call.parameters["offset"]?.toLong() ?: 0
-				val isLocal = true
+			authentication(
+				required = true,
+				role = RoleType.Admin
+			) {
+				get("/admin/users") {
+					val take = Configuration.timeline.defaultObjects
+					val offset = call.parameters["offset"]?.toLong() ?: 0
+					val isLocal = true
 
-				val users = UserService.getMany(
-					(if (isLocal) UserTable.host eq null else UserTable.id neq null),
-					take,
-					offset
-				)
+					val users = UserService.getMany(
+						(if (isLocal) UserTable.host eq null else UserTable.id neq null),
+						take,
+						offset
+					)
 
-				val totalUsers = UserService.count(
-					(if (isLocal) UserTable.host eq null else UserTable.id neq null)
-				)
+					val totalUsers = UserService.count(
+						(if (isLocal) UserTable.host eq null else UserTable.id neq null)
+					)
 
-				call.respondHtml(HttpStatusCode.OK) {
-					head {
-						title { +"Users" }
-						styleLink("/admin/assets/index.css")
-						script { src = "/admin/assets/index.js" }
-					}
-					body {
-						adminHeader("Users")
-						adminMain {
-							table {
-								tr {
-									classes = setOf("header")
-									th { +"Username" }
-									th { +"Status" }
-									th { +"Actions" }
-								}
-								for (user in users) {
+					call.respondHtml(HttpStatusCode.OK) {
+						head {
+							title { +"Users" }
+							styleLink("/admin/assets/index.css")
+							script { src = "/admin/assets/index.js" }
+						}
+						body {
+							adminHeader("Users")
+							adminMain {
+								table {
 									tr {
-										td {
-											+"@${user.username}${if (user.host != null) "@" + user.host else ""}"
-										}
-										td {
-											val status = mutableListOf<String>()
-
-											status += if (user.activated) "Activated" else "Unactivated"
-
-											val highestRole = RoleService.getUserHighestRole(user.id.toString())
-											if (highestRole == RoleType.Admin) status += "Admin"
-											if (highestRole == RoleType.Mod) status += "Mod"
-
-											if (user.suspended) status += "Suspended"
-											if (user.sensitive) status += "Sensitive"
-
-											+status.joinToString(separator = ", ")
-										}
-										td {
-											button {
-												+"Activate"
+										classes = setOf("header")
+										th { +"Username" }
+										th { +"Status" }
+										th { +"Actions" }
+									}
+									for (user in users) {
+										tr {
+											td {
+												+"@${user.username}${if (user.host != null) "@" + user.host else ""}"
 											}
-											button {
-												+"Suspend"
+											td {
+												val status = mutableListOf<String>()
+
+												status += if (user.activated) "Activated" else "Unactivated"
+
+												val highestRole = RoleService.getUserHighestRole(user.id.toString())
+												if (highestRole == RoleType.Admin) status += "Admin"
+												if (highestRole == RoleType.Mod) status += "Mod"
+
+												if (user.suspended) status += "Suspended"
+												if (user.sensitive) status += "Sensitive"
+
+												+status.joinToString(separator = ", ")
+											}
+											td {
+												button {
+													+"Activate"
+												}
+												button {
+													+"Suspend"
+												}
 											}
 										}
 									}
 								}
+								p {
+									+"${users.size}${if (isLocal) " local" else ""} users shown, $totalUsers total."
+								}
+								adminListNav(offset, take)
 							}
-							p {
-								+"${users.size}${if (isLocal) " local" else ""} users shown, $totalUsers total."
-							}
-							adminListNav(offset, take)
 						}
 					}
 				}

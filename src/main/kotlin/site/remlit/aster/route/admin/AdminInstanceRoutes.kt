@@ -15,10 +15,12 @@ import kotlinx.html.th
 import kotlinx.html.title
 import kotlinx.html.tr
 import org.jetbrains.exposed.v1.core.neq
+import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.table.InstanceTable
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.InstanceService
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminListNav
 import site.remlit.aster.util.webcomponent.adminMain
@@ -26,52 +28,57 @@ import site.remlit.aster.util.webcomponent.adminMain
 object AdminInstanceRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			get("/admin/instances") {
-				val take = Configuration.timeline.defaultObjects
-				val offset = call.parameters["offset"]?.toLong() ?: 0
+			authentication(
+				required = true,
+				role = RoleType.Admin
+			) {
+				get("/admin/instances") {
+					val take = Configuration.timeline.defaultObjects
+					val offset = call.parameters["offset"]?.toLong() ?: 0
 
-				val instances = InstanceService.getMany(
-					InstanceTable.id neq "",
-					take,
-					offset
-				)
-				val totalInstances = InstanceService.count(
-					InstanceTable.id neq ""
-				)
+					val instances = InstanceService.getMany(
+						InstanceTable.id neq "",
+						take,
+						offset
+					)
+					val totalInstances = InstanceService.count(
+						InstanceTable.id neq ""
+					)
 
-				call.respondHtml(HttpStatusCode.OK) {
-					head {
-						title { +"Instances" }
-						styleLink("/admin/assets/index.css")
-					}
-					body {
-						adminHeader("Instances")
-						adminMain {
-							table {
-								tr {
-									classes = setOf("header")
-									th { +"Host" }
-									th { +"Software" }
-									th { +"Description" }
-									th { +"Actions" }
-								}
-								for (instance in instances) {
+					call.respondHtml(HttpStatusCode.OK) {
+						head {
+							title { +"Instances" }
+							styleLink("/admin/assets/index.css")
+						}
+						body {
+							adminHeader("Instances")
+							adminMain {
+								table {
 									tr {
-										td { +instance.host }
-										td { +"${instance.software} ${instance.version}" }
-										td { +(instance.description ?: "") }
-										td {
-											button {
-												+"Suspend"
+										classes = setOf("header")
+										th { +"Host" }
+										th { +"Software" }
+										th { +"Description" }
+										th { +"Actions" }
+									}
+									for (instance in instances) {
+										tr {
+											td { +instance.host }
+											td { +"${instance.software} ${instance.version}" }
+											td { +(instance.description ?: "") }
+											td {
+												button {
+													+"Suspend"
+												}
 											}
 										}
 									}
 								}
+								p {
+									+"${instances.size} instances shown, $totalInstances total."
+								}
+								adminListNav(offset, take)
 							}
-							p {
-								+"${instances.size} instances shown, $totalInstances total."
-							}
-							adminListNav(offset, take)
 						}
 					}
 				}

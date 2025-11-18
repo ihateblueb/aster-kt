@@ -1,7 +1,6 @@
 package site.remlit.aster.route.api
 
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -22,13 +21,14 @@ import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
 import site.remlit.aster.service.ap.ApActorService
 import site.remlit.aster.util.authenticatedUserKey
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.fromEntity
 import site.remlit.aster.util.sanitizeOrNull
 
 object UserRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			authenticate("authOptional") {
+			authentication {
 				get("/api/lookup/{handle}") {
 					val handle = call.parameters.getOrFail("handle").removePrefix("@")
 					val splitHandle = handle.split("@")
@@ -62,7 +62,9 @@ object UserRoutes {
 				)
 			}
 
-			authenticate("authRequired") {
+			authentication(
+				required = true,
+			) {
 				post("/api/user/{id}") {
 					val authenticatedUser = call.attributes[authenticatedUserKey]
 					val user = UserService.getById(call.parameters.getOrFail("id"))

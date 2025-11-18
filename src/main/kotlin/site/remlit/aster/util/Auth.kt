@@ -7,6 +7,7 @@ import io.ktor.server.routing.*
 import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.annotations.ApiStatus
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.model.ApiException
@@ -76,7 +77,7 @@ private fun internalAuth(
 			null
 		}
 
-		val user = authEntity?.user
+		val user = transaction { authEntity?.user }
 
 		if (user != null && user.activated && !user.suspended) {
 			attributes.put(

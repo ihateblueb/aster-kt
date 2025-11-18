@@ -1,7 +1,6 @@
 package site.remlit.aster.route.api.mod
 
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,6 +10,7 @@ import org.jetbrains.exposed.v1.core.less
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import site.remlit.aster.common.model.Policy
 import site.remlit.aster.common.model.type.PolicyType
+import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.PolicyEntity
 import site.remlit.aster.db.table.PolicyTable
 import site.remlit.aster.model.ApiException
@@ -18,6 +18,7 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.PolicyService
 import site.remlit.aster.service.TimelineService
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.fromEntities
 import site.remlit.aster.util.model.fromEntity
 
@@ -32,7 +33,10 @@ object PolicyRoutes {
 	fun register() =
 		// todo: some of this needs to be moved into the service
 		RouteRegistry.registerRoute {
-			authenticate("authRequiredMod") {
+			authentication(
+				required = true,
+				role = RoleType.Mod
+			) {
 				get("/api/mod/policies") {
 					val since = TimelineService.normalizeSince(call.parameters["since"])
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
