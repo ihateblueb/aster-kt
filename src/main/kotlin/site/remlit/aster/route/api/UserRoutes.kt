@@ -44,8 +44,7 @@ object UserRoutes {
 						(Configuration.hideRemoteContent && user.host != null && call.attributes.getOrNull(
 							authenticatedUserKey
 						) == null)
-					)
-						throw ApiException(HttpStatusCode.NotFound)
+					) throw ApiException(HttpStatusCode.NotFound)
 
 					call.respond(User.fromEntity(user))
 				}

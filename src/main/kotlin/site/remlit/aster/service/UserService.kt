@@ -7,6 +7,7 @@ import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.db.entity.UserPrivateEntity
 import site.remlit.aster.db.table.UserPrivateTable
 import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.exception.SetupException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 
@@ -75,7 +76,8 @@ object UserService : Service {
 	 * @return Instance actor user
 	 * */
 	fun getInstanceActor(): UserEntity {
-		val user = getByUsername("instance.actor") ?: throw RuntimeException("Instance actor can't be null")
+		val user = getByUsername("instance.actor")
+			?: throw SetupException("Instance actor can't be null")
 
 		return user
 	}

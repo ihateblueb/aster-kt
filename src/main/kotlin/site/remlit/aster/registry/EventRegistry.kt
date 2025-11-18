@@ -44,7 +44,8 @@ object EventRegistry {
 	 * @since 2025.9.1.0-SNAPSHOT
 	 * */
 	fun addListener(event: KClass<*>, listener: (Event) -> Unit) {
-		if (!event.isSubclassOf(Event::class)) throw IllegalArgumentException("Event $event is not a derivative of the Event interface")
+		if (!event.isSubclassOf(Event::class))
+			throw IllegalArgumentException("Event $event is not a derivative of the Event interface")
 		if (Configuration.debug) logger.debug("Added ${event.simpleName} listener ${listener::class.simpleName}")
 		listeners.add(Pair(event, listener))
 	}

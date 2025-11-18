@@ -18,7 +18,6 @@ import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.ResolverService
 import site.remlit.aster.service.TimeService
 import site.remlit.aster.service.UserService
-import site.remlit.aster.util.extractBoolean
 import site.remlit.aster.util.extractString
 import site.remlit.aster.util.ifFails
 import site.remlit.aster.util.jsonConfig
@@ -88,8 +87,6 @@ object ApNoteService : Service {
 		val content = extractString { json["content"] }
 		val misskeyContent = extractString { json["_misskey_content"] }
 
-		val sensitive = extractBoolean { json["sensitive"] } ?: false
-
 		val published = extractString { json["published"] }.let {
 			if (it != null) ifFails({ LocalDateTime.parse(it) }) {
 				TimeService.now()
@@ -149,11 +146,11 @@ object ApNoteService : Service {
 					it.user = UserService.getById(note.user?.id!!)!!
 					it.cw = note.cw
 					// todo: note nullability
-					it.content = note.content ?: ""
+					it.content = note.content.orEmpty()
 					it.visibility = note.visibility ?: Visibility.Direct
 
 					// todo: to
-					it.to = note.to ?: emptyList()
+					it.to = note.to.orEmpty()
 					// todo: tags
 					// todo: emojis
 					// todo: repeat
@@ -184,11 +181,11 @@ object ApNoteService : Service {
 					this.user = UserService.getById(note.user?.id!!)!!
 					this.cw = note.cw
 					// todo: note nullability
-					this.content = note.content ?: ""
+					this.content = note.content.orEmpty()
 					this.visibility = note.visibility ?: Visibility.Direct
 
 					// todo: to
-					this.to = note.to ?: emptyList()
+					this.to = note.to.orEmpty()
 					// todo: tags
 					// todo: emojis
 					// todo: repeat

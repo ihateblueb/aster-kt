@@ -12,9 +12,9 @@ import site.remlit.aster.db.entity.UserEntity
 import site.remlit.aster.db.entity.UserPrivateEntity
 import site.remlit.aster.db.table.RoleTable
 import site.remlit.aster.db.table.UserTable
+import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.KeyType
 import site.remlit.aster.model.Service
-import site.remlit.aster.model.Configuration
 import site.remlit.aster.service.ap.ApIdService
 
 /**
@@ -40,7 +40,7 @@ object SetupService : Service {
 		val existingAdminRole = RoleService.get(RoleTable.type eq RoleType.Admin)
 
 		if (existingAdminRole != null) {
-			if (Configuration.debug) logger.debug("Admin role already exists.")
+			if (Configuration.debug) logger.debug("Admin role already exists")
 		} else {
 			logger.warn("Admin role missing, generating...")
 
@@ -53,13 +53,13 @@ object SetupService : Service {
 				}
 			}
 
-			logger.info("Admin role generated.")
+			logger.info("Admin role generated")
 		}
 
 		val existingModRole = RoleService.get(RoleTable.type eq RoleType.Mod)
 
 		if (existingModRole != null) {
-			if (Configuration.debug) logger.debug("Mod role already exists.")
+			if (Configuration.debug) logger.debug("Mod role already exists")
 		} else {
 			logger.warn("Mod role missing, generating...")
 
@@ -72,7 +72,7 @@ object SetupService : Service {
 				}
 			}
 
-			logger.info("Mod role generated.")
+			logger.info("Mod role generated")
 		}
 	}
 
@@ -87,7 +87,7 @@ object SetupService : Service {
 		)
 
 		if (existingActor != null) {
-			logger.info("Instance actor already exists.")
+			if (Configuration.debug) logger.debug("Instance actor already exists")
 		} else {
 			logger.warn("Instance actor missing, generating...")
 
@@ -116,7 +116,7 @@ object SetupService : Service {
 				}
 			}
 
-			logger.info("Instance actor generated.")
+			logger.info("Instance actor generated")
 		}
 	}
 }

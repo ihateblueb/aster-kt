@@ -58,7 +58,10 @@ object ApActorService : Service {
 	// partials used here since a regular user has the expectation of being real,
 	// may in future have calculated fields like likes on note, where creating them
 	// would waste a query and potentially error
-	fun toUser(json: JsonObject, existing: User? = null): PartialUser? {
+	fun toUser(
+		json: JsonObject,
+		existing: User? = null
+	): PartialUser? {
 		val extractedId = extractString { json["id"] }
 
 		if (extractedId.isNullOrBlank()) {

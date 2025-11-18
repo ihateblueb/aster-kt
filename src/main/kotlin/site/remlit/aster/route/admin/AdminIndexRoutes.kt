@@ -36,7 +36,7 @@ object AdminIndexRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			staticResources("/admin/assets", "admin")
-			
+
 			authentication(
 				required = true,
 				role = RoleType.Admin

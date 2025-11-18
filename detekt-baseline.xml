@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+    <ManuallySuppressedIssues/>
+    <CurrentIssues>
+        <ID>EmptyFunctionBlock:RelationshipService.kt$RelationshipService${}</ID>
+        <ID>ForbiddenComment:NoteService.kt$NoteService$// TODO: duration?</ID>
+        <ID>LongMethod:Application.kt$@ApiStatus.Internal fun Application.module()</ID>
+        <ID>LongMethod:CommandLineService.kt$CommandLineService$suspend fun execute(args: Array&lt;String>)</ID>
+        <ID>LoopWithTooManyJumpStatements:InstanceService.kt$InstanceService$for</ID>
+        <ID>LoopWithTooManyJumpStatements:MigrationService.kt$MigrationService$for</ID>
+        <ID>MagicNumber:AidCounter.kt$10</ID>
+        <ID>MagicNumber:ApValidationService.kt$ApValidationService$150</ID>
+        <ID>MagicNumber:Application.kt$10</ID>
+        <ID>MagicNumber:Configuration.kt$Configuration$1000L</ID>
+        <ID>MagicNumber:Configuration.kt$Configuration$30</ID>
+        <ID>MagicNumber:Configuration.kt$Configuration$9782</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationFileStorage$25</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationQueue$4</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationQueue$6</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationQueue$8</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationTimeline$15</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationTimeline$35</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$36</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$4</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$8</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$946684800000L</ID>
+        <ID>MagicNumber:KeypairService.kt$KeypairService$2048</ID>
+        <ID>MagicNumber:QueueService.kt$QueueService$15</ID>
+        <ID>MagicNumber:RandomService.kt$RandomService$32</ID>
+        <ID>MagicNumber:RegisterRoutes.kt$RegisterRoutes$12</ID>
+        <ID>MagicNumber:SetupService.kt$SetupService$12</ID>
+        <ID>MagicNumber:TimeService.kt$TimeService$24</ID>
+        <ID>MagicNumber:UploadRoutes.kt$UploadRoutes$1000000L</ID>
+        <ID>PrintStackTrace:ApDeliverService.kt$ApDeliverService$e</ID>
+        <ID>PrintStackTrace:ApValidationService.kt$ApValidationService$e</ID>
+        <ID>SwallowedException:ApValidationService.kt$ApValidationService$e: Exception</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$content: String</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$cw: String?</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$id: String</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$noteId: String</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$user: User</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$user: UserEntity</ID>
+        <ID>UnusedParameter:RelationshipService.kt$RelationshipService$from: String</ID>
+        <ID>UnusedParameter:RelationshipService.kt$RelationshipService$to: String</ID>
+        <ID>UnusedParameter:SanitizerService.kt$SanitizerService$escape: Boolean = false</ID>
+    </CurrentIssues>
+</SmellBaseline>

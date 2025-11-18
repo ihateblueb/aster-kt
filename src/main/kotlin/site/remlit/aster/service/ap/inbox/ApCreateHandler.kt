@@ -22,21 +22,21 @@ class ApCreateHandler : ApInboxHandler() {
 			is ApIdOrObject.Id -> {
 				// todo: ApGenericResolver
 				ApNoteService.resolve(copy.`object`.value)
-					?: throw Exception("Note ${copy.`object`.value} not found")
+					?: throw IllegalArgumentException("Note ${copy.`object`.value} not found")
 			}
 
 			is ApIdOrObject.Object -> {
 				val obj = jsonConfig.decodeFromJsonElement<ApTypedObject>(copy.`object`.value)
 				when (obj.type) {
-					"Note" -> handleNote(job, jsonConfig.decodeFromJsonElement<ApNote>(copy.`object`.value))
+					"Note" -> handleNote(jsonConfig.decodeFromJsonElement<ApNote>(copy.`object`.value))
 					else -> throw NotImplementedError("No Create handler for ${obj.type}")
 				}
 			}
 		}
 	}
 
-	suspend fun handleNote(job: InboxQueueEntity, note: ApNote) {
+	suspend fun handleNote(note: ApNote) {
 		ApNoteService.resolve(note.id)
-			?: throw Exception("Note ${note.id} not found")
+			?: throw IllegalArgumentException("Note ${note.id} not found")
 	}
 }

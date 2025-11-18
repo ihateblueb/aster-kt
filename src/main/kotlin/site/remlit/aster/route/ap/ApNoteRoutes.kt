@@ -59,8 +59,8 @@ object ApNoteRoutes {
 						`object` = ApIdOrObject.createObject {
 							ApNote.fromEntity(note)
 						},
-						to = toCc["to"] ?: emptyList(),
-						cc = toCc["cc"] ?: emptyList()
+						to = toCc["to"].orEmpty(),
+						cc = toCc["cc"].orEmpty()
 					)
 				)
 			}

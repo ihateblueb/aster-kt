@@ -1,0 +1,34 @@
+style:
+  WildcardImport:
+    active: false
+  UseRequire:
+    active: false
+  UseCheckOrError:
+    active: false
+  ReturnCount:
+    active: false
+  ThrowsCount:
+    active: false
+  UseAnyOrNoneInsteadOfFind:
+    active: false
+  UnusedPrivateProperty:
+    allowedNames: 'ignored|expected|serialVersionUID|logger'
+complexity:
+  LongMethod:
+    excludes: [ '**/route/**', '**/service/ap/**' ]
+  TooManyFunctions:
+    thresholdInObjects: 20
+  NestedBlockDepth:
+    threshold: 8
+  LongParameterList:
+    functionThreshold: 8
+  CyclomaticComplexMethod:
+    active: false
+  ComplexCondition:
+    threshold: 12
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+naming:
+  NoNameShadowing:
+    active: false

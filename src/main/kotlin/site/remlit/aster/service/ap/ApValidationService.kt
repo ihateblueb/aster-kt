@@ -35,7 +35,19 @@ import kotlin.time.ExperimentalTime
 object ApValidationService : Service {
 	private val logger: Logger = LoggerFactory.getLogger(ApValidationService::class.java)
 
-	suspend fun validate(request: RoutingRequest, body: ByteArray? = null): UserEntity? {
+	/**
+	 * Validates an ActivityPub request
+	 *
+	 * @param request Routing request
+	 * @param body Request body
+	 *
+	 * @return Requesting user
+	 * */
+	@Suppress("LongMethod", "CyclomaticComplexMethod")
+	suspend fun validate(
+		request: RoutingRequest,
+		body: ByteArray? = null
+	): UserEntity {
 		val validationRequestId = IdentifierService.generate()
 
 		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
@@ -107,7 +119,6 @@ object ApValidationService : Service {
 		println(signatureHeader)
 
 		val keyIdRegex = buildHeaderRegex("keyId")
-		val algorithmRegex = buildHeaderRegex("algorithm")
 		val headersRegex = buildHeaderRegex("headers")
 		val signatureRegex = buildHeaderRegex("signature")
 
@@ -115,11 +126,6 @@ object ApValidationService : Service {
 			?: throw ApValidationException(
 				ApValidationExceptionType.Unauthorized,
 				"Could not extract keyId from Signature header"
-			)
-		val sigAlgorithm = algorithmRegex.find(signatureHeader)?.groups?.get(1)?.value
-			?: throw ApValidationException(
-				ApValidationExceptionType.Unauthorized,
-				"Could not extract algorithm from Signature header"
 			)
 		val sigHeaders = headersRegex.find(signatureHeader)?.groups?.get(1)?.value?.split(" ")
 			?: throw ApValidationException(

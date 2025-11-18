@@ -16,7 +16,8 @@ object VisibilityService : Service {
 	 *
 	 * @param visibility Visibility of the entity
 	 * @param author Author of the entity
-	 * @param to List of user ids, other users who can see this entity (for direct visibility). Not applicable to all entities.
+	 * @param to List of user ids, other users who can see this entity
+	 *           (for direct visibility). Not applicable to all entities.
 	 * @param user User who is trying to view the entity
 	 * @param ignoreBlock Whether to take block relationships into account
 	 *
@@ -29,8 +30,14 @@ object VisibilityService : Service {
 		user: String,
 		ignoreBlock: Boolean = false
 	): Boolean {
-		val author = User.fromEntity(UserService.getById(author) ?: throw Exception("Author not found"))
-		val user = User.fromEntity(UserService.getById(user) ?: throw Exception("User not found"))
+		val author = User.fromEntity(
+			UserService.getById(author)
+				?: throw IllegalArgumentException("Author not found")
+		)
+		val user = User.fromEntity(
+			UserService.getById(user)
+				?: throw IllegalArgumentException("User not found")
+		)
 
 		if (!ignoreBlock && RelationshipService.eitherBlocking(user.id, author.id))
 			return false

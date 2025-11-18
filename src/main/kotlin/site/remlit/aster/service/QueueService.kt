@@ -77,7 +77,7 @@ object QueueService : Service {
 			}
 		}
 
-		logger.info("Initialized inbox and deliver queues.")
+		logger.info("Initialized inbox and deliver queues")
 	}
 
 	// queue checkers

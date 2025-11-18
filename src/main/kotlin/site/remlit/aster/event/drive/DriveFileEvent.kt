@@ -10,4 +10,4 @@ import site.remlit.aster.model.Event
  *
  * @since 2025.10.5.0-SNAPSHOT
  * */
-abstract class DriveFileEvent(val driveFile: DriveFile) : Event
+open class DriveFileEvent(val driveFile: DriveFile) : Event

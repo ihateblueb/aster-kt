@@ -159,7 +159,8 @@ fun Application.module() {
 
 			if (cause is ApValidationException) {
 				call.respond(
-					if (cause.type == ApValidationExceptionType.Unauthorized) HttpStatusCode.Unauthorized else HttpStatusCode.Forbidden,
+					if (cause.type == ApValidationExceptionType.Unauthorized) HttpStatusCode.Unauthorized
+					else HttpStatusCode.Forbidden,
 					ApiError(
 						cause.message,
 						call.callId,

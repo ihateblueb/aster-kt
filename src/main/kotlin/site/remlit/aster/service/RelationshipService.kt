@@ -229,7 +229,7 @@ object RelationshipService : Service {
 		}
 
 		val relationship = getByIds(to.id.toString(), from.id.toString())
-			?: throw Exception("Relationship not found")
+			?: throw IllegalArgumentException("Relationship not found")
 
 		if (to.host == null) {
 			NotificationService.create(

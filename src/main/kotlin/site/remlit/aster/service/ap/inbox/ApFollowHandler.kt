@@ -17,20 +17,20 @@ class ApFollowHandler : ApInboxHandler() {
 		val follow = jsonConfig.decodeFromString<ApFollowActivity>(String(job.content.bytes))
 
 		val actor = ApActorService.resolve(follow.actor)
-			?: throw Exception("Follow sender cannot be found")
+			?: throw IllegalArgumentException("Follow sender cannot be found")
 
 		val obj = when (follow.`object`) {
 			is ApIdOrObject.Id -> ApActorService.resolve(follow.`object`.value)
-			else -> throw Exception("Follow target must be represented as an ID")
-		} ?: throw Exception("Follow target cannot be found")
+			else -> throw IllegalArgumentException("Follow target must be represented as an ID")
+		} ?: throw IllegalArgumentException("Follow target cannot be found")
 
 		if (obj.host != null)
-			throw Exception("Follow target must be local")
+			throw IllegalArgumentException("Follow target must be local")
 
 		logger.debug("${actor.apId} sent follow request to ${obj.apId}")
 
 		if (RelationshipService.eitherBlocking(actor.id.toString(), obj.id.toString()))
-			throw Exception("Conflicting existing relationship")
+			throw IllegalArgumentException("Conflicting existing relationship")
 
 		val existingRelationship =
 			RelationshipService.getByIds(actor.id.toString(), obj.id.toString())

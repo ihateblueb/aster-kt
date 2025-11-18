@@ -13,6 +13,8 @@ pluginManagement {
 		id("io.ktor.plugin") version "3.3.2"
 		id("com.gradleup.shadow") version "8.3.0"
 		id("org.jetbrains.dokka") version "2.0.0"
+
+		id("io.gitlab.arturbosch.detekt") version "1.23.8"
 	}
 }
 

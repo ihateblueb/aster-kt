@@ -66,7 +66,10 @@ class IdentifierServiceTest {
 				idsUnique.add(id)
 			}
 
-			logger.info("[$count:${idsUnique.size}] ${result.first}: AVG ${avg}μs, MIN ${min}μs, MAX ${max}μs, MEDIAN ${median}μs")
+			logger.info(
+				"[$count:${idsUnique.size}] " +
+						"${result.first}: AVG ${avg}μs, MIN ${min}μs, MAX ${max}μs, MEDIAN ${median}μs"
+			)
 		}
 	}
 

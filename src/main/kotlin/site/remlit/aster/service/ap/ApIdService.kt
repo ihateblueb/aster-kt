@@ -51,7 +51,8 @@ object ApIdService : Service {
 	 * @param id ID of a User
 	 */
 	fun renderOutboxApId(id: String? = null): String {
-		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/outbox" else this.renderBaseApId() + "outbox"
+		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" +
+				id + "/outbox" else this.renderBaseApId() + "outbox"
 	}
 
 	/**

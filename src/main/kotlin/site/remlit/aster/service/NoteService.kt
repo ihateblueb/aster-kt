@@ -27,7 +27,6 @@ import site.remlit.aster.event.note.NoteLikeEvent
 import site.remlit.aster.event.note.NoteRepeatEvent
 import site.remlit.aster.event.note.NoteUnlikeEvent
 import site.remlit.aster.exception.InsertFailureException
-import site.remlit.aster.exception.TargetNotFoundException
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.Service
 import site.remlit.aster.service.ap.ApIdService
@@ -194,7 +193,7 @@ object NoteService : Service {
 			}
 		}
 
-		val note = getById(id) ?: throw InsertFailureException("Failed to create note")
+		val note = getById(id)!!
 		NoteCreateEvent(note).call()
 
 		return note
@@ -230,10 +229,10 @@ object NoteService : Service {
 		noteId: String,
 	) {
 		val note = getById(noteId)
-			?: throw TargetNotFoundException("Note not found")
+			?: throw IllegalArgumentException("Note not found")
 
 		if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
-			throw TargetNotFoundException("Note not found")
+			throw IllegalArgumentException("Note not found")
 
 		val existing = transaction {
 			NoteLikeEntity
@@ -280,7 +279,7 @@ object NoteService : Service {
 			?: throw IllegalArgumentException("Note not found")
 
 		if (!VisibilityService.canISee(note.visibility, note.user.id, note.to, user.id))
-			throw TargetNotFoundException("Note not found")
+			throw IllegalArgumentException("Note not found")
 
 		val id = IdentifierService.generate()
 

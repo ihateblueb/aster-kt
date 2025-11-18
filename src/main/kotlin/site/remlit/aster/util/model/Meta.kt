@@ -32,9 +32,15 @@ fun Meta.Companion.getMeta(): Meta {
 		name = Configuration.name,
 		version = MetaVersion(
 			aster = PackageInformation.version,
-			java = "${System.getProperty("java.vendor") ?: "Unknown vendor"} ${System.getProperty("java.version") ?: "Unknown version"}",
+			java = "${System.getProperty("java.vendor") ?: "Unknown vendor"} ${
+				System.getProperty("java.version")
+					?: "Unknown version"
+			}",
 			kotlin = KotlinVersion.CURRENT.toString(),
-			system = "${System.getProperty("os.name") ?: "Unknown name"} ${System.getProperty("os.version") ?: "Unknown version"}",
+			system = "${System.getProperty("os.name") ?: "Unknown name"} ${
+				System.getProperty("os.version")
+					?: "Unknown version"
+			}",
 		),
 		plugins = plugins,
 		registrations = Configuration.registrations,

@@ -5,4 +5,4 @@ package site.remlit.aster.event.application
  *
  * @since 2025.10.2.0-SNAPSHOT
  * */
-class ApplicationBeginShutdownEvent() : ApplicationEvent()
+class ApplicationBeginShutdownEvent : ApplicationEvent()

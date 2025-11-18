@@ -3,7 +3,6 @@ package site.remlit.aster.util.model
 import site.remlit.aster.common.model.SmallUser
 import site.remlit.aster.common.model.User
 import site.remlit.aster.db.entity.UserEntity
-import kotlin.collections.map
 
 
 fun User.Companion.fromEntity(entity: UserEntity) = User(
