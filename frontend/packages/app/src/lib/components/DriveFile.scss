@@ -3,11 +3,15 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 10px;
-  gap: 4px;
+  padding: 12px;
+  gap: 6px;
   box-sizing: border-box;
 
   border-radius: var(--br-md);
+
+  &:hover {
+    background-color: var(--bg-3-50);
+  }
 
   img {
     height: 115px;

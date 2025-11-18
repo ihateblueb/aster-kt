@@ -43,4 +43,9 @@
       box-shadow: var(--funky-effect);
     }
   }
+
+  &.danger {
+    color: var(--danger);
+    background: var(--danger-50);
+  }
 }

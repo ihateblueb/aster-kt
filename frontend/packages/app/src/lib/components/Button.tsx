@@ -7,12 +7,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     thin?: boolean;
     center?: boolean;
     primary?: boolean;
+    danger?: boolean;
     nav?: boolean;
     to?: string;
     children: React.ReactNode;
 }
 
-function Button({wide, thin, center, primary, nav, to, children, ...props}: ButtonProps) {
+function Button({wide, thin, center, primary, danger, nav, to, children, ...props}: ButtonProps) {
     const navigate = useNavigate();
 
     if (to !== undefined)
@@ -20,7 +21,7 @@ function Button({wide, thin, center, primary, nav, to, children, ...props}: Butt
 
     return (
         <button
-            className={`button${wide ? " wide" : ""}${thin ? " thin" : ""}${center ? " center" : ""}${primary ? " primary" : ""}${nav ? " nav" : ""}`} {...props}>
+            className={`button${wide ? " wide" : ""}${thin ? " thin" : ""}${center ? " center" : ""}${primary ? " primary" : ""}${danger ? " danger" : ""}${nav ? " nav" : ""}`} {...props}>
             {children}
         </button>
     )
