@@ -1,0 +1,21 @@
+name: Detekt
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+jobs:
+  detekt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Javas
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'jetbrains'
+          java-version: '24'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Run Detekt with Gradle
+        run: ./gradlew detekt

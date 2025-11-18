@@ -113,6 +113,10 @@ detekt {
 	buildUponDefaultConfig = true
 }
 
+if ("detekt" !in gradle.startParameter.taskNames) {
+	tasks.detekt { enabled = false }
+}
+
 // docs
 
 val sourcesJar by tasks.registering(Jar::class) {
