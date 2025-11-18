@@ -55,7 +55,7 @@ object Configuration : ConfigurationObject {
 
 	val reservedUsernames: List<String>
 		get() =
-			config?.propertyOrNull("reservedUsernames")?.getList() ?: emptyList()
+			config?.propertyOrNull("reservedUsernames")?.getList().orEmpty()
 
 	init {
 		thread(name = "Configuration Refresher") {
@@ -137,8 +137,7 @@ class ConfigurationTimeline : ConfigurationObject {
 		get() = ConfigurationBubbleTimeline(
 			authRequired = (config?.propertyOrNull("timeline.bubble.authRequired")?.getString()?.toBooleanStrictOrNull()
 				?: false),
-			hosts = (config?.propertyOrNull("timeline.bubble.hosts")?.getList()
-				?: emptyList())
+			hosts = (config?.propertyOrNull("timeline.bubble.hosts")?.getList().orEmpty())
 		)
 	val public: ConfigurationSpecificTimeline
 		get() = ConfigurationSpecificTimeline(

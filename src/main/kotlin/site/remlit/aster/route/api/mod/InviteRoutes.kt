@@ -12,7 +12,6 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.IdentifierService
 import site.remlit.aster.service.InviteService
 import site.remlit.aster.service.RandomService
-import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey
 import site.remlit.aster.util.authentication
 
@@ -24,8 +23,8 @@ object InviteRoutes {
 				role = RoleType.Mod
 			) {
 				get("/api/mod/invites") {
-					val since = TimelineService.normalizeSince(call.parameters["since"])
-					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
+					//val since = TimelineService.normalizeSince(call.parameters["since"])
+					//val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())
 
 					throw ApiException(HttpStatusCode.NotImplemented)
 				}

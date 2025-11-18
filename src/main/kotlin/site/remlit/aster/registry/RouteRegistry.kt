@@ -43,7 +43,7 @@ object RouteRegistry {
 	/**
 	 * List of registered extension functions for routes.
 	 */
-	var routes: MutableList<Routing.() -> Unit> = emptyList<Routing.() -> Unit>().toMutableList()
+	val routes: MutableList<Routing.() -> Unit> = emptyList<Routing.() -> Unit>().toMutableList()
 
 	/**
 	 * Register a route to be loaded by the server

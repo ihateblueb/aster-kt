@@ -10,6 +10,8 @@ plugins {
 	id("io.ktor.plugin")
 	id("com.gradleup.shadow")
 	id("org.jetbrains.dokka")
+
+	id("io.gitlab.arturbosch.detekt")
 }
 
 group = "site.remlit"
@@ -101,6 +103,14 @@ ktor {
 		version = project.version.toString()
 		target = project.layout.buildDirectory.file("openapi.json")
 	}
+}
+
+// style
+
+detekt {
+	toolVersion = "1.23.8"
+	config.setFrom(file("detekt.yml"))
+	buildUponDefaultConfig = true
 }
 
 // docs

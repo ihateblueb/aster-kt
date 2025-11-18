@@ -10,4 +10,4 @@ import site.remlit.aster.model.Event
  * @since 2025.9.1.0-SNAPSHOT
  * */
 @ApiStatus.OverrideOnly
-abstract class UserEvent(val user: User) : Event
+open class UserEvent(val user: User) : Event

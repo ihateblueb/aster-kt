@@ -28,7 +28,7 @@ object UploadRoutes {
 		staticFiles("/uploads", Configuration.fileStorage.localPath.toFile()) {
 			enableAutoHeadResponse()
 		}
-		
+
 		authentication(
 			required = true,
 		) {
@@ -53,7 +53,10 @@ object UploadRoutes {
 						val path =
 							Path("${Configuration.fileStorage.localPath.absolutePathString()}/${authenticatedUser.id}/$name").let {
 								if (it.exists())
-									Path("${Configuration.fileStorage.localPath.absolutePathString()}/${authenticatedUser.id}/${IdentifierService.generate()}-$name")
+									Path(
+										"${Configuration.fileStorage.localPath.absolutePathString()}" +
+												"/${authenticatedUser.id}/${IdentifierService.generate()}-$name"
+									)
 								else it
 							}
 

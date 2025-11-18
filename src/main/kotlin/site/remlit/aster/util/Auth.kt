@@ -32,6 +32,7 @@ val authorizedFetchUserKey = AttributeKey<UserEntity>("authorizedFetchUser")
  * @since 2025.11.3.0-SNAPSHOT
  * */
 @ApiStatus.Internal
+@Suppress("CyclomaticComplexMethod", "NestedBlockDepth")
 private fun internalAuth(
 	optional: Boolean,
 	request: ApplicationRequest,

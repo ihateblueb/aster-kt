@@ -49,8 +49,8 @@ data class ApNote(
 				misskeyContent = note.content,
 				published = FormatService.formatToStandardDateTime(note.createdAt),
 				visibility = note.visibility,
-				to = toCc["to"]!!,
-				cc = toCc["cc"]!!
+				to = toCc["to"].orEmpty(),
+				cc = toCc["cc"].orEmpty()
 			)
 		}
 	}

@@ -8,6 +8,6 @@ import site.remlit.aster.db.entity.InboxQueueEntity
  * To be registered with the InboxHandlerRegistry.
  * */
 @ApiStatus.OverrideOnly
-abstract class ApInboxHandler() {
+open class ApInboxHandler {
 	open suspend fun handle(job: InboxQueueEntity) {}
 }

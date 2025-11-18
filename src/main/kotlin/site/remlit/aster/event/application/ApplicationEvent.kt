@@ -9,4 +9,4 @@ import site.remlit.aster.model.Event
  * @since 2025.10.2.0-SNAPSHOT
  * */
 @ApiStatus.OverrideOnly
-abstract class ApplicationEvent() : Event
+open class ApplicationEvent : Event

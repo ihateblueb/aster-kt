@@ -66,7 +66,10 @@ object MigrationService : Service {
 
 			if (!dbMeta.getTables(null, null, "database_meta", null).next()) {
 				conn.createStatement().use { stmt ->
-					stmt.execute("CREATE TABLE database_meta (migration text unique, \"createdAt\" timestamp default CURRENT_TIMESTAMP);")
+					stmt.execute(
+						"CREATE TABLE database_meta (migration text unique," +
+								"\"createdAt\" timestamp default CURRENT_TIMESTAMP);"
+					)
 				}
 			}
 

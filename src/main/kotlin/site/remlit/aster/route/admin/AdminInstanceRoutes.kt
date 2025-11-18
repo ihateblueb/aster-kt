@@ -65,7 +65,7 @@ object AdminInstanceRoutes {
 										tr {
 											td { +instance.host }
 											td { +"${instance.software} ${instance.version}" }
-											td { +(instance.description ?: "") }
+											td { +(instance.description.orEmpty()) }
 											td {
 												button {
 													+"Suspend"

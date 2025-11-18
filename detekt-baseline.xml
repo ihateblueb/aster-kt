@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+    <ManuallySuppressedIssues/>
+    <CurrentIssues>
+        <ID>ComplexCondition:ApNoteRoutes.kt$ApNoteRoutes$note == null || !note.user.activated || note.user.suspended ||
+            !note.user.host.isNullOrBlank() || (note.visibility != Visibility.Public &amp;&amp; note.visibility !=
+            Visibility.Unlisted)
+        </ID>
+        <ID>ComplexCondition:ApUserRoutes.kt$ApUserRoutes$user == null || user.host != null || !user.activated ||
+            user.suspended
+        </ID>
+        <ID>ComplexCondition:NoteRoutes.kt$NoteRoutes$note == null || !note.user.activated || note.user.suspended ||
+            (note.visibility != Visibility.Public &amp;&amp; note.visibility != Visibility.Unlisted) ||
+            (Configuration.hideRemoteContent &amp;&amp; note.user.host != null &amp;&amp; call.attributes.getOrNull(
+            authenticatedUserKey ) == null)
+        </ID>
+        <ID>ComplexCondition:NoteRoutes.kt$NoteRoutes$note == null || !note.user.activated || note.user.suspended ||
+            VisibilityService.canISee( note.visibility, note.user.id, note.to, authenticatedUser.id.toString() )
+        </ID>
+        <ID>ComplexCondition:UserRoutes.kt$UserRoutes$user == null || !user.activated || user.suspended ||
+            (Configuration.hideRemoteContent &amp;&amp; user.host != null &amp;&amp; call.attributes.getOrNull(
+            authenticatedUserKey ) == null)
+        </ID>
+        <ID>CyclomaticComplexMethod:ApActorService.kt$ApActorService$fun toUser( json: JsonObject, existing: User? =
+            null ): PartialUser?
+        </ID>
+        <ID>CyclomaticComplexMethod:ApNoteService.kt$ApNoteService$suspend fun toNote(json: JsonObject, existing: Note?
+            = null): PartialNote?
+        </ID>
+        <ID>CyclomaticComplexMethod:CommandLineService.kt$CommandLineService$suspend fun execute(args:
+            Array&lt;String>)
+        </ID>
+        <ID>CyclomaticComplexMethod:InstanceService.kt$InstanceService$suspend fun resolve(host: String, refetch:
+            Boolean = false): InstanceEntity?
+        </ID>
+        <ID>CyclomaticComplexMethod:NoteRoutes.kt$NoteRoutes$fun register()</ID>
+        <ID>CyclomaticComplexMethod:UserRoutes.kt$UserRoutes$fun register()</ID>
+        <ID>EmptyFunctionBlock:RelationshipService.kt$RelationshipService${}</ID>
+        <ID>ForbiddenComment:NoteService.kt$NoteService$// TODO: duration?</ID>
+        <ID>InvalidPackageDeclaration:IdentifierServiceTest.kt$package site.remlit.aster.test.service</ID>
+        <ID>LongMethod:ApActorService.kt$ApActorService$fun toUser( json: JsonObject, existing: User? = null ):
+            PartialUser?
+        </ID>
+        <ID>LongMethod:Application.kt$@ApiStatus.Internal fun Application.module()</ID>
+        <ID>LongMethod:CommandLineService.kt$CommandLineService$suspend fun execute(args: Array&lt;String>)</ID>
+        <ID>LoopWithTooManyJumpStatements:InstanceService.kt$InstanceService$for</ID>
+        <ID>LoopWithTooManyJumpStatements:MigrationService.kt$MigrationService$for</ID>
+        <ID>MagicNumber:AidCounter.kt$10</ID>
+        <ID>MagicNumber:ApValidationService.kt$ApValidationService$150</ID>
+        <ID>MagicNumber:Application.kt$10</ID>
+        <ID>MagicNumber:Configuration.kt$Configuration$1000L</ID>
+        <ID>MagicNumber:Configuration.kt$Configuration$30</ID>
+        <ID>MagicNumber:Configuration.kt$Configuration$9782</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationFileStorage$25</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationQueue$4</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationQueue$6</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationQueue$8</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationTimeline$15</ID>
+        <ID>MagicNumber:Configuration.kt$ConfigurationTimeline$35</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$36</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$4</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$8</ID>
+        <ID>MagicNumber:IdentifierService.kt$IdentifierService$946684800000L</ID>
+        <ID>MagicNumber:KeypairService.kt$KeypairService$2048</ID>
+        <ID>MagicNumber:QueueService.kt$QueueService$15</ID>
+        <ID>MagicNumber:RandomService.kt$RandomService$32</ID>
+        <ID>MagicNumber:RegisterRoutes.kt$RegisterRoutes$12</ID>
+        <ID>MagicNumber:SetupService.kt$SetupService$12</ID>
+        <ID>MagicNumber:TimeService.kt$TimeService$24</ID>
+        <ID>MagicNumber:UploadRoutes.kt$UploadRoutes$1000000L</ID>
+        <ID>MaxLineLength:IdentifierServiceTest.kt$IdentifierServiceTest$logger.info("[$count:${idsUnique.size}]
+            ${result.first}: AVG ${avg}μs, MIN ${min}μs, MAX ${max}μs, MEDIAN ${median}μs")
+        </ID>
+        <ID>MaxLineLength:VisibilityService.kt$VisibilityService$*</ID>
+        <ID>NewLineAtEndOfFile:AdminDebugRoutes.kt$site.remlit.aster.route.admin.AdminDebugRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminHeader.kt$site.remlit.aster.util.webcomponent.AdminHeader.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminIndexRoutes.kt$site.remlit.aster.route.admin.AdminIndexRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminInstanceRoutes.kt$site.remlit.aster.route.admin.AdminInstanceRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminInviteRoutes.kt$site.remlit.aster.route.admin.AdminInviteRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminListNav.kt$site.remlit.aster.util.webcomponent.AdminListNav.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminMain.kt$site.remlit.aster.util.webcomponent.AdminMain.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminPluginRoutes.kt$site.remlit.aster.route.admin.AdminPluginRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminQueueRoutes.kt$site.remlit.aster.route.admin.AdminQueueRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:AdminUserRoutes.kt$site.remlit.aster.route.admin.AdminUserRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:ApBlockActivity.kt$site.remlit.aster.model.ap.activity.ApBlockActivity.kt</ID>
+        <ID>NewLineAtEndOfFile:ApCreateHandler.kt$site.remlit.aster.service.ap.inbox.ApCreateHandler.kt</ID>
+        <ID>NewLineAtEndOfFile:ApDeliverService.kt$site.remlit.aster.service.ap.ApDeliverService.kt</ID>
+        <ID>NewLineAtEndOfFile:ApEmojiReactActivity.kt$site.remlit.aster.model.ap.activity.ApEmojiReactActivity.kt</ID>
+        <ID>NewLineAtEndOfFile:ApFollowActivity.kt$site.remlit.aster.model.ap.activity.ApFollowActivity.kt</ID>
+        <ID>NewLineAtEndOfFile:ApFollowHandler.kt$site.remlit.aster.service.ap.inbox.ApFollowHandler.kt</ID>
+        <ID>NewLineAtEndOfFile:ApIdOrObject.kt$site.remlit.aster.model.ap.ApIdOrObject.kt</ID>
+        <ID>NewLineAtEndOfFile:ApObjectTypeRegistry.kt$site.remlit.aster.registry.ApObjectTypeRegistry.kt</ID>
+        <ID>NewLineAtEndOfFile:ApSignatureService.kt$site.remlit.aster.service.ap.ApSignatureService.kt</ID>
+        <ID>NewLineAtEndOfFile:ApTag.kt$site.remlit.aster.model.ap.ApTag.kt</ID>
+        <ID>NewLineAtEndOfFile:ApTypedObject.kt$site.remlit.aster.model.ap.ApTypedObject.kt</ID>
+        <ID>NewLineAtEndOfFile:ApplicationEvent.kt$site.remlit.aster.event.application.ApplicationEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:ArrayContains.kt$site.remlit.aster.util.sql.ArrayContains.kt</ID>
+        <ID>NewLineAtEndOfFile:ArrayContainsOp.kt$site.remlit.aster.util.sql.ArrayContainsOp.kt</ID>
+        <ID>NewLineAtEndOfFile:AsterPlugin.kt$site.remlit.aster.model.plugin.AsterPlugin.kt</ID>
+        <ID>NewLineAtEndOfFile:Auth.kt$site.remlit.aster.util.Auth.kt</ID>
+        <ID>NewLineAtEndOfFile:AuthRouteSelector.kt$site.remlit.aster.util.auth.AuthRouteSelector.kt</ID>
+        <ID>NewLineAtEndOfFile:AuthenticationType.kt$site.remlit.aster.model.AuthenticationType.kt</ID>
+        <ID>NewLineAtEndOfFile:Capitalize.kt$site.remlit.aster.util.Capitalize.kt</ID>
+        <ID>NewLineAtEndOfFile:DeliverQueueEntity.kt$site.remlit.aster.db.entity.DeliverQueueEntity.kt</ID>
+        <ID>NewLineAtEndOfFile:DeliverQueueTable.kt$site.remlit.aster.db.table.DeliverQueueTable.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveFile.kt$site.remlit.aster.util.model.DriveFile.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveFileCreateEvent.kt$site.remlit.aster.event.drive.DriveFileCreateEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveFileEntity.kt$site.remlit.aster.db.entity.DriveFileEntity.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveFileEvent.kt$site.remlit.aster.event.drive.DriveFileEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveFileTable.kt$site.remlit.aster.db.table.DriveFileTable.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveRoutes.kt$site.remlit.aster.route.api.DriveRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:DriveService.kt$site.remlit.aster.service.DriveService.kt</ID>
+        <ID>NewLineAtEndOfFile:Event.kt$site.remlit.aster.model.Event.kt</ID>
+        <ID>NewLineAtEndOfFile:EventRegistry.kt$site.remlit.aster.registry.EventRegistry.kt</ID>
+        <ID>NewLineAtEndOfFile:FormatService.kt$site.remlit.aster.service.FormatService.kt</ID>
+        <ID>NewLineAtEndOfFile:FrontendRoutes.kt$site.remlit.aster.route.FrontendRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:HighlightConversion.kt$site.remlit.aster.util.log.HighlightConversion.kt</ID>
+        <ID>NewLineAtEndOfFile:HostMetaRoutes.kt$site.remlit.aster.route.ap.HostMetaRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:IdentifierServiceTest.kt$site.remlit.aster.test.service.IdentifierServiceTest.kt</ID>
+        <ID>NewLineAtEndOfFile:IdentifierType.kt$site.remlit.aster.model.IdentifierType.kt</ID>
+        <ID>NewLineAtEndOfFile:IfFails.kt$site.remlit.aster.util.IfFails.kt</ID>
+        <ID>NewLineAtEndOfFile:InboxHandlerRegistry.kt$site.remlit.aster.registry.InboxHandlerRegistry.kt</ID>
+        <ID>NewLineAtEndOfFile:InboxQueueEntity.kt$site.remlit.aster.db.entity.InboxQueueEntity.kt</ID>
+        <ID>NewLineAtEndOfFile:InsertFailureException.kt$site.remlit.aster.exception.InsertFailureException.kt</ID>
+        <ID>NewLineAtEndOfFile:InstanceService.kt$site.remlit.aster.service.InstanceService.kt</ID>
+        <ID>NewLineAtEndOfFile:Invite.kt$site.remlit.aster.util.model.Invite.kt</ID>
+        <ID>NewLineAtEndOfFile:JsonUtilities.kt$site.remlit.aster.util.JsonUtilities.kt</ID>
+        <ID>NewLineAtEndOfFile:KeyType.kt$site.remlit.aster.model.KeyType.kt</ID>
+        <ID>NewLineAtEndOfFile:KeyValService.kt$site.remlit.aster.service.KeyValService.kt</ID>
+        <ID>NewLineAtEndOfFile:KeyValTable.kt$site.remlit.aster.db.table.KeyValTable.kt</ID>
+        <ID>NewLineAtEndOfFile:LoginRoutes.kt$site.remlit.aster.route.api.LoginRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:MigrationException.kt$site.remlit.aster.exception.MigrationException.kt</ID>
+        <ID>NewLineAtEndOfFile:MigrationService.kt$site.remlit.aster.service.MigrationService.kt</ID>
+        <ID>NewLineAtEndOfFile:Note.kt$site.remlit.aster.util.model.Note.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteCreateEvent.kt$site.remlit.aster.event.note.NoteCreateEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteDeleteEvent.kt$site.remlit.aster.event.note.NoteDeleteEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteEditEvent.kt$site.remlit.aster.event.note.NoteEditEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteEvent.kt$site.remlit.aster.event.note.NoteEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteInteractionEvent.kt$site.remlit.aster.event.note.NoteInteractionEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteLikeEvent.kt$site.remlit.aster.event.note.NoteLikeEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteRepeatEvent.kt$site.remlit.aster.event.note.NoteRepeatEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:NoteUnlikeEvent.kt$site.remlit.aster.event.note.NoteUnlikeEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:Notification.kt$site.remlit.aster.util.model.Notification.kt</ID>
+        <ID>NewLineAtEndOfFile:NotificationRoutes.kt$site.remlit.aster.route.api.NotificationRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:NotificationService.kt$site.remlit.aster.service.NotificationService.kt</ID>
+        <ID>NewLineAtEndOfFile:PluginRegistry.kt$site.remlit.aster.registry.PluginRegistry.kt</ID>
+        <ID>NewLineAtEndOfFile:Policy.kt$site.remlit.aster.util.model.Policy.kt</ID>
+        <ID>NewLineAtEndOfFile:QueueStatus.kt$site.remlit.aster.model.QueueStatus.kt</ID>
+        <ID>NewLineAtEndOfFile:Relationship.kt$site.remlit.aster.util.model.Relationship.kt</ID>
+        <ID>NewLineAtEndOfFile:RelationshipService.kt$site.remlit.aster.service.RelationshipService.kt</ID>
+        <ID>NewLineAtEndOfFile:RouteRegistry.kt$site.remlit.aster.registry.RouteRegistry.kt</ID>
+        <ID>NewLineAtEndOfFile:SanitizeOrNull.kt$site.remlit.aster.util.SanitizeOrNull.kt</ID>
+        <ID>NewLineAtEndOfFile:Service.kt$site.remlit.aster.model.Service.kt</ID>
+        <ID>NewLineAtEndOfFile:SmallNote.kt$site.remlit.aster.util.model.SmallNote.kt</ID>
+        <ID>NewLineAtEndOfFile:SmallUser.kt$site.remlit.aster.util.model.SmallUser.kt</ID>
+        <ID>NewLineAtEndOfFile:Stats.kt$site.remlit.aster.util.Stats.kt</ID>
+        <ID>NewLineAtEndOfFile:TargetNotFoundException.kt$site.remlit.aster.exception.TargetNotFoundException.kt</ID>
+        <ID>NewLineAtEndOfFile:TimelineRoutes.kt$site.remlit.aster.route.api.TimelineRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:UploadRoutes.kt$site.remlit.aster.route.UploadRoutes.kt</ID>
+        <ID>NewLineAtEndOfFile:User.kt$site.remlit.aster.util.model.User.kt</ID>
+        <ID>NewLineAtEndOfFile:UserCreateEvent.kt$site.remlit.aster.event.user.UserCreateEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:UserDeleteEvent.kt$site.remlit.aster.event.user.UserDeleteEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:UserEditEvent.kt$site.remlit.aster.event.user.UserEditEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:UserEvent.kt$site.remlit.aster.event.user.UserEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:UserFollowEvent.kt$site.remlit.aster.event.user.UserFollowEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:UserFollowRequestEvent.kt$site.remlit.aster.event.user.UserFollowRequestEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:UserRelationshipEvent.kt$site.remlit.aster.event.user.UserRelationshipEvent.kt</ID>
+        <ID>NewLineAtEndOfFile:VisibilityService.kt$site.remlit.aster.service.VisibilityService.kt</ID>
+        <ID>NewLineAtEndOfFile:WebfingerRoutes.kt$site.remlit.aster.route.ap.WebfingerRoutes.kt</ID>
+        <ID>PrintStackTrace:ApDeliverService.kt$ApDeliverService$e</ID>
+        <ID>PrintStackTrace:ApValidationService.kt$ApValidationService$e</ID>
+        <ID>SwallowedException:ApValidationService.kt$ApValidationService$e: Exception</ID>
+        <ID>UnusedParameter:ApCreateHandler.kt$ApCreateHandler$job: InboxQueueEntity</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$content: String</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$cw: String?</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$id: String</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$noteId: String</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$user: User</ID>
+        <ID>UnusedParameter:NoteService.kt$NoteService$user: UserEntity</ID>
+        <ID>UnusedParameter:RelationshipService.kt$RelationshipService$from: String</ID>
+        <ID>UnusedParameter:RelationshipService.kt$RelationshipService$to: String</ID>
+        <ID>UnusedParameter:SanitizerService.kt$SanitizerService$escape: Boolean = false</ID>
+    </CurrentIssues>
+</SmellBaseline>

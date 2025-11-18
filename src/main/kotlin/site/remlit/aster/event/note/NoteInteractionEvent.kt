@@ -10,4 +10,4 @@ import site.remlit.aster.common.model.User
  * @since 2025.9.1.0-SNAPSHOT
  * */
 @ApiStatus.OverrideOnly
-abstract class NoteInteractionEvent(note: Note, val user: User) : NoteEvent(note)
+open class NoteInteractionEvent(note: Note, val user: User) : NoteEvent(note)
