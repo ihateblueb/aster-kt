@@ -16,7 +16,8 @@ object VisibilityService : Service {
 	 *
 	 * @param visibility Visibility of the entity
 	 * @param author Author of the entity
-	 * @param to List of user ids, other users who can see this entity (for direct visibility). Not applicable to all entities.
+	 * @param to List of user ids, other users who can see this entity
+	 *           (for direct visibility). Not applicable to all entities.
 	 * @param user User who is trying to view the entity
 	 * @param ignoreBlock Whether to take block relationships into account
 	 *
