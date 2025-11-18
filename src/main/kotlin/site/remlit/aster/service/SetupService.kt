@@ -16,6 +16,9 @@ import site.remlit.aster.model.Configuration
 import site.remlit.aster.model.KeyType
 import site.remlit.aster.model.Service
 import site.remlit.aster.service.ap.ApIdService
+import java.nio.file.Files
+import kotlin.io.path.Path
+import kotlin.io.path.exists
 
 /**
  * Service for ensuring the instance is properly set up.
@@ -31,6 +34,9 @@ object SetupService : Service {
 	fun setup() {
 		setupRoles()
 		setupInstanceActor()
+
+		val pluginsDir = Path("plugins")
+		if (!pluginsDir.exists()) Files.createDirectories(pluginsDir)
 	}
 
 	/**
