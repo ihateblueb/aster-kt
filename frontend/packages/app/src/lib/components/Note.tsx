@@ -280,14 +280,14 @@ function Note(
 
             <footer>
                 <button className={"highlightable"} title={"Reply"}>
-                    <IconArrowBackUp aria-hidden={true} size={20}/>
+                    <IconArrowBackUp aria-hidden size={20}/>
                 </button>
                 <button
                     className={"highlightable" + ((note?.repeats?.some((e) => e?.user?.id === self?.id)) ? " repeated" : "")}
                     title={"Repeat"}
                     onClick={() => repeat()}
                 >
-                    <IconRepeat aria-hidden={true} size={20}/>
+                    <IconRepeat aria-hidden size={20}/>
                     {(note?.repeats?.length >= 1) ? <span>{note?.repeats?.length}</span> : null}
                 </button>
                 <button
@@ -295,16 +295,16 @@ function Note(
                     title={"Like"}
                     onClick={() => like()}
                 >
-                    <IconStar aria-hidden={true} size={20}/>
+                    <IconStar aria-hidden size={20}/>
                     {(note?.likes?.length >= 1) ? <span>{note?.likes?.length}</span> : null}
                 </button>
                 <button className={"highlightable"} title={"React"}>
-                    <IconPlus aria-hidden={true} size={20}/>
+                    <IconPlus aria-hidden size={20}/>
                 </button>
                 <button className={`highlightable${dropdownOpen ? " selected" : ""}`} title={"More"}
                         ref={dropdownRef}
                         onClick={() => setDropdownOpen(!dropdownOpen)}>
-                    <IconDots aria-hidden={true} size={20}/>
+                    <IconDots aria-hidden size={20}/>
                 </button>
             </footer>
 

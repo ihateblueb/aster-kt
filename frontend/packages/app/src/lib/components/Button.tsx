@@ -1,4 +1,5 @@
 import './Button.scss'
+import type {RefObject} from "react";
 import * as React from "react";
 import {useNavigate} from "@tanstack/react-router";
 
@@ -10,10 +11,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     danger?: boolean;
     nav?: boolean;
     to?: string;
+    ref?: RefObject<HTMLButtonElement | null>;
     children: React.ReactNode;
 }
 
-function Button({wide, thin, center, primary, danger, nav, to, children, ...props}: ButtonProps) {
+function Button({wide, thin, center, primary, danger, nav, to, ref, children, ...props}: ButtonProps) {
     const navigate = useNavigate();
 
     if (to !== undefined)
@@ -21,7 +23,10 @@ function Button({wide, thin, center, primary, danger, nav, to, children, ...prop
 
     return (
         <button
-            className={`button${wide ? " wide" : ""}${thin ? " thin" : ""}${center ? " center" : ""}${primary ? " primary" : ""}${danger ? " danger" : ""}${nav ? " nav" : ""}`} {...props}>
+            className={`button${wide ? " wide" : ""}${thin ? " thin" : ""}${center ? " center" : ""}${primary ? " primary" : ""}${danger ? " danger" : ""}${nav ? " nav" : ""}`}
+            ref={ref}
+            {...props}
+        >
             {children}
         </button>
     )
