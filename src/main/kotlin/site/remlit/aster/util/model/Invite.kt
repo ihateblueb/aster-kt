@@ -14,4 +14,5 @@ fun Invite.Companion.fromEntity(entity: InviteEntity): Invite = Invite(
 	usedAt = entity.usedAt
 )
 
-fun Invite.Companion.fromEntities(entities: List<InviteEntity>): List<Invite> = entities.map { fromEntity(it) }
+fun Invite.Companion.fromEntities(entities: List<InviteEntity>): List<Invite> =
+	entities.map { fromEntity(it) }
