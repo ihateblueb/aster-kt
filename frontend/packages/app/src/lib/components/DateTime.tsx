@@ -45,7 +45,7 @@ function DateTime({date, short}: { date: Date; short: boolean }) {
 
     useEffect(() => {
         setInterval(() => {
-            if (short) setValue(calculate(date))w
+            if (short) setValue(calculate(date))
         }, 10000)
     })
 
