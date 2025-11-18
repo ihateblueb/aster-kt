@@ -44,3 +44,4 @@
 1762099246347_Migration_user.sql
 1762521842952_Migration_note.sql
 1762616014833_Migration_relationship.sql
+1763508219144_Migration_emoji.sql

@@ -47,5 +47,5 @@ object UserTable : IdTable<String>("user") {
 
 	val publicKey = varchar("publicKey", length = 5000)
 
-	override val primaryKey = PrimaryKey(NoteTable.id)
+	override val primaryKey = PrimaryKey(id)
 }

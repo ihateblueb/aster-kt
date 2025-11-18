@@ -8,5 +8,5 @@ object UserPrivateTable : IdTable<String>("user_private") {
 	val password = varchar("password", length = 250)
 	val privateKey = varchar("privateKey", length = 5000)
 
-	override val primaryKey = PrimaryKey(NoteTable.id)
+	override val primaryKey = PrimaryKey(id)
 }

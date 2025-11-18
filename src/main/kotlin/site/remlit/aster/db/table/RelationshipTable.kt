@@ -20,5 +20,5 @@ object RelationshipTable : IdTable<String>("relationship") {
 	val createdAt = datetime("createdAt").defaultExpression(CurrentDateTime)
 	val updatedAt = datetime("updatedAt").nullable()
 
-	override val primaryKey = PrimaryKey(PolicyTable.id)
+	override val primaryKey = PrimaryKey(id)
 }

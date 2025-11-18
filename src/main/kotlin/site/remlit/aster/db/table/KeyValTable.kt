@@ -8,5 +8,5 @@ object KeyValTable : IdTable<String>("keyval") {
 	val key = text("key", eagerLoading = true).uniqueIndex("unique_keyval_key")
 	val value = text("value", eagerLoading = true).nullable()
 
-	override val primaryKey = PrimaryKey(InviteTable.id)
+	override val primaryKey = PrimaryKey(id)
 }

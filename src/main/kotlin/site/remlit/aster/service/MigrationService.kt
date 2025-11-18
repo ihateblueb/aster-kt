@@ -9,6 +9,7 @@ import site.remlit.aster.db.Database
 import site.remlit.aster.db.table.AuthTable
 import site.remlit.aster.db.table.DeliverQueueTable
 import site.remlit.aster.db.table.DriveFileTable
+import site.remlit.aster.db.table.EmojiTable
 import site.remlit.aster.db.table.InboxQueueTable
 import site.remlit.aster.db.table.InstanceTable
 import site.remlit.aster.db.table.InviteTable
@@ -91,6 +92,7 @@ object MigrationService : Service {
 				AuthTable,
 				DeliverQueueTable,
 				DriveFileTable,
+				EmojiTable,
 				InboxQueueTable,
 				InstanceTable,
 				InviteTable,
