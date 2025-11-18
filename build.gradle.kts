@@ -32,7 +32,6 @@ dependencies {
 	// ktor server
 	implementation("io.ktor:ktor-server-core-jvm:3.3.2")
 	implementation("io.ktor:ktor-server-netty-jvm:3.3.2")
-	implementation("io.ktor:ktor-server-auth-jvm:3.3.2")
 	implementation("io.ktor:ktor-server-csrf-jvm:3.3.2")
 	implementation("io.ktor:ktor-server-config-yaml-jvm:3.3.2")
 	implementation("io.ktor:ktor-server-call-logging-jvm:3.3.2")

@@ -1,7 +1,6 @@
 package site.remlit.aster.route.api
 
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.v1.core.and
@@ -13,11 +12,14 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NotificationService
 import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey
+import site.remlit.aster.util.authentication
 
 object NotificationRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			authenticate("authRequired") {
+			authentication(
+				required = true,
+			) {
 				get("/api/notifications") {
 					val authenticatedUser = call.attributes[authenticatedUserKey]
 					val since = TimelineService.normalizeSince(call.parameters["since"])

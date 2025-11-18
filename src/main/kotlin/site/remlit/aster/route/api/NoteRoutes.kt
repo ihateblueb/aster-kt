@@ -1,7 +1,6 @@
 package site.remlit.aster.route.api
 
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -19,6 +18,7 @@ import site.remlit.aster.service.NotificationService
 import site.remlit.aster.service.RoleService
 import site.remlit.aster.service.VisibilityService
 import site.remlit.aster.util.authenticatedUserKey
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.fromEntity
 
 object NoteRoutes {
@@ -31,7 +31,7 @@ object NoteRoutes {
 
 	fun register() =
 		RouteRegistry.registerRoute {
-			authenticate("authOptional") {
+			authentication {
 				get("/api/note/{id}") {
 					val note = NoteService.getById(call.parameters.getOrFail("id"))
 
@@ -49,13 +49,15 @@ object NoteRoutes {
 
 					call.respond(note)
 				}
+
+				get("/api/note/{id}/replies") {
+					throw ApiException(HttpStatusCode.NotImplemented)
+				}
 			}
 
-			get("/api/note/{id}/replies") {
-				throw ApiException(HttpStatusCode.NotImplemented)
-			}
-
-			authenticate("authRequired") {
+			authentication(
+				required = true,
+			) {
 				delete("/api/note/{id}") {
 					val authenticatedUser = call.attributes[authenticatedUserKey]
 

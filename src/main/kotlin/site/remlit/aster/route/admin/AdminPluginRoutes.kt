@@ -20,49 +20,56 @@ import kotlinx.html.p
 import kotlinx.html.styleLink
 import kotlinx.html.title
 import kotlinx.html.ul
+import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.registry.PluginRegistry
 import site.remlit.aster.registry.RouteRegistry
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 
 object AdminPluginRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			post("/admin/plugins") {
-				val string = call.receive<String>()
-				call.respondText { "$string" }
-			}
+			authentication(
+				required = true,
+				role = RoleType.Admin
+			) {
+				post("/admin/plugins") {
+					val string = call.receive<String>()
+					call.respondText { "$string" }
+				}
 
-			get("/admin/plugins") {
-				call.respondHtml(HttpStatusCode.OK) {
-					head {
-						title { +"Plugins" }
-						styleLink("/admin/assets/index.css")
-					}
-					body {
-						adminHeader("Plugins")
-						adminMain {
-							form {
-								input {
-									type = InputType.text
-									id = "action"
-									value = "reload"
-									hidden = true
+				get("/admin/plugins") {
+					call.respondHtml(HttpStatusCode.OK) {
+						head {
+							title { +"Plugins" }
+							styleLink("/admin/assets/index.css")
+						}
+						body {
+							adminHeader("Plugins")
+							adminMain {
+								form {
+									input {
+										type = InputType.text
+										id = "action"
+										value = "reload"
+										hidden = true
+									}
+									input {
+										type = InputType.submit
+										value = "Reload"
+									}
 								}
-								input {
-									type = InputType.submit
-									value = "Reload"
-								}
-							}
-							div {
-								this.classes = setOf("ctn")
 								div {
-									this.classes = setOf("ctn", "column")
-									ul {
-										for (plugin in PluginRegistry.plugins) {
-											li {
-												b { +"${plugin.first.name} ${plugin.first.version}" }
-												p { +plugin.first.mainClass }
+									this.classes = setOf("ctn")
+									div {
+										this.classes = setOf("ctn", "column")
+										ul {
+											for (plugin in PluginRegistry.plugins) {
+												li {
+													b { +"${plugin.first.name} ${plugin.first.version}" }
+													p { +plugin.first.mainClass }
+												}
 											}
 										}
 									}

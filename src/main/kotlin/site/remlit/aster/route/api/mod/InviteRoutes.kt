@@ -1,11 +1,11 @@
 package site.remlit.aster.route.api.mod
 
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.InviteEntity
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.registry.RouteRegistry
@@ -14,11 +14,15 @@ import site.remlit.aster.service.InviteService
 import site.remlit.aster.service.RandomService
 import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey
+import site.remlit.aster.util.authentication
 
 object InviteRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			authenticate("authRequiredMod") {
+			authentication(
+				required = true,
+				role = RoleType.Mod
+			) {
 				get("/api/mod/invites") {
 					val since = TimelineService.normalizeSince(call.parameters["since"])
 					val take = TimelineService.normalizeTake(call.parameters["take"]?.toIntOrNull())

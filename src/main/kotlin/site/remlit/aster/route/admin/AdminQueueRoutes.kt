@@ -16,169 +16,176 @@ import kotlinx.html.title
 import kotlinx.html.ul
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import site.remlit.aster.common.model.type.RoleType
 import site.remlit.aster.db.entity.DeliverQueueEntity
 import site.remlit.aster.db.entity.InboxQueueEntity
 import site.remlit.aster.db.table.DeliverQueueTable
 import site.remlit.aster.db.table.InboxQueueTable
 import site.remlit.aster.model.QueueStatus
 import site.remlit.aster.registry.RouteRegistry
+import site.remlit.aster.util.authentication
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 
 object AdminQueueRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
-			get("/admin/queues") {
-				val inboxPending: MutableList<InboxQueueEntity> = mutableListOf()
-				val inboxCompleted: MutableList<InboxQueueEntity> = mutableListOf()
-				val inboxFailed: MutableList<InboxQueueEntity> = mutableListOf()
+			authentication(
+				required = true,
+				role = RoleType.Admin
+			) {
+				get("/admin/queues") {
+					val inboxPending: MutableList<InboxQueueEntity> = mutableListOf()
+					val inboxCompleted: MutableList<InboxQueueEntity> = mutableListOf()
+					val inboxFailed: MutableList<InboxQueueEntity> = mutableListOf()
 
-				val deliverPending: MutableList<DeliverQueueEntity> = mutableListOf()
-				val deliverCompleted: MutableList<DeliverQueueEntity> = mutableListOf()
-				val deliverFailed: MutableList<DeliverQueueEntity> = mutableListOf()
+					val deliverPending: MutableList<DeliverQueueEntity> = mutableListOf()
+					val deliverCompleted: MutableList<DeliverQueueEntity> = mutableListOf()
+					val deliverFailed: MutableList<DeliverQueueEntity> = mutableListOf()
 
-				transaction {
-					InboxQueueEntity
-						.find { InboxQueueTable.status eq QueueStatus.PENDING }
-						.forEach { e ->
-							inboxPending.add(e)
-						}
-					InboxQueueEntity
-						.find { InboxQueueTable.status eq QueueStatus.COMPLETED }
-						.forEach { e ->
-							inboxCompleted.add(e)
-						}
-					InboxQueueEntity
-						.find { InboxQueueTable.status eq QueueStatus.FAILED }
-						.forEach { e ->
-							inboxFailed.add(e)
-						}
+					transaction {
+						InboxQueueEntity
+							.find { InboxQueueTable.status eq QueueStatus.PENDING }
+							.forEach { e ->
+								inboxPending.add(e)
+							}
+						InboxQueueEntity
+							.find { InboxQueueTable.status eq QueueStatus.COMPLETED }
+							.forEach { e ->
+								inboxCompleted.add(e)
+							}
+						InboxQueueEntity
+							.find { InboxQueueTable.status eq QueueStatus.FAILED }
+							.forEach { e ->
+								inboxFailed.add(e)
+							}
 
-					DeliverQueueEntity
-						.find { DeliverQueueTable.status eq QueueStatus.PENDING }
-						.forEach { e ->
-							deliverPending.add(e)
-						}
-					DeliverQueueEntity
-						.find { DeliverQueueTable.status eq QueueStatus.COMPLETED }
-						.forEach { e ->
-							deliverCompleted.add(e)
-						}
-					DeliverQueueEntity
-						.find { DeliverQueueTable.status eq QueueStatus.FAILED }
-						.forEach { e ->
-							deliverFailed.add(e)
-						}
-				}
-
-				call.respondHtml(HttpStatusCode.OK) {
-					head {
-						title { +"Queues" }
-						styleLink("/admin/assets/index.css")
-						// some autoreload script
+						DeliverQueueEntity
+							.find { DeliverQueueTable.status eq QueueStatus.PENDING }
+							.forEach { e ->
+								deliverPending.add(e)
+							}
+						DeliverQueueEntity
+							.find { DeliverQueueTable.status eq QueueStatus.COMPLETED }
+							.forEach { e ->
+								deliverCompleted.add(e)
+							}
+						DeliverQueueEntity
+							.find { DeliverQueueTable.status eq QueueStatus.FAILED }
+							.forEach { e ->
+								deliverFailed.add(e)
+							}
 					}
-					body {
-						adminHeader("Queues")
-						adminMain {
-							h2 { +"Inbox" }
-							transaction {
-								div {
-									this.classes = setOf("ctn")
+
+					call.respondHtml(HttpStatusCode.OK) {
+						head {
+							title { +"Queues" }
+							styleLink("/admin/assets/index.css")
+							// some autoreload script
+						}
+						body {
+							adminHeader("Queues")
+							adminMain {
+								h2 { +"Inbox" }
+								transaction {
 									div {
-										this.classes = setOf("ctn", "column")
-										span {
-											+"${inboxPending.size} jobs pending"
+										this.classes = setOf("ctn")
+										div {
+											this.classes = setOf("ctn", "column")
+											span {
+												+"${inboxPending.size} jobs pending"
+											}
+											ul {
+												for (job in inboxPending) {
+													li {
+														a {
+															href = "/job/${job.id}"
+															+"${job.id} ${job.sender?.host}"
+														}
+													}
+												}
+											}
 										}
-										ul {
-											for (job in inboxPending) {
-												li {
-													a {
-														href = "/job/${job.id}"
-														+"${job.id} ${job.sender?.host}"
+										div {
+											this.classes = setOf("ctn", "column")
+											span {
+												+"${inboxCompleted.size} jobs completed"
+											}
+											ul {
+												for (job in inboxCompleted) {
+													li {
+														a {
+															href = "/job/${job.id}"
+															+"${job.id} ${job.sender?.host}"
+														}
+													}
+												}
+											}
+										}
+										div {
+											this.classes = setOf("ctn", "column")
+											span {
+												+"${inboxFailed.size} jobs failed"
+											}
+											ul {
+												for (job in inboxFailed) {
+													li {
+														a {
+															href = "/job/${job.id}"
+															+"${job.id} ${job.sender?.host}"
+														}
 													}
 												}
 											}
 										}
 									}
+									h2 { +"Deliver" }
 									div {
-										this.classes = setOf("ctn", "column")
-										span {
-											+"${inboxCompleted.size} jobs completed"
-										}
-										ul {
-											for (job in inboxCompleted) {
-												li {
-													a {
-														href = "/job/${job.id}"
-														+"${job.id} ${job.sender?.host}"
+										this.classes = setOf("ctn")
+										div {
+											this.classes = setOf("ctn", "column")
+											span {
+												+"${deliverPending.size} jobs pending"
+											}
+											ul {
+												for (job in deliverPending) {
+													li {
+														a {
+															href = "/job/${job.id}"
+															+"${job.id} ${job.sender?.host}"
+														}
 													}
 												}
 											}
 										}
-									}
-									div {
-										this.classes = setOf("ctn", "column")
-										span {
-											+"${inboxFailed.size} jobs failed"
-										}
-										ul {
-											for (job in inboxFailed) {
-												li {
-													a {
-														href = "/job/${job.id}"
-														+"${job.id} ${job.sender?.host}"
+										div {
+											this.classes = setOf("ctn", "column")
+											span {
+												+"${deliverCompleted.size} jobs completed"
+											}
+											ul {
+												for (job in deliverCompleted) {
+													li {
+														a {
+															href = "/job/${job.id}"
+															+"${job.id} ${job.sender?.host}"
+														}
 													}
 												}
 											}
 										}
-									}
-								}
-								h2 { +"Deliver" }
-								div {
-									this.classes = setOf("ctn")
-									div {
-										this.classes = setOf("ctn", "column")
-										span {
-											+"${deliverPending.size} jobs pending"
-										}
-										ul {
-											for (job in deliverPending) {
-												li {
-													a {
-														href = "/job/${job.id}"
-														+"${job.id} ${job.sender?.host}"
-													}
-												}
+										div {
+											this.classes = setOf("ctn", "column")
+											span {
+												+"${deliverFailed.size} jobs failed"
 											}
-										}
-									}
-									div {
-										this.classes = setOf("ctn", "column")
-										span {
-											+"${deliverCompleted.size} jobs completed"
-										}
-										ul {
-											for (job in deliverCompleted) {
-												li {
-													a {
-														href = "/job/${job.id}"
-														+"${job.id} ${job.sender?.host}"
-													}
-												}
-											}
-										}
-									}
-									div {
-										this.classes = setOf("ctn", "column")
-										span {
-											+"${deliverFailed.size} jobs failed"
-										}
-										ul {
-											for (job in deliverFailed) {
-												li {
-													a {
-														href = "/admin/queues/job/${job.id}"
-														+"${job.id} ${job.sender?.host}"
+											ul {
+												for (job in deliverFailed) {
+													li {
+														a {
+															href = "/admin/queues/job/${job.id}"
+															+"${job.id} ${job.sender?.host}"
+														}
 													}
 												}
 											}
