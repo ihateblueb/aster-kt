@@ -11,7 +11,8 @@ object EmojiTable : IdTable<String>("emoji") {
 
 	val apId = varchar("apId", length = 1025).uniqueIndex("unique_emoji_apId")
 
-	val name = varchar("name", length = 250)
+	val name = varchar("name", length = 5000)
+    val category = varchar("category", length = 250).nullable()
 	val host = varchar("host", length = 500).nullable()
 	val src = varchar("src", length = 1025)
 

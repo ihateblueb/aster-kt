@@ -11,6 +11,7 @@ data class Emoji(
 	val apId: String,
 
 	val name: String,
+    val category: String? = null,
 	val host: String? = null,
 	val src: String,
 

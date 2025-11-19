@@ -8,6 +8,7 @@ fun Emoji.Companion.fromEntity(entity: EmojiEntity): Emoji =
 		id = entity.id.toString(),
 		apId = entity.apId,
 		name = entity.name,
+        category = entity.category,
 		host = entity.host,
 		src = entity.src,
 		createdAt = entity.createdAt,

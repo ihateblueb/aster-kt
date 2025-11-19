@@ -40,8 +40,7 @@ import site.remlit.aster.util.jsonConfig
 import site.remlit.aster.util.setJsonConfig
 import java.util.concurrent.TimeUnit
 
-@ApiStatus.Internal
-fun main(args: Array<String>) {
+internal fun main(args: Array<String>) {
 	if (args.isNotEmpty() && !args[0].startsWith("-")) {
 		runBlocking {
 			CommandLineService.execute(args)
@@ -56,7 +55,7 @@ fun main(args: Array<String>) {
 	Runtime.getRuntime().addShutdownHook(Thread {
 		Thread.currentThread().name = "ShutdownMain"
 		runBlocking {
-			server.stop(1, 10, TimeUnit.SECONDS)
+			server.stop()
 			Database.dataSource.close()
 		}
 		ApplicationFinishShutdownEvent().call()

@@ -11,6 +11,7 @@ class EmojiEntity(id: EntityID<String>) : Entity<String>(id) {
 	var apId by EmojiTable.apId
 
 	var name by EmojiTable.name
+    var category by EmojiTable.category
 	var host by EmojiTable.host
 	var src by EmojiTable.src
 

@@ -70,7 +70,7 @@ object InstanceService : Service {
 	 * @param take Number of instances to take
 	 * @param offset Offset for query
 	 *
-	 * @return Instance entities, if it exists
+	 * @return Instance entities, if they exist
 	 * */
 	fun getMany(
 		where: Op<Boolean>,
