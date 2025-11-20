@@ -267,7 +267,6 @@ object RelationshipService : Service {
 	 * @param from Relationship owner
 	 * */
 	@JvmStatic
-	fun unfollow(to: String, from: String) {
-	}
+	fun unfollow(to: String, from: String): Nothing = TODO()
 	//</editor-fold>
 }
