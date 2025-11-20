@@ -36,12 +36,14 @@ object RelationshipService : Service {
 	 * Reference the "to" user on a relationship.
 	 * For usage in queries.
 	 * */
+	@JvmStatic
 	val userToAlias = UserTable.alias("to")
 
 	/**
 	 * Reference the "from" user on a relationship.
 	 * For usage in queries.
 	 * */
+	@JvmStatic
 	val userFromAlias = UserTable.alias("from")
 
 	/**
@@ -51,6 +53,7 @@ object RelationshipService : Service {
 	 *
 	 * @return Relationship, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): Relationship? = transaction {
 		val relationship = RelationshipEntity
 			.find { where }
@@ -70,6 +73,7 @@ object RelationshipService : Service {
 	 *
 	 * @return Relationship, if any
 	 * */
+	@JvmStatic
 	fun getByIds(to: String, from: String) = get(
 		userToAlias[UserTable.id] eq to
 				and (userFromAlias[UserTable.id] eq from)
@@ -84,6 +88,7 @@ object RelationshipService : Service {
 	 *
 	 * @return Relationships, if any
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -112,6 +117,7 @@ object RelationshipService : Service {
 	 *
 	 * @return ActivityPub ID of the activity used to create the relationship
 	 * */
+	@JvmStatic
 	fun getActivityId(relationshipId: String): String? = transaction {
 		RelationshipEntity
 			.find { RelationshipTable.id eq relationshipId }
@@ -127,6 +133,7 @@ object RelationshipService : Service {
 	 *
 	 * @return Pair of Relationship, where first is to and second is from
 	 * */
+	@JvmStatic
 	fun getPair(to: String, from: String): Pair<Relationship?, Relationship?> {
 		return Pair(
 			this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from)),
@@ -134,6 +141,7 @@ object RelationshipService : Service {
 		)
 	}
 
+	@JvmStatic
 	fun mapPair(pair: Pair<Relationship?, Relationship?>): List<Map<String, Relationship?>> {
 		return listOf(
 			mapOf(
@@ -154,6 +162,7 @@ object RelationshipService : Service {
 	 *
 	 * @return If either are blocking each other
 	 * */
+	@JvmStatic
 	fun eitherBlocking(to: String, from: String): Boolean {
 		val pair = this.getPair(to, from)
 
@@ -174,6 +183,7 @@ object RelationshipService : Service {
 	 *
 	 * @return If `from` is muting `to`
 	 * */
+	@JvmStatic
 	fun muteExists(to: String, from: String): Boolean {
 		val relationship = this.get(RelationshipTable.to eq to and (RelationshipTable.from eq from))
 
@@ -190,6 +200,7 @@ object RelationshipService : Service {
 	 *
 	 * @return Relationship pair
 	 * */
+	@JvmStatic
 	fun follow(to: String, from: String): Pair<Relationship?, Relationship?> {
 		if (eitherBlocking(to, from))
 			throw IllegalArgumentException("You cannot follow this user")
@@ -255,6 +266,8 @@ object RelationshipService : Service {
 	 * @param to Relationship target
 	 * @param from Relationship owner
 	 * */
-	fun unfollow(to: String, from: String) {}
+	@JvmStatic
+	fun unfollow(to: String, from: String) {
+	}
 	//</editor-fold>
 }

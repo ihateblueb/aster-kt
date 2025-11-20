@@ -38,6 +38,7 @@ object ResolverService : Service {
 	 *
 	 * @return Created HTTP client
 	 * */
+	@JvmStatic
 	fun createClient(): HttpClient {
 		return HttpClient(CIO) {
 			defaultRequest {
@@ -76,6 +77,7 @@ object ResolverService : Service {
 	 *
 	 * @return JsonObject or null
 	 * */
+	@JvmStatic
 	suspend fun resolve(url: String, accept: String = "application/activity+json"): JsonObject? {
 		val blockPolicies = PolicyService.getAllByType(PolicyType.Block)
 		val blockedHosts = PolicyService.reducePoliciesToHost(blockPolicies)
@@ -112,6 +114,7 @@ object ResolverService : Service {
 	 *
 	 * @return JsonObject or null
 	 * */
+	@JvmStatic
 	@OptIn(ExperimentalTime::class)
 	suspend fun resolveSigned(
 		url: String,

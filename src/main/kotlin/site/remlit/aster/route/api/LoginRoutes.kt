@@ -17,7 +17,7 @@ import site.remlit.aster.service.AuthService
 import site.remlit.aster.service.UserService
 import site.remlit.aster.util.model.fromEntity
 
-object LoginRoutes {
+internal object LoginRoutes {
 	@Serializable
 	data class LoginBody(
 		val username: String,

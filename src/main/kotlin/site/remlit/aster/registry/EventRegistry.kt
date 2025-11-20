@@ -20,6 +20,7 @@ object EventRegistry {
 	 *
 	 * @since 2025.9.1.0-SNAPSHOT
 	 * */
+	@JvmStatic
 	val listeners: MutableList<Pair<KClass<*>, (Event) -> Unit>> =
 		emptyList<Pair<KClass<*>, (Event) -> Unit>>().toMutableList()
 
@@ -43,6 +44,7 @@ object EventRegistry {
 	 *
 	 * @since 2025.9.1.0-SNAPSHOT
 	 * */
+	@JvmStatic
 	fun addListener(event: KClass<*>, listener: (Event) -> Unit) {
 		if (!event.isSubclassOf(Event::class))
 			throw IllegalArgumentException("Event $event is not a derivative of the Event interface")

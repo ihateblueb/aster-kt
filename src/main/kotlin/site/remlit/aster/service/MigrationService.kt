@@ -1,5 +1,6 @@
 package site.remlit.aster.service
 
+import org.jetbrains.annotations.ApiStatus
 import org.jetbrains.exposed.v1.core.ExperimentalDatabaseMigrationApi
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.jetbrains.exposed.v1.migration.jdbc.MigrationUtils
@@ -42,11 +43,13 @@ object MigrationService : Service {
 	/**
 	 * Directory where migrations are in source
 	 * */
+	@JvmStatic
 	val migrationsDir = Path("src/main/resources/migrations")
 
 	/**
 	 * Directory where migration manifest is in source
 	 * */
+	@JvmStatic
 	val manifestPath = Path("$migrationsDir/_manifest.txt")
 
 	private val database = Database.connection
@@ -56,6 +59,7 @@ object MigrationService : Service {
 	 * Creates the database meta table that tracks which migrations have been run if not present.
 	 * Also deletes the old migration system if it remains.
 	 * */
+	@ApiStatus.Internal
 	fun initialize() {
 		/*
 		* Why isn't this using Exposed?
@@ -85,6 +89,7 @@ object MigrationService : Service {
 	/**
 	 * Generates migration scripts based on current database schema.
 	 * */
+	@ApiStatus.Internal
 	fun generate() {
 		transaction(database) {
 			// todo: automatically look for these
@@ -142,6 +147,7 @@ object MigrationService : Service {
 	/**
 	 * Determines if a database is up to date or not, and stops server if it isn't
 	 * */
+	@ApiStatus.Internal
 	fun isUpToDate() {
 		if (getPendingMigrations().isNotEmpty()) {
 			logger.error("Theres one or more pending migrations. Please run them before continuing.")
@@ -154,6 +160,7 @@ object MigrationService : Service {
 	 *
 	 * @return List of migration scripts
 	 * */
+	@JvmStatic
 	fun getPendingMigrations(): List<String> {
 		val pending = mutableListOf<String>()
 
@@ -181,6 +188,7 @@ object MigrationService : Service {
 	/**
 	 * Executes any pending migrations.
 	 * */
+	@ApiStatus.Internal
 	fun execute() {
 		initialize()
 

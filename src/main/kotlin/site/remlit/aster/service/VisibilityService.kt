@@ -23,6 +23,7 @@ object VisibilityService : Service {
 	 *
 	 * @return If the user can see the entity
 	 * */
+	@JvmStatic
 	fun canISee(
 		visibility: Visibility,
 		author: String,

@@ -42,21 +42,25 @@ object QueueService : Service {
 	/**
 	 * Inbox queue coroutine scope
 	 * */
+	@JvmStatic
 	val inboxScope = CoroutineScope(Dispatchers.Default + CoroutineName("InboxDispatcher"))
 
 	/**
 	 * Deliver queue coroutine scope
 	 * */
+	@JvmStatic
 	val deliverScope = CoroutineScope(Dispatchers.Default + CoroutineName("DeliverDispatcher"))
 
 	/**
 	 * Current count of active inbox queue workers
 	 * */
+	@JvmStatic
 	var activeInboxWorkers = 0
 
 	/**
 	 * Current count of active deliver queue workers
 	 * */
+	@JvmStatic
 	var activeDeliverWorkers = 0
 
 	/**

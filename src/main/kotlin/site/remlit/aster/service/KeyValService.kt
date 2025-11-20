@@ -20,6 +20,7 @@ object KeyValService : Service {
 	 *
 	 * @return Entity found, if any
 	 * */
+	@JvmStatic
 	fun getEntity(where: Op<Boolean>): KeyValEntity? = transaction {
 		KeyValEntity
 			.find { where }
@@ -33,6 +34,7 @@ object KeyValService : Service {
 	 *
 	 * @return Entity found, if any
 	 * */
+	@JvmStatic
 	fun getEntity(key: String): KeyValEntity? = getEntity(KeyValTable.key eq key)
 
 	/**
@@ -42,6 +44,7 @@ object KeyValService : Service {
 	 *
 	 * @return Value
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): String? = getEntity(where)?.value
 
 	/**
@@ -51,6 +54,7 @@ object KeyValService : Service {
 	 *
 	 * @return Value
 	 * */
+	@JvmStatic
 	fun get(key: String): String? = get(KeyValTable.key eq key)
 
 	/**
@@ -60,6 +64,7 @@ object KeyValService : Service {
 	 * @param key Key
 	 * @param value Value
 	 * */
+	@JvmStatic
 	fun set(key: String, value: String?) {
 		val existing = getEntity(key)
 		transaction {
@@ -80,6 +85,7 @@ object KeyValService : Service {
 	 *
 	 * @param where Query to find value
 	 * */
+	@JvmStatic
 	fun delete(where: Op<Boolean>) = getEntity(where)?.delete()
 
 	/**
@@ -87,5 +93,6 @@ object KeyValService : Service {
 	 *
 	 * @param key Key
 	 * */
+	@JvmStatic
 	fun delete(key: String) = getEntity(key)?.delete()
 }

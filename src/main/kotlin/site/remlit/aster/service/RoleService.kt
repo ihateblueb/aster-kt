@@ -27,6 +27,7 @@ object RoleService : Service {
 	 *
 	 * @return Found role, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): RoleEntity? = transaction {
 		RoleEntity
 			.find { where }
@@ -42,6 +43,7 @@ object RoleService : Service {
 	 *
 	 * @return List of found roles
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -60,6 +62,7 @@ object RoleService : Service {
 	 *
 	 * @return List of roles
 	 * */
+	@JvmStatic
 	fun getAll(): List<RoleEntity> = transaction {
 		RoleEntity
 			.all()
@@ -73,6 +76,7 @@ object RoleService : Service {
 	 *
 	 * @return Found role, if any
 	 * */
+	@JvmStatic
 	fun getById(id: String): RoleEntity? = get(RoleTable.id eq id)
 
 	/**
@@ -82,6 +86,7 @@ object RoleService : Service {
 	 *
 	 * @return Highest tole type
 	 * */
+	@JvmStatic
 	fun getUserHighestRole(userId: String): RoleType? {
 		val user = UserService.getById(userId) ?: return null
 		val rolesOfType = getMany(RoleTable.id inList user.roles)
@@ -99,6 +104,7 @@ object RoleService : Service {
 	 *
 	 * @return If the user has the role or not
 	 * */
+	@JvmStatic
 	fun userHasRoleOfType(userId: String, type: RoleType): Boolean {
 		val user = UserService.getById(userId)
 		val rolesOfType = getMany(RoleTable.type eq type)
@@ -119,6 +125,7 @@ object RoleService : Service {
 	 *
 	 * @return List of users with a role of a certain type
 	 * */
+	@JvmStatic
 	fun getUsersOfType(type: RoleType): List<User> {
 		val rolesOfType = getMany(RoleTable.type eq type)
 
@@ -143,6 +150,7 @@ object RoleService : Service {
 	 *
 	 * @return If they're a mod or an admin
 	 * */
+	@JvmStatic
 	fun isModOrAdmin(userId: String) =
 		listOf(RoleType.Mod, RoleType.Admin).contains(getUserHighestRole(userId))
 }

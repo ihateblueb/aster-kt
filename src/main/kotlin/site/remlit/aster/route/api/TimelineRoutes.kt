@@ -19,7 +19,7 @@ import site.remlit.aster.util.authenticatedUserKey
 import site.remlit.aster.util.authentication
 import site.remlit.aster.util.sql.arrayContains
 
-object TimelineRoutes {
+internal object TimelineRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			authentication(

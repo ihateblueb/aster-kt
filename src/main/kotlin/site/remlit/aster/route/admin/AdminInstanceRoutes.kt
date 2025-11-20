@@ -25,7 +25,7 @@ import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminListNav
 import site.remlit.aster.util.webcomponent.adminMain
 
-object AdminInstanceRoutes {
+internal object AdminInstanceRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			authentication(

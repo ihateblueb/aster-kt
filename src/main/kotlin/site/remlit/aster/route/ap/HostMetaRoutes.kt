@@ -8,7 +8,7 @@ import site.remlit.aster.model.WellKnown
 import site.remlit.aster.model.WellKnownLink
 import site.remlit.aster.registry.RouteRegistry
 
-object HostMetaRoutes {
+internal object HostMetaRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/.well-known/host-meta") {

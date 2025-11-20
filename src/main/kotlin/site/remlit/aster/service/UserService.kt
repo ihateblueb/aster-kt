@@ -24,6 +24,7 @@ object UserService : Service {
 	 *
 	 * @return Found user, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): UserEntity? = transaction {
 		UserEntity
 			.find { where }
@@ -37,6 +38,7 @@ object UserService : Service {
 	 *
 	 * @return Found user private, if any
 	 * */
+	@JvmStatic
 	fun getPrivate(where: Op<Boolean>): UserPrivateEntity? = transaction {
 		UserPrivateEntity
 			.find { where }
@@ -50,6 +52,7 @@ object UserService : Service {
 	 *
 	 * @return Found user, if any
 	 * */
+	@JvmStatic
 	fun getById(id: String): UserEntity? = get(UserTable.id eq id)
 
 	/**
@@ -59,6 +62,7 @@ object UserService : Service {
 	 *
 	 * @return Found user, if any
 	 * */
+	@JvmStatic
 	fun getByApId(apId: String): UserEntity? = get(UserTable.apId eq apId)
 
 	/**
@@ -68,6 +72,7 @@ object UserService : Service {
 	 *
 	 * @return Found user, if any
 	 * */
+	@JvmStatic
 	fun getByUsername(username: String): UserEntity? = get(UserTable.username eq username)
 
 	/**
@@ -75,6 +80,7 @@ object UserService : Service {
 	 *
 	 * @return Instance actor user
 	 * */
+	@JvmStatic
 	fun getInstanceActor(): UserEntity {
 		val user = getByUsername("instance.actor")
 			?: throw SetupException("Instance actor can't be null")
@@ -89,6 +95,7 @@ object UserService : Service {
 	 *
 	 * @return Found user private, if any
 	 * */
+	@JvmStatic
 	fun getPrivateById(id: String): UserPrivateEntity? = getPrivate(UserPrivateTable.id eq id)
 
 	/**
@@ -100,6 +107,7 @@ object UserService : Service {
 	 *
 	 * @return Found users, if any
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -120,6 +128,7 @@ object UserService : Service {
 	 *
 	 * @return Count of users where query applies
 	 * */
+	@JvmStatic
 	fun count(where: Op<Boolean>): Long = transaction {
 		UserEntity
 			.find { where }
@@ -131,5 +140,6 @@ object UserService : Service {
 	 *
 	 * @param where Query to find user
 	 * */
+	@JvmStatic
 	fun delete(where: Op<Boolean>) = get(where)?.delete()
 }

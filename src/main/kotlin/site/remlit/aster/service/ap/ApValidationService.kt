@@ -43,6 +43,7 @@ object ApValidationService : Service {
 	 *
 	 * @return Requesting user
 	 * */
+	@JvmStatic
 	@Suppress("LongMethod", "CyclomaticComplexMethod")
 	suspend fun validate(
 		request: RoutingRequest,
@@ -185,10 +186,12 @@ object ApValidationService : Service {
 		return actor
 	}
 
+	@JvmStatic
 	fun isDigestValid(digest: String, data: ByteArray): Boolean {
 		return digest == ApSignatureService.createDigest(data)
 	}
 
+	@JvmStatic
 	@OptIn(ExperimentalTime::class)
 	fun isSignatureValid(
 		signature: String,
@@ -226,6 +229,7 @@ object ApValidationService : Service {
 		return javaSignature.verify(Base64.getDecoder().decode(signature))
 	}
 
+	@JvmStatic
 	fun parseHttpDate(date: String): LocalDateTime {
 		return ZonedDateTime
 			.parse(date, DateTimeFormatter.RFC_1123_DATE_TIME)
@@ -237,6 +241,7 @@ object ApValidationService : Service {
 	/**
 	 * Creates a regex pattern to get the value of a `key="value"` pattern.
 	 * */
+	@JvmStatic
 	fun buildHeaderRegex(key: String) = Regex("$key=\"(.*?)\"")
 }
 

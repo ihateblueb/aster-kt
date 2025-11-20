@@ -21,6 +21,7 @@ object TimeService : Service {
 	 *
 	 * @return Current LocalDateTime
 	 * */
+	@JvmStatic
 	@OptIn(ExperimentalTime::class)
 	fun now(): LocalDateTime {
 		return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
@@ -33,6 +34,7 @@ object TimeService : Service {
 	 *
 	 * @return Created LocalDateTime
 	 * */
+	@JvmStatic
 	fun hoursAgo(hours: Long): LocalDateTime {
 		return now()
 			.toJavaLocalDateTime().minus(hours, ChronoUnit.HOURS).toKotlinLocalDateTime()
@@ -45,5 +47,6 @@ object TimeService : Service {
 	 *
 	 * @return Created LocalDateTime
 	 * */
+	@JvmStatic
 	fun daysAgo(days: Long): LocalDateTime = hoursAgo(days * 24)
 }

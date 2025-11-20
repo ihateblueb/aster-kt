@@ -5,7 +5,7 @@ import io.ktor.server.routing.*
 import site.remlit.aster.model.ApiException
 import site.remlit.aster.registry.RouteRegistry
 
-object OutboxRoutes {
+internal object OutboxRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/outbox") {

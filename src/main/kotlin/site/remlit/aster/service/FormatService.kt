@@ -21,6 +21,7 @@ object FormatService : Service {
 	 *
 	 * @return Calculated time offset
 	 * */
+	@JvmStatic
 	fun getTimeZoneOffset(localDateTime: LocalDateTime): ZoneOffset {
 		return ZoneId.systemDefault().rules.getOffset(localDateTime.toJavaLocalDateTime())
 	}
@@ -33,6 +34,7 @@ object FormatService : Service {
 	 *
 	 * @return Standard date format
 	 * */
+	@JvmStatic
 	fun formatToStandardDateTime(localDateTime: LocalDateTime): String {
 		val offsetTime = localDateTime.toJavaLocalDateTime().atOffset(getTimeZoneOffset(localDateTime))
 		return offsetTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
@@ -45,5 +47,6 @@ object FormatService : Service {
 	 *
 	 * @return ASCII string
 	 * */
+	@JvmStatic
 	fun toASCII(string: String): String = IDN.toASCII(string)
 }

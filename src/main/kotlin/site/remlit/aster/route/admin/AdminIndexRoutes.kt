@@ -32,7 +32,7 @@ import site.remlit.aster.util.model.getMeta
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 
-object AdminIndexRoutes {
+internal object AdminIndexRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			staticResources("/admin/assets", "admin")

@@ -8,7 +8,7 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.QueueService
 import site.remlit.aster.service.ap.ApValidationService
 
-object InboxRoutes {
+internal object InboxRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			post("/inbox") {

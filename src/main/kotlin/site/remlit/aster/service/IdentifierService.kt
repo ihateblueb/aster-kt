@@ -58,6 +58,7 @@ object IdentifierService : Service {
 	 *
 	 * @return Generated ID
 	 * */
+	@JvmStatic
 	fun generate(): String {
 		if (Configuration.identifiers == IdentifierType.Aid)
 			return generateAid()

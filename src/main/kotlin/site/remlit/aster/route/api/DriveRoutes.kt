@@ -16,7 +16,7 @@ import site.remlit.aster.service.TimelineService
 import site.remlit.aster.util.authenticatedUserKey
 import site.remlit.aster.util.authentication
 
-object DriveRoutes {
+internal object DriveRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			authentication(

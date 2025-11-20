@@ -21,6 +21,7 @@ object AuthService : Service {
 	 *
 	 * @return Auth entity, if it exists
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): AuthEntity? = transaction {
 		AuthEntity
 			.find { where }
@@ -34,6 +35,7 @@ object AuthService : Service {
 	 *
 	 * @return Auth entity, if it exists
 	 * */
+	@JvmStatic
 	fun getByToken(token: String): AuthEntity? = get(AuthTable.token eq token)
 
 	/**
@@ -43,6 +45,7 @@ object AuthService : Service {
 	 *
 	 * @return Newly created auth token
 	 * */
+	@JvmStatic
 	fun registerToken(user: String): String {
 		val id = IdentifierService.generate()
 		val generatedToken = RandomService.generateString()

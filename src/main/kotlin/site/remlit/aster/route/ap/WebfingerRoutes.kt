@@ -14,7 +14,7 @@ import site.remlit.aster.model.WellKnownLink
 import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.UserService
 
-object WebfingerRoutes {
+internal object WebfingerRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/.well-known/webfinger") {

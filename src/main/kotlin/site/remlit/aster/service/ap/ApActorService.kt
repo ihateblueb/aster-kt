@@ -38,6 +38,7 @@ object ApActorService : Service {
 	 *
 	 * @return UserEntity or null
 	 * */
+	@JvmStatic
 	suspend fun resolve(apId: String, refetch: Boolean = false): UserEntity? {
 		val existing = UserService.getByApId(apId)
 
@@ -58,6 +59,7 @@ object ApActorService : Service {
 	// partials used here since a regular user has the expectation of being real,
 	// may in future have calculated fields like likes on note, where creating them
 	// would waste a query and potentially error
+	@JvmStatic
 	fun toUser(
 		json: JsonObject,
 		existing: User? = null
@@ -167,6 +169,7 @@ object ApActorService : Service {
 	 *
 	 * @return UserEntity or null
 	 * */
+	@JvmStatic
 	fun update(user: PartialUser): UserEntity? {
 		try {
 			transaction {
@@ -224,6 +227,7 @@ object ApActorService : Service {
 	 *
 	 * @return UserEntity or null
 	 * */
+	@JvmStatic
 	fun register(user: PartialUser): UserEntity? {
 		try {
 			transaction {

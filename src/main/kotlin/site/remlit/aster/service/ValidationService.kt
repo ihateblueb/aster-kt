@@ -15,6 +15,7 @@ object ValidationService : Service {
 	 *
 	 * @return Whether a string contains non-alphanumeric characters
 	 * */
+	@JvmStatic
 	fun containsNonAlphanumeric(text: String): Boolean {
 		val newText = text.replace(Regex("[^a-zA-Z0-9.]"), "*")
 		return newText.contains("*")

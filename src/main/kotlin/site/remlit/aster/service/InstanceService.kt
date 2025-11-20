@@ -39,6 +39,7 @@ object InstanceService : Service {
 	 *
 	 * @return Instance entity, if it exists
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): InstanceEntity? = transaction {
 		InstanceEntity
 			.find { where }
@@ -52,6 +53,7 @@ object InstanceService : Service {
 	 *
 	 * @return Instance entity, if it exists
 	 * */
+	@JvmStatic
 	fun getById(id: String): InstanceEntity? = get(InstanceTable.id eq id)
 
 	/**
@@ -61,6 +63,7 @@ object InstanceService : Service {
 	 *
 	 * @return Instance entity, if it exists
 	 * */
+	@JvmStatic
 	fun getByHost(host: String): InstanceEntity? = get(InstanceTable.host eq host)
 
 	/**
@@ -72,6 +75,7 @@ object InstanceService : Service {
 	 *
 	 * @return Instance entities, if they exist
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -91,6 +95,7 @@ object InstanceService : Service {
 	 *
 	 * @return Count of instances where query applies
 	 * */
+	@JvmStatic
 	fun count(where: Op<Boolean>): Long = transaction {
 		InstanceEntity
 			.find { where }
@@ -105,6 +110,7 @@ object InstanceService : Service {
 	 *
 	 * @return Instance entity, if it exists or can be resolved
 	 * */
+	@JvmStatic
 	suspend fun resolve(host: String, refetch: Boolean = false): InstanceEntity? {
 		val existing = get(InstanceTable.host eq host)
 
@@ -146,6 +152,7 @@ object InstanceService : Service {
 	 *
 	 * @return Partial instance from provided information
 	 * */
+	@JvmStatic
 	fun toInstance(host: String, nodeinfo: JsonObject, existing: InstanceEntity? = null): PartialInstance {
 		val id = existing?.id?.toString() ?: IdentifierService.generate()
 
@@ -188,6 +195,7 @@ object InstanceService : Service {
 	 *
 	 * @return Updated instance
 	 * */
+	@JvmStatic
 	fun update(instance: PartialInstance): InstanceEntity? {
 		try {
 			transaction {
@@ -221,6 +229,7 @@ object InstanceService : Service {
 	 *
 	 * @return Created instance
 	 * */
+	@JvmStatic
 	fun register(instance: PartialInstance): InstanceEntity? {
 		try {
 			transaction {

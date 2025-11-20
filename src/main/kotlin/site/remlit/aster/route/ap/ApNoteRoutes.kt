@@ -13,7 +13,7 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.ap.ApVisibilityService
 
-object ApNoteRoutes {
+internal object ApNoteRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/notes/{id}") {

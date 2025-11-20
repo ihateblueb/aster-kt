@@ -27,6 +27,7 @@ object InviteService : Service {
 	 *
 	 * @return Found invite, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): Invite? = transaction {
 		val invite = InviteEntity
 			.find { where }
@@ -45,6 +46,7 @@ object InviteService : Service {
 	 *
 	 * @return Found invite, if any
 	 * */
+	@JvmStatic
 	fun getById(id: String): Invite? = get(InviteTable.id eq id)
 
 	/**
@@ -54,6 +56,7 @@ object InviteService : Service {
 	 *
 	 * @return Found invite, if any
 	 * */
+	@JvmStatic
 	fun getByCode(code: String): Invite? = get(InviteTable.code eq code)
 
 	/**
@@ -65,6 +68,7 @@ object InviteService : Service {
 	 *
 	 * @return Found invites, if any
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -87,6 +91,7 @@ object InviteService : Service {
 	 *
 	 * @return Count of invites
 	 * */
+	@JvmStatic
 	fun count(where: Op<Boolean>): Long = transaction {
 		InviteTable
 			.select(where)
@@ -98,6 +103,7 @@ object InviteService : Service {
 	 *
 	 * @param where Query to find invite
 	 * */
+	@JvmStatic
 	fun delete(where: Op<Boolean>) = transaction {
 		InviteEntity
 			.find { where }
@@ -110,6 +116,7 @@ object InviteService : Service {
 	 *
 	 * @param id ID of invite
 	 * */
+	@JvmStatic
 	fun deleteById(id: String) = delete(InviteTable.id eq id)
 
 	/**
@@ -117,6 +124,7 @@ object InviteService : Service {
 	 *
 	 * @param code Code of invite
 	 * */
+	@JvmStatic
 	fun deleteByCode(code: String) = delete(InviteTable.code eq code)
 
 	/**
@@ -125,6 +133,7 @@ object InviteService : Service {
 	 * @param code Code of invite
 	 * @param userId ID of the user
 	 * */
+	@JvmStatic
 	fun useInvite(code: String, userId: String) {
 		val invite = transaction {
 			InviteEntity

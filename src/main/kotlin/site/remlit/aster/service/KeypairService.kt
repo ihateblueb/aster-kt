@@ -22,6 +22,7 @@ object KeypairService : Service {
 	 *
 	 * @return Keypair
 	 * */
+	@JvmStatic
 	fun generate(): KeyPair {
 		val generator = KeyPairGenerator.getInstance("RSA")
 		generator.initialize(2048)
@@ -36,6 +37,7 @@ object KeypairService : Service {
 	 *
 	 * @return Pem version of key
 	 * */
+	@JvmStatic
 	fun keyToPem(type: KeyType, key: KeyPair): String {
 		val base64Key =
 			Base64.getEncoder()
@@ -56,6 +58,7 @@ object KeypairService : Service {
 	 *
 	 * @return Public key
 	 * */
+	@JvmStatic
 	fun pemToPublicKey(pem: String): PublicKey {
 		val start = "-----BEGIN PUBLIC KEY-----\n"
 		val end = "\n-----END PUBLIC KEY-----\n"
@@ -77,6 +80,7 @@ object KeypairService : Service {
 	 *
 	 * @return Private key
 	 * */
+	@JvmStatic
 	fun pemToPrivateKey(pem: String): PrivateKey {
 		val start = "-----BEGIN PRIVATE KEY-----\n"
 		val end = "\n-----END PRIVATE KEY-----\n"
@@ -85,7 +89,7 @@ object KeypairService : Service {
 			.replace(end, "")
 			.replace("\n", "")
 			.trim()
-		
+
 		val byteArray = Base64.getMimeDecoder().decode(editedString)
 
 		return KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(byteArray))

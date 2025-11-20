@@ -27,7 +27,7 @@ import site.remlit.aster.util.authentication
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 
-object AdminQueueRoutes {
+internal object AdminQueueRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			authentication(

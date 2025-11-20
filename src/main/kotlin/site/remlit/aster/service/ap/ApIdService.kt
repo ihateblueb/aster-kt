@@ -21,6 +21,7 @@ import site.remlit.aster.model.Service
  * @since 2025.5.1.0-SNAPSHOT
  * */
 object ApIdService : Service {
+	@JvmStatic
 	fun renderBaseApId(): String {
 		return Configuration.url.toString()
 	}
@@ -28,6 +29,7 @@ object ApIdService : Service {
 	/**
 	 * @param id ID of a Note
 	 */
+	@JvmStatic
 	fun renderNoteApId(id: String): String {
 		return this.renderBaseApId() + "notes/" + id
 	}
@@ -35,6 +37,7 @@ object ApIdService : Service {
 	/**
 	 * @param id ID of a User
 	 */
+	@JvmStatic
 	fun renderUserApId(id: String): String {
 		return this.renderBaseApId() + "users/" + id
 	}
@@ -42,14 +45,17 @@ object ApIdService : Service {
 	/**
 	 * @param id ID of a User
 	 */
+	@JvmStatic
 	fun renderInboxApId(id: String? = null): String {
-		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" + id + "/inbox" else this.renderBaseApId() + "inbox"
+		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" +
+				id + "/inbox" else this.renderBaseApId() + "inbox"
 	}
 
 
 	/**
 	 * @param id ID of a User
 	 */
+	@JvmStatic
 	fun renderOutboxApId(id: String? = null): String {
 		return if (!id.isNullOrEmpty()) this.renderBaseApId() + "users/" +
 				id + "/outbox" else this.renderBaseApId() + "outbox"
@@ -58,6 +64,7 @@ object ApIdService : Service {
 	/**
 	 * @param id ID of a User
 	 */
+	@JvmStatic
 	fun renderFollowingApId(id: String): String {
 		return this.renderBaseApId() + "users/" + id + "/following"
 	}
@@ -65,6 +72,7 @@ object ApIdService : Service {
 	/**
 	 * @param id ID of a User
 	 */
+	@JvmStatic
 	fun renderFollowersApId(id: String): String {
 		return this.renderBaseApId() + "users/" + id + "/followers"
 	}
@@ -72,6 +80,7 @@ object ApIdService : Service {
 	/**
 	 * @param id ID of an activity
 	 */
+	@JvmStatic
 	fun renderActivityApId(id: String): String {
 		return this.renderBaseApId() + "activities/" + id
 	}

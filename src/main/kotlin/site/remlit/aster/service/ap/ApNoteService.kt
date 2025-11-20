@@ -38,6 +38,7 @@ object ApNoteService : Service {
 	 *
 	 * @return Note or null
 	 * */
+	@JvmStatic
 	suspend fun resolve(apId: String, refetch: Boolean = false): Note? {
 		InstanceService.resolve(Url(apId).host)
 		val existingNote = NoteService.getByApId(apId)
@@ -65,6 +66,7 @@ object ApNoteService : Service {
 	 *
 	 * @return PartialNote or null
 	 */
+	@JvmStatic
 	suspend fun toNote(json: JsonObject, existing: Note? = null): PartialNote? {
 		val apId = extractString { json["id"] }
 		if (apId.isNullOrBlank()) return null
@@ -138,6 +140,7 @@ object ApNoteService : Service {
 	 *
 	 * @return Note or null
 	 * */
+	@JvmStatic
 	fun update(note: PartialNote): Note? {
 		try {
 			transaction {
@@ -173,6 +176,7 @@ object ApNoteService : Service {
 	 *
 	 * @return Note or null
 	 * */
+	@JvmStatic
 	fun register(note: PartialNote): Note? {
 		try {
 			transaction {

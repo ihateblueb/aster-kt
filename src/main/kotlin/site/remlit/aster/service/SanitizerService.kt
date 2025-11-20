@@ -25,6 +25,7 @@ object SanitizerService : Service {
 	 * @return Sanitized string
 	 * */
 	// todo: escaping
+	@JvmStatic
 	fun sanitize(string: String, escape: Boolean = false): String =
 		policy.sanitize(string)
 }

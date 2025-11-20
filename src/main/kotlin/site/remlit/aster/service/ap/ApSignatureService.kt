@@ -9,6 +9,7 @@ import kotlin.io.encoding.Base64
 import kotlin.time.ExperimentalTime
 
 object ApSignatureService : Service {
+	@JvmStatic
 	fun createSigningString(
 		method: HttpMethod,
 		target: String,
@@ -41,6 +42,7 @@ object ApSignatureService : Service {
 	 *
 	 * @return Pair, first being the Signature header and the second the digest if a body was specified.
 	 * */
+	@JvmStatic
 	@OptIn(ExperimentalTime::class)
 	fun createSignature(
 		target: String,
@@ -84,6 +86,7 @@ object ApSignatureService : Service {
 		return Pair(signatureHeader, digest)
 	}
 
+	@JvmStatic
 	fun createDigest(data: ByteArray): String =
 		java.util.Base64.getEncoder().encodeToString(
 			MessageDigest.getInstance("SHA-256").digest(data)

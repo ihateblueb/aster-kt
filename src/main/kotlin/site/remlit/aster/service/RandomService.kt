@@ -17,6 +17,7 @@ object RandomService : Service {
 	 *
 	 * @return Secure random string
 	 * */
+	@JvmStatic
 	fun generateString(size: Int = 16): String {
 		val random = SecureRandom()
 

@@ -21,7 +21,7 @@ import site.remlit.aster.util.authenticatedUserKey
 import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.fromEntity
 
-object NoteRoutes {
+internal object NoteRoutes {
 	@Serializable
 	data class PostNoteBody(
 		val cw: String? = null,

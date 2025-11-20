@@ -33,6 +33,7 @@ object ApDeliverService {
 	 * @param sender Activity sender
 	 * @param inbox Inbox to deliver to
 	 * */
+	@JvmSynthetic
 	inline fun <reified T> deliver(
 		activity: T,
 		sender: UserEntity?,
@@ -49,6 +50,7 @@ object ApDeliverService {
 	 *
 	 * @param job Job to handle
 	 * */
+	@JvmStatic
 	suspend fun handle(job: DeliverQueueEntity) {
 		try {
 			val url = Url(job.inbox)

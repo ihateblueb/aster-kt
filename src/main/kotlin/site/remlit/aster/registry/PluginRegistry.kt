@@ -13,6 +13,7 @@ object PluginRegistry {
 	/**
 	 * List of currently enabled plugins
 	 * */
+	@JvmStatic
 	val plugins: MutableList<Pair<PluginManifest, AsterPlugin>> =
 		emptyList<Pair<PluginManifest, AsterPlugin>>().toMutableList()
 

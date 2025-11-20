@@ -4,7 +4,7 @@ import io.ktor.server.http.content.*
 import site.remlit.aster.model.Configuration
 import site.remlit.aster.registry.RouteRegistry
 
-object FrontendRoutes {
+internal object FrontendRoutes {
 	fun register() {
 		RouteRegistry.registerRoute {
 			if (Configuration.builtinFrontend)

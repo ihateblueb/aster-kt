@@ -9,6 +9,7 @@ import site.remlit.aster.model.ap.ApTypedObject
 import kotlin.reflect.KClass
 
 object ApObjectTypeRegistry {
+	@JvmStatic
 	val apObjectTypes =
 		mutableListOf<Pair<KClass<out ApObject>, KSerializer<out ApObject>>>()
 
@@ -18,6 +19,7 @@ object ApObjectTypeRegistry {
 	 * @param klass Class of object type
 	 * @param serializer Serializer of object type
 	 * */
+	@JvmStatic
 	fun register(klass: KClass<out ApObject>, serializer: KSerializer<out ApObject>) {
 		apObjectTypes.add(Pair(klass, serializer))
 	}

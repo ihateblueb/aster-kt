@@ -22,7 +22,7 @@ import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.fromEntities
 import site.remlit.aster.util.model.fromEntity
 
-object PolicyRoutes {
+internal object PolicyRoutes {
 	@Serializable
 	data class PolicyBody(
 		val type: PolicyType,

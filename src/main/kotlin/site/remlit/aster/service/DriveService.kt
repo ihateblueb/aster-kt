@@ -35,6 +35,7 @@ object DriveService : Service {
 	 *
 	 * @return Found drive file, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): DriveFile? = transaction {
 		val driveFile = DriveFileEntity
 			.find { where }
@@ -53,6 +54,7 @@ object DriveService : Service {
 	 *
 	 * @return Found drive file, if any
 	 * */
+	@JvmStatic
 	fun getById(id: String): DriveFile? = get(DriveFileTable.id eq id)
 
 	/**
@@ -62,6 +64,7 @@ object DriveService : Service {
 	 *
 	 * @return Found drive file, if any
 	 * */
+	@JvmStatic
 	fun getBySrc(src: String): DriveFile? = get(DriveFileTable.src eq src)
 
 	/**
@@ -73,6 +76,7 @@ object DriveService : Service {
 	 *
 	 * @return Found drive files, if any
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -99,6 +103,7 @@ object DriveService : Service {
 	 *
 	 * @return Count of drive files
 	 * */
+	@JvmStatic
 	fun count(where: Op<Boolean>): Long = transaction {
 		DriveFileTable
 			.leftJoin(UserTable)
@@ -115,6 +120,7 @@ object DriveService : Service {
 	 *
 	 * @return Created drive file
 	 * */
+	@JvmStatic
 	fun create(
 		user: UserEntity,
 		type: ContentType,
@@ -141,6 +147,7 @@ object DriveService : Service {
 	 *
 	 * @param where Query to find drive file
 	 * */
+	@JvmStatic
 	fun delete(where: Op<Boolean>) = transaction {
 		val entity = DriveFileEntity
 			.find { where }
@@ -156,6 +163,7 @@ object DriveService : Service {
 	 *
 	 * @param id ID of drive file
 	 * */
+	@JvmStatic
 	fun deleteById(id: String) = delete(DriveFileTable.id eq id)
 
 	/**
@@ -163,5 +171,6 @@ object DriveService : Service {
 	 *
 	 * @param src Source of drive file
 	 * */
+	@JvmStatic
 	fun deleteBySrc(src: String) = delete(DriveFileTable.src eq src)
 }

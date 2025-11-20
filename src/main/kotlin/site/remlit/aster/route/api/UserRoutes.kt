@@ -25,7 +25,7 @@ import site.remlit.aster.util.authentication
 import site.remlit.aster.util.model.fromEntity
 import site.remlit.aster.util.sanitizeOrNull
 
-object UserRoutes {
+internal object UserRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			authentication {

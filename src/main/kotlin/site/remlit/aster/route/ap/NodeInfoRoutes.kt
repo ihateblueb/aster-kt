@@ -22,7 +22,7 @@ import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.NoteService
 import site.remlit.aster.service.UserService
 
-object NodeInfoRoutes {
+internal object NodeInfoRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/.well-known/nodeinfo") {

@@ -18,6 +18,7 @@ import kotlin.reflect.full.createInstance
 object InboxHandlerRegistry {
 	private val logger = LoggerFactory.getLogger(InboxHandlerRegistry::class.java)
 
+	@JvmStatic
 	val inboxHandlers = mutableListOf<Pair<String, ApInboxHandler>>()
 
 	/**
@@ -58,6 +59,7 @@ object InboxHandlerRegistry {
 	 * @param type Activity type to handle
 	 * @param handler Handler for activity
 	 * */
+	@JvmStatic
 	fun register(type: String, handler: ApInboxHandler) {
 		inboxHandlers.add(Pair(type, handler))
 	}

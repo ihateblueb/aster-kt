@@ -37,6 +37,7 @@ object NotificationService : Service {
 	 *
 	 * @return Notification, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): Notification? = transaction {
 		val entity = NotificationEntity
 			.find { where }
@@ -60,18 +61,21 @@ object NotificationService : Service {
 	 *
 	 * @return Notification, if any
 	 * */
+	@JvmStatic
 	fun getById(id: String): Notification? = get(NotificationTable.id eq id)
 
 	/**
 	 * Reference the "to" user on a notification.
 	 * For usage in queries.
 	 * */
+	@JvmStatic
 	val userToAlias = UserTable.alias("to")
 
 	/**
 	 * Reference the "from" user on a notification.
 	 * For usage in queries.
 	 * */
+	@JvmStatic
 	val userFromAlias = UserTable.alias("from")
 
 	/**
@@ -83,6 +87,7 @@ object NotificationService : Service {
 	 *
 	 * @return Notifications, if any
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -117,6 +122,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -150,6 +156,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -175,6 +182,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -200,6 +208,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -224,6 +233,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -247,6 +257,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -269,6 +280,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created notification
 	 * */
+	@JvmStatic
 	fun create(
 		type: NotificationType,
 		to: UserEntity,
@@ -289,6 +301,7 @@ object NotificationService : Service {
 	 *
 	 * @return Created bite notification
 	 * */
+	@JvmStatic
 	fun bite(
 		to: UserEntity,
 		from: UserEntity,

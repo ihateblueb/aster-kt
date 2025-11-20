@@ -29,7 +29,7 @@ import site.remlit.aster.service.ValidationService
 import site.remlit.aster.service.ap.ApIdService
 import site.remlit.aster.util.model.fromEntity
 
-object RegisterRoutes {
+internal object RegisterRoutes {
 	@Serializable
 	data class RegisterBody(
 		val username: String,

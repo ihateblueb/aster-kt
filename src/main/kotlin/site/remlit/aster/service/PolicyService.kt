@@ -22,6 +22,7 @@ object PolicyService : Service {
 	 *
 	 * @return Found policy, if any
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): PolicyEntity? = transaction {
 		PolicyEntity
 			.find { where }
@@ -35,6 +36,7 @@ object PolicyService : Service {
 	 *
 	 * @return Found policy, if any
 	 * */
+	@JvmStatic
 	fun getById(id: String): PolicyEntity? = get(PolicyTable.id eq id)
 
 	/**
@@ -46,6 +48,7 @@ object PolicyService : Service {
 	 *
 	 * @return Policies, if any
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -66,6 +69,7 @@ object PolicyService : Service {
 	 *
 	 * @return Found policies, if any
 	 * */
+	@JvmStatic
 	fun getAllByType(type: PolicyType): List<PolicyEntity> = transaction {
 		PolicyEntity
 			.find { PolicyTable.type eq type }
@@ -80,6 +84,7 @@ object PolicyService : Service {
 	 *
 	 * @return List of hosts
 	 * */
+	@JvmStatic
 	fun reducePoliciesToHost(policies: List<PolicyEntity>): List<String> {
 		val reducedHosts: MutableList<String> = mutableListOf()
 

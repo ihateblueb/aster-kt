@@ -9,7 +9,7 @@ import site.remlit.aster.model.ap.ApActor
 import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.service.UserService
 
-object ApUserRoutes {
+internal object ApUserRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/users/{id}") {

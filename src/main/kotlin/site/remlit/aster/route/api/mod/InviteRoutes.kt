@@ -15,7 +15,7 @@ import site.remlit.aster.service.RandomService
 import site.remlit.aster.util.authenticatedUserKey
 import site.remlit.aster.util.authentication
 
-object InviteRoutes {
+internal object InviteRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			authentication(

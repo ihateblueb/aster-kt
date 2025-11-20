@@ -1,6 +1,7 @@
 package site.remlit.aster.service
 
 import at.favre.lib.crypto.bcrypt.BCrypt
+import org.jetbrains.annotations.ApiStatus
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -31,6 +32,7 @@ object SetupService : Service {
 	/**
 	 * Ensure instance is properly set up
 	 * */
+	@ApiStatus.Internal
 	fun setup() {
 		setupRoles()
 		setupInstanceActor()
@@ -42,6 +44,7 @@ object SetupService : Service {
 	/**
 	 * Creates admin and mod roles, if they don't already exist
 	 * */
+	@ApiStatus.Internal
 	fun setupRoles() {
 		val existingAdminRole = RoleService.get(RoleTable.type eq RoleType.Admin)
 
@@ -86,6 +89,7 @@ object SetupService : Service {
 	/**
 	 * Creates instance actor, if it doesn't already exist
 	 * */
+	@ApiStatus.Internal
 	fun setupInstanceActor() {
 		val existingActor = UserService.get(
 			UserTable.username eq "instance.actor"

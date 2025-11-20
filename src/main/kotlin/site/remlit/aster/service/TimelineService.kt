@@ -17,6 +17,7 @@ object TimelineService : Service {
 	 *
 	 * @return Number acceptable for the server to use
 	 * */
+	@JvmStatic
 	fun normalizeTake(take: Int?): Int {
 		if (take != null) {
 			if (take > Configuration.timeline.maxObjects) {
@@ -37,6 +38,7 @@ object TimelineService : Service {
 	 *
 	 * @return Time and date acceptable for the server to use
 	 * */
+	@JvmStatic
 	fun normalizeSince(since: String?): LocalDateTime {
 		val now = TimeService.now().toString()
 		return LocalDateTime.parse(since ?: now)

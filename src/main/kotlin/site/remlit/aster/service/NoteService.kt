@@ -46,12 +46,14 @@ object NoteService : Service {
 	 * Reference the "replyingTo" note on a note.
 	 * For usage in queries.
 	 * */
+	@JvmStatic
 	val replyingToAlias = NoteTable.alias("replyingTo")
 
 	/**
 	 * Reference the "repeat" note on a note.
 	 * For usage in queries.
 	 * */
+	@JvmStatic
 	val repeatAlias = NoteTable.alias("repeat")
 
 	/**
@@ -61,6 +63,7 @@ object NoteService : Service {
 	 *
 	 * @return Note, if exists
 	 * */
+	@JvmStatic
 	fun get(where: Op<Boolean>): Note? = transaction {
 		val note = NoteEntity
 			.find { where }
@@ -79,6 +82,7 @@ object NoteService : Service {
 	 *
 	 * @return Note, if exists
 	 * */
+	@JvmStatic
 	fun getById(id: String): Note? = get(NoteTable.id eq id)
 
 	/**
@@ -88,6 +92,7 @@ object NoteService : Service {
 	 *
 	 * @return Note, if exists
 	 * */
+	@JvmStatic
 	fun getByApId(apId: String): Note? = get(NoteTable.apId eq apId)
 
 	/**
@@ -99,6 +104,7 @@ object NoteService : Service {
 	 *
 	 * @return Notes, if exist
 	 * */
+	@JvmStatic
 	fun getMany(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -129,6 +135,7 @@ object NoteService : Service {
 	 *
 	 * @return Notes, if exist
 	 * */
+	@JvmStatic
 	fun getManySmall(
 		where: Op<Boolean>,
 		take: Int = Configuration.timeline.defaultObjects,
@@ -157,6 +164,7 @@ object NoteService : Service {
 	 *
 	 * @return Count of notes
 	 * */
+	@JvmStatic
 	fun count(where: Op<Boolean>): Long = transaction {
 		NoteTable
 			.leftJoin(UserTable)
@@ -175,6 +183,7 @@ object NoteService : Service {
 	 *
 	 * @return Created note
 	 * */
+	@JvmStatic
 	fun create(
 		id: String = IdentifierService.generate(),
 		user: UserEntity,
@@ -209,6 +218,7 @@ object NoteService : Service {
 	 *
 	 * @return Updated note
 	 * */
+	@JvmStatic
 	fun update(
 		id: String,
 		user: UserEntity,
@@ -224,6 +234,7 @@ object NoteService : Service {
 	 *
 	 * @since 2025.9.1.1-SNAPSHOT
 	 * */
+	@JvmStatic
 	fun like(
 		user: User,
 		noteId: String,
@@ -268,6 +279,7 @@ object NoteService : Service {
 	 *
 	 * @return Created repeat or quote
 	 */
+	@JvmStatic
 	fun repeat(
 		user: User,
 		noteId: String,
@@ -308,6 +320,7 @@ object NoteService : Service {
 	 *
 	 * @param where Query to find note
 	 * */
+	@JvmStatic
 	fun delete(where: Op<Boolean>) = transaction {
 		val entity = NoteEntity
 			.find { where }
@@ -325,6 +338,7 @@ object NoteService : Service {
 	 * @param user User to mute notifications for
 	 * @param noteId ID of note to mute
 	 */
+	@JvmStatic
 	// TODO: duration?
 	fun mute(
 		user: User,
@@ -336,6 +350,7 @@ object NoteService : Service {
 	 *
 	 * @param id ID of note
 	 * */
+	@JvmStatic
 	fun deleteById(id: String) = delete(NoteTable.id eq id)
 
 	/**
@@ -343,5 +358,6 @@ object NoteService : Service {
 	 *
 	 * @param apId ActivityPub ID of note
 	 * */
+	@JvmStatic
 	fun deleteByApId(apId: String) = delete(NoteTable.id eq apId)
 }

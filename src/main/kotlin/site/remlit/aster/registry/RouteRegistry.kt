@@ -43,6 +43,7 @@ object RouteRegistry {
 	/**
 	 * List of registered extension functions for routes.
 	 */
+	@JvmStatic
 	val routes: MutableList<Routing.() -> Unit> = emptyList<Routing.() -> Unit>().toMutableList()
 
 	/**
@@ -50,6 +51,7 @@ object RouteRegistry {
 	 *
 	 * @param route Lambda containing route
 	 */
+	@JvmStatic
 	fun registerRoute(
 		route: Routing.() -> Unit
 	) {

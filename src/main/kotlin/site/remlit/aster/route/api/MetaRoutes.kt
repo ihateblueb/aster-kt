@@ -7,7 +7,7 @@ import site.remlit.aster.common.model.Meta
 import site.remlit.aster.registry.RouteRegistry
 import site.remlit.aster.util.model.getMeta
 
-object MetaRoutes {
+internal object MetaRoutes {
 	fun register() =
 		RouteRegistry.registerRoute {
 			get("/api/meta") {

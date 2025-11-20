@@ -21,7 +21,7 @@ import site.remlit.aster.util.jsonConfig
 import site.remlit.aster.util.webcomponent.adminHeader
 import site.remlit.aster.util.webcomponent.adminMain
 
-object AdminDebugRoutes {
+internal object AdminDebugRoutes {
 	fun register() = RouteRegistry.registerRoute {
 		authentication(
 			required = true,

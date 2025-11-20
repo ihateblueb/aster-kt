@@ -18,6 +18,7 @@ object ApVisibilityService : Service {
 	 * @param followersUrl URL of the actor's followers collection
 	 * @param to List of other actors this object is addressed to, using their IDs
 	 * */
+	@JvmStatic
 	fun visibilityToCc(
 		visibility: Visibility,
 		followersUrl: String?,
@@ -46,6 +47,7 @@ object ApVisibilityService : Service {
 		}
 	}
 
+	@JvmStatic
 	fun determineVisibility(
 		to: List<String>,
 		cc: List<String>,
